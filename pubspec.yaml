@@ -47,6 +47,10 @@ dependencies:
   get_storage: ^2.0.3
   # 持久化工具
   shared_preferences: ^2.0.6
+  #日历
+  table_calendar: ^3.0.2
+  #国际化处理
+#  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

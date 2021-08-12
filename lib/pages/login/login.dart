@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:good_grandma/pages/home/home.dart';
+import 'package:good_grandma/pages/home/index_page.dart';
 import 'package:good_grandma/pages/login/forget.dart';
 import 'package:good_grandma/pages/login/loginBackground.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
               LoginBtn(
                 title: '登录',
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=> HomePage()));
+                  Navigator.push(context, MaterialPageRoute(builder:(context)=> IndexPage()));
                 },
               ),
               SizedBox(height: 10),

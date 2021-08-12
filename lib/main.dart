@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:good_grandma/common/store.dart';
-import 'package:good_grandma/pages/home/home.dart';
+import 'package:good_grandma/pages/home/index_page.dart';
 import 'package:good_grandma/pages/login/login.dart';
 import 'package:good_grandma/provider/indexProvider.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget  {
             elevation: 3,
           ),
         ),
-        home: (Store.readToken() == null || Store.readToken().isEmpty) ? LoginPage() : HomePage(),
+        home: (Store.readToken() == null || Store.readToken().isEmpty) ? LoginPage() : IndexPage(),
       ),
     );
   }
