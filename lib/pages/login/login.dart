@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
           controller: _username,
           style: TextStyle(fontSize: 32,color: Color(0xFF333333)),
           decoration: InputDecoration(
-              hintText: "请输入账户号码",
+              hintText: "请输入账户号码1",
               hintStyle: TextStyle(fontSize: 32,color: Color(0XFFCCCCCC)),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
