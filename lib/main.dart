@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/home/index_page.dart';
 import 'package:good_grandma/pages/login/login.dart';
 import 'package:good_grandma/provider/indexProvider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   await Store.init();
-  runApp(MyApp());
+  // runApp(MyApp());
+  initializeDateFormatting().then((_) => runApp(MyApp()));
   setupStatusBar();
 }
 
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget  {
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.light,
         theme: ThemeData(
-          scaffoldBackgroundColor: Color.fromRGBO(250, 250, 250, 1),
+          scaffoldBackgroundColor: AppColors.FFF4F5F8,
           brightness: Brightness.light,
           appBarTheme: AppBarTheme(
             brightness: Brightness.light,

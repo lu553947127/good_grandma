@@ -49,8 +49,10 @@ dependencies:
   shared_preferences: ^2.0.6
   #日历
   table_calendar: ^3.0.2
-  #国际化处理
-#  intl: ^0.17.0
+  # 国际化处理
+  intl: ^0.17.0
+  # 图片缓存
+  cached_network_image: ^3.1.0
 
 dev_dependencies:
   flutter_test:
