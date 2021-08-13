@@ -5,7 +5,6 @@ import 'package:good_grandma/pages/login/forget.dart';
 import 'package:good_grandma/pages/login/loginBackground.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/login/loginEditText.dart';
-import 'package:good_grandma/pages/work/work.dart';
 
 ///登录页面
 class LoginPage extends StatefulWidget {
