@@ -53,6 +53,8 @@ dependencies:
   intl: ^0.17.0
   # 图片缓存
   cached_network_image: ^3.1.0
+  # 查看大图
+  extended_image: ^4.1.0
 
 dev_dependencies:
   flutter_test:
