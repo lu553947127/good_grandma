@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
               LoginBtn(
                 title: '登录',
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=> IndexPage()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
                 },
               ),
               SizedBox(height: 10),
