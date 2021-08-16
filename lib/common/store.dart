@@ -9,9 +9,11 @@ class Store {
 
   static const _kToken = "keyToken";
   static const _userId = "userid";
+  static const _userName = "user_name";
+  static const _userAvatar = "avatar";
 
 
-  static saveToken(String token, String userId) async {
+  static saveToken(String token) {
     _box.write(_kToken, token);
   }
 
@@ -27,8 +29,26 @@ class Store {
     return _box.read(_userId);
   }
 
+  static saveUserName(String userName) {
+    _box.write(_userName, userName);
+  }
+
+  static String readUserName() {
+    return _box.read(_userName);
+  }
+
+  static saveUserAvatar(String avatar) {
+    _box.write(_userAvatar, avatar);
+  }
+
+  static String readUserAvatar() {
+    return _box.read(_userAvatar);
+  }
+
   static removeToken() {
     _box.remove(_kToken);
     _box.remove(_userId);
+    _box.remove(_userName);
+    _box.remove(_userAvatar);
   }
 }

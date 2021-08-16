@@ -1,5 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/store.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/home/index_page.dart';
 import 'package:good_grandma/pages/login/forget.dart';
 import 'package:good_grandma/pages/login/loginBackground.dart';
@@ -29,6 +35,51 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Application.appContext = context;
+
+    ///密码登录
+    _loginPassword(){
+      final username = _username.text;
+      final password = _password.text;
+
+      if (username.isEmpty || password.isEmpty) {
+        showToast("用户名和密码不能为空");
+        return;
+      }
+
+      requestPostLogin(Api.loginPassword, formData: {
+        'tenantId': '000000',
+        'username': username,
+        'password': passwordMD5(password),
+        'grant_type': 'app',
+        'scope': 'all',
+        'type': 'account',
+      }).then((val) async{
+        var data = json.decode(val.toString());
+        print('请求结果---loginPassword----$data');
+        if (data['error_description'] != null){
+          showToast(data['error_description']);
+        }else {
+          Store.saveToken(data['access_token']);
+          Store.saveUserId(data['user_id']);
+          Store.saveUserName(data['user_name']);
+          Store.saveUserAvatar(data['avatar']);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
+        }
+      });
+    }
+
+    ///验证码登录
+    _loginCode() async {
+      final account = _account.text;
+      final code = _code.text;
+
+      if (account.isEmpty || code.isEmpty) {
+        showToast("手机号和验证码不能为空");
+        return;
+      }
+
+    }
 
     ///开始倒计时
     void startCountdownTimer() {
@@ -56,12 +107,14 @@ class _LoginPageState extends State<LoginPage> {
               textEditingController: _username,
               text: '请输入账号',
               images: 'assets/images/ic_login_name.png',
+              type: TextInputType.text
             ),
             SizedBox(height: 10),
             LoginEditText(
               textEditingController: _password,
               text: '请输入密码',
               images: 'assets/images/ic_login_password.png',
+              type: TextInputType.visiblePassword
             )
           ],
         ),
@@ -78,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
               textEditingController: _account,
               text: '请输入手机号',
               images: 'assets/images/ic_login_phone.png',
+              type: TextInputType.number
             ),
             SizedBox(height: 10),
             Stack(
@@ -86,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                   textEditingController: _code,
                   text: '请输入验证码',
                   images: 'assets/images/ic_login_code.png',
+                    type: TextInputType.number
                 ),
                 Positioned(
                   right: 0,
@@ -93,12 +148,12 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(0xFFC68D3E),Color(0xFFC68D3E)]), borderRadius: BorderRadius.circular(40)),
-                    child: FlatButton(
+                    child: TextButton(
                       child: Text(_autoCodeText, style: TextStyle(fontSize: 12, color: Colors.white)),
                       onPressed: (){
                         final account = _account.text;
                         if (account.isEmpty) {
-                          print("验证码不能为空");
+                          showToast("验证码不能为空");
                           return;
                         }
                         startCountdownTimer();
@@ -158,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(visible ? '验证码登录' : '密码登录', style: TextStyle(color: Color(0xFF2F4058), fontSize: 12),),
             //点击快速注册、执行事件
             onPressed: (){
@@ -168,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Offstage(
             offstage: visible ? false : true,
-            child: FlatButton(
+            child: TextButton(
               child: Text("忘记密码", style: TextStyle(color: Color(0xFF2F4058), fontSize: 12)),
               //忘记密码按钮，点击执行事件
               onPressed: (){
@@ -194,9 +249,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 10),
               LoginBtn(
                 title: '登录',
-                onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
-                },
+                onPressed: visible ? _loginPassword : _loginCode,
               ),
               SizedBox(height: 10),
               _codeOrForget()

@@ -56,6 +56,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 textEditingController: _phone,
                 text: '请输入手机号',
                 images: 'assets/images/ic_login_phone.png',
+                  type: TextInputType.number
               ),
               SizedBox(height: 10),
               Stack(
@@ -64,6 +65,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     textEditingController: _code,
                     text: '请输入验证码',
                     images: 'assets/images/ic_login_code.png',
+                      type: TextInputType.number
                   ),
                   Positioned(
                     right: 0,
@@ -91,12 +93,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 textEditingController: _password,
                 text: '请输入新密码',
                 images: 'assets/images/ic_login_password.png',
+                  type: TextInputType.visiblePassword
               ),
               SizedBox(height: 10),
               LoginEditText(
                 textEditingController: _password2,
                 text: '请确认新密码',
                 images: 'assets/images/ic_login_password.png',
+                  type: TextInputType.visiblePassword
               ),
               SizedBox(height: 10),
               LoginBtn(
