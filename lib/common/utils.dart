@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
@@ -55,4 +57,11 @@ Future<String> showPickerDate(BuildContext context) async {
         print((picker.adapter as DateTimePickerAdapter).value.toString());
       }).showModal(context);
   return result ?? "";
+}
+
+///密码md5加密
+String passwordMD5(String data) {
+  var content = new Utf8Encoder().convert(data);
+  var digest = md5.convert(content);
+  return digest.toString();
 }

@@ -19,7 +19,7 @@ class FormPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("表单"),
         actions: [
-          RaisedButton(
+          TextButton(
             child: Text(
               "提交",
               style: TextStyle(color: Colors.white, fontSize: 16),

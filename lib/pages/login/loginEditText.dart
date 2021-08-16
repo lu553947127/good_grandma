@@ -5,11 +5,13 @@ class LoginEditText extends StatelessWidget {
   TextEditingController textEditingController = TextEditingController();
   var text;
   var images;
+  TextInputType type;
 
   LoginEditText({Key key
     , @required this.textEditingController
     , @required this.text
     , @required this.images
+    , @required this.type
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class LoginEditText extends StatelessWidget {
       ),
       child: TextField(
         controller: textEditingController,
+        keyboardType: type,//输入类型
         style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
         cursorColor: Color(0xFFC68D3E),//修改光标颜色
         decoration: InputDecoration(

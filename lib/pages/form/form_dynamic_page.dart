@@ -36,7 +36,7 @@ class FormDynamicPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         top: 30, bottom: 30, left: 22, right: 22),
-                    child: RaisedButton(
+                    child: TextButton(
                       child: Text(
                         "提交",
                         style: TextStyle(color: Colors.white, fontSize: 16),
@@ -178,7 +178,7 @@ TFormRow getRow(e) {
         requireStar: e["mustinput"],
         state: e["btnstate"],
         suffixWidget: (context, row) {
-          return RaisedButton(
+          return TextButton(
             onPressed: () {
               row.state = "1";
               showToast("验证成功");
