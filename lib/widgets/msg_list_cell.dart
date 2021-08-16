@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:provider/provider.dart';
-
+///消息列表cell样式，也用于规章文件
 class MsgListCell extends StatelessWidget {
   final VoidCallback cellOnTap;
   MsgListCell({Key key, @required this.cellOnTap}) : super(key: key);
@@ -21,7 +21,15 @@ class MsgListCell extends StatelessWidget {
             title: Container(
               padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(4)),
+                  color: Colors.white, borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    offset: Offset(2, 1),
+                    blurRadius: 1.5,
+                  )
+                ]
+              ),
               child: Column(
                 children: [
                   //标题 已读未读
