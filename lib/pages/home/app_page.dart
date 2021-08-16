@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/pages/home/regular_doc_page.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
 ///应用
@@ -15,6 +16,9 @@ class AppPage extends StatelessWidget{
           break;
         case '工作报告':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
+          break;
+        case '规章文件':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> RegularDocPage()));
           break;
       }
     }

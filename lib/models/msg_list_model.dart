@@ -15,6 +15,8 @@ class MsgListModel extends ChangeNotifier {
   bool forDuiZhangDan;
   ///对账单是否已经签署
   bool _sign;
+  ///是否是用于规章文件列表，如果是，没有已读未读的功能几对应的显示
+  bool forRegularDoc;
 
   ///是否已读
   bool get read => _read;
@@ -38,6 +40,7 @@ class MsgListModel extends ChangeNotifier {
     this.id = '',
     this.enclosureSize = '',
     this.enclosureURL = '',
+    this.forRegularDoc = false,
   }) {
     setRead(false);
     setSign(false);

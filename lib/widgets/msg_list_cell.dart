@@ -38,32 +38,35 @@ class MsgListCell extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )),
-                      Container(
-                        width: 36,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(2.5),
-                            border: Border.all(
-                                color: model.read
-                                    ? AppColors.FFC1C8D7
-                                    : AppColors.FFC08A3F),
-                            boxShadow: [
-                              BoxShadow(
+                      Visibility(
+                        visible: !model.forRegularDoc,
+                        child: Container(
+                          width: 36,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(2.5),
+                              border: Border.all(
+                                  color: model.read
+                                      ? AppColors.FFC1C8D7
+                                      : AppColors.FFC08A3F),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: model.read
+                                        ? AppColors.FFC1C8D7
+                                        : AppColors.FFC08A3F,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 1.5)
+                              ]),
+                          child: Center(
+                            child: Text(
+                              model.read ? '已读' : '未读',
+                              style: TextStyle(
                                   color: model.read
                                       ? AppColors.FFC1C8D7
                                       : AppColors.FFC08A3F,
-                                  offset: Offset(1, 1),
-                                  blurRadius: 1.5)
-                            ]),
-                        child: Center(
-                          child: Text(
-                            model.read ? '已读' : '未读',
-                            style: TextStyle(
-                                color: model.read
-                                    ? AppColors.FFC1C8D7
-                                    : AppColors.FFC08A3F,
-                                fontSize: 11.0),
+                                  fontSize: 11.0),
+                            ),
                           ),
                         ),
                       ),
@@ -158,7 +161,8 @@ class MsgListCell extends StatelessWidget {
               ),
             ),
             onTap: () {
-              model.setRead(true);
+              if(!model.forRegularDoc)
+                model.setRead(true);
               if (cellOnTap != null) cellOnTap();
             },
           ),
