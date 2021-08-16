@@ -69,24 +69,29 @@ class MineHeaderView extends StatelessWidget {
                         ),
                       ),
                       //信息
+                      //todo:一行不适合放很多元素，如果数据超标 容易显示错误
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               //用户名
-                              Text(
-                                userName ?? '',
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 20.0),
-                                // maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              Container(
+                                child: Text(
+                                  userName ?? '',
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 20.0),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                constraints: BoxConstraints(maxWidth: 120.0),
                               ),
                               //省份
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Container(
                                   height: 24,
+                                  constraints: BoxConstraints(maxWidth: 80),
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 24 / 2),
                                   decoration: BoxDecoration(
@@ -96,7 +101,9 @@ class MineHeaderView extends StatelessWidget {
                                           color: Colors.white, width: 1)),
                                   child: Text(local ?? '',
                                       style: const TextStyle(
-                                          color: Colors.white, fontSize: 14.0)),
+                                          color: Colors.white, fontSize: 14.0),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,),
                                 ),
                               ),
                             ],
