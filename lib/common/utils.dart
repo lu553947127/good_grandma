@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:app_settings/app_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto/crypto.dart';
 import 'package:date_format/date_format.dart';
@@ -79,14 +80,18 @@ class AppUtil {
   /// 保存图片到相册
   ///
   /// 默认为下载网络图片，如需下载资源图片，需要指定 [isAsset] 为 `true`。
-  static Future<void> saveImage(String imageUrl, {bool isAsset: false}) async {
+  static Future<void> saveImage({BuildContext context, String imageUrl, bool isAsset: false}) async {
     try {
       if (imageUrl == null || imageUrl.isEmpty) throw '保存失败，图片不存在！';
 
       /// 权限检测
       PermissionStatus storageStatus = await Permission.storage.status;
       if (storageStatus != PermissionStatus.granted) {
-        storageStatus = await Permission.storage.request();
+        if (Platform.isIOS) {
+          storageStatus = await Permission.photos.request();
+        } else {
+          storageStatus = await Permission.storage.request();
+        }
         if (storageStatus != PermissionStatus.granted) {
           throw '无法存储图片，请先授权！';
         }
@@ -118,6 +123,27 @@ class AppUtil {
       if (result == null || result == '') throw '图片保存失败';
       Fluttertoast.showToast(msg: '保存成功');
     } catch (e) {
+      if (e == '无法存储图片，请先授权！'){
+        bool result = await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('无法存储图片'),
+                content: Text('是否打开存储权限设置？'),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('取消')),
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('确定')),
+                ],
+              );
+            });
+        if(result != null && result){
+          AppSettings.openAppSettings();
+        }
+      }
       if (e != null) Fluttertoast.showToast(msg: e.toString());
     }
   }

@@ -53,7 +53,7 @@ class _Body extends State<RegularDocDetailPage> {
                               color: AppColors.FFC1C8D7, fontSize: 11.0)),
                       trailing: TextButton(
                         onPressed: () {
-                          AppUtil.saveImage(model.enclosureURL);
+                          AppUtil.saveImage(context: context,imageUrl: model.enclosureURL);
                         },
                         child: Image.asset('assets/images/download_image.png',
                             width: 24, height: 24),

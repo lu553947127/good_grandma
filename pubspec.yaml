@@ -63,6 +63,8 @@ dependencies:
   crypto: ^3.0.1
   # 保存图片到相册
   image_gallery_saver: ^1.6.9
+  # 打开系统设置
+  app_settings: ^4.1.1
 
 dev_dependencies:
   flutter_test:
