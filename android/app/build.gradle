@@ -52,3 +52,8 @@ android {
 flutter {
     source '../..'
 }
+
+dependencies {
+    //定位功能
+    compile 'com.amap.api:location:latest.integration'
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:good_grandma/pages/home/msg_enclosure_page.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
@@ -51,15 +52,11 @@ class _Body extends State<RegularDocDetailPage> {
                           style: const TextStyle(
                               color: AppColors.FFC1C8D7, fontSize: 11.0)),
                       trailing: TextButton(
-                        onPressed: () {},
-                        //todo:需要图标,需要有这个下载按钮吗
-                        child: Icon(
-                          Icons.cloud_download_outlined,
-                          size: 24,
-                          color: AppColors.FF2F4058,
-                        ),
-                        // child: Image.asset('assets/images/msg_book.png',
-                        //     width: 24, height: 24),
+                        onPressed: () {
+                          AppUtil.saveImage(model.enclosureURL);
+                        },
+                        child: Image.asset('assets/images/download_image.png',
+                            width: 24, height: 24),
                       ),
                       onTap: () {
                         Navigator.push(context,

@@ -1,10 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto/crypto.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'application.dart';
+
+/// 使用 DefaultCacheManager 类（可能无法自动引入，需要手动引入）
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 void showToast(String text) {
   FToast fToast = FToast()..init(Application.appContext);
@@ -64,4 +73,52 @@ String passwordMD5(String data) {
   var content = new Utf8Encoder().convert(data);
   var digest = md5.convert(content);
   return digest.toString();
+}
+
+class AppUtil {
+  /// 保存图片到相册
+  ///
+  /// 默认为下载网络图片，如需下载资源图片，需要指定 [isAsset] 为 `true`。
+  static Future<void> saveImage(String imageUrl, {bool isAsset: false}) async {
+    try {
+      if (imageUrl == null || imageUrl.isEmpty) throw '保存失败，图片不存在！';
+
+      /// 权限检测
+      PermissionStatus storageStatus = await Permission.storage.status;
+      if (storageStatus != PermissionStatus.granted) {
+        storageStatus = await Permission.storage.request();
+        if (storageStatus != PermissionStatus.granted) {
+          throw '无法存储图片，请先授权！';
+        }
+      }
+
+      /// 保存的图片数据
+      Uint8List imageBytes;
+
+      if (isAsset == true) {
+        /// 保存资源图片
+        ByteData bytes = await rootBundle.load(imageUrl);
+        imageBytes = bytes.buffer.asUint8List();
+      } else {
+        /// 保存网络图片
+        CachedNetworkImage image = CachedNetworkImage(imageUrl: imageUrl);
+        DefaultCacheManager manager =
+            image.cacheManager ?? DefaultCacheManager();
+        Map<String, String> headers = image.httpHeaders;
+        File file = await manager.getSingleFile(
+          image.imageUrl,
+          headers: headers,
+        );
+        imageBytes = await file.readAsBytes();
+      }
+
+      /// 保存图片
+      final result = await ImageGallerySaver.saveImage(imageBytes);
+
+      if (result == null || result == '') throw '图片保存失败';
+      Fluttertoast.showToast(msg: '保存成功');
+    } catch (e) {
+      if (e != null) Fluttertoast.showToast(msg: e.toString());
+    }
+  }
 }

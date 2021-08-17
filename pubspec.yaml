@@ -55,8 +55,14 @@ dependencies:
   cached_network_image: ^3.1.0
   # 查看大图
   extended_image: ^4.1.0
+  # 高德定位
+  amap_flutter_location: ^2.0.0
+  # 申请权限
+  permission_handler: ^8.1.4+2
   # MD5加密
   crypto: ^3.0.1
+  # 保存图片到相册
+  image_gallery_saver: ^1.6.9
 
 dev_dependencies:
   flutter_test:
