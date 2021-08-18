@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/pages/home/regular_doc_page.dart';
+import 'package:good_grandma/pages/home/sign_in_page.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
@@ -17,6 +19,12 @@ class AppPage extends StatelessWidget{
           break;
         case '工作报告':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
+          break;
+        case '签到':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
+          break;
+        case '规章文件':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> RegularDocPage()));
           break;
       }
     }
@@ -57,8 +65,7 @@ class AppPage extends StatelessWidget{
                                   Image.asset(list[index]['image'], width: 55.0, height: 55.0),
                                   Text(list[index]['name'], style: TextStyle(fontSize: 14, color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
                                 ],
-                              )
-                          );
+                              ));
                         }
                       )
                     ],
