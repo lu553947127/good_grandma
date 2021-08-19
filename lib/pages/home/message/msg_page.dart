@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/pages/home/msg_duizhangdan_list_page.dart';
-import 'package:good_grandma/pages/home/msg_post_list_page.dart';
-import 'package:good_grandma/pages/home/msg_tongzhi_list_page.dart';
+import 'package:good_grandma/pages/home/message/msg_duizhangdan_list_page.dart';
+import 'package:good_grandma/pages/home/message/msg_post_list_page.dart';
+import 'package:good_grandma/pages/home/message/msg_tongzhi_list_page.dart';
 
 ///消息
 class MsgPage extends StatefulWidget {
