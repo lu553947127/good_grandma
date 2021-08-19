@@ -35,7 +35,18 @@ class _WorkReportState extends State<WorkReport> {
       ),
       body: CustomScrollView(
           slivers: [
-            WorkTypeTitle(),
+            WorkTypeTitle(
+              color: Colors.white,
+              type: '我收到的',
+              list: [
+                {'name': '我收到的'},
+                {'name': '我提交的'},
+                {'name': '我的草稿'},
+              ],
+              onPressed: (){},
+              onPressed2: (){},
+              onPressed3: (){},
+            ),
             WorkSelectType(),
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {

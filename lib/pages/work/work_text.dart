@@ -133,4 +133,126 @@ class WorkText {
       ]
     }
   ];
+
+
+  static var examine = {
+    'labelPosition': 'left',
+    'labelSuffix': '：',
+    'labelWidth': 120,
+    'gutter': 0,
+    'menuBtn': true,
+    'submitBtn': true,
+    'submitText': '提交',
+    'emptyBtn': true,
+    'emptyText': '清空',
+    'menuPosition': 'center',
+    'column': [
+      {
+        'type': 'date',
+        'label': '日期',
+        'span': 12,
+        'display': true,
+        'format': 'yyyy-MM-dd',
+        'valueFormat': 'yyyy-MM-dd',
+        'prop': '1627871021462_70086',
+        'value': 'Date.now()'
+      },
+      {
+        'type': 'input',
+        'label': '申请人',
+        'span': 12,
+        'display': true,
+        'prop': '1627871072643_66617',
+        'value': 'applyUser'
+      },
+      {
+        'type': 'select',
+        'label': '费用类型',
+        'cascaderItem': [],
+        'span': 24,
+        'display': true,
+        'props': {
+          'label': 'label',
+          'value': 'value'
+        },
+        'prop': '1627871108560_41410',
+        'dicUrl': '/api/xxxxx',
+        'required': true,
+        'rules': [
+          {
+            'required': true,
+            'message': '请选择费用类型'
+          }
+        ]
+      },
+      {
+        'type': 'input',
+        'label': '主旨',
+        'span': 24,
+        'display': true,
+        'prop': '1627871137349_94316'
+      },
+      {
+        'type': 'textarea',
+        'label': '说明',
+        'span': 24,
+        'display': true,
+        'prop': '1627871147439_92417'
+      },
+      {
+        'type': 'upload',
+        'label': '附件',
+        'span': 24,
+        'display': true,
+        'showFileList': true,
+        'multiple': true,
+        'limit': 10,
+        'propsHttp': {
+          'res': 'data',
+          'name': 'fileName',
+          'url': 'link'
+        },
+        'canvasOption': {},
+        'prop': '1627871318233_8530',
+        'action': '/api/xxxxx',
+        'required': true,
+        'rules': [
+          {
+            'required': true,
+            'message': '附件必须填写'
+          }
+        ]
+      },
+      {
+        'type': 'dynamic',
+        'label': '子表单',
+        'span': 24,
+        'display': true,
+        'children': {
+          'align': 'center',
+          'headerAlign': 'center',
+          'index': false,
+          'addBtn': true,
+          'delBtn': true,
+          'column': [
+            {
+              'type': 'input',
+              'label': '表单名称',
+              'span': 24,
+              'display': true,
+              'prop': '1627871356926_66525'
+            },
+            {
+              'type': 'input',
+              'label': '上传人',
+              'span': 24,
+              'display': true,
+              'prop': '1627871372269_52233'
+            }
+          ]
+        },
+        'prop': '1627871353960_85737'
+      }
+    ]
+  };
 }

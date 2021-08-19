@@ -5,7 +5,7 @@ import 'package:good_grandma/pages/home/app_page.dart';
 import 'package:good_grandma/pages/home/home_page.dart';
 import 'package:good_grandma/pages/home/mine_page.dart';
 import 'package:good_grandma/pages/home/msg_page.dart';
-import 'package:good_grandma/pages/home/shenpi_page.dart';
+import 'package:good_grandma/pages/home/examine/shenpi_page.dart';
 
 ///首页底部tabbar
 class IndexPage extends StatefulWidget {

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/login/loginEditText.dart';
-import 'package:good_grandma/pages/work/work.dart';
 import 'loginBackground.dart';
 import 'loginBtn.dart';
 
@@ -73,7 +72,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(0xFFC68D3E),Color(0xFFC68D3E)]), borderRadius: BorderRadius.circular(40)),
-                      child: FlatButton(
+                      child: TextButton(
                         child: Text(_autoCodeText, style: TextStyle(fontSize: 12, color: Colors.white)),
                         onPressed: (){
                           final account = _phone.text;
@@ -106,7 +105,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               LoginBtn(
                 title: '重置',
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkPage()));
+
                 },
               ),
             ],

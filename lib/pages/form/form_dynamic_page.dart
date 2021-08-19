@@ -4,11 +4,17 @@ import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/form/form.dart';
 import 'package:good_grandma/form/form_row.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 
 ///动态表单
 class FormDynamicPage extends StatelessWidget {
-  FormDynamicPage({Key key}) : super(key: key);
+
+  String title;
+
+  FormDynamicPage({Key key
+    , @required this.title
+  }) : super(key: key);
 
   final GlobalKey _dynamicFormKey = GlobalKey<TFormState>();
 
@@ -16,7 +22,7 @@ class FormDynamicPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("动态表单"),
+        title: Text(title),
       ),
       body: FutureBuilder(
         future: getData(),
@@ -34,13 +40,9 @@ class FormDynamicPage extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 30, bottom: 30, left: 22, right: 22),
-                    child: TextButton(
-                      child: Text(
-                        "提交",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
+                    padding: const EdgeInsets.only(top: 30, bottom: 30, left: 22, right: 22),
+                    child: LoginBtn(
+                      title: '提交',
                       onPressed: () {
                         //校验
                         List errors = (_dynamicFormKey.currentState as TFormState).validate();
@@ -68,22 +70,6 @@ class FormDynamicPage extends StatelessWidget {
 
 Future getData() async {
   final json = await DefaultAssetBundle.of(Application.appContext).loadString("assets/file/test.json");
-
-  // requestPost('https://run.mocky.io/v3/44775a6e-4862-43fb-9171-6ca6dcaa072a').then((val) async{
-    // print('getData```````````````${val.toString()}');
-    // var data = json.decode(val.toString());
-    // print('请求结果---requestPost----$data');
-    // List form = data["data"]["form"];
-    // List<TFormRow> rows = [];
-    // form.forEach((e) {
-    //   TFormRow row = getRow(e);
-    //   if (row != null) {
-    //     rows.add(row);
-    //   }
-    // });
-    // return rows;
-  // });
-
   List form = jsonDecode(json)["data"]["form"];
   List<TFormRow> rows = [];
   form.forEach((e) {

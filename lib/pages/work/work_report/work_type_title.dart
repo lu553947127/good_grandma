@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 
 class WorkTypeTitle extends StatefulWidget {
-  const WorkTypeTitle({Key key}) : super(key: key);
+
+  Color color;
+  String type;
+  List<Map> list;
+  final void Function() onPressed;
+  final void Function() onPressed2;
+  final void Function() onPressed3;
+
+  WorkTypeTitle({Key key
+    , @required this.color
+    , @required this.type
+    , @required this.list
+    , @required this.onPressed
+    , @required this.onPressed2
+    , @required this.onPressed3
+  }) : super(key: key);
 
   @override
   _WorkTypeTitleState createState() => _WorkTypeTitleState();
@@ -9,13 +24,11 @@ class WorkTypeTitle extends StatefulWidget {
 
 class _WorkTypeTitleState extends State<WorkTypeTitle> {
 
-  String type = '我收到的';
-
   @override
   Widget build(BuildContext context) {
 
     _setTextColor(title){
-      if(title.contains(type)){
+      if(title.contains(widget.type)){
         return Colors.white;
       }else{
         return Color(0xFFC68D3E);
@@ -23,7 +36,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
     }
 
     _setBgColor(title){
-      if(title.contains(type)){
+      if(title.contains(widget.type)){
         return Color(0xFFC68D3E);
       }else{
         return Colors.white;
@@ -33,7 +46,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.all(10),
-        color: Colors.white,
+        color: widget.color,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -41,15 +54,15 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 width: 100,
                 height: 35,
                 decoration: BoxDecoration(
-                  color: _setBgColor('我收到的')
+                  color: _setBgColor(widget.list[0]['name'])
                   , borderRadius: BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0), topRight: Radius.circular(0.0), bottomRight: Radius.circular(0.0))
                   , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
                 ),
                 child: TextButton(
-                  child: Text('我收到的', style: TextStyle(fontSize: 12, color: _setTextColor('我收到的'))),
+                  child: Text(widget.list[0]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[0]['name']))),
                   onPressed: (){
                     setState(() {
-                      type = '我收到的';
+                      widget.type = widget.list[0]['name'];
                     });
                   },
                 ),
@@ -58,14 +71,14 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 width: 100,
                 height: 35,
                 decoration: BoxDecoration(
-                  color: _setBgColor('我提交的')
+                  color: _setBgColor(widget.list[1]['name'])
                   , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
                 ),
                 child: TextButton(
-                  child: Text('我提交的', style: TextStyle(fontSize: 12, color: _setTextColor('我提交的'))),
+                  child: Text(widget.list[1]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[1]['name']))),
                   onPressed: (){
                     setState(() {
-                      type = '我提交的';
+                      widget.type = widget.list[1]['name'];
                     });
                   },
                 ),
@@ -74,15 +87,15 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 width: 100,
                 height: 35,
                 decoration: BoxDecoration(
-                  color: _setBgColor('我的草稿')
+                  color: _setBgColor(widget.list[2]['name'])
                   , borderRadius: BorderRadius.only(topLeft: Radius.circular(0.0), bottomLeft: Radius.circular(0.0), topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0))
                   , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
                 ),
                 child: TextButton(
-                  child: Text('我的草稿', style: TextStyle(fontSize: 12, color: _setTextColor('我的草稿'))),
+                  child: Text(widget.list[2]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[2]['name']))),
                   onPressed: (){
                     setState(() {
-                      type = '我的草稿';
+                      widget.type = widget.list[2]['name'];
                     });
                   },
                 ),
