@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
-import 'package:good_grandma/pages/home/message/msg_enclosure_page.dart';
+import 'package:good_grandma/pages/message/msg_enclosure_page.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
 import 'package:provider/provider.dart';
 

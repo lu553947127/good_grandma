@@ -74,7 +74,7 @@ class _Body extends State<HomePage> {
         avatar: 'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
         userName: '猫和老鼠',
         time: '2012-05-29 16:31:50',
-        isWeekType: i % 2 == 0,
+        postType: i +1,
         target: 45667.0,
         cumulative: 34567.0,
         actual: 12345441.0,
