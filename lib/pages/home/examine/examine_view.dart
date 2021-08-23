@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/pages/home/examine/examine_detail.dart';
 
 ///审批列表
 class ExamineView extends StatelessWidget {
@@ -80,7 +81,9 @@ class ExamineView extends StatelessWidget {
           ],
         ),
         onTap: (){
-
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineDetail(
+            status: date['status'],
+          )));
         },
       ),
     );

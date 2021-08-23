@@ -48,6 +48,10 @@ Future<String> showPicker(List options, BuildContext context) async {
   await Picker(
       height: 220,
       itemExtent: 38,
+      cancelText: '取消',
+      confirmText: '确定',
+      cancelTextStyle: TextStyle(fontSize: 14,color: Color(0xFF2F4058)),
+      confirmTextStyle: TextStyle(fontSize: 14,color: Color(0xFFC68D3E)),
       adapter: PickerDataAdapter<String>(pickerdata: options),
       onConfirm: (Picker picker, List value) {
         result = options[value.first];
@@ -60,7 +64,18 @@ Future<String> showPickerDate(BuildContext context) async {
   await Picker(
       height: 220,
       itemExtent: 38,
-      adapter: DateTimePickerAdapter(),
+      cancelText: '取消',
+      confirmText: '确定',
+      cancelTextStyle: TextStyle(fontSize: 14,color: Color(0xFF2F4058)),
+      confirmTextStyle: TextStyle(fontSize: 14,color: Color(0xFFC68D3E)),
+      adapter: DateTimePickerAdapter(
+          type: PickerDateTimeType.kYMD,
+          isNumberMonth: true,
+          yearSuffix: "年",
+          monthSuffix: "月",
+          daySuffix: "日",
+          value: DateTime.now()
+      ),
       onConfirm: (Picker picker, List value) {
         result = formatDate((picker.adapter as DateTimePickerAdapter).value,
             [yyyy, '-', mm, '-', dd]);
