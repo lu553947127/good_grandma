@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/pages/form/form_dynamic_page.dart';
+import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/home/examine/examine_add.dart';
 import 'package:good_grandma/pages/home/examine/examine_view.dart';
 import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
 ///审批
@@ -38,6 +39,8 @@ class ShenPiPage extends StatelessWidget{
       },
     ];
 
+    List<String> list = ["请假审批", "费用审批", "费用核销审批", "营销费用审批", "对账审批", "费用审批"];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('审批申请'),
@@ -45,7 +48,7 @@ class ShenPiPage extends StatelessWidget{
       body: CustomScrollView(
           slivers: [
             WorkTypeTitle(
-              color: Color(0xFFF8F9FC),
+              color: null,
               type: '我申请的',
               list: [
                 {'name': '我申请的'},
@@ -63,34 +66,15 @@ class ShenPiPage extends StatelessWidget{
             )
           ]
       ),
-      floatingActionButton: PopupMenuButton<String>(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5)
-        ),
-        child: Image.asset('assets/images/ic_work_add.png', width: 70, height: 70),
-        itemBuilder: (context) {
-          return <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: '请假审批',
-              child: TextButton(
-                child: Text('请假审批', style: TextStyle(fontSize: 15,color: Color(0XFF2F4058))),
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=> FormDynamicPage(
-                    title: '请假申请',
-                  )));
-                },
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: '费用审批',
-              child: TextButton(
-                child: Text('费用审批', style: TextStyle(fontSize: 15,color: Color(0XFF2F4058))),
-                onPressed: (){
-
-                },
-              ),
-            )
-          ];
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFFC68D3E),
+        onPressed: () async{
+          String value = await showPicker(list, context);
+          print('showPicker======$value');
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdd(
+            title: value,
+          )));
         },
       ),
     );

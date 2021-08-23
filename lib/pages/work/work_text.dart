@@ -148,26 +148,8 @@ class WorkText {
     'menuPosition': 'center',
     'column': [
       {
-        'type': 'date',
-        'label': '日期',
-        'span': 12,
-        'display': true,
-        'format': 'yyyy-MM-dd',
-        'valueFormat': 'yyyy-MM-dd',
-        'prop': '1627871021462_70086',
-        'value': 'Date.now()'
-      },
-      {
-        'type': 'input',
-        'label': '申请人',
-        'span': 12,
-        'display': true,
-        'prop': '1627871072643_66617',
-        'value': 'applyUser'
-      },
-      {
         'type': 'select',
-        'label': '费用类型',
+        'label': '请假类型',
         'cascaderItem': [],
         'span': 24,
         'display': true,
@@ -178,26 +160,52 @@ class WorkText {
         'prop': '1627871108560_41410',
         'dicUrl': '/api/xxxxx',
         'required': true,
+        'placeholder': '请选择请假类型',
         'rules': [
           {
             'required': true,
-            'message': '请选择费用类型'
+            'message': '事假'
+          },
+          {
+            'required': true,
+            'message': '病假'
+          },
+          {
+            'required': true,
+            'message': '婚假'
           }
         ]
       },
       {
-        'type': 'input',
-        'label': '主旨',
-        'span': 24,
+        'type': 'date',
+        'label': '开始时间',
+        'placeholder': '请选择开始时间',
+        'span': 12,
         'display': true,
-        'prop': '1627871137349_94316'
+        'format': 'yyyy-MM-dd',
+        'valueFormat': 'yyyy-MM-dd',
+        'prop': '1627871021462_70086',
+        'value': 'Date.now()'
       },
       {
-        'type': 'textarea',
-        'label': '说明',
-        'span': 24,
+        'type': 'date',
+        'label': '结束时间',
+        'placeholder': '请选择结束时间',
+        'span': 12,
         'display': true,
-        'prop': '1627871147439_92417'
+        'format': 'yyyy-MM-dd',
+        'valueFormat': 'yyyy-MM-dd',
+        'prop': '1627871021462_70086',
+        'value': 'Date.now()'
+      },
+      {
+        'type': 'input',
+        'label': '请假事由',
+        'placeholder': '请输入请假事由',
+        'span': 12,
+        'display': true,
+        'prop': '1627871072643_66617',
+        'value': 'applyUser'
       },
       {
         'type': 'upload',
@@ -220,38 +228,117 @@ class WorkText {
           {
             'required': true,
             'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          }
+        ]
+      }
+    ]
+  };
+
+  static var examine2 = {
+    'labelPosition': 'left',
+    'labelSuffix': '：',
+    'labelWidth': 120,
+    'gutter': 0,
+    'menuBtn': true,
+    'submitBtn': true,
+    'submitText': '提交',
+    'emptyBtn': true,
+    'emptyText': '清空',
+    'menuPosition': 'center',
+    'column': [
+      {
+        'type': 'select',
+        'label': '费用类别',
+        'cascaderItem': [],
+        'span': 24,
+        'display': true,
+        'props': {
+          'label': 'label',
+          'value': 'value'
+        },
+        'prop': '1627871108560_41410',
+        'dicUrl': '/api/xxxxx',
+        'required': true,
+        'placeholder': '请选择请假类型',
+        'rules': [
+          {
+            'required': true,
+            'message': '事假'
+          },
+          {
+            'required': true,
+            'message': '病假'
+          },
+          {
+            'required': true,
+            'message': '婚假'
           }
         ]
       },
       {
-        'type': 'dynamic',
-        'label': '子表单',
+        'type': 'input',
+        'label': '费用金额',
+        'placeholder': '请输入请假事由',
+        'span': 12,
+        'display': true,
+        'prop': '1627871072643_66617',
+        'value': 'applyUser'
+      },
+      {
+        'type': 'upload',
+        'label': '附件',
         'span': 24,
         'display': true,
-        'children': {
-          'align': 'center',
-          'headerAlign': 'center',
-          'index': false,
-          'addBtn': true,
-          'delBtn': true,
-          'column': [
-            {
-              'type': 'input',
-              'label': '表单名称',
-              'span': 24,
-              'display': true,
-              'prop': '1627871356926_66525'
-            },
-            {
-              'type': 'input',
-              'label': '上传人',
-              'span': 24,
-              'display': true,
-              'prop': '1627871372269_52233'
-            }
-          ]
+        'showFileList': true,
+        'multiple': true,
+        'limit': 10,
+        'propsHttp': {
+          'res': 'data',
+          'name': 'fileName',
+          'url': 'link'
         },
-        'prop': '1627871353960_85737'
+        'canvasOption': {},
+        'prop': '1627871318233_8530',
+        'action': '/api/xxxxx',
+        'required': true,
+        'rules': [
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          },
+          {
+            'required': true,
+            'message': '附件必须填写'
+          }
+        ]
       }
     ]
   };
