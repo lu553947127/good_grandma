@@ -33,27 +33,37 @@ class _WorkReportState extends State<WorkReport> {
         iconTheme: IconThemeData(color: Colors.black),
         title: Text("工作报告",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
-      body: CustomScrollView(
-          slivers: [
-            WorkTypeTitle(
-              color: Colors.white,
-              type: '我收到的',
-              list: [
-                {'name': '我收到的'},
-                {'name': '我提交的'},
-                {'name': '我的草稿'},
-              ],
-              onPressed: (){},
-              onPressed2: (){},
-              onPressed3: (){},
-            ),
-            WorkSelectType(),
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  HomeReportModel model = _reportList[index];
-                  return HomeReportCell(model: model);
-                }, childCount: _reportList.length))
-          ]
+      body: SafeArea(
+        child: Scrollbar(
+          child: CustomScrollView(
+              slivers: [
+                //切换选项卡
+                WorkTypeTitle(
+                  color: Colors.white,
+                  type: '我收到的',
+                  list: [
+                    {'name': '我收到的'},
+                    {'name': '我提交的'},
+                    {'name': '我的草稿'},
+                  ],
+                  onPressed: (){},
+                  onPressed2: (){},
+                  onPressed3: (){},
+                ),
+                //筛选
+                WorkSelectType(
+                  selEmpBtnOnTap: (selEmployees){
+
+                  },
+                ),
+                SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      HomeReportModel model = _reportList[index];
+                      return HomeReportCell(model: model);
+                    }, childCount: _reportList.length))
+              ]
+          ),
+        ),
       ),
       floatingActionButton: PopupMenuButton<String>(
         shape: RoundedRectangleBorder(
@@ -76,6 +86,19 @@ class _WorkReportState extends State<WorkReport> {
             )
           ];
         },
+        onSelected: (name){
+          if(name == '日报') {
+            // Navigator.push(context, MaterialPageRoute(builder: (_){
+            //   return DayPostDetailPage();
+            // }));
+          }
+          else if(name == '周报') {
+
+          }
+          else if(name == '周报') {
+
+          }
+        },
       )
     );
   }
@@ -86,7 +109,7 @@ class _WorkReportState extends State<WorkReport> {
         avatar: 'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
         userName: '冯岩昌',
         time: '2012-05-29 16:31:50',
-        isWeekType: i % 2 == 0,
+        postType: i + 1,
         target: 45667.0,
         cumulative: 34567.0,
         actual: 12345441.0,
@@ -95,7 +118,7 @@ class _WorkReportState extends State<WorkReport> {
           '开柜费用核销',
           '经销商补货，开柜，录入冰柜',
           '和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '经销商沟通冰柜达成……',
+          '经销商沟通冰柜达成沟通冰柜沟通冰柜沟通冰柜沟通冰柜沟通冰柜沟通冰柜沟通冰柜',
           '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
         ],
         plans: [
@@ -103,7 +126,7 @@ class _WorkReportState extends State<WorkReport> {
           '开柜费用核销',
           '经销商补货，开柜，录入冰柜',
           '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '经销商沟通冰柜达成……',
+          '经销商沟通冰柜达成沟通冰柜沟通冰柜沟通冰柜沟通冰柜沟通冰柜沟通冰柜沟通冰柜',
           '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
           '经销商补货，开柜，录入冰柜',
           '和冯经理拜访经销商和冯经理拜访经销商和冯经理',

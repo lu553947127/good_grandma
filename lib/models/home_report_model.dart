@@ -8,8 +8,8 @@ class HomeReportModel {
   ///时间
   String time;
 
-  ///周报true 月报类别
-  bool isWeekType;
+  ///类别：日报1 周报2 月报3
+  int postType;
 
   ///目标
   double target;
@@ -30,7 +30,7 @@ class HomeReportModel {
     this.avatar = '',
     this.userName = '',
     this.time = '',
-    this.isWeekType = true,
+    this.postType = 1,
     this.target = 0,
     this.cumulative = 0,
     this.actual = 0,

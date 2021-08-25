@@ -42,7 +42,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
         return Colors.white;
       }
     }
-
+    final double w = (MediaQuery.of(context).size.width - 15 * 2) / 3;
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.all(10),
@@ -51,7 +51,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 100,
+                width: w,
                 height: 35,
                 decoration: BoxDecoration(
                   color: _setBgColor(widget.list[0]['name'])
@@ -68,7 +68,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 ),
               ),
               Container(
-                width: 100,
+                width: w,
                 height: 35,
                 decoration: BoxDecoration(
                   color: _setBgColor(widget.list[1]['name'])
@@ -84,7 +84,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 ),
               ),
               Container(
-                width: 100,
+                width: w,
                 height: 35,
                 decoration: BoxDecoration(
                   color: _setBgColor(widget.list[2]['name'])
