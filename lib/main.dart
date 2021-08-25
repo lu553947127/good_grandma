@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/home/index_page.dart';
 import 'package:good_grandma/pages/login/login.dart';
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget  {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    LogUtil.init(title: "好阿婆", isDebug: true, limitLength:800);
 
     return MultiProvider(
       providers: [

@@ -69,16 +69,18 @@ Future<String> showPickerDate(BuildContext context) async {
       cancelTextStyle: TextStyle(fontSize: 14,color: Color(0xFF2F4058)),
       confirmTextStyle: TextStyle(fontSize: 14,color: Color(0xFFC68D3E)),
       adapter: DateTimePickerAdapter(
-          type: PickerDateTimeType.kYMD,
+          type: PickerDateTimeType.kYMDHM,
           isNumberMonth: true,
           yearSuffix: "年",
           monthSuffix: "月",
           daySuffix: "日",
+          hourSuffix: '时',
+          minuteSuffix: '时',
           value: DateTime.now()
       ),
       onConfirm: (Picker picker, List value) {
         result = formatDate((picker.adapter as DateTimePickerAdapter).value,
-            [yyyy, '-', mm, '-', dd]);
+            [yyyy, '-', mm, '-', dd, '-', HH, '-', nn]);
         print((picker.adapter as DateTimePickerAdapter).value.toString());
       }).showModal(context);
   return result ?? "";
