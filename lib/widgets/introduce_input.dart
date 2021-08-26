@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 typedef OnChanged = void Function(String txt);
 
+///带右下角计数的输入框
 class InputWidget extends StatefulWidget {
   const InputWidget({
     this.placeholder='请输入',

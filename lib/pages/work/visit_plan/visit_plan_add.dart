@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
+import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
-import 'package:good_grandma/widgets/introduce_input.dart';
 
 ///新增拜访计划
 class VisitPlanAdd extends StatefulWidget {
@@ -16,6 +15,7 @@ class VisitPlanAdd extends StatefulWidget {
 class _VisitPlanAddState extends State<VisitPlanAdd> {
 
   TextEditingController controllerTitle = TextEditingController();
+  TextEditingController controllerAddress = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +31,7 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
         child: Column(
           children: [
             TextInputView(
+              rightLength: 80,
               leftTitle: '标题',
               rightPlaceholder: '请输入标题',
               textEditingController: controllerTitle,
@@ -68,9 +69,10 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
                 )
             ),
             TextInputView(
+              rightLength: 80,
               leftTitle: '客户地址',
               rightPlaceholder: '关联地址',
-              textEditingController: controllerTitle,
+              textEditingController: controllerAddress,
               type: TextInputType.text,
             ),
             SizedBox(
@@ -80,27 +82,13 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
                   decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
                 )
             ),
-            Container(
+            ContentInputView(
               color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20, left: 20),
-                    child: Text('备注', style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0))
-                  ),
-                  SizedBox(height: 0),
-                  Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: InputWidget(
-                        placeholder: '备注信息',
-                        onChanged: (String txt){
-                          // inputText = txt;
-                        },
-                      )
-                  )
-                ],
-              ),
+              leftTitle: '备注',
+              rightPlaceholder: '备注信息',
+              onChanged: (tex){
+
+              },
             ),
             Padding(
               padding: EdgeInsets.all(20),

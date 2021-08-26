@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/select_image.dart';
+import 'package:provider/provider.dart';
 
 import '../form/tform.dart';
 
-
+///自定义图片选择器
 class CustomPhotosWidget extends StatelessWidget {
   CustomPhotosWidget({
     Key key,
@@ -46,3 +48,55 @@ class CustomPhotosWidget extends StatelessWidget {
     );
   }
 }
+
+///自定义多图片选择器
+class CustomPhotoWidget extends StatelessWidget {
+  CustomPhotoWidget({Key key,
+  this.title,
+  this.length
+  }) : super(key: key);
+
+  final String title;
+  final int length;
+
+  @override
+  Widget build(BuildContext context) {
+    final ImagesProvider imagesProvider = Provider.of<ImagesProvider>(context);
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 15, color: Colors.black87),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            child: GridView.builder(
+                shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
+                physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                itemCount: imagesProvider.filePath.length == length ? imagesProvider.filePath.length : length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8
+                ),
+                itemBuilder: (BuildContext content, int index){
+                  return SelectImagesView(
+                    index: index,
+                    imagesProvider: imagesProvider,
+                  );
+                }
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

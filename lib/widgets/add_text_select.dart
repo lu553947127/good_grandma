@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 
+///单行选择框
 class TextSelectView extends StatelessWidget {
   final String leftTitle;
   final String rightPlaceholder;

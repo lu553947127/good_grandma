@@ -24,4 +24,7 @@ class Api {
 
   ///获取流程表单
   static const getFormByProcessId = "api/hap-workflow/process/getFormByProcessId";
+
+  ///上传附件
+  static const putFile = "/hap-resource/oss/endpoint/put-file";
 }

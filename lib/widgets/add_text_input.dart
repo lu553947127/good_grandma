@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 
+///单行文本输入框
 class TextInputView extends StatelessWidget {
   String leftTitle;
   String rightPlaceholder;
   TextEditingController textEditingController = TextEditingController();
   TextInputType type;
+  double rightLength;
 
   TextInputView({Key key,
     @required this.leftTitle,
     @required this.rightPlaceholder,
     @required this.textEditingController,
-    @required this.type
+    @required this.type,
+    @required this.rightLength
   }) : super(key: key);
 
   @override
@@ -25,7 +28,7 @@ class TextInputView extends StatelessWidget {
         children: [
           Text(leftTitle, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
           Container(
-            width: 80,
+            width: rightLength,
             child: MouseRegion(
                 child: TextField(
                   controller: textEditingController,

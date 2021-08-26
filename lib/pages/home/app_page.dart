@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/home/regular_doc_page.dart';
 import 'package:good_grandma/pages/home/sign_in_page.dart';
+import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
@@ -16,6 +17,7 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitPlan()));
           break;
         case '客户拜访':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitAdd()));
           break;
         case '工作报告':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
