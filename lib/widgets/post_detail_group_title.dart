@@ -16,21 +16,26 @@ class PostDetailGroupTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: ClipOval(
-                child: Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(color: color, boxShadow: [
-                    BoxShadow(color: color, offset: Offset(1, 1), blurRadius: 1.5)
-                  ]),
-                ),
-              ),
-            ),
+            color != null
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: ClipOval(
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(color: color, boxShadow: [
+                          BoxShadow(
+                              color: color,
+                              offset: Offset(1, 1),
+                              blurRadius: 1.5)
+                        ]),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
             Expanded(
                 child: Text(
               name,
