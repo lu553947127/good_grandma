@@ -44,7 +44,6 @@ class _InputWidgetState extends State<InputWidget> {
             // border: Border.all(color: Color(0xFFDEDEDE)),
           ),
           alignment: AlignmentDirectional.topStart,
-          margin: EdgeInsets.only(bottom: 10,left: 10,right: 10),
           child: CupertinoTextField(
             placeholder: widget.placeholder,
             cursorColor: Color(0xFFC68D3E),//修改光标颜色

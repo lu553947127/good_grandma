@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 
+///图片上传
 class ImagesProvider with ChangeNotifier{
 
   ///图片地址

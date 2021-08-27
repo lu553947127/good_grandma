@@ -11,11 +11,16 @@ class ContentInputView extends StatefulWidget {
   final OnChanged onChanged;
   final Color color;
 
+  ///分割线间距
+  double sizeHeight = 0;
+
   ContentInputView({Key key,
-    @required this.leftTitle,
-    @required this.rightPlaceholder,
-    @required this.onChanged,
-    @required this.color}) : super(key: key);
+    this.leftTitle,
+    this.rightPlaceholder,
+    this.onChanged,
+    this.color,
+    this.sizeHeight,
+  }) : super(key: key);
 
   @override
   _ContentInputViewState createState() => _ContentInputViewState();
@@ -29,8 +34,15 @@ class _ContentInputViewState extends State<ContentInputView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(
+              width: double.infinity,
+              height: widget.sizeHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+              )
+          ),
           Padding(
-              padding: EdgeInsets.only(top: 20, left: 20),
+              padding: EdgeInsets.only(top: 10, left: 10),
               child: Text(widget.leftTitle, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0))
           ),
           SizedBox(height: 0),

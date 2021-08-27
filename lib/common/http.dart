@@ -115,12 +115,12 @@ Future requestGet(url, {param})async{
 
     return response.data;
   } on DioError catch(e){
-    if (e.response.statusCode == 401 || e.response.statusCode == 404){
-      showToast('登录token过期，请重新登录');
-      Store.removeToken();
-      Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
-      return print('ERROR:===$url===>$e');
-    }
+    // if (e.response.statusCode == 401 || e.response.statusCode == 404){
+    //   showToast('登录token过期，请重新登录');
+    //   Store.removeToken();
+    //   Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
+    //   return print('ERROR:===$url===>$e');
+    // }
     return print('ERROR:===$url===>$e');
   }
 }

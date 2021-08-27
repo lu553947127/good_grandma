@@ -2,37 +2,68 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 
 ///单行选择框
-class TextSelectView extends StatelessWidget {
+class TextSelectView extends StatefulWidget {
+
+  ///左侧标题
   final String leftTitle;
-  final String rightPlaceholder;
-  final void Function() onPressed;
+  ///右侧占位
+  String rightPlaceholder;
+  ///点击回调
+  final Future Function() onPressed;
+  ///选择回调value
+  String value = '';
+  ///分割线间距
+  double sizeHeight = 0;
 
   TextSelectView({Key key,
-    @required this.leftTitle,
-    @required this.rightPlaceholder,
-    @required this.onPressed
+    this.leftTitle,
+    this.rightPlaceholder,
+    this.onPressed,
+    this.sizeHeight
   }) : super(key: key);
 
   @override
+  _TextSelectViewState createState() => _TextSelectViewState();
+}
+
+class _TextSelectViewState extends State<TextSelectView> {
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(left: 10, right: 10),
       color: Colors.white,
       height: 60,
-      child: TextButton(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(leftTitle, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
-            Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+              width: double.infinity,
+              height: widget.sizeHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+              )
+          ),
+          InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(leftTitle, style: const TextStyle(color: AppColors.FFC1C8D7, fontSize: 15.0)),
-                Icon(Icons.keyboard_arrow_right, color: AppColors.FFC1C8D7)
+                Text(widget.leftTitle, style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                Row(
+                  children: [
+                    Text(widget.rightPlaceholder, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
+                    Icon(Icons.keyboard_arrow_right, color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28)
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-        onPressed: onPressed,
+            ),
+            onTap: () async{
+              widget.value = await widget.onPressed();
+              setState(() {
+                widget.rightPlaceholder =  widget.value;
+              });
+            },
+          )
+        ],
       ),
     );
   }

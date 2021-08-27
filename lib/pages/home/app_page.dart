@@ -22,11 +22,27 @@ class AppPage extends StatelessWidget{
         case '工作报告':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
           break;
+        case '市场物料':
+          break;
+        case '市场活动':
+          break;
+        case '报修':
+          break;
         case '签到':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
           break;
         case '规章文件':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> RegularDocPage()));
+          break;
+        case '一级订单':
+          break;
+        case '二级订单':
+          break;
+        case '审批申请':
+          break;
+        case '营销费用管理':
+          break;
+        case '客户对账':
           break;
       }
     }

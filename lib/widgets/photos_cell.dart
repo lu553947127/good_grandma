@@ -52,48 +52,64 @@ class CustomPhotosWidget extends StatelessWidget {
 ///自定义多图片选择器
 class CustomPhotoWidget extends StatelessWidget {
   CustomPhotoWidget({Key key,
-  this.title,
-  this.length
+    this.title,
+    this.length,
+    this.sizeHeight
   }) : super(key: key);
 
   final String title;
   final int length;
+
+  ///分割线间距
+  double sizeHeight = 0;
 
   @override
   Widget build(BuildContext context) {
     final ImagesProvider imagesProvider = Provider.of<ImagesProvider>(context);
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
       child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              title,
-              style: TextStyle(fontSize: 15, color: Colors.black87),
-            ),
+          SizedBox(
+              width: double.infinity,
+              height: sizeHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+              )
           ),
           Container(
-            margin: EdgeInsets.only(top: 10),
-            child: GridView.builder(
-                shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
-                physics:NeverScrollableScrollPhysics(),//禁用滑动事件
-                itemCount: imagesProvider.filePath.length == length ? imagesProvider.filePath.length : length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    title,
+                    style: TextStyle(fontSize: 15, color: Colors.black87),
+                  ),
                 ),
-                itemBuilder: (BuildContext content, int index){
-                  return SelectImagesView(
-                    index: index,
-                    imagesProvider: imagesProvider,
-                  );
-                }
+                Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: GridView.builder(
+                      shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
+                      physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                      itemCount: imagesProvider.filePath.length == length ? imagesProvider.filePath.length : length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8
+                      ),
+                      itemBuilder: (BuildContext content, int index){
+                        return SelectImagesView(
+                          index: index,
+                          imagesProvider: imagesProvider,
+                        );
+                      }
+                  ),
+                )
+              ],
             ),
-          ),
+          )
         ],
       ),
     );

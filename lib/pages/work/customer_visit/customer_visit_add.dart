@@ -16,8 +16,6 @@ class CustomerVisitAdd extends StatefulWidget {
 
 class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
-  TextEditingController controllerName = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     ImagesProvider imagesProvider = new ImagesProvider();
@@ -36,17 +34,12 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               rightLength: 120,
               leftTitle: '客户姓名',
               rightPlaceholder: '请输入客户名称',
-              textEditingController: controllerName,
-              type: TextInputType.text,
-            ),
-            SizedBox(
-                width: double.infinity,
-                height: 10,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                )
+              onChanged: (tex){
+
+              },
             ),
             ContentInputView(
+              sizeHeight: 10,
               color: Colors.white,
               leftTitle: '行动过程',
               rightPlaceholder: '行动过程',
@@ -54,18 +47,12 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
               },
             ),
-            SizedBox(
-                width: double.infinity,
-                height: 10,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                )
-            ),
             ChangeNotifierProvider<ImagesProvider>.value(
                 value: imagesProvider,
                 child:  CustomPhotoWidget(
                   title: '上传照片',
                   length: 3,
+                  sizeHeight: 10,
                 )
             ),
             Container(
