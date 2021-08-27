@@ -52,8 +52,8 @@ Future<String> showPicker(List options, BuildContext context) async {
       itemExtent: 38,
       cancelText: '取消',
       confirmText: '确定',
-      cancelTextStyle: TextStyle(fontSize: 14, color: Color(0xFF2F4058)),
-      confirmTextStyle: TextStyle(fontSize: 14, color: Color(0xFFC68D3E)),
+      cancelTextStyle: TextStyle(fontSize: 14,color: Color(0xFF2F4058)),
+      confirmTextStyle: TextStyle(fontSize: 14,color: Color(0xFFC68D3E)),
       adapter: PickerDataAdapter<String>(pickerdata: options),
       onConfirm: (Picker picker, List value) {
         result = options[value.first];
@@ -68,15 +68,16 @@ Future<String> showPickerDate(BuildContext context) async {
       itemExtent: 38,
       cancelText: '取消',
       confirmText: '确定',
-      cancelTextStyle: TextStyle(fontSize: 14, color: Color(0xFF2F4058)),
-      confirmTextStyle: TextStyle(fontSize: 14, color: Color(0xFFC68D3E)),
+      cancelTextStyle: TextStyle(fontSize: 14,color: Color(0xFF2F4058)),
+      confirmTextStyle: TextStyle(fontSize: 14,color: Color(0xFFC68D3E)),
       adapter: DateTimePickerAdapter(
           type: PickerDateTimeType.kYMD,
           isNumberMonth: true,
           yearSuffix: "年",
           monthSuffix: "月",
           daySuffix: "日",
-          value: DateTime.now()),
+          value: DateTime.now()
+      ),
       onConfirm: (Picker picker, List value) {
         result = formatDate((picker.adapter as DateTimePickerAdapter).value,
             [yyyy, '-', mm, '-', dd]);
@@ -96,8 +97,7 @@ class AppUtil {
   /// 保存图片到相册
   ///
   /// 默认为下载网络图片，如需下载资源图片，需要指定 [isAsset] 为 `true`。
-  static Future<void> saveImage(
-      {BuildContext context, String imageUrl, bool isAsset: false}) async {
+  static Future<void> saveImage({BuildContext context, String imageUrl, bool isAsset: false}) async {
     try {
       if (imageUrl == null || imageUrl.isEmpty) throw '保存失败，图片不存在！';
 
@@ -140,7 +140,7 @@ class AppUtil {
       if (result == null || result == '') throw '图片保存失败';
       Fluttertoast.showToast(msg: '保存成功');
     } catch (e) {
-      if (e == '无法存储图片，请先授权！') {
+      if (e == '无法存储图片，请先授权！'){
         bool result = await showDialog(
             context: context,
             builder: (context) {
@@ -157,7 +157,7 @@ class AppUtil {
                 ],
               );
             });
-        if (result != null && result) {
+        if(result != null && result){
           AppSettings.openAppSettings();
         }
       }

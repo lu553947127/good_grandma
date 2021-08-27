@@ -188,8 +188,9 @@ class _VisitPlanState extends State<VisitPlan> {
               child: Row(
                 children: [
                   FloatingActionButton(
-                    child: Icon(Icons.add_task_rounded),
+                    child: Text('今', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700)),
                     backgroundColor: AppColors.FF959EB1,
+                    heroTag: 'other',
                     onPressed: (){
 
                     },

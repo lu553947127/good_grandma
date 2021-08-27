@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/home/index_page.dart';
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
         'type': 'account',
       }).then((val) async{
         var data = json.decode(val.toString());
-        print('请求结果---loginPassword----$data');
+        LogUtil.d('请求结果---loginPassword----$data');
         if (data['error_description'] != null){
           showToast(data['error_description']);
         }else {

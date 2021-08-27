@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 typedef OnChanged = void Function(String txt);
 
+///带右下角计数的输入框
 class InputWidget extends StatefulWidget {
   const InputWidget({
     this.placeholder='请输入',
@@ -46,6 +47,7 @@ class _InputWidgetState extends State<InputWidget> {
           margin: EdgeInsets.only(bottom: 10,left: 10,right: 10),
           child: CupertinoTextField(
             placeholder: widget.placeholder,
+            cursorColor: Color(0xFFC68D3E),//修改光标颜色
             style: TextStyle(fontSize: 15, color: Colors.black),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(2)),
