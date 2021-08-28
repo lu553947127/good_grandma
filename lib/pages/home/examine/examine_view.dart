@@ -4,13 +4,13 @@ import 'package:good_grandma/pages/home/examine/examine_detail.dart';
 ///审批列表
 class ExamineView extends StatelessWidget {
 
-  var date;
-  ExamineView({Key key, this.date}) : super(key: key);
+  var data;
+  ExamineView({Key key, this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
-    List<Map> list = (date['list'] as List).cast();
+    List<Map> list = (data['list'] as List).cast();
 
     return Container(
       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
@@ -37,17 +37,17 @@ class ExamineView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(date['title'],style: TextStyle(fontSize: 14, color: date['status'] == '审核中' ? Color(0XFFE45C26) : Color(0XFF2F4058))),
+                    Text(data['title'],style: TextStyle(fontSize: 14, color: data['status'] == '审核中' ? Color(0XFFE45C26) : Color(0XFF2F4058))),
                     SizedBox(height: 10),
-                    Text(date['time'],style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                    Text(data['time'],style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                   ],
                 ),
                 Container(
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: date['status'] == '审核中' ? Color(0XFFFAEEEA) : Color(0XFFEFEFF4), borderRadius: BorderRadius.circular(3),
+                    color: data['status'] == '审核中' ? Color(0XFFFAEEEA) : Color(0XFFEFEFF4), borderRadius: BorderRadius.circular(3),
                   ),
-                  child: Text(date['status'], style: TextStyle(fontSize: 10, color: date['status'] == '审核中' ? Color(0XFFE45C26) : Color(0XFF959EB1))),
+                  child: Text(data['status'], style: TextStyle(fontSize: 10, color: data['status'] == '审核中' ? Color(0XFFE45C26) : Color(0XFF959EB1))),
                 )
               ],
             ),
@@ -82,7 +82,7 @@ class ExamineView extends StatelessWidget {
         ),
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineDetail(
-            status: date['status'],
+            status: data['status'],
           )));
         },
       ),
