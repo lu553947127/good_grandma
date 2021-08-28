@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/pages/work/work_report/select_employee_page.dart';
 
 class WorkSelectType extends StatefulWidget {
@@ -13,29 +14,27 @@ class WorkSelectType extends StatefulWidget {
 
 class _Body extends State<WorkSelectType> {
   List<EmployeeModel> _employees = [];
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _btnName1 = '所有人';
+  String _btnName2 = '所有类型';
+  String _btnName3 = '所有日期';
 
   @override
   Widget build(BuildContext context) {
     final double w = (MediaQuery.of(context).size.width - 15 * 2) / 3;
 
-    String btnName = '所有人';
     int selCount = 0;
     if (_employees.isNotEmpty) {
-      List<EmployeeModel> _selEmployees =
-          _employees.where((employee) => employee.isSelected).toList();
-      if (_selEmployees.isNotEmpty &&
-          _selEmployees.length < _employees.length) {
-        selCount = _selEmployees.length;
-        int i = 0;
-        btnName = '';
-        _selEmployees.forEach((employee) {
-          btnName += employee.name;
-          if (i < _selEmployees.length - 1) btnName += ',';
-          i++;
-        });
-      }
+      selCount = _employees.length;
+      int i = 0;
+      _btnName1 = '';
+      _employees.forEach((employee) {
+        _btnName1 += employee.name;
+        if (i < _employees.length - 1) _btnName1 += ',';
+        i++;
+      });
     }
+
+
     return SliverToBoxAdapter(
       child: Container(
         color: Colors.white,
@@ -52,7 +51,7 @@ class _Body extends State<WorkSelectType> {
                     Expanded(
                       flex: selCount > 0 ? 1 : 0,
                       child: Text(
-                        btnName,
+                        _btnName1,
                         style: const TextStyle(
                             fontSize: 14, color: AppColors.FF2F4058),
                         maxLines: 1,
@@ -111,7 +110,7 @@ class _Body extends State<WorkSelectType> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('所有类型',
+                      Text(_btnName2,
                           style: TextStyle(
                               fontSize: 14, color: AppColors.FF2F4058)),
                       Padding(
@@ -126,7 +125,9 @@ class _Body extends State<WorkSelectType> {
                   String result =
                       await showPicker(['所有类型', '日报', '周报', '月报'], context);
                   if (result != null && result.isNotEmpty) {
-                    print('result = $result');
+                    setState(() {
+                      _btnName2 = result;
+                    });
                   }
                 },
               ),
@@ -138,7 +139,7 @@ class _Body extends State<WorkSelectType> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('所有日期',
+                    Text(_btnName3,
                         style:
                             TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
                     Padding(
@@ -152,7 +153,9 @@ class _Body extends State<WorkSelectType> {
                   String result =
                       await showPicker(['所有日期', '上周', '上月'], context);
                   if (result != null && result.isNotEmpty) {
-                    print('result = $result');
+                    setState(() {
+                      _btnName3 = result;
+                    });
                   }
                 },
               ),

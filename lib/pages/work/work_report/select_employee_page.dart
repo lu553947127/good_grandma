@@ -1,9 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/models/employee_model.dart';
+import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
 ///选择员工
@@ -43,7 +42,7 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
           child: CustomScrollView(
             slivers: [
               //搜索区域
-              _SearchTextWidget(
+              SearchTextWidget(
                   editingController: _editingController,
                   focusNode: _focusNode,
                   onSearch: (text) {}),
@@ -101,7 +100,7 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
                 Fluttertoast.showToast(msg: '至少选择一个员工',gravity: ToastGravity.CENTER);
                 return;
               }
-              Navigator.pop(context, _employees);
+              Navigator.pop(context, _selList);
             }),
       ),
     );
@@ -146,75 +145,5 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
     super.dispose();
     _focusNode?.dispose();
     _editingController?.dispose();
-  }
-}
-
-class EmployeeModel {
-  final String name;
-  final String id;
-  bool isSelected;
-
-  EmployeeModel({
-    this.name = '',
-    this.id = '',
-    this.isSelected = false,
-  });
-}
-
-///搜索框
-class _SearchTextWidget extends StatelessWidget {
-  const _SearchTextWidget({
-    Key key,
-    @required TextEditingController editingController,
-    @required FocusNode focusNode,
-    this.onSearch,
-  })  : _editingController = editingController,
-        _focusNode = focusNode,
-        super(key: key);
-
-  final TextEditingController _editingController;
-  final FocusNode _focusNode;
-  final Function(String text) onSearch;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            offset: Offset(0, 1),
-            blurRadius: 5,
-          )
-        ]),
-        child: Container(
-          height: 30,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          decoration: BoxDecoration(
-              color: AppColors.FFEFEFF4,
-              borderRadius: BorderRadius.circular(30 / 2)),
-          child: TextField(
-            controller: _editingController,
-            focusNode: _focusNode,
-            maxLines: 1,
-            selectionHeightStyle: BoxHeightStyle.max,
-            textInputAction: TextInputAction.search,
-            onSubmitted: onSearch,
-            decoration: InputDecoration(
-              icon: Icon(Icons.search, size: 20, color: AppColors.FFC1C8D7),
-              contentPadding: const EdgeInsets.only(),
-              hintText: '请输入员工姓名',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30 / 2),
-                borderSide: BorderSide.none,
-              ),
-              hintStyle:
-                  const TextStyle(color: AppColors.FFC1C8D7, fontSize: 14),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
