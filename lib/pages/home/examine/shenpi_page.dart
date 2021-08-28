@@ -125,7 +125,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
             ),
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return ExamineView(date: _list[index]);
+                  return ExamineView(data: _list[index]);
                 }, childCount: _list.length)
             )
           ]

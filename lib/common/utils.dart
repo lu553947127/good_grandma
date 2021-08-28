@@ -61,6 +61,28 @@ Future<String> showPicker(List options, BuildContext context) async {
   return result ?? "";
 }
 
+///多级联动
+Future<String> showPickerModal(BuildContext context, String data) async {
+  String result;
+  await Picker(
+      height: 220,
+      itemExtent: 38,
+      adapter: PickerDataAdapter<String>(pickerdata: JsonDecoder().convert(data)),
+      changeToFirst: true,
+      hideHeader: false,
+      cancelText: '取消',
+      confirmText: '确定',
+      cancelTextStyle: TextStyle(fontSize: 14,color: Color(0xFF2F4058)),
+      confirmTextStyle: TextStyle(fontSize: 14,color: Color(0xFFC68D3E)),
+      onConfirm: (picker, value) {
+        print(value.toString());
+        print(picker.adapter.text);
+        result = picker.adapter.text;
+      }
+  ).showModal(context); //_sca
+  return result ?? "";
+}
+
 Future<String> showPickerDate(BuildContext context) async {
   String result;
   await Picker(
@@ -84,6 +106,76 @@ Future<String> showPickerDate(BuildContext context) async {
         print((picker.adapter as DateTimePickerAdapter).value.toString());
       }).showModal(context);
   return result ?? "";
+}
+
+///选择开始日期和结束日期
+showPickerDateRange(BuildContext context) {
+
+  Picker ps = Picker(
+      hideHeader: true,
+      adapter: DateTimePickerAdapter(
+          type: PickerDateTimeType.kYMD,
+          isNumberMonth: true,
+          yearSuffix: "年",
+          monthSuffix: "月",
+          daySuffix: "日",
+          value: DateTime.now()
+      ),
+      onConfirm: (Picker picker, List value) {
+        print((picker.adapter as DateTimePickerAdapter).value);
+      }
+  );
+
+  Picker pe = Picker(
+      hideHeader: true,
+      adapter: DateTimePickerAdapter(
+          type: PickerDateTimeType.kYMD,
+          isNumberMonth: true,
+          yearSuffix: "年",
+          monthSuffix: "月",
+          daySuffix: "日",
+          value: DateTime.now()
+      ),
+      onConfirm: (Picker picker, List value) {
+        print((picker.adapter as DateTimePickerAdapter).value);
+      }
+  );
+
+  List<Widget> actions = [
+    TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('取消', style: TextStyle(fontSize: 14,color: Color(0xFF2F4058)))),
+    TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+          ps.onConfirm(ps, ps.selecteds);
+          pe.onConfirm(pe, pe.selecteds);
+        },
+        child: Text('确定', style: TextStyle(fontSize: 14,color: Color(0xFFC68D3E))))
+  ];
+
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("选择日期范围"),
+          actions: actions,
+          content: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text("开始时间:"),
+                ps.makePicker(),
+                Text("结束时间:"),
+                pe.makePicker()
+              ],
+            ),
+          ),
+        );
+      });
 }
 
 ///密码md5加密

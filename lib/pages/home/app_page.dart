@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/home/regular_doc_page.dart';
 import 'package:good_grandma/pages/home/sign_in_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
+import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
+import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
+import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
 ///应用
@@ -43,6 +46,15 @@ class AppPage extends StatelessWidget{
         case '营销费用管理':
           break;
         case '客户对账':
+          break;
+        case '拜访统计':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatistics()));
+          break;
+        case '冰柜销量':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
+          break;
+        case '冰柜统计':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
           break;
       }
     }
