@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/pages/contract/contract_page.dart';
+import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
 import 'package:good_grandma/pages/home/regular_doc_page.dart';
 import 'package:good_grandma/pages/home/sign_in_page.dart';
+import 'package:good_grandma/pages/stock/stock_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
@@ -32,6 +35,7 @@ class AppPage extends StatelessWidget{
         case '市场活动':
           break;
         case '报修':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> GuaranteePage()));
           break;
         case '签到':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
@@ -57,6 +61,12 @@ class AppPage extends StatelessWidget{
           break;
         case '冰柜统计':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
+          break;
+        case '客户库存':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> StockPage()));
+          break;
+        case '电子合同':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
           break;
       }
     }

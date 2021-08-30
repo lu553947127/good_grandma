@@ -99,8 +99,8 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
     );
   }
 
-  void _showDialog(BuildContext context) {
-    showDialog(
+  void _showDialog(BuildContext context) async{
+    bool result = await showDialog(
         context: context,
         builder: (context) {
           return SMSCodeDialog(
@@ -109,10 +109,13 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
             focusNode2: _focusNode2,
             editingController2: _textEditingController2,
             submitBtnOnTap: (){
-              Navigator.pop(context);
+              ///网络请求后
+              Navigator.pop(context,true);
             },
           );
         });
+    if (result != null && result) {
+    }
   }
 
   void _refresh() {}
