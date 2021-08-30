@@ -39,7 +39,17 @@ class _IndexPageState extends State<IndexPage> {
         activeIcon: Image.asset('assets/images/tabbar_mine_sel.png',width: 22.0,height: 22.0),
         label: '我的'),
   ];
-  final _pages = [HomePage(), MsgPage(), AppPage(), ShenPiPage(), MinePage()];
+  List _pages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _pages.addAll([HomePage(switchTabbarIndex: (index){
+      setState(() {
+        _selectedIndex = index;
+      });
+    },), MsgPage(), AppPage(), ShenPiPage(), MinePage()]);
+  }
 
   @override
   Widget build(BuildContext context) {

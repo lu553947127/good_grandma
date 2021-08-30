@@ -5,10 +5,12 @@ import 'package:good_grandma/common/colors.dart';
 class HomeMsgTitle extends StatelessWidget {
   final String msgCount;
   final String msgTime;
+  final VoidCallback onTap;
   HomeMsgTitle({
     Key key,
     @required this.msgTime,
     @required this.msgCount,
+    @required this.onTap,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ class HomeMsgTitle extends StatelessWidget {
                         )))
               ],
             ),
-            onTap: () {},
+            onTap: onTap,
           ),
         ),
       ),

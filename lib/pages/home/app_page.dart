@@ -3,6 +3,7 @@ import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
 import 'package:good_grandma/pages/home/regular_doc_page.dart';
 import 'package:good_grandma/pages/home/sign_in_page.dart';
+import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/stock/stock_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
@@ -33,6 +34,7 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterial()));
           break;
         case '市场活动':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketingActivityPage()));
           break;
         case '报修':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> GuaranteePage()));

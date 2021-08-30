@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/models/home_report_model.dart';
+import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
+import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
+import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
+import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/widgets/home_group_title.dart';
 import 'package:good_grandma/widgets/home_msg_title.dart';
 import 'package:good_grandma/widgets/home_plan_cell.dart';
@@ -8,6 +12,9 @@ import 'package:good_grandma/widgets/home_table_header.dart';
 
 ///首页
 class HomePage extends StatefulWidget {
+  final Function(int index) switchTabbarIndex;
+
+  const HomePage({Key key,@required this.switchTabbarIndex}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _Body();
 }
@@ -39,7 +46,9 @@ class _Body extends State<HomePage> {
         child: CustomScrollView(
           slivers: [
             //顶部按钮
-            HomeTableHeader(),
+            HomeTableHeader(onTap: (index){
+              _titleBtnOnTap(context,index);
+            },),
             //消息通知
             SliverToBoxAdapter(
                 child: Visibility(
@@ -47,7 +56,10 @@ class _Body extends State<HomePage> {
                     child: HomeGroupTitle(title: '消息通知', showMore: false))),
             //消息cell
             SliverToBoxAdapter(
-                child: HomeMsgTitle(msgTime: _msgTime, msgCount: _msgCount)),
+                child: HomeMsgTitle(msgTime: _msgTime, msgCount: _msgCount,onTap: (){
+                  if(widget.switchTabbarIndex != null)
+                    widget.switchTabbarIndex(1);
+                },)),
             //拜访计划
             SliverToBoxAdapter(
                 child: HomeGroupTitle(title: '拜访计划', showMoreBtnOnTap: () {})),
@@ -66,6 +78,41 @@ class _Body extends State<HomePage> {
         ),
       ),
     );
+  }
+
+
+  ///按钮点击事件
+  void _titleBtnOnTap(BuildContext context, int index) {
+    switch(index){
+      case 0://工作报告
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
+        break;
+      case 1://市场活动
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketingActivityPage()));
+        break;
+      case 2:
+        { //审批申请
+          if(widget.switchTabbarIndex != null)
+            widget.switchTabbarIndex(3);
+        }
+        break;
+      case 3://费用申请
+        break;
+      case 4://业绩统计
+        break;
+      case 5://冰柜销量
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
+        break;
+      case 6://冰柜统计
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
+        break;
+      case 7:
+        { //更多
+          if(widget.switchTabbarIndex != null)
+            widget.switchTabbarIndex(2);
+        }
+        break;
+    }
   }
 
   void _getBaoGaoList() async {
