@@ -60,11 +60,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 ),
                 child: TextButton(
                   child: Text(widget.list[0]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[0]['name']))),
-                  onPressed: (){
-                    setState(() {
-                      widget.type = widget.list[0]['name'];
-                    });
-                  },
+                  onPressed: widget.onPressed,
                 ),
               ),
               Container(
@@ -76,11 +72,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 ),
                 child: TextButton(
                   child: Text(widget.list[1]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[1]['name']))),
-                  onPressed: (){
-                    setState(() {
-                      widget.type = widget.list[1]['name'];
-                    });
-                  },
+                  onPressed: widget.onPressed2,
                 ),
               ),
               Container(
@@ -93,11 +85,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
                 ),
                 child: TextButton(
                   child: Text(widget.list[2]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[2]['name']))),
-                  onPressed: (){
-                    setState(() {
-                      widget.type = widget.list[2]['name'];
-                    });
-                  },
+                  onPressed: widget.onPressed3,
                 ),
               )
             ]

@@ -49,36 +49,58 @@ class _ShenPiPageState extends State<ShenPiPage> {
     },
   ];
 
-  // List<Map> list = [
-  //   {'name' : '请假审批', 'id': '1'},
-  //   {'name' : '费用审批', 'id': '2'},
-  //   {'name' : '费用核销审批', 'id': '3'},
-  //   {'name' : '营销费用审批', 'id': '9'},
-  //   {'name' : '对账审批', 'id': '4'},
-  //   {'name' : '费用审批', 'id': '5'},
-  //   {'name' : '营销费用审批', 'id': '7'}
-  //  ];
-  List<Map> list;
+  List<Map> list = [];
+  List<Map> sendList = [];
+  List<Map> todoList = [];
+  List<Map> copyList = [];
+  String type = '我申请的';
+  List<Map> listTitle = [
+    {'name': '我申请的'},
+    {'name': '我审批的'},
+    {'name': '知会我的'},
+  ];
+  List<Map> listType;
 
-  ///我的请求列表
+  ///我的请求列表(我申请的)
   _sendList(){
-    Map<String, dynamic> map = {'current': '1', 'size': '10'};
-    requestGet(Api.todoList, param: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---todoList----$data');
-
-    });
-
+    Map<String, dynamic> map = {'current': '1', 'size': '999'};
     requestGet(Api.sendList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---sendList----$data');
-
+      setState(() {
+        sendList = (data['data']['records'] as List).cast();
+        type = listTitle[0]['name'];
+        list = sendList;
+      });
     });
+  }
 
-    requestGet(Api.doneList, param: map).then((val) async{
+  ///待办列表(我审批的)
+  _todoList(){
+    LogUtil.d('请求结果---todoList----');
+    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    requestGet(Api.todoList, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---doneList----$data');
+      LogUtil.d('请求结果---todoList----$data');
+      setState(() {
+        todoList = (data['data']['records'] as List).cast();
+        type = listTitle[1]['name'];
+        list = todoList;
+      });
+    });
+  }
 
+  ///我的抄送列表(知会我的)
+  _copyList(){
+    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    requestGet(Api.copyList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---copyList----$data');
+      setState(() {
+        copyList = (data['data']['records'] as List).cast();
+        type = listTitle[2]['name'];
+        list = copyList;
+      });
     });
   }
 
@@ -89,7 +111,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---processList----$data');
       if (data['code'] == 200){
-        list = (data['data']['records'] as List).cast();
+        listType = (data['data']['records'] as List).cast();
       }else {
         showToast(data['msg']);
       }
@@ -113,20 +135,28 @@ class _ShenPiPageState extends State<ShenPiPage> {
           slivers: [
             WorkTypeTitle(
               color: null,
-              type: '我申请的',
-              list: [
-                {'name': '我申请的'},
-                {'name': '我审批的'},
-                {'name': '知会我的'},
-              ],
-              onPressed: (){},
-              onPressed2: (){},
-              onPressed3: (){},
+              type: type,
+              list: listTitle,
+              onPressed: (){
+                _sendList();
+              },
+              onPressed2: (){
+                _todoList();
+              },
+              onPressed3: (){
+                _copyList();
+              },
             ),
+            list.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return ExamineView(data: _list[index]);
-                }, childCount: _list.length)
+                  return ExamineView(data: list[index]);
+                }, childCount: list.length)
+            ) :
+            SliverToBoxAdapter(
+                child: Center(
+                    child: Text('暂无数据')
+                )
             )
           ]
       ),
@@ -137,7 +167,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
           showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
-                return ExamineSelectDialog(list: list);
+                return ExamineSelectDialog(list: listType);
               }
           );
         },

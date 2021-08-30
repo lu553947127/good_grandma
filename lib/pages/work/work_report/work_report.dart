@@ -25,6 +25,13 @@ class _WorkReportState extends State<WorkReport> {
   List<HomeReportModel> _reportList = [];
   String selectValue;
 
+  String type = '我收到的';
+  List<Map> listTitle = [
+    {'name': '我收到的'},
+    {'name': '我提交的'},
+    {'name': '我的草稿'},
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -51,15 +58,23 @@ class _WorkReportState extends State<WorkReport> {
               //切换选项卡
               WorkTypeTitle(
                 color: Colors.white,
-                type: '我收到的',
-                list: [
-                  {'name': '我收到的'},
-                  {'name': '我提交的'},
-                  {'name': '我的草稿'},
-                ],
-                onPressed: () {},
-                onPressed2: () {},
-                onPressed3: () {},
+                type: type,
+                list: listTitle,
+                onPressed: () {
+                  setState(() {
+                    type = listTitle[0]['name'];
+                  });
+                },
+                onPressed2: () {
+                  setState(() {
+                    type = listTitle[1]['name'];
+                  });
+                },
+                onPressed3: () {
+                  setState(() {
+                    type = listTitle[2]['name'];
+                  });
+                },
               ),
               //筛选
               WorkSelectType(
