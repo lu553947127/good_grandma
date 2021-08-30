@@ -60,7 +60,7 @@ class ExamineDetailTitle extends StatelessWidget {
                     ),
                     SizedBox(height: 3),
                     Visibility(
-                        visible: status == '审核中' ? true : false,
+                        visible: status == 'unfinished' ? true : false,
                         child: Row(
                           children: [
                             Image.asset('assets/images/icon_examine_wait.png', width: 12, height: 12),
@@ -76,17 +76,17 @@ class ExamineDetailTitle extends StatelessWidget {
             Row(
               children: [
                 Visibility(
-                  visible: status == '审核中' ? true : false,
+                  visible: status == 'unfinished' ? true : false,
                   child: Container(
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
                     ),
-                    child: Text('审核中', style: TextStyle(fontSize: 10, color: Color(0XFFE45C26))),
+                    child: Text(status == 'unfinished' ? '审核中' : '已审核', style: TextStyle(fontSize: 10, color: Color(0XFFE45C26))),
                   ),
                 ),
                 Visibility(
-                  visible: status == '审核中' ? false : true,
+                  visible: status == 'unfinished' ? false : true,
                   child: Container(
                     padding: EdgeInsets.all(5),
                     child: Image.asset('assets/images/icon_examine_complete.png', width: 50, height: 50),

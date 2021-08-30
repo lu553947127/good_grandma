@@ -4,6 +4,7 @@ import 'package:good_grandma/pages/home/sign_in_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
+import 'package:good_grandma/pages/work/market_material/market_material.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
@@ -26,6 +27,7 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
           break;
         case '市场物料':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterial()));
           break;
         case '市场活动':
           break;

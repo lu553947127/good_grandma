@@ -10,11 +10,14 @@ class Api {
   ///密码登录
   static const loginPassword = "/api/hap-auth/oauth/token";
 
-  ///待办列表
+  ///我的请求列表(我申请的)
+  static const sendList = "/api/hap-workflow/process/sendList";
+
+  ///待办列表(我审批的)
   static const todoList = "/api/hap-workflow/process/todoList";
 
-  ///我的请求列表
-  static const sendList = "/api/hap-workflow/process/sendList";
+  ///我的抄送列表(知会我的)
+  static const copyList = "/api/hap-workflow/process/copyList";
 
   ///办结列表
   static const doneList = "/api/hap-workflow/process/doneList";

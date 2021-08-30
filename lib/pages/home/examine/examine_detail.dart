@@ -45,7 +45,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                   title: '我的请假申请',
                   time: '提交时间: 2021-07-15',
                   wait: '等待王武审批',
-                  status: widget.status
+                  status: widget.status == 'unfinished' ? '审核中' : '已审核'
               ),
               ExamineDetailContent(),
               SliverToBoxAdapter(
