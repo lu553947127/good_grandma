@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
-import 'package:good_grandma/models/stock_add_model.dart';
+import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
 class SelectGoodsPage extends StatefulWidget {
   const SelectGoodsPage({Key key, @required this.selGoods}) : super(key: key);
   final List<GoodsModel> selGoods;
+  // final bool selectSingle;
 
   @override
   _SelectGoodsPageState createState() => _SelectGoodsPageState();
@@ -47,7 +48,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
                     return _GoodsGridCell(goodsModel: goodsModel);
                   }, childCount: _goodsList.length),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, childAspectRatio: 0.9))
+                      crossAxisCount: 3, childAspectRatio: 0.8))
             ],
           ),
         ),
@@ -79,6 +80,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
             'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
         name: '产品' + i.toString(),
         id: i.toString(),
+        spec: '规格：1*40'
       ));
     }
     if (widget.selGoods.isNotEmpty) {
@@ -121,6 +123,8 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
         });
       },
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -148,13 +152,19 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
                     child: Positioned(
                         bottom: 3,
                         right: 3,
-                        child: Image.asset('assets/images/goods_sel.png',width: 30,height: 30,)),
+                        child: Image.asset('assets/images/goods_sel.png',
+                            width: 30, height: 30)),
                   ),
                 ],
               ),
             ),
           ),
           Text(widget.goodsModel.name),
+          Visibility(
+            visible: widget.goodsModel.spec.isNotEmpty,
+            child: Text(widget.goodsModel.spec,
+                style: const TextStyle(color: AppColors.FF959EB1, fontSize: 11)),
+          ),
         ],
       ),
     );

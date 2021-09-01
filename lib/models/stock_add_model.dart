@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/models/employee_model.dart';
+import 'package:good_grandma/models/goods_model.dart';
 
 ///商品添加model
 class StockAddModel extends ChangeNotifier {
@@ -76,19 +77,4 @@ class StockModel {
   }) {
     goodsList = [];
   }
-}
-
-///商品模型
-class GoodsModel {
-  String name;
-  String id;
-  String image;
-  bool isSelected;
-
-  GoodsModel({
-    this.name = '',
-    this.id = '',
-    this.image = '',
-    this.isSelected = false,
-  });
 }

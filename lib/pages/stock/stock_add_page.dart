@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
+import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/stock_add_model.dart';
 import 'package:good_grandma/pages/stock/select_goods_page.dart';
 import 'package:good_grandma/pages/work/work_report/select_employee_page.dart';
@@ -31,7 +32,7 @@ class _StockAddPageState extends State<StockAddPage> {
       i++;
     });
     return Scaffold(
-      appBar: AppBar(title: const Text('客户库存')),
+      appBar: AppBar(title: const Text('新增库存')),
       body: Scrollbar(
         child: CustomScrollView(
           slivers: [
@@ -75,13 +76,8 @@ class _StockAddPageState extends State<StockAddPage> {
                     style:
                         TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
                 trailing: IconButton(
-                    onPressed: () {
-                      _model.addToStockList(StockModel());
-                    },
-                    icon: Icon(
-                      Icons.add_circle,
-                      color: AppColors.FFC68D3E,
-                    )),
+                    onPressed: () => _model.addToStockList(StockModel()),
+                    icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
               ),
             ),
             //list
@@ -106,9 +102,7 @@ class _StockAddPageState extends State<StockAddPage> {
                       //请选择商品
                       ListTile(
                         title: Text(
-                            goodsNames.isNotEmpty
-                                ? goodsNames
-                                : '请选择商品',
+                            goodsNames.isNotEmpty ? goodsNames : '请选择商品',
                             style: TextStyle(
                                 color: goodsNames.isNotEmpty
                                     ? AppColors.FF2F4058
@@ -117,11 +111,12 @@ class _StockAddPageState extends State<StockAddPage> {
                         trailing: Icon(Icons.chevron_right,
                             color: AppColors.FF2F4058),
                         contentPadding: const EdgeInsets.all(0),
-                        onTap: () async{
-                          List<GoodsModel> _selGoodsList = await Navigator.push(context,
-                              MaterialPageRoute(builder: (_) {
-                                return SelectGoodsPage(selGoods: stockModel.goodsList);
-                              }));
+                        onTap: () async {
+                          List<GoodsModel> _selGoodsList = await Navigator.push(
+                              context, MaterialPageRoute(builder: (_) {
+                            return SelectGoodsPage(
+                                selGoods: stockModel.goodsList);
+                          }));
                           if (_selGoodsList != null) {
                             stockModel.goodsList.clear();
                             stockModel.goodsList.addAll(_selGoodsList);
@@ -146,7 +141,7 @@ class _StockAddPageState extends State<StockAddPage> {
                                   text: stockModel.tBoxNum,
                                   hintText: '请输入数量',
                                   keyboardType: TextInputType.number,
-                                  callBack: (text){
+                                  callBack: (text) {
                                     stockModel.tBoxNum = text;
                                     _model.editStockListWith(index, stockModel);
                                   }),
@@ -154,14 +149,14 @@ class _StockAddPageState extends State<StockAddPage> {
                             _NumberCell(
                               title: '整箱(1*40)',
                               value: stockModel.fBoxNum,
-                              onTap: ()  => AppUtil.showInputDialog(
+                              onTap: () => AppUtil.showInputDialog(
                                   context: context,
                                   editingController: _editingController,
                                   focusNode: _focusNode,
                                   text: stockModel.fBoxNum,
                                   hintText: '请输入数量',
                                   keyboardType: TextInputType.number,
-                                  callBack: (text){
+                                  callBack: (text) {
                                     stockModel.fBoxNum = text;
                                     _model.editStockListWith(index, stockModel);
                                   }),
@@ -169,14 +164,14 @@ class _StockAddPageState extends State<StockAddPage> {
                             _NumberCell(
                               title: '非整箱(支)',
                               value: stockModel.unboxNum,
-                              onTap: ()  => AppUtil.showInputDialog(
+                              onTap: () => AppUtil.showInputDialog(
                                   context: context,
                                   editingController: _editingController,
                                   focusNode: _focusNode,
                                   text: stockModel.unboxNum,
                                   hintText: '请输入数量',
                                   keyboardType: TextInputType.number,
-                                  callBack: (text){
+                                  callBack: (text) {
                                     stockModel.unboxNum = text;
                                     _model.editStockListWith(index, stockModel);
                                   }),
@@ -208,9 +203,9 @@ class _StockAddPageState extends State<StockAddPage> {
                             icon: Icon(Icons.delete_forever_outlined,
                                 color: Colors.black)),
                         contentPadding: const EdgeInsets.all(0),
-                        onTap: () async{
+                        onTap: () async {
                           String time = await showPickerDate(context);
-                          if(time != null) {
+                          if (time != null) {
                             stockModel.time = time;
                             _model.editStockListWith(index, stockModel);
                           }
@@ -230,6 +225,7 @@ class _StockAddPageState extends State<StockAddPage> {
       ),
     );
   }
+
   @override
   void dispose() {
     super.dispose();
