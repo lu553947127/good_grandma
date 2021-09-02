@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
+import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
@@ -99,6 +100,7 @@ class _Body extends State<HomePage> {
       case 3://费用申请
         break;
       case 4://业绩统计
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
         break;
       case 5://冰柜销量
         Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));

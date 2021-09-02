@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class CircleBorderPinter extends CustomPainter {
   final double size;
   final double ratio;
+  final double strokeWidth;
   final Color color;
 
   Paint _bgPaint;
@@ -14,16 +15,16 @@ class CircleBorderPinter extends CustomPainter {
   PathMetric _pathMetric;
 
   CircleBorderPinter(
-      {@required this.ratio, @required this.size, @required this.color})
+      {@required this.ratio, @required this.size, @required this.color,this.strokeWidth = 8})
       : super() {
     _bgPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
+      ..strokeWidth = strokeWidth
       ..color = color.withOpacity(0.4);
 
     _frontPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
+      ..strokeWidth = strokeWidth
       ..color = color;
 
     _shape = RRect.fromRectAndRadius(

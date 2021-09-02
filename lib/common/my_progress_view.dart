@@ -9,10 +9,12 @@ class MyProgressView extends StatelessWidget {
     @required this.borderRadius,
     @required this.backgroundColor,
     @required this.valueColor,
+    this.width = double.infinity,
   }) : super(key: key);
 
   final double ratio;
   final double height;
+  final double width;
   final double borderRadius;
   final Color backgroundColor;
   final Color valueColor;
@@ -21,7 +23,7 @@ class MyProgressView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      width: double.infinity,
+      width: width,
       // 圆角矩形剪裁（`ClipRRect`）组件，使用圆角矩形剪辑其子项的组件。
       child: ClipRRect(
         // 边界半径（`borderRadius`）属性，圆角的边界半径。
