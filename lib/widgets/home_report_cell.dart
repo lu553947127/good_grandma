@@ -8,14 +8,17 @@ import 'package:good_grandma/pages/work/work_report/month_post_detail_page.dart'
 import 'package:good_grandma/pages/work/work_report/month_post_detail_zn_page.dart';
 import 'package:good_grandma/pages/work/work_report/week_post_detail_page.dart';
 import 'package:good_grandma/pages/work/work_report/week_post_detail_zn_page.dart';
+import 'package:good_grandma/widgets/home_report_cell_list.dart';
 import 'package:good_grandma/widgets/post_progress_view.dart';
 
 class HomeReportCell extends StatelessWidget {
   final HomeReportModel model;
+
   HomeReportCell({Key key, @required this.model}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final Map map = _transInfoFromPostType(model.postType);
+    final Map map = transInfoFromPostType(model.postType);
     final Color color = map['color'];
     final String name = map['name'];
     //是否是职能
@@ -61,14 +64,14 @@ class HomeReportCell extends StatelessWidget {
                   offset: Offset(2, 1), //x,y轴
                   color: Colors.black.withOpacity(0.1), //投影颜色
                   blurRadius: 1 //投影距离
-                  ),
+              ),
             ]),
         child: Column(
           children: [
             //头像 名称 日期 类别
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               child: Row(
                 children: [
                   ClipOval(
@@ -77,7 +80,7 @@ class HomeReportCell extends StatelessWidget {
                       width: 30.0,
                       height: 30.0,
                       errorWidgetChild:
-                          Icon(Icons.supervised_user_circle, size: 30.0),
+                      Icon(Icons.supervised_user_circle, size: 30.0),
                     ),
                   ),
                   Text('  ' + (model.userName ?? '') + '  ',
@@ -134,8 +137,9 @@ class HomeReportCell extends StatelessWidget {
                 thickness: 1,
                 indent: 10.0,
                 endIndent: 10.0),
-            _CellList(list: model.summary ?? [], title: '本$name区域重点工作总结'),
-            _CellList(
+            HomeReportCellList(
+                list: model.summary ?? [], title: '本$name区域重点工作总结'),
+            HomeReportCellList(
                 list: model.plans ?? [],
                 title: (name == '日' ? '明' : '下') + '$name工作计划'),
           ],
@@ -143,8 +147,8 @@ class HomeReportCell extends StatelessWidget {
       ),
     );
   }
-
-  Map _transInfoFromPostType(int postType) {
+  ///工作报告类型转颜色和中文名
+  static Map transInfoFromPostType(int postType) {
     if (postType == 1) {
       //日
       return {'color': AppColors.FFE5A800, 'name': '日'};
@@ -154,59 +158,5 @@ class HomeReportCell extends StatelessWidget {
     }
     //月
     return {'color': AppColors.FFE45C26, 'name': '月'};
-  }
-}
-
-///总结列表
-class _CellList extends StatelessWidget {
-  final List<String> list;
-  final String title;
-  _CellList({Key key, @required this.list, @required this.title})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    if (list == null || list.isEmpty) {
-      return Container();
-    }
-    List<Widget> _views = [];
-    int i = 1;
-    for (String title1 in list) {
-      _views.add(Text.rich(TextSpan(
-        text: '$i.',
-        style: const TextStyle(color: AppColors.FF959EB1, fontSize: 12.0),
-        children: [
-          TextSpan(
-              text: title1 ?? '',
-              style: const TextStyle(color: AppColors.FF2F4058))
-        ],
-      )));
-      if (i < list.length)
-        _views.add(const Divider(color: Color(0xFFE3E3E7), thickness: 1));
-      i++;
-    }
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text(title ?? '',
-                style:
-                    const TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
-          ),
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-                color: AppColors.FFF4F5F8,
-                borderRadius: BorderRadius.circular(4)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _views,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

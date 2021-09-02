@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
@@ -12,14 +14,12 @@ class SignInCensusPage extends StatefulWidget {
 class _Body extends State<SignInCensusPage> {
   DateTime _selectedDay;
   DateTime _focusedDay = DateTime.now();
-  ValueNotifier<List<Event>> _selectedEvents;
+  ValueNotifier<List<Map>> _selectedMaps;
 
   @override
   void initState() {
     super.initState();
     _refresh();
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
   }
 
   @override
@@ -58,9 +58,10 @@ class _Body extends State<SignInCensusPage> {
                       selectedDayPredicate: (day) =>
                           isSameDay(_selectedDay, day),
                       onDaySelected: _onDaySelected,
-                      eventLoader: _getEventsForDay,
+                      eventLoader: _getMapsForDay,
                       onPageChanged: (focusedDay) {
                         _focusedDay = focusedDay;
+                        _refresh();
                       },
                       // headerVisible: false,
                       onFormatChanged: (format) {},
@@ -94,16 +95,15 @@ class _Body extends State<SignInCensusPage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: ValueListenableBuilder<List<Event>>(
-                valueListenable: _selectedEvents,
+              child: ValueListenableBuilder<List<Map>>(
+                valueListenable: _selectedMaps,
                 builder: (context, values, _) {
-                  List<Widget> list = [];
-                  for (Event event in values) {
-                    final time = '${event.time.hour < 10 ? '0' : ''}${event.time.hour}:${event.time.minute < 10 ? '0' : ''}${event.time.minute}:${event.time.second < 10 ? '0' : ''}${event.time.second}';
-                    final address = event.title * 10;
-                    list.add(_SignInEventCell(time: time, address: address));
-                  }
-                  return Column(children: list);
+                  return Column(children: List.generate(values.length, (index) {
+                    Map event = values[index];
+                    final time = event['time'];//'${event.time.hour < 10 ? '0' : ''}${event.time.hour}:${event.time.minute < 10 ? '0' : ''}${event.time.minute}:${event.time.second < 10 ? '0' : ''}${event.time.second}';
+                    final address = event['address'];//event.title * 10;
+                    return _SignInMapCell(time: time, address: address);
+                  }));
                 },
               ),
             )
@@ -113,11 +113,32 @@ class _Body extends State<SignInCensusPage> {
     );
   }
 
-  void _refresh() {}
+  void _refresh() {
+    _selectedDay = _focusedDay;
+    _selectedMaps = ValueNotifier(_getMapsForDay(_selectedDay));
+  }
 
-  List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+  List<Map> _getMapsForDay(DateTime day) {
+    List<Map> valueList = List.generate(3, (index) {
+      return {'time':'09:23:88','address':'地址地址地址地址地址地址地址地址'};
+    });
+    Map<DateTime, List<Map>> map = {
+      DateTime.utc(_selectedDay.year,_selectedDay.month,1):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,3):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,5):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,12):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,13):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,15):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,21):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,23):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,25):valueList,
+    };
+    final map1 = LinkedHashMap<DateTime, List<Map>>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(map);
+
+    return map1[day] ?? [];
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -127,13 +148,13 @@ class _Body extends State<SignInCensusPage> {
         _focusedDay = focusedDay;
       });
 
-      _selectedEvents.value = _getEventsForDay(selectedDay);
+      _selectedMaps.value = _getMapsForDay(selectedDay);
     }
   }
 }
 ///签到事件cell
-class _SignInEventCell extends StatelessWidget {
-  const _SignInEventCell({
+class _SignInMapCell extends StatelessWidget {
+  const _SignInMapCell({
     Key key,
     @required this.time,
     @required this.address,

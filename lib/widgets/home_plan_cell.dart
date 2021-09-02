@@ -18,8 +18,7 @@ class _PlanCellState extends State<HomePlanCell> {
   @override
   void initState() {
     super.initState();
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+    _refresh();
   }
 
   @override
@@ -52,6 +51,7 @@ class _PlanCellState extends State<HomePlanCell> {
               eventLoader: _getEventsForDay,
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
+                _refresh();
               },
               headerVisible: false,
               onFormatChanged: (format) {},
@@ -104,10 +104,38 @@ class _PlanCellState extends State<HomePlanCell> {
       ),
     );
   }
+  void _refresh() {
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+    if(mounted)
+      setState(() {});
+  }
 
   List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+    List<Event> valueList = List.generate(3, (index) {
+      return Event(
+          title: 'Today\'s Event 1',
+          content: 'content ' * 30,
+          time: DateTime.utc(kFirstDay.year, kFirstDay.month, 5, kToday.hour,
+              kToday.minute, kToday.second));
+    });
+    Map<DateTime, List<Event>> map = {
+      DateTime.utc(_selectedDay.year,_selectedDay.month,1):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,3):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,5):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,12):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,13):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,15):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,21):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,23):valueList,
+      DateTime.utc(_selectedDay.year,_selectedDay.month,25):valueList,
+    };
+    final map1 = LinkedHashMap<DateTime, List<Event>>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(map);
+
+    return map1[day] ?? [];
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -137,34 +165,34 @@ class Event {
 /// Example events.
 ///
 /// Using a [LinkedHashMap] is highly recommended if you decide to use a map.
-final kEvents = LinkedHashMap<DateTime, List<Event>>(
-  equals: isSameDay,
-  hashCode: getHashCode,
-)..addAll(_kEventSource);
+// final kEvents = LinkedHashMap<DateTime, List<Event>>(
+//   equals: isSameDay,
+//   hashCode: getHashCode,
+// )..addAll(_kEventSource);
 
-final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
-    key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
-    value: (item) => List.generate(
-        item % 4 + 1,
-        (index) => Event(
-            title: 'Event $item | ${index + 1}',
-            content: 'content $item | ${index + 1}',
-            time: DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5,
-                kToday.hour, kToday.minute, kToday.second))))
-  ..addAll({
-    kToday: [
-      Event(
-          title: 'Today\'s Event 1',
-          content: 'content ' * 30,
-          time: DateTime.utc(kFirstDay.year, kFirstDay.month, 5, kToday.hour,
-              kToday.minute, kToday.second)),
-      Event(
-          title: 'Today\'s Event 2',
-          content: 'content ' * 30,
-          time: DateTime.utc(kFirstDay.year, kFirstDay.month, 5, kToday.hour,
-              kToday.minute, kToday.second)),
-    ],
-  });
+// final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
+//     key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
+//     value: (item) => List.generate(
+//         item % 4 + 1,
+//         (index) => Event(
+//             title: 'Event $item | ${index + 1}',
+//             content: 'content $item | ${index + 1}',
+//             time: DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5,
+//                 kToday.hour, kToday.minute, kToday.second))))
+//   ..addAll({
+//     kToday: [
+//       Event(
+//           title: 'Today\'s Event 1',
+//           content: 'content ' * 30,
+//           time: DateTime.utc(kFirstDay.year, kFirstDay.month, 5, kToday.hour,
+//               kToday.minute, kToday.second)),
+//       Event(
+//           title: 'Today\'s Event 2',
+//           content: 'content ' * 30,
+//           time: DateTime.utc(kFirstDay.year, kFirstDay.month, 5, kToday.hour,
+//               kToday.minute, kToday.second)),
+//     ],
+//   });
 int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }

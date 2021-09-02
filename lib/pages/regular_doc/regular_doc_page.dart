@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
-import 'package:good_grandma/pages/home/regular_doc_detail_page.dart';
+import 'package:good_grandma/pages/regular_doc/regular_doc_detail_page.dart';
 import 'package:good_grandma/widgets/msg_list_cell.dart';
 import 'package:provider/provider.dart';
 

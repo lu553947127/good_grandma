@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
-import 'package:good_grandma/pages/home/regular_doc_page.dart';
-import 'package:good_grandma/pages/home/sign_in_page.dart';
+import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
+import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
+import 'package:good_grandma/pages/repor_statistics/report_statistics_page.dart';
 import 'package:good_grandma/pages/stock/stock_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
@@ -74,6 +75,10 @@ class AppPage extends StatelessWidget{
         case '业绩统计':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
           break;
+        case '报告统计':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> ReportStatisticsPage()));
+          break;
+
       }
     }
 

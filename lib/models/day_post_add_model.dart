@@ -8,7 +8,13 @@ class DayPostAddModel extends ChangeNotifier {
     _achievementRate = 0.0;
     _summaries = [];
     _plans = [];
+    type = 1;
+    id = '';
   }
+  String id;
+
+  ///类别 1：日报 2：周报 3：月报
+  int type;
 
   ///本月目标
   String _target;

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
-import 'package:good_grandma/pages/home/sign_in_census_page.dart';
+import 'package:good_grandma/pages/sign_in/sign_in_census_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 ///签到
