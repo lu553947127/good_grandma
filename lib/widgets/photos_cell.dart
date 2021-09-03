@@ -54,11 +54,15 @@ class CustomPhotoWidget extends StatelessWidget {
   CustomPhotoWidget({Key key,
     this.title,
     this.length,
+    this.url,
     this.sizeHeight
   }) : super(key: key);
 
   final String title;
   final int length;
+
+  ///上传附件url
+  final String url;
 
   ///分割线间距
   double sizeHeight = 0;
@@ -103,6 +107,7 @@ class CustomPhotoWidget extends StatelessWidget {
                         return SelectImagesView(
                           index: index,
                           imagesProvider: imagesProvider,
+                          url: url
                         );
                       }
                   ),

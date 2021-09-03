@@ -120,13 +120,16 @@ Future requestGet(url, {param})async{
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       return print('ERROR:===$url===>$e');
+    }else if (e.response.statusCode == 500){
+      showToast('接口报500啦');
+      return print('ERROR:===$url===>$e');
     }
     return print('ERROR:===$url===>$e');
   }
 }
 
 ///上传附件
-Future getPutFile(file) async{
+Future getPutFile(url, file) async{
   try{
     print('开始上传图片...............'+file);
     var headers = Map<String, String>();
@@ -145,7 +148,7 @@ Future getPutFile(file) async{
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(file, filename:name)
     });
-    response = await dio.post(Api.baseUrl() + Api.putFile, data: formData);
+    response = await dio.post(Api.baseUrl() + url, data: formData);
     return response.data;
   } on DioError catch(e){
     if (e.response.statusCode == 401 || e.response.statusCode == 404){

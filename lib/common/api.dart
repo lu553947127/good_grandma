@@ -19,14 +19,23 @@ class Api {
   ///我的抄送列表(知会我的)
   static const copyList = "/api/hap-workflow/process/copyList";
 
-  ///办结列表
+  ///办结列表(暂时不用)
   static const doneList = "/api/hap-workflow/process/doneList";
 
   ///可发起流程列表
   static const processList = "/api/hap-workflow/process/processList";
 
+  ///发起流程
+  static const startProcess = "/api/hap-workflow/process/startProcess";
+
   ///获取流程表单
   static const getFormByProcessId = "/api/hap-workflow/process/getFormByProcessId";
+
+  ///获取流程详情
+  static const processDetail = "/api/hap-workflow/process/detail";
+
+  ///获取流程驳回/同意
+  static const completeTask = "/api/hap-workflow/process/completeTask";
 
   ///上传附件
   static const putFile = "/hap-resource/oss/endpoint/put-file";

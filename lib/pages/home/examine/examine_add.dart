@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/form/form.dart';
-import 'package:good_grandma/pages/login/loginBtn.dart';
+import 'package:good_grandma/pages/home/examine/apply/cost_apply.dart';
+import 'package:good_grandma/pages/home/examine/apply/cost_off_apply.dart';
+import 'package:good_grandma/pages/home/examine/apply/leave_apply.dart';
 import 'package:good_grandma/widgets/custom_form.dart';
 
 ///审批添加
@@ -24,8 +24,6 @@ class ExamineAdd extends StatefulWidget {
 
 class _ExamineAddState extends State<ExamineAdd> {
 
-  final GlobalKey _dynamicFormKey = GlobalKey<TFormState>();
-
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> map = {'processId': widget.processId};
@@ -43,37 +41,48 @@ class _ExamineAddState extends State<ExamineAdd> {
           if (snapshot.hasData) {
             var data = jsonDecode(snapshot.data.toString());
             LogUtil.d('请求结果---getFormByProcessId----$data');
-            var form = jsonDecode(data['data']['form']);
+            var form = jsonDecode(data['data']['appForm']);
             LogUtil.d('form----$form');
             List list = (form['column'] as List).cast();
             LogUtil.d('list----$list');
-            return CustomScrollView(
-              slivers: [
-                SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      return CustomFormView(data: list[index]);
-                    }, childCount: list.length)
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 30, left: 22, right: 22),
-                    child: LoginBtn(
-                      title: '提交',
-                      onPressed: () {
-                        showToast("成功");
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            );
+
+            switch (widget.name){
+              case '费用申请':
+                return ExamineCostApply(
+                    name: widget.name,
+                    processId: widget.processId,
+                    list: list
+                );
+                break;
+              case '请假流程':
+                return ExamineLeaveApply(
+                    name: widget.name,
+                    processId: widget.processId,
+                    list: list
+                );
+                break;
+              case '费用核销':
+                return ExamineCostOffApply(
+                    name: widget.name,
+                    processId: widget.processId,
+                    list: list
+                );
+                break;
+              default:
+                return CustomFormView(
+                    name: widget.name,
+                    processId: widget.processId,
+                    list: list
+                );
+                break;
+            }
           }else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator()
             );
           }
-        },
-      ),
+        }
+      )
     );
   }
 }

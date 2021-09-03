@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 
+///审批申请详情头部标题
 class ExamineDetailTitle extends StatelessWidget {
 
-  String avatar;
-  String title;
-  String time;
-  String wait;
-  String status;
+  final String avatar;
+  final String title;
+  final String time;
+  final String wait;
+  final String status;
+  final String type;
 
   ExamineDetailTitle({Key key
     , @required this.avatar
@@ -15,6 +17,7 @@ class ExamineDetailTitle extends StatelessWidget {
     , @required this.time
     , @required this.wait
     , @required this.status
+    , @required this.type
   }) : super(key: key);
 
   @override
@@ -41,8 +44,6 @@ class ExamineDetailTitle extends StatelessWidget {
                     imageURL: avatar,
                     width: 50.0,
                     height: 50.0,
-                    errorWidgetChild:
-                    Icon(Icons.supervised_user_circle, size: 30.0),
                   ),
                 ),
                 SizedBox(width: 10),
@@ -60,7 +61,7 @@ class ExamineDetailTitle extends StatelessWidget {
                     ),
                     SizedBox(height: 3),
                     Visibility(
-                        visible: status == 'unfinished' ? true : false,
+                        visible: type == '知会我的' ? false : status == '审核中' ? true : false,
                         child: Row(
                           children: [
                             Image.asset('assets/images/icon_examine_wait.png', width: 12, height: 12),
@@ -73,26 +74,29 @@ class ExamineDetailTitle extends StatelessWidget {
                 )
               ],
             ),
-            Row(
-              children: [
-                Visibility(
-                  visible: status == 'unfinished' ? true : false,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
+            Offstage(
+              offstage: type == '知会我的' ? true : false,
+              child: Row(
+                children: [
+                  Visibility(
+                    visible: status == '审核中' ? true  : false,
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Text(status == '审核中' ? '审核中' : '已审核', style: TextStyle(fontSize: 10, color: Color(0XFFE45C26))),
                     ),
-                    child: Text(status == 'unfinished' ? '审核中' : '已审核', style: TextStyle(fontSize: 10, color: Color(0XFFE45C26))),
                   ),
-                ),
-                Visibility(
-                  visible: status == 'unfinished' ? false : true,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Image.asset('assets/images/icon_examine_complete.png', width: 50, height: 50),
-                  ),
-                )
-              ],
+                  Visibility(
+                    visible: status == '审核中' ? false : true,
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      child: Image.asset('assets/images/icon_examine_complete.png', width: 50, height: 50),
+                    ),
+                  )
+                ],
+              )
             )
           ],
         ),

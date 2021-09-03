@@ -109,16 +109,20 @@ Future<String> showPickerDate(BuildContext context) async {
 }
 
 ///选择开始日期和结束日期
-showPickerDateRange(BuildContext context) {
-
+void showPickerDateRange({@required BuildContext context, @required Function(Map map) callBack}) async {
+  Map param;
+  String startTime;
+  String endTime;
   Picker ps = Picker(
       hideHeader: true,
       adapter: DateTimePickerAdapter(
-          type: PickerDateTimeType.kYMD,
+          type: PickerDateTimeType.kYMDHM,
           isNumberMonth: true,
-          yearSuffix: "年",
-          monthSuffix: "月",
-          daySuffix: "日",
+          // yearSuffix: "年",
+          // monthSuffix: "月",
+          // daySuffix: "日",
+          // hourSuffix: '时',
+          // minuteSuffix: '分',
           value: DateTime.now()
       ),
       onConfirm: (Picker picker, List value) {
@@ -129,11 +133,13 @@ showPickerDateRange(BuildContext context) {
   Picker pe = Picker(
       hideHeader: true,
       adapter: DateTimePickerAdapter(
-          type: PickerDateTimeType.kYMD,
+          type: PickerDateTimeType.kYMDHM,
           isNumberMonth: true,
-          yearSuffix: "年",
-          monthSuffix: "月",
-          daySuffix: "日",
+          // yearSuffix: "年",
+          // monthSuffix: "月",
+          // daySuffix: "日",
+          // hourSuffix: '时',
+          // minuteSuffix: '分',
           value: DateTime.now()
       ),
       onConfirm: (Picker picker, List value) {
@@ -149,14 +155,27 @@ showPickerDateRange(BuildContext context) {
         child: Text('取消', style: TextStyle(fontSize: 14,color: Color(0xFF2F4058)))),
     TextButton(
         onPressed: () {
-          Navigator.pop(context);
+
           ps.onConfirm(ps, ps.selecteds);
           pe.onConfirm(pe, pe.selecteds);
+
+          startTime = formatDate((ps.adapter as DateTimePickerAdapter).value,
+              [yyyy, '-', mm, '-', dd, ' ', hh, ':', nn]);
+          endTime = formatDate((pe.adapter as DateTimePickerAdapter).value,
+              [yyyy, '-', mm, '-', dd, ' ', hh, ':', nn]);
+          print(startTime);
+          print(endTime);
+
+          var days = (pe.adapter as DateTimePickerAdapter).value.difference((ps.adapter as DateTimePickerAdapter).value).inDays;
+
+          param = {'startTime': startTime, 'endTime': endTime, 'days': days};
+
+          Navigator.pop(context, param);
         },
         child: Text('确定', style: TextStyle(fontSize: 14,color: Color(0xFFC68D3E))))
   ];
 
-  showDialog(
+  param = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -176,6 +195,10 @@ showPickerDateRange(BuildContext context) {
           ),
         );
       });
+
+  if (param != null) {
+    if (callBack != null) callBack(param);
+  }
 }
 
 ///密码md5加密

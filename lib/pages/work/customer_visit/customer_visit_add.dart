@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
@@ -53,6 +54,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                   title: '上传照片',
                   length: 3,
                   sizeHeight: 10,
+                  url: Api.putFile
                 )
             ),
             Container(

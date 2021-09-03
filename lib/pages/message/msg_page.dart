@@ -23,6 +23,7 @@ class _MsgPageState extends State<MsgPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('消息'),
       ),
       body: ListView.separated(

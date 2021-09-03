@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
@@ -115,7 +116,12 @@ class VisitStatisticsType extends StatelessWidget {
                 ],
               ),
               onPressed: () async {
-                showPickerDateRange(context);
+                showPickerDateRange(
+                    context: Application.appContext,
+                    callBack: (Map param){
+
+                    }
+                );
               },
             )
           ],

@@ -7,11 +7,22 @@ class ImagesProvider with ChangeNotifier{
   ///图片地址
   var imgPath;
   ///图片地址结合
-  List<File> filePath = [];
+  List<String> filePath = [];
+  ///map图片集合
+  List<Map> imagePath = [];
 
   //选择图片集合
-  imagesList(File image) async{
+  imagesList(String image) async{
     filePath.add(image);
+    notifyListeners();
+  }
+
+  //生成接口添加的数据
+  addImageData(images, name) async{
+    Map addData = new Map();
+    addData['label'] = name;
+    addData['value'] = images;
+    imagePath.add(addData);
     notifyListeners();
   }
 
