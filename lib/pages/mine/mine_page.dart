@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/common/store.dart';
-import 'package:good_grandma/pages/login/login.dart';
+import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
 
 ///我的
@@ -130,11 +129,7 @@ class MinePage extends StatelessWidget {
       case -3:
         {
           //设置按钮
-          // print('设置按钮');
-
-          //临时作为退出登录
-          Store.removeToken();
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => SetUpPage()));
         }
         break;
       case -2:

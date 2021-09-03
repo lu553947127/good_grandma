@@ -27,6 +27,17 @@ class StatisticsHeadWidget extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Stack(
         children: [
+          Positioned(
+            bottom: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width - 15 * 2,
+                  height: 50,
+                ),
+              )
+          ),
           Image.asset('assets/images/performance_head.png',
               fit: BoxFit.fill, width: double.infinity),
           SafeArea(

@@ -73,6 +73,8 @@ dependencies:
   signature: ^4.1.1
   # 图表
   fl_chart: ^0.40.0
+  # 应用信息
+  package_info: ^2.0.2
 
 dev_dependencies:
   flutter_test:
