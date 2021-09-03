@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/sign_in/sign_in_census_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -72,9 +73,8 @@ class _SignInButtonState extends State<_SignInButton> {
     /// 动态申请定位权限
     _requestPermission();
 
-    ///todo:key都是暂时的
     AMapFlutterLocation.setApiKey(
-        'aeb06cd10ca91bc2c77a3a70d89bd6c8', '275249e60a6b2da6b74615bce89e23e9');
+        AppUtil.aMapAndroidKey, AppUtil.aMapiOSKey);
 
     ///iOS 获取native精度类型
     if (Platform.isIOS) _requestAccuracyAuthorization();

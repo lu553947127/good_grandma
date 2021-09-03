@@ -186,6 +186,10 @@ String passwordMD5(String data) {
 }
 
 class AppUtil {
+  ///todo:key都是暂时的
+  static const aMapAndroidKey = 'aeb06cd10ca91bc2c77a3a70d89bd6c8';
+  static const aMapiOSKey = '275249e60a6b2da6b74615bce89e23e9';
+
   /// 保存图片到相册
   ///
   /// 默认为下载网络图片，如需下载资源图片，需要指定 [isAsset] 为 `true`。

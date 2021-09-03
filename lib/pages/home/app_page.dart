@@ -7,6 +7,7 @@ import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.da
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
 import 'package:good_grandma/pages/repor_statistics/report_statistics_page.dart';
 import 'package:good_grandma/pages/stock/stock_page.dart';
+import 'package:good_grandma/pages/track/track_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
@@ -77,6 +78,9 @@ class AppPage extends StatelessWidget{
           break;
         case '报告统计':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> ReportStatisticsPage()));
+          break;
+        case '行动轨迹':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> TrackPage()));
           break;
 
       }

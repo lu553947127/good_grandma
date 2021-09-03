@@ -1,0 +1,278 @@
+import 'package:amap_flutter_base/amap_flutter_base.dart';
+import 'package:amap_flutter_map/amap_flutter_map.dart';
+import 'package:flutter/material.dart';
+import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/models/employee_model.dart';
+import 'package:good_grandma/models/track_model.dart';
+import 'package:good_grandma/pages/track/select_user_page.dart';
+
+///行动轨迹
+class TrackPage extends StatefulWidget {
+  const TrackPage({Key key}) : super(key: key);
+
+  @override
+  _TrackPageState createState() => _TrackPageState();
+}
+
+class _TrackPageState extends State<TrackPage> {
+  static const AMapApiKey _aMapApiKey = AMapApiKey(
+      androidKey: AppUtil.aMapAndroidKey, iosKey: AppUtil.aMapiOSKey);
+  List<TrackModel> _dataArray = [];
+  List<EmployeeModel> _userList = [];
+  EmployeeModel _selUserModel;
+  Map<String, Polyline> _polyLines = <String, Polyline>{};
+  //需要先设置一个空的map赋值给AMapWidget的markers，否则后续无法添加marker
+  final Map<String, Marker> _markers = <String, Marker>{};
+  AMapController _mapController;
+
+  final _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _key,
+      appBar: AppBar(title: const Text('行动轨迹')),
+      body: Stack(
+        children: [
+          AMapWidget(
+            apiKey: _aMapApiKey,
+            compassEnabled: true,
+            polylines: Set<Polyline>.of(_polyLines.values),
+            markers: Set<Marker>.of(_markers.values),
+            onMapCreated: (controller) => _mapController = controller,
+          ),
+          Positioned(
+              top: 15,
+              left: 15,
+              child: _selUserModel != null
+                  ? Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.FFC1C8D7, width: 1)
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 9.0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          EmployeeModel result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      SelectUserPage(userList: _userList)));
+                          if (result != null) {
+                            setState(() => _selUserModel = result);
+                            _getTrackWithUser(result);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Text(_selUserModel.name),
+                            Icon(Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container()),
+        ],
+      ),
+    );
+  }
+
+  ///获取用户列表
+  void _getUserList() async {
+    await Future.delayed(Duration(seconds: 1));
+    _userList.clear();
+    _userList.addAll(List.generate(
+        5, (index) => EmployeeModel(name: '张$index', id: index.toString())));
+    if (_userList.isNotEmpty) {
+      _selUserModel = _userList.first;
+      _getTrackWithUser(_selUserModel);
+    }
+    if (mounted) setState(() {});
+  }
+
+  ///从服务器请求用户轨迹
+  void _getTrackWithUser(EmployeeModel userModel) async {
+    await Future.delayed(Duration(seconds: 1));
+    _dataArray.clear();
+    _dataArray.addAll([
+      TrackModel(
+          name: _selUserModel.name,
+          positionName: '荣格超市1',
+          time: '2021-7-23 11:00:40',
+          duration: '40',
+          latLng: LatLng(39.938698, 116.275177)),
+      TrackModel(
+          name: _selUserModel.name,
+          positionName: '荣格超市2',
+          time: '2021-7-23 11:00:41',
+          duration: '40',
+          latLng: LatLng(39.966069, 116.289253)),
+      TrackModel(
+          name: _selUserModel.name,
+          positionName: '荣格超市3',
+          time: '2021-7-23 11:00:42',
+          duration: '40',
+          latLng: LatLng(39.944226, 116.306076)),
+      TrackModel(
+          name: _selUserModel.name,
+          positionName: '荣格超市4',
+          time: '2021-7-23 11:00:43',
+          duration: '40',
+          latLng: LatLng(39.966069, 116.322899)),
+      TrackModel(
+          name: _selUserModel.name,
+          positionName: '荣格超市5',
+          time: '2021-7-23 11:00:44',
+          duration: '40',
+          latLng: LatLng(39.938698, 116.336975)),
+    ]);
+    _addLine();
+    if (mounted) setState(() {});
+  }
+
+  ///添加一个marker 点
+  void _addMarker(TrackModel model) {
+    final Marker marker = Marker(
+        position: model.latLng,
+        //使用默认hue的方式设置Marker的图标
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        infoWindowEnable: false,
+        onTap: (String id) {
+          _onTap(id, model);
+        });
+    //调用setState触发AMapWidget的更新，从而完成marker的添加
+    _markers[marker.id] = marker;
+  }
+
+  ///添加线
+  void _addLine() {
+    final Polyline polyline = Polyline(
+      color: AppColors.FFE45C26,
+      width: 2.5,
+      points: _createPoints(),
+    );
+    _polyLines[polyline.id] = polyline;
+  }
+
+  ///创建坐标点为绘制作准备
+  List<LatLng> _createPoints() {
+    final List<LatLng> points = <LatLng>[];
+    if (_dataArray.isEmpty) return points;
+    double latCount = 0;
+    double lngCount = 0;
+    _dataArray.forEach((model) {
+      points.add(model.latLng);
+      _addMarker(model);
+      latCount += model.latLng.latitude;
+      lngCount += model.latLng.longitude;
+    });
+    _changeCameraPosition(
+        LatLng(latCount / _dataArray.length, lngCount / _dataArray.length));
+    return points;
+  }
+
+  ///跳转中心点到坐标
+  void _changeCameraPosition(LatLng latLng) {
+    _mapController?.moveCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            //中心点
+            target: latLng,
+            //缩放级别
+            zoom: 13,
+            //俯仰角0°~45°（垂直与地图时为0）
+            // tilt: 30,
+            //偏航角 0~360° (正北方为0)
+            bearing: 0),
+      ),
+      animated: true,
+    );
+  }
+
+  ///节点被点击
+  void _onTap(String id, TrackModel model) async {
+    // print('str = $id,model.time = ${model.time}');
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          List<Map> values = [
+            {'title': '拜访人：', 'value': model.name ?? ''},
+            {'title': '拜访时间：', 'value': model.time ?? ''},
+            {'title': '停留时间：', 'value': model.duration ?? ''},
+          ];
+          return Container(
+            height: 150,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      color: AppColors.FFEFEFF4,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20))),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: Text(model.positionName,
+                            style: const TextStyle(fontSize: 14.0)),
+                      )),
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('关闭',
+                              style: const TextStyle(
+                                  fontSize: 14.0, color: AppColors.FF959EB1))),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 100,
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: values
+                        .map((e) => Text.rich(TextSpan(
+                                text: e['title'],
+                                style: const TextStyle(
+                                    color: AppColors.FF959EB1, fontSize: 14.0),
+                                children: [
+                                  TextSpan(
+                                      text: e['value'],
+                                      style: const TextStyle(
+                                          color: AppColors.FF2F4058)),
+                                  TextSpan(
+                                      text: e['title'] == values.last['title']
+                                          ? '分钟'
+                                          : ''),
+                                ])))
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        backgroundColor: Colors.transparent);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _mapController?.disponse();
+  }
+}
+
