@@ -107,11 +107,13 @@ class _SelectImageViewState extends State<SelectImageView> {
 class SelectImagesView extends StatefulWidget {
   SelectImagesView({Key key,
     this.index,
-    this.imagesProvider
+    this.imagesProvider,
+    this.url
   }) : super(key: key);
 
   final int index;
   final ImagesProvider imagesProvider;
+  final String url;
 
   @override
   _SelectImagesViewState createState() => _SelectImagesViewState();
@@ -125,13 +127,14 @@ class _SelectImagesViewState extends State<SelectImagesView> {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-        // getPutFile(pickedFile.path).then((val) async{
-        //   var data = json.decode(val.toString());
-        //   print('请求结果---uploadFile----$data');
-        //   Provider.of<ImagesProvider>(context,listen: false).imagesList(pickedFile.path);
-        // });
+        getPutFile(widget.url, pickedFile.path).then((val) async{
+          var data = json.decode(val.toString());
+          print('请求结果---uploadFile----$data');
+          Provider.of<ImagesProvider>(context,listen: false).imagesList(data['data']['link']);
+          Provider.of<ImagesProvider>(context,listen: false).addImageData(data['data']['link'], data['data']['originalName']);
+        });
 
-        Provider.of<ImagesProvider>(context,listen: false).imagesList(File(pickedFile.path));
+        // Provider.of<ImagesProvider>(context,listen: false).imagesList(File(pickedFile.path));
         return true;
       } else {
         return false;
@@ -176,6 +179,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
 
   @override
   Widget build(BuildContext context) {
+
     if(widget.index == widget.imagesProvider.filePath.length){
       return GestureDetector(
         child: Image.asset('assets/images/icon_add_images.png', width: 192, height: 108),
@@ -195,7 +199,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
           InkWell(
             child: Stack(
               children: <Widget>[
-                Image.file(widget.imagesProvider.filePath[widget.index], width: 192, height: 108),
+                Image.network(widget.imagesProvider.filePath[widget.index], width: 192, height: 108),
                 Positioned(
                   right: 0,
                   child: InkWell(

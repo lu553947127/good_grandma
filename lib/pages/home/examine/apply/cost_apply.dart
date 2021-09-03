@@ -10,40 +10,41 @@ import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
+import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
-import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
-import 'package:good_grandma/widgets/time_select.dart';
 import 'package:provider/provider.dart';
 
-///自定义表单组件
-class CustomFormView extends StatefulWidget {
+///费用申请
+class ExamineCostApply extends StatefulWidget {
   final String name;
   final String processId;
   final List list;
-  CustomFormView({Key key,
-    this.name,
-    this.processId,
-    this.list
+
+  ExamineCostApply({Key key
+    , @required this.name
+    , @required this.processId
+    , @required this.list
   }) : super(key: key);
 
   @override
-  _CustomFormViewState createState() => _CustomFormViewState();
+  _ExamineCostApplyState createState() => _ExamineCostApplyState();
 }
 
-class _CustomFormViewState extends State<CustomFormView> {
+class _ExamineCostApplyState extends State<ExamineCostApply> {
   @override
   Widget build(BuildContext context) {
     ImagesProvider imagesProvider = new ImagesProvider();
-
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
 
     List<String> dataList = [];
     Map addData = new Map();
     addData['processId'] = widget.processId;
+    addData['date'] = nowTime;
+    addData['applyer'] = '${Store.readPostName()}${Store.readNickName()}';
 
     for (Map map in widget.list) {
       dataList.add(map['prop']);
@@ -54,58 +55,11 @@ class _CustomFormViewState extends State<CustomFormView> {
     _childWidget(data){
       switch(data['type']){
         case 'date':
-          if (data['detail'] != null && data['detail'] == true){
-            addData[data['prop']] = nowTime;
-            return TextDefaultView(
-                leftTitle: data['label'],
-                rightPlaceholder: nowTime,
-                sizeHeight: 0
-            );
-          } else {
-            return TextSelectView(
-              leftTitle: data['label'],
-              rightPlaceholder: '请选择${data['label']}',
-              sizeHeight: 0,
-              onPressed: () async{
-                String time = await showPickerDate(context);
-                for (String prop in dataList) {
-                  if (data['prop'] == prop){
-                    addData[prop] = time;
-                  }
-                }
-
-                LogUtil.d('addData----$addData');
-                return time;
-              },
-            );
-          }
-          break;
-        case 'input':
-          if (data['detail'] != null && data['detail'] == true){
-
-            addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
-
-            return TextDefaultView(
-                leftTitle: data['label'],
-                rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
-                sizeHeight: 1
-            );
-          }else {
-            return TextInputView(
-              leftTitle: data['label'],
-              rightPlaceholder: '请输入${data['label']}',
-              sizeHeight: 1,
-              onChanged: (tex){
-                for (String prop in dataList) {
-                  if (data['prop'] == prop){
-                    addData[prop] = tex;
-                  }
-                }
-
-                LogUtil.d('addData----$addData');
-              },
-            );
-          }
+          return TextDefaultView(
+            leftTitle: data['label'],
+            rightPlaceholder: nowTime,
+            sizeHeight: 0
+          );
           break;
         case 'select':
           return TextSelectView(
@@ -127,50 +81,33 @@ class _CustomFormViewState extends State<CustomFormView> {
             },
           );
           break;
-        case 'datetimerange':
-          return TimeSelectView(
+        case 'input':
+          if (data['label'] == '申请人'){
+            return TextDefaultView(
+                leftTitle: data['label'],
+                rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
+                sizeHeight: 1
+            );
+          }else {
+            return NumberInputView(
               leftTitle: data['label'],
-              rightPlaceholder: '请选择${data['label']}',
+              rightPlaceholder: '请输入${data['label']}',
+              leftInput: data['prepend'],
+              rightInput: data['append'],
+              type: TextInputType.number,
+              rightLength: 120,
               sizeHeight: 1,
-              onPressed: (param) {
-                print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
-                print('param--------onPressed--------- $param');
-
-                List<String> timeList = [];
-                timeList.add(param['startTime']);
-                timeList.add(param['endTime']);
-
+              onChanged: (tex){
                 for (String prop in dataList) {
                   if (data['prop'] == prop){
-                    addData[prop] = timeList;
+                    addData[prop] = tex;
                   }
                 }
 
-                addData['days'] = param['days'];
-
                 LogUtil.d('addData----$addData');
-              }
-          );
-          break;
-        case 'number':
-          if (widget.name == '请假流程'){
-            return Container();
+              },
+            );
           }
-          return TextInputView(
-            leftTitle: data['label'],
-            rightPlaceholder: '请输入${data['label']}',
-            type: TextInputType.number,
-            sizeHeight: 1,
-            onChanged: (tex){
-              for (String prop in dataList) {
-                if (data['prop'] == prop){
-                  addData[prop] = tex;
-                }
-              }
-
-              LogUtil.d('addData----$addData');
-            },
-          );
           break;
         case 'textarea':
           return ContentInputView(
@@ -195,21 +132,21 @@ class _CustomFormViewState extends State<CustomFormView> {
               child:  CustomPhotoWidget(
                 title: data['label'],
                 length: 3,
-                sizeHeight: 10,
-                url: data['action']
+                url: data['action'],
+                sizeHeight: 10
               )
           );
           break;
         default:
-          return Container(
-            child: Text('无法显示此类型'),
-          );
+          return Container();
           break;
       }
     }
 
     ///发起流程
     _startProcess(){
+      addData['file'] = imagesProvider.imagePath;
+      LogUtil.d('addData----$addData');
       requestPost(Api.startProcess, json: addData).then((val) async{
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---startProcess----$data');

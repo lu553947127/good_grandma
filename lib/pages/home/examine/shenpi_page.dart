@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/home/examine/examine_detail.dart';
 import 'package:good_grandma/pages/home/examine/examine_select.dart';
 import 'package:good_grandma/pages/home/examine/examine_view.dart';
 import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
@@ -18,47 +18,21 @@ class ShenPiPage extends StatefulWidget {
 
 class _ShenPiPageState extends State<ShenPiPage> {
 
-  final List<Map> _list = [
-    {'title': '事假申请', 'status': '审核中', 'time' : '2012-05-29 16:31:50',
-      'list' : [
-        {
-          "title":"请假类型",
-          "content":"事假",
-        },
-        {
-          "title":"请假日期",
-          "content":"2021-7-20 — 2021-7-22",
-        },
-        {
-          "title":"请假天数",
-          "content":"2天",
-        }
-      ]
-    },
-    {'title': '费用申请', 'status': '已审核', 'time' : '2012-05-29 16:31:50',
-      'list' : [
-        {
-          "title":"费用类别",
-          "content":"固定费用 - 差旅费用",
-        },
-        {
-          "title":"费用金额",
-          "content":"¥1万元",
-        }
-      ]
-    },
-  ];
-
-  List<Map> list = [];
-  List<Map> sendList = [];
-  List<Map> todoList = [];
-  List<Map> copyList = [];
   String type = '我申请的';
   List<Map> listTitle = [
     {'name': '我申请的'},
     {'name': '我审批的'},
     {'name': '知会我的'},
   ];
+  ///审批申请列表数据
+  List<Map> list = [];
+  ///我申请的列表
+  List<Map> sendList = [];
+  ///我审批的列表
+  List<Map> todoList = [];
+  ///知会我的列表
+  List<Map> copyList = [];
+  ///可发起的流程列表
   List<Map> listType;
 
   ///我的请求列表(我申请的)
@@ -77,7 +51,6 @@ class _ShenPiPageState extends State<ShenPiPage> {
 
   ///待办列表(我审批的)
   _todoList(){
-    LogUtil.d('请求结果---todoList----');
     Map<String, dynamic> map = {'current': '1', 'size': '999'};
     requestGet(Api.todoList, param: map).then((val) async{
       var data = json.decode(val.toString());
@@ -126,9 +99,19 @@ class _ShenPiPageState extends State<ShenPiPage> {
   }
 
   @override
+  void deactivate() {
+    var bool = ModalRoute.of(context).isCurrent;
+    if (bool) {
+      _sendList();
+      _processList();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('审批申请'),
       ),
       body: CustomScrollView(
@@ -150,12 +133,26 @@ class _ShenPiPageState extends State<ShenPiPage> {
             list.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return ExamineView(data: list[index]);
+                  String processIsFinished = list[index]['processIsFinished'] == 'unfinished' ? '审核中' : '已审核';
+                  return ExamineView(
+                    data: list[index],
+                    type: type,
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineDetail(
+                        processInsId: list[index]['processInstanceId'],
+                        taskId: list[index]['taskId'],
+                        type: type,
+                        processIsFinished: processIsFinished,
+                        status: list[index]['status'],
+                      ))).then((value) => _sendList());
+                    }
+                  );
                 }, childCount: list.length)
             ) :
             SliverToBoxAdapter(
-                child: Center(
-                    child: Text('暂无数据')
+                child: Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
                 )
             )
           ]

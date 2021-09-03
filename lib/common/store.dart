@@ -10,6 +10,8 @@ class Store {
   static const _kToken = "keyToken";
   static const _userId = "userid";
   static const _userName = "user_name";
+  static const _postName = "post_name";
+  static const _nickName = "nick_name";
   static const _userAvatar = "avatar";
 
 
@@ -37,6 +39,22 @@ class Store {
     return _box.read(_userName);
   }
 
+  static savePostName(String postName) {
+    _box.write(_postName, postName);
+  }
+
+  static String readPostName() {
+    return _box.read(_postName);
+  }
+
+  static saveNickName(String nickName) {
+    _box.write(_nickName, nickName);
+  }
+
+  static String readNickName() {
+    return _box.read(_nickName);
+  }
+
   static saveUserAvatar(String avatar) {
     _box.write(_userAvatar, avatar);
   }
@@ -49,6 +67,8 @@ class Store {
     _box.remove(_kToken);
     _box.remove(_userId);
     _box.remove(_userName);
+    _box.remove(_postName);
+    _box.remove(_nickName);
     _box.remove(_userAvatar);
   }
 }

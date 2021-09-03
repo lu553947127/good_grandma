@@ -344,6 +344,37 @@ class WorkText {
   };
 }
 
+final List<Map> _list = [
+  {'title': '事假申请', 'status': '审核中', 'time' : '2012-05-29 16:31:50',
+    'list' : [
+      {
+        "title":"请假类型",
+        "content":"事假",
+      },
+      {
+        "title":"请假日期",
+        "content":"2021-7-20 — 2021-7-22",
+      },
+      {
+        "title":"请假天数",
+        "content":"2天",
+      }
+    ]
+  },
+  {'title': '费用申请', 'status': '已审核', 'time' : '2012-05-29 16:31:50',
+    'list' : [
+      {
+        "title":"费用类别",
+        "content":"固定费用 - 差旅费用",
+      },
+      {
+        "title":"费用金额",
+        "content":"¥1万元",
+      }
+    ]
+  },
+];
+
 const PickerData = '''
 [
     {
