@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/day_post_add_model.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
+import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
 
 ///我的
@@ -135,7 +136,7 @@ class MinePage extends StatelessWidget {
       case -2:
         {
           //开通账号功能
-          print('开通账号功能');
+          Navigator.push(context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
         }
         break;
       case -1:
