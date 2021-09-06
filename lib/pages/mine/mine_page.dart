@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/mine_performance_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
@@ -12,6 +13,7 @@ class MinePage extends StatelessWidget {
     {'image': 'assets/images/mine_form.png', 'name': '我的报单'},
     {'image': 'assets/images/mine_order.png', 'name': '我的订单'},
     {'image': 'assets/images/mine_contract.png', 'name': '我的合同'},
+    {'image': 'assets/images/mine_feedback.png', 'name': '意见反馈'},
   ];
   @override
   Widget build(BuildContext context) {
@@ -31,12 +33,8 @@ class MinePage extends StatelessWidget {
             local: local,
             type: type,
             phone: phone,
-            setBtnOnTap: () {
-              _cellOnTap(context, -3);
-            },
-            functionBtnOnTap: () {
-              _cellOnTap(context, -2);
-            },
+            setBtnOnTap: () => _cellOnTap(context, -3),
+            functionBtnOnTap: () => _cellOnTap(context, -2),
           ),
           //我的业绩
           SliverToBoxAdapter(
@@ -168,6 +166,12 @@ class MinePage extends StatelessWidget {
         {
           //我的合同
 
+        }
+        break;
+      case 4:
+        {
+          //意见反馈
+          Navigator.push(context, MaterialPageRoute(builder: (_) => FeedbackPage()));
         }
         break;
     }

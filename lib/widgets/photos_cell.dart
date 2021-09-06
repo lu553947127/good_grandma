@@ -55,7 +55,8 @@ class CustomPhotoWidget extends StatelessWidget {
     this.title,
     this.length,
     this.url,
-    this.sizeHeight
+    this.sizeHeight,
+    this.bgColor = Colors.white,
   }) : super(key: key);
 
   final String title;
@@ -63,6 +64,7 @@ class CustomPhotoWidget extends StatelessWidget {
 
   ///上传附件url
   final String url;
+  final Color bgColor;
 
   ///分割线间距
   double sizeHeight = 0;
@@ -71,7 +73,7 @@ class CustomPhotoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ImagesProvider imagesProvider = Provider.of<ImagesProvider>(context);
     return Container(
-      color: Colors.white,
+      color: bgColor,
       child: Column(
         children: [
           SizedBox(
@@ -85,11 +87,14 @@ class CustomPhotoWidget extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Column(
               children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    title,
-                    style: TextStyle(fontSize: 15, color: Colors.black87),
+                Visibility(
+                  visible: title.isNotEmpty,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      title,
+                      style: TextStyle(fontSize: 15, color: Colors.black87),
+                    ),
                   ),
                 ),
                 Container(
@@ -97,6 +102,7 @@ class CustomPhotoWidget extends StatelessWidget {
                   child: GridView.builder(
                       shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
                       physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                      padding: const EdgeInsets.all(0),
                       itemCount: imagesProvider.filePath.length == length ? imagesProvider.filePath.length : length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
