@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/pages/mine/mine_performance_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
@@ -142,7 +143,7 @@ class MinePage extends StatelessWidget {
       case -1:
         {
           //我的业绩
-          print('我的业绩');
+          Navigator.push(context, MaterialPageRoute(builder: (_) => MinePerformancePage()));
         }
         break;
       case 0:

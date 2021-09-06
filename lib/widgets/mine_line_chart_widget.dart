@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 
 ///折线图
-class LineChartWidget extends StatelessWidget {
-  const LineChartWidget({
+class MineLineChartWidget extends StatelessWidget {
+  const MineLineChartWidget({
     Key key,
     @required this.dataMap,
     this.title = '',
@@ -33,20 +33,18 @@ class LineChartWidget extends StatelessWidget {
         // ! Here we can style each data line.
         LineChartBarData(
           spots: spots1,
-          colors: [AppColors.FFE45C26],
+          colors: [Colors.grey],
           barWidth: 2,
           isCurved: true,
           dotData: FlDotData(
-            //节点
             show: true,
             getDotPainter: (FlSpot spot, double xPercentage,
                 LineChartBarData bar, int index,
                 {double size}) {
               return FlDotCirclePainter(
                 radius: 3.5,
-                color: Colors.white,
+                color: AppColors.FFE45C26,
                 strokeColor: AppColors.FFE45C26,
-                strokeWidth: 2,
               );
             },
           ),
@@ -81,7 +79,7 @@ class LineChartWidget extends StatelessWidget {
       ),
       // ! Axis title
       axisTitleData: FlAxisTitleData(
-        show: true,
+        show: false,
         bottomTitle: AxisTitle(titleText: title + '年度业绩折线图', showTitle: true),
         // leftTitle: AxisTitle(titleText: '金额（万元）', showTitle: true),
       ),
@@ -120,7 +118,16 @@ class LineChartWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('金额（万元）'),
+          DefaultTextStyle(
+            style: const TextStyle(color: AppColors.FF959EB1,fontSize: 12.0),
+            child: Row(
+              children: [
+                Text('金额（万元）'),
+                Spacer(),
+                Text('月度业绩'),
+              ],
+            ),
+          ),
           Container(
             height: height,
             width: width,
