@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
+import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/declaration_form/add_declaration_form_page.dart';
 import 'package:good_grandma/pages/declaration_form/my_declaration_form_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/mine_performance_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
+import 'package:good_grandma/pages/order/first_order_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
 import 'package:provider/provider.dart';
 
@@ -173,13 +175,13 @@ class MinePage extends StatelessWidget {
       case 2:
         {
           //我的订单
-
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FirstOrderPage()));
         }
         break;
       case 3:
         {
           //我的合同
-
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
         }
         break;
       case 4:

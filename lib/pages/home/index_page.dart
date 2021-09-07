@@ -45,10 +45,10 @@ class _IndexPageState extends State<IndexPage> {
   void initState() {
     super.initState();
     _pages.addAll([HomePage(switchTabbarIndex: (index){
-      setState(() {
-        _selectedIndex = index;
-      });
-    },), MsgPage(), AppPage(), ShenPiPage(), MinePage()]);
+      setState(() => _selectedIndex = index);
+    },), MsgPage(), AppPage(shenpiOnTap: (){
+      setState(() => _selectedIndex = 3);
+    },), ShenPiPage(), MinePage()]);
   }
 
   @override
@@ -73,8 +73,6 @@ class _IndexPageState extends State<IndexPage> {
 
   void _onItemTapped(int index) {
     if (index != _selectedIndex)
-      setState(() {
-        _selectedIndex = index;
-      });
+      setState(() => _selectedIndex = index);
   }
 }

@@ -20,6 +20,9 @@ import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
 ///应用
 class AppPage extends StatelessWidget{
+  final VoidCallback shenpiOnTap;
+  const AppPage({Key key,@required this.shenpiOnTap}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
 
@@ -56,11 +59,20 @@ class AppPage extends StatelessWidget{
         case '二级订单':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> SecondOrderPage()));
           break;
-        case '审批申请':
+        case '审批申请':{
+          if(shenpiOnTap != null)
+            shenpiOnTap();
+        }
           break;
-        case '营销费用管理':
+        case '营销费用申请':
+          break;
+        case '营销费用核销':
           break;
         case '客户对账':
+          break;
+        case '商品销量统计':
+          break;
+        case '企业文件柜':
           break;
         case '拜访统计':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatistics()));
@@ -120,8 +132,9 @@ class AppPage extends StatelessWidget{
                               onPressed: () {
                                 _btnOnPressed(context, list, index);
                               },
+                              style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Image.asset(list[index]['image'], width: 55.0, height: 55.0),
                                   Text(list[index]['name'], style: TextStyle(fontSize: 14, color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
