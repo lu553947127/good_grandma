@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/models/declaration_form_model.dart';
+import 'package:good_grandma/pages/declaration_form/add_declaration_form_page.dart';
+import 'package:good_grandma/pages/declaration_form/my_declaration_form_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/mine_performance_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
+import 'package:provider/provider.dart';
 
 ///我的
 class MinePage extends StatelessWidget {
@@ -129,31 +133,41 @@ class MinePage extends StatelessWidget {
       case -3:
         {
           //设置按钮
-          Navigator.push(context, MaterialPageRoute(builder: (_) => SetUpPage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => SetUpPage()));
         }
         break;
       case -2:
         {
           //开通账号功能
-          Navigator.push(context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
         }
         break;
       case -1:
         {
           //我的业绩
-          Navigator.push(context, MaterialPageRoute(builder: (_) => MinePerformancePage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => MinePerformancePage()));
         }
         break;
       case 0:
         {
           //我要报单
-          print('我要报单');
+          DeclarationFormModel model = DeclarationFormModel();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) =>
+                      ChangeNotifierProvider<DeclarationFormModel>.value(
+                          value: model, child: AddDeclarationFormPage())));
         }
         break;
       case 1:
         {
           //我的报单
-
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => MyDeclarationFormPage()));
         }
         break;
       case 2:
@@ -171,7 +185,8 @@ class MinePage extends StatelessWidget {
       case 4:
         {
           //意见反馈
-          Navigator.push(context, MaterialPageRoute(builder: (_) => FeedbackPage()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => FeedbackPage()));
         }
         break;
     }

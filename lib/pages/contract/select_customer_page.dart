@@ -4,7 +4,7 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
-///选择员工
+///选择客户
 class SelectCustomerPage extends StatefulWidget {
   const SelectCustomerPage({Key key, @required this.selCustomers})
       : super(key: key);

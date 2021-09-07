@@ -80,7 +80,9 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
             'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
         name: '产品' + i.toString(),
         id: i.toString(),
-        spec: '规格：1*40'
+        spec: '规格：1*40',
+        price: 2.0,
+        weight: 1000,
       ));
     }
     if (widget.selGoods.isNotEmpty) {
