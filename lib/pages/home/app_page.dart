@@ -4,6 +4,7 @@ import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
 import 'package:good_grandma/pages/order/first_order_page.dart';
 import 'package:good_grandma/pages/order/second_order_page.dart';
 import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
+import 'package:good_grandma/pages/sales_statistics/sales_statistics_page.dart';
 import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
@@ -71,6 +72,13 @@ class AppPage extends StatelessWidget{
         case '客户对账':
           break;
         case '商品销量统计':
+          {
+            //todo:登录用户类型需要从登录信息中获取
+            //分三种登录用户类型,不同类型显示状态不同 1：业务经理，2：管理层，3：客户登录
+            int userType = 2;
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SalesStatisticsPage(userType: userType,)));
+          }
           break;
         case '企业文件柜':
           break;

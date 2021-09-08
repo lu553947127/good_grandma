@@ -10,6 +10,8 @@ class PostProgressView extends StatelessWidget {
 
   ///标题
   final String title;
+  ///标题颜色
+  final Color titleColor;
 
   ///进度条颜色
   final Color color;
@@ -33,6 +35,7 @@ class PostProgressView extends StatelessWidget {
     @required this.title,
     @required this.textColor,
     this.width = 200,
+    this.titleColor = Colors.black,
     this.height = 6,
     this.fontSize = 10.0,
     this.horizontal = 10.0,
@@ -46,7 +49,7 @@ class PostProgressView extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
       child: Row(
         children: [
-          Text((title ?? '') + '  ', style: const TextStyle(fontSize: 12.0)),
+          Text((title ?? '') + '  ', style: TextStyle(color: titleColor,fontSize: 12.0)),
           Stack(
             children: [
               Container(height: height, width: width),
