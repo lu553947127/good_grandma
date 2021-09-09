@@ -5,6 +5,7 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/pages/home/examine/apply/cost_apply.dart';
 import 'package:good_grandma/pages/home/examine/apply/cost_off_apply.dart';
+import 'package:good_grandma/pages/home/examine/apply/evection_apply.dart';
 import 'package:good_grandma/pages/home/examine/apply/leave_apply.dart';
 import 'package:good_grandma/widgets/custom_form.dart';
 
@@ -63,6 +64,13 @@ class _ExamineAddState extends State<ExamineAdd> {
                 break;
               case '费用核销':
                 return ExamineCostOffApply(
+                    name: widget.name,
+                    processId: widget.processId,
+                    list: list
+                );
+                break;
+              case '出差报销':
+                return ExamineEvectionApply(
                     name: widget.name,
                     processId: widget.processId,
                     list: list

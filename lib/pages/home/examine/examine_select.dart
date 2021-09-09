@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/home/examine/examine_add.dart';
 
+///审批类型列表弹窗
 class ExamineSelectDialog extends StatelessWidget {
   final List<Map> list;
   ExamineSelectDialog({Key key, @required this.list}) : super(key: key);
@@ -26,7 +27,8 @@ class ExamineSelectDialog extends StatelessWidget {
                     topRight: Radius.circular(15),
                   ),
                 ),
-                child: ListView.builder(
+                child: list.length != 0 ?
+                ListView.builder(
                     itemCount: list.length,
                     itemBuilder: (content, index){
                       return ListTile(
@@ -42,7 +44,11 @@ class ExamineSelectDialog extends StatelessWidget {
                         },
                       );
                     }
-                ),
+                ) :
+                Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
               )
             ],
           );

@@ -1,13 +1,20 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/home/examine/apply/dynamic_form.dart';
+import 'package:good_grandma/pages/home/examine/apply/system_form.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
+import 'package:good_grandma/provider/form_rovider.dart';
+import 'package:good_grandma/provider/form_sys_provider.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
-import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
@@ -34,6 +41,9 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
   Widget build(BuildContext context) {
 
     ImagesProvider imagesProvider = new ImagesProvider();
+    FormProvider formProvider = new FormProvider();
+    FormSysProvider formSysProvider = new FormSysProvider();
+
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
 
@@ -115,9 +125,34 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
             rightPlaceholder: '请输入${data['label']}',
             sizeHeight: 10,
             onChanged: (tex){
+              for (String prop in dataList) {
+                if (data['prop'] == prop){
+                  addData[prop] = tex;
+                }
+              }
 
+              LogUtil.d('addData----$addData');
             },
           );
+          break;
+        case 'dynamic':
+          if (data['prop'] == 'zhifuduixiangxinxi'){
+            return ChangeNotifierProvider<FormProvider>.value(
+              value: formProvider,
+              child: DynamicFormView(
+                data: data,
+              ),
+            );
+          }else if (data['prop'] == 'xitongfujian'){
+            return ChangeNotifierProvider<FormSysProvider>.value(
+              value: formSysProvider,
+              child: SystemFormView(
+                data: data,
+              ),
+            );
+          }else {
+            return Container();
+          }
           break;
         case 'upload':
           return ChangeNotifierProvider<ImagesProvider>.value(
@@ -136,6 +171,23 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
       }
     }
 
+    ///发起流程
+    _startProcess(){
+      addData['file'] = imagesProvider.imagePath;
+      addData['zhifuduixiangxinxi'] = formProvider.mapList;
+      LogUtil.d('addData----$addData');
+      requestPost(Api.startProcess, json: addData).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---startProcess----$data');
+        if (data['code'] == 200){
+          showToast("添加成功");
+          Navigator.of(Application.appContext).pop('refresh');
+        }else {
+          showToast(data['msg']);
+        }
+      });
+    }
+
     return CustomScrollView(
         slivers: [
           SliverList(
@@ -148,9 +200,7 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
                   padding: const EdgeInsets.only(top: 30, bottom: 30, left: 22, right: 22),
                   child: LoginBtn(
                       title: '提交',
-                      onPressed: () {
-                        showToast("成功");
-                      }
+                      onPressed: _startProcess
                   )
               )
           )

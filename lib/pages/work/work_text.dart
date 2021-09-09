@@ -60,23 +60,23 @@ class WorkText {
         }
       ]
     },
-    {
-      'title': '费用管理',
-      'list':[
-        {
-          "image":"assets/images/ic_work_12.png",
-          "name":"营销费用申请",
-        },
-        {
-          "image":"assets/images/ic_work_13.png",
-          "name":"营销费用核销",
-        },
-        {
-          "image":"assets/images/ic_work_14.png",
-          "name":"客户对账",
-        }
-      ]
-    },
+    // {
+    //   'title': '费用管理',
+    //   'list':[
+    //     {
+    //       "image":"assets/images/ic_work_12.png",
+    //       "name":"营销费用申请",
+    //     },
+    //     {
+    //       "image":"assets/images/ic_work_13.png",
+    //       "name":"营销费用核销",
+    //     },
+    //     {
+    //       "image":"assets/images/ic_work_14.png",
+    //       "name":"客户对账",
+    //     }
+    //   ]
+    // },
     {
       'title': '统计分析',
       'list':[

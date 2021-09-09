@@ -66,12 +66,12 @@ class AppPage extends StatelessWidget{
             shenpiOnTap();
         }
           break;
-        case '营销费用申请':
-          break;
-        case '营销费用核销':
-          break;
-        case '客户对账':
-          break;
+        // case '营销费用申请':
+        //   break;
+        // case '营销费用核销':
+        //   break;
+        // case '客户对账':
+        //   break;
         case '商品销量统计':
           {
             //todo:登录用户类型需要从登录信息中获取

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
@@ -65,6 +64,18 @@ class _ExamineDetailState extends State<ExamineDetail> {
 
               ///获取审核流程列表数据
               List<Map> flowList = (data['data']['flow'] as List).cast();
+
+              ///删除无用数据
+              for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
+                  flowList.removeAt(i);
+                }
+                if (flowList[i]['historyActivityType'] == 'candidate'){
+                  LogUtil.d('flowList----$i');
+                  flowList.remove(i);
+                }
+              }
+
               LogUtil.d('flowList----$flowList');
 
               return Stack(
@@ -75,7 +86,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                           avatar: process['user']['avatar'],
                           title: process['processDefinitionName'],
                           time: '提交时间: ${process['createTime']}',
-                          wait: '等待王武审批',
+                          wait: '等待${flowList[0]['user']['name']}审批',
                           status: widget.processIsFinished == '审核中' ? '审核中' : '已审核',
                           type: widget.type,
                         ),

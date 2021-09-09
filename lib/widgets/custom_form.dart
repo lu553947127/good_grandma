@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
@@ -210,6 +209,13 @@ class _CustomFormViewState extends State<CustomFormView> {
 
     ///发起流程
     _startProcess(){
+
+      for (String prop in dataList) {
+        if ('upload' == prop){
+          addData['file'] = imagesProvider.imagePath;
+        }
+      }
+
       requestPost(Api.startProcess, json: addData).then((val) async{
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---startProcess----$data');
