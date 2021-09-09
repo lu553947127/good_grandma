@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
+import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
@@ -37,19 +38,19 @@ class _Body extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("好阿婆"),
-        actions: [
-          TextButton(
-              onPressed: () {},
-              child: Image.asset('assets/images/home_scan.png',
-                  width: 20.0, height: 20.0)),
-        ],
+        // actions: [
+        //   TextButton(
+        //       onPressed: () {},
+        //       child: Image.asset('assets/images/home_scan.png',
+        //           width: 20.0, height: 20.0)),
+        // ],
       ),
       body: Scrollbar(
         child: CustomScrollView(
           slivers: [
             //顶部按钮
-            HomeTableHeader(onTap: (index){
-              _titleBtnOnTap(context,index);
+            HomeTableHeader(onTap: (name){
+              _titleBtnOnTap(context,name);
             },),
             //消息通知
             SliverToBoxAdapter(
@@ -84,33 +85,34 @@ class _Body extends State<HomePage> {
 
 
   ///按钮点击事件
-  void _titleBtnOnTap(BuildContext context, int index) {
-    switch(index){
-      case 0://工作报告
+  void _titleBtnOnTap(BuildContext context, String name) {
+    switch(name){
+      case '工作报告':
         Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
         break;
-      case 1://市场活动
+      case '市场活动':
         Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketingActivityPage()));
         break;
-      case 2:
-        { //审批申请
+      case '审批申请':
+        {
           if(widget.switchTabbarIndex != null)
             widget.switchTabbarIndex(3);
         }
         break;
-      case 3://费用申请
+      case '签到':
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
         break;
-      case 4://业绩统计
+      case '业绩统计':
         Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
         break;
-      case 5://冰柜销量
+      case '冰柜销量':
         Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
         break;
-      case 6://冰柜统计
+      case '冰柜统计':
         Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
         break;
-      case 7:
-        { //更多
+      case '更多':
+        {
           if(widget.switchTabbarIndex != null)
             widget.switchTabbarIndex(2);
         }
