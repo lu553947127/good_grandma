@@ -53,6 +53,8 @@ class _ExamineDetailState extends State<ExamineDetail> {
               var process = data['data']['process'];
               LogUtil.d('process----$process');
 
+              LogUtil.d('variables----${process['variables']}');
+
               ///获取详情表单数据
               // var form = jsonDecode(data['data']['form']['allForm']);
               // LogUtil.d('form----$form');
@@ -71,7 +73,6 @@ class _ExamineDetailState extends State<ExamineDetail> {
                   flowList.removeAt(i);
                 }
                 if (flowList[i]['historyActivityType'] == 'candidate'){
-                  LogUtil.d('flowList----$i');
                   flowList.remove(i);
                 }
               }
