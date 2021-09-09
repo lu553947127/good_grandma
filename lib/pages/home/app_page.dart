@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
+import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
 import 'package:good_grandma/pages/order/first_order_page.dart';
 import 'package:good_grandma/pages/order/second_order_page.dart';
@@ -81,6 +82,7 @@ class AppPage extends StatelessWidget{
           }
           break;
         case '企业文件柜':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FilesPage()));
           break;
         case '拜访统计':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatistics()));

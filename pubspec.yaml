@@ -75,6 +75,10 @@ dependencies:
   fl_chart: ^0.40.0
   # 应用信息
   package_info: ^2.0.2
+  # 文件选择器
+#  file_picker: ^4.0.2
+  # 阅读文档
+  flutter_filereader: ^3.0.0
 
 dev_dependencies:
   flutter_test:

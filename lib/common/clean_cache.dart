@@ -12,7 +12,7 @@ class CleanCache{
         print(file.path);
       });*/
     // print('临时目录大小: ' + value.toString());
-    return  _renderSize(value);
+    return  renderSize(value);
   }
   ///清除缓存
   static Future<String> cleanCache()async{
@@ -65,7 +65,7 @@ class CleanCache{
     }
   }
   // 计算大小
-  static _renderSize(double value) {
+  static renderSize(double value) {
     if (null == value) {
       return 0;
     }
