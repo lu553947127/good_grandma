@@ -96,7 +96,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/file/
     - assets/images/
 
 
