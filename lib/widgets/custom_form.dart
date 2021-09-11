@@ -211,11 +211,10 @@ class _CustomFormViewState extends State<CustomFormView> {
     _startProcess(){
 
       for (String prop in dataList) {
-        if ('upload' == prop){
+        if ('fujian' == prop){
           addData['file'] = imagesProvider.imagePath;
         }
       }
-
       requestPost(Api.startProcess, json: addData).then((val) async{
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---startProcess----$data');
