@@ -25,7 +25,6 @@ class _DynamicEvectionFormViewState extends State<DynamicEvectionFormView> {
     final FormEvectionProvider formEvectionProvider = Provider.of<FormEvectionProvider>(context);
 
     _childWidget(data, index){
-
       FormEvectionModel formEvectionModel = formEvectionProvider.form[index];
 
       switch(data['type']){
@@ -33,10 +32,14 @@ class _DynamicEvectionFormViewState extends State<DynamicEvectionFormView> {
           return TimeSelectView(
               leftTitle: data['label'],
               rightPlaceholder: '请选择${data['label']}',
+              value: (formEvectionModel.start_time.isNotEmpty && formEvectionModel.end_time.isNotEmpty)
+                  ? '${formEvectionModel.start_time + ' - ' + formEvectionModel.end_time}'
+                  : '',
+              dayNumber: formEvectionModel.hejitianshu,
               sizeHeight: 0,
               onPressed: (param) {
-                print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
-                print('param--------onPressed--------- $param');
+                // print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
+                // print('param--------onPressed--------- $param');
 
                 formEvectionModel.start_time = param['startTime'];
                 formEvectionModel.end_time = param['endTime'];

@@ -11,17 +11,19 @@ class TimeSelectView extends StatefulWidget {
   ///点击回调
   final Function(Map param) onPressed;
   ///选择回调value
-  String value = '';
+  String value;
   ///分割线间距
   double sizeHeight = 0;
   ///请假天数
-  int dayNumber = 0;
+  int dayNumber;
 
   TimeSelectView({Key key,
     this.leftTitle,
     this.rightPlaceholder,
     this.onPressed,
-    this.sizeHeight
+    this.sizeHeight,
+    this.dayNumber = 0,
+    this.value = '',
   }) : super(key: key);
 
   @override
@@ -53,7 +55,7 @@ class _TimeSelectViewState extends State<TimeSelectView> {
                   Text(widget.leftTitle, style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                   Row(
                     children: [
-                      Text(widget.rightPlaceholder, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
+                      Text(widget.value == '' ?widget.rightPlaceholder:widget.value, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
                       Icon(Icons.keyboard_arrow_right, color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28)
                     ],
                   )
@@ -63,12 +65,8 @@ class _TimeSelectViewState extends State<TimeSelectView> {
                 showPickerDateRange(
                     context: Application.appContext,
                   callBack: (Map param){
-                    setState(() {
-                      widget.rightPlaceholder = param['startTime'] + ' - ' + param['endTime'];
-                      widget.value = param['startTime'] + ' - ' + param['endTime'];
-                      widget.dayNumber = param['days'];
-                      widget.onPressed(param);
-                    });
+                      if(widget.onPressed != null)
+                        widget.onPressed(param);
                   }
                 );
               },
