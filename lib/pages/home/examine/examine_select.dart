@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/pages/home/examine/examine_add.dart';
 
 ///审批类型列表弹窗
 class ExamineSelectDialog extends StatelessWidget {
@@ -35,13 +34,7 @@ class ExamineSelectDialog extends StatelessWidget {
                         title: Center(
                           child: Text(list[index]['name'], style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
                         ),
-                        onTap: (){
-                          Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdd(
-                            name: list[index]['name'],
-                            processId: list[index]['id'],
-                          )));
-                        },
+                        onTap: () => Navigator.pop(context,list[index]),
                       );
                     }
                 ) :

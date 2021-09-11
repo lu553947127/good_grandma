@@ -145,8 +145,8 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                             Text('驳回', style: TextStyle(fontSize: 13, color: Color(0XFFDD0000)))
                                           ]
                                         ),
-                                        onPressed: (){
-                                          Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
+                                        onPressed: () async{
+                                          String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
                                             process: process,
                                             type: widget.type,
                                             processIsFinished: widget.processIsFinished,
@@ -154,6 +154,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                             taskId: widget.taskId,
                                             wait: '等待${flowList[0]['user']['name']}审批',
                                           )));
+                                          if(refresh2 != null) Navigator.pop(context,'refresh');
                                         },
                                       ),
                                       SizedBox(
@@ -171,8 +172,8 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               Text('通过', style: TextStyle(fontSize: 13, color: Color(0XFF12BD95)))
                                             ],
                                           ),
-                                          onPressed: (){
-                                            Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
+                                          onPressed: () async{
+                                            String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
                                               process: process,
                                               type: widget.type,
                                               processIsFinished: widget.processIsFinished,
@@ -180,6 +181,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               taskId: widget.taskId,
                                               wait: '等待${flowList[0]['user']['name']}审批',
                                             )));
+                                            if(refresh2 != null) Navigator.pop(context,'refresh');
                                           }
                                       )
                                     ]
