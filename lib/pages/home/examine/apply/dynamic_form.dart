@@ -32,10 +32,17 @@ class _DynamicFormViewState extends State<DynamicFormView> {
 
       switch(data['type']){
         case 'select':
+          String value = '';
+          if (data['prop'] == 'danweimingcheng'){
+            value = formModel.danweimingcheng;
+          } else if (data['prop'] == 'zhifufangshi'){
+            value = formModel.zhifufangshi;
+          }
           return TextSelectView(
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 0,
+              value : value,
             onPressed: () async{
               String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
               LogUtil.d('select----$select');
