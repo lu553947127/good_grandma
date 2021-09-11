@@ -30,6 +30,7 @@ class ImagesProvider with ChangeNotifier{
   imagesListDelete(int index) async{
     if(filePath.length > 0){
       filePath.removeAt(index);
+      imagePath.removeAt(index);
       notifyListeners();
     }
   }
