@@ -7,7 +7,9 @@ import 'package:good_grandma/pages/home/examine/apply/cost_apply.dart';
 import 'package:good_grandma/pages/home/examine/apply/cost_off_apply.dart';
 import 'package:good_grandma/pages/home/examine/apply/evection_apply.dart';
 import 'package:good_grandma/pages/home/examine/apply/leave_apply.dart';
+import 'package:good_grandma/provider/time_select_provider.dart';
 import 'package:good_grandma/widgets/custom_form.dart';
+import 'package:provider/provider.dart';
 
 ///审批添加
 class ExamineAdd extends StatefulWidget {
@@ -27,6 +29,9 @@ class _ExamineAddState extends State<ExamineAdd> {
 
   @override
   Widget build(BuildContext context) {
+
+    TimeSelectProvider timeSelectProvider = new TimeSelectProvider();
+
     Map<String, dynamic> map = {'processId': widget.processId};
     return Scaffold(
       appBar: AppBar(
@@ -49,24 +54,33 @@ class _ExamineAddState extends State<ExamineAdd> {
 
             switch (widget.name){
               case '费用申请':
-                return ExamineCostApply(
-                    name: widget.name,
-                    processId: widget.processId,
-                    list: list
+                return ChangeNotifierProvider<TimeSelectProvider>.value(
+                    value: timeSelectProvider,
+                    child: ExamineCostApply(
+                        name: widget.name,
+                        processId: widget.processId,
+                        list: list
+                    )
                 );
                 break;
               case '请假流程':
-                return ExamineLeaveApply(
-                    name: widget.name,
-                    processId: widget.processId,
-                    list: list
+                return ChangeNotifierProvider<TimeSelectProvider>.value(
+                  value: timeSelectProvider,
+                  child: ExamineLeaveApply(
+                      name: widget.name,
+                      processId: widget.processId,
+                      list: list
+                  )
                 );
                 break;
               case '费用核销':
-                return ExamineCostOffApply(
-                    name: widget.name,
-                    processId: widget.processId,
-                    list: list
+                return ChangeNotifierProvider<TimeSelectProvider>.value(
+                    value: timeSelectProvider,
+                    child: ExamineCostOffApply(
+                        name: widget.name,
+                        processId: widget.processId,
+                        list: list
+                    )
                 );
                 break;
               case '出差报销':

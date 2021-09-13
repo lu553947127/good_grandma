@@ -48,7 +48,7 @@ class ExamineReject extends StatelessWidget {
 
       if (data['code'] == 200){
         showToast("驳回成功");
-        Navigator.of(Application.appContext).pop('refresh2');
+        Navigator.of(Application.appContext).pop('refresh');
       }else {
         showToast(data['msg']);
       }

@@ -6,10 +6,12 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
+import 'package:good_grandma/provider/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/time_select.dart';
+import 'package:provider/provider.dart';
 
 ///请假申请
 class ExamineLeaveApply extends StatefulWidget {
@@ -31,6 +33,8 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
   @override
   Widget build(BuildContext context) {
 
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+
     List<String> dataList = [];
     Map addData = new Map();
     addData['processId'] = widget.processId;
@@ -48,9 +52,12 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 0,
+            value: timeSelectProvider.select,
             onPressed: () async{
               String type = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
               print('type -------- $type');
+
+              timeSelectProvider.addValue(type);
 
               for (String prop in dataList) {
                 if (data['prop'] == prop){
@@ -68,9 +75,15 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 1,
+              value: (timeSelectProvider.startTime.isNotEmpty && timeSelectProvider.endTime.isNotEmpty)
+                  ? '${timeSelectProvider.startTime + ' - ' + timeSelectProvider.endTime}'
+                  : '',
+            dayNumber: timeSelectProvider.dayNumber,
             onPressed: (param) {
               print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
               print('param--------onPressed--------- $param');
+
+              timeSelectProvider.addStartTime(param['startTime'], param['endTime'], param['days']);
 
               List<String> timeList = [];
               timeList.add(param['startTime']);
@@ -126,22 +139,22 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
     }
 
     return CustomScrollView(
-      slivers: [
-        SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return _childWidget(widget.list[index]);
-            }, childCount: widget.list.length)
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-              padding: const EdgeInsets.only(top: 30, bottom: 30, left: 22, right: 22),
-              child: LoginBtn(
-                  title: '提交',
-                  onPressed: _startProcess
+        slivers: [
+          SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return _childWidget(widget.list[index]);
+              }, childCount: widget.list.length)
+          ),
+          SliverToBoxAdapter(
+              child: Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 30, left: 22, right: 22),
+                  child: LoginBtn(
+                      title: '提交',
+                      onPressed: _startProcess
+                  )
               )
           )
-        )
-      ]
+        ]
     );
   }
 }

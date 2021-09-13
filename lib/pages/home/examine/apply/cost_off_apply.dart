@@ -12,6 +12,7 @@ import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/form_rovider.dart';
 import 'package:good_grandma/provider/form_sys_provider.dart';
 import 'package:good_grandma/provider/image_provider.dart';
+import 'package:good_grandma/provider/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
@@ -43,6 +44,7 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
     ImagesProvider imagesProvider = new ImagesProvider();
     FormProvider formProvider = new FormProvider();
     FormSysProvider formSysProvider = new FormSysProvider();
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
 
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
@@ -72,9 +74,12 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 1,
+            value: timeSelectProvider.select,
             onPressed: () async{
               String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
               LogUtil.d('select----$select');
+
+              timeSelectProvider.addValue(select);
 
               for (String prop in dataList) {
                 if (data['prop'] == prop){

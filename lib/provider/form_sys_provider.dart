@@ -8,9 +8,16 @@ class FormSysProvider with ChangeNotifier{
   ///动态列表
   List<Map> get formSys => _formSys;
 
+  String select = '';
+
 
   FormSysProvider() {
     _formSys = [];
+  }
+
+  add(str){
+    select = str;
+    notifyListeners();
   }
 
   ///添加item

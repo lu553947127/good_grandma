@@ -98,10 +98,14 @@ class _DynamicFormViewState extends State<DynamicFormView> {
           );
           break;
         case 'datetime':
+          String value = '';
+          value = formModel.yujizhifushijian;
+
           return TextSelectView(
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 1,
+            value: value,
             onPressed: () async{
               String time = await showPickerDate(context);
 

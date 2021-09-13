@@ -55,7 +55,8 @@ class _TimeSelectViewState extends State<TimeSelectView> {
                   Text(widget.leftTitle, style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                   Row(
                     children: [
-                      Text(widget.value == '' ?widget.rightPlaceholder:widget.value, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
+                      Text(widget.value == '' ? widget.rightPlaceholder : widget.value,
+                          style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: widget.value == '' ? 15.0 : 13.0)),
                       Icon(Icons.keyboard_arrow_right, color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28)
                     ],
                   )

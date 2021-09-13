@@ -71,11 +71,21 @@ class _ExamineDetailState extends State<ExamineDetail> {
 
               ///删除无用数据
               for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['historyActivityType'] == 'candidate'){
+                  flowList.removeAt(i);
+                }
+              }
+
+              for(int i=0; i < flowList.length; i++) {
                 if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
                   flowList.removeAt(i);
                 }
-                else if (flowList[i]['historyActivityType'] == 'candidate'){
-                  flowList.remove(i);
+              }
+
+              for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['user']['id'] == null){
+                  flowList.removeAt(i);
+                  LogUtil.d('flowList--user--$i');
                 }
               }
 

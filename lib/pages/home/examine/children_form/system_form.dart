@@ -34,10 +34,13 @@ class _SystemFormViewState extends State<SystemFormView> {
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 0,
+            value: formSysProvider.select,
             onPressed: () async{
               String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
               LogUtil.d('select----$select');
 
+
+              formSysProvider.add(select);
               // if (data['prop'] == 'danweimingcheng'){
               //   formModel.danweimingcheng = select;
               // } else if (data['prop'] == 'zhifufangshi'){
