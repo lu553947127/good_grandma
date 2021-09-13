@@ -107,17 +107,19 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: <Widget>[
             LoginEditText(
-              textEditingController: _username,
-              text: '请输入账号',
-              images: 'assets/images/ic_login_name.png',
-              type: TextInputType.text
+                textEditingController: _username,
+                text: '请输入账号',
+                images: 'assets/images/ic_login_name.png',
+                type: TextInputType.text,
+                passwordVisible: false
             ),
             SizedBox(height: 10),
             LoginEditText(
               textEditingController: _password,
               text: '请输入密码',
               images: 'assets/images/ic_login_password.png',
-              type: TextInputType.visiblePassword
+              type: TextInputType.visiblePassword,
+              passwordVisible: true
             )
           ],
         ),
@@ -134,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
               textEditingController: _account,
               text: '请输入手机号',
               images: 'assets/images/ic_login_phone.png',
-              type: TextInputType.number
+              type: TextInputType.number,
+                passwordVisible: false
             ),
             SizedBox(height: 10),
             Stack(
@@ -143,7 +146,8 @@ class _LoginPageState extends State<LoginPage> {
                   textEditingController: _code,
                   text: '请输入验证码',
                   images: 'assets/images/ic_login_code.png',
-                    type: TextInputType.number
+                    type: TextInputType.number,
+                    passwordVisible: false
                 ),
                 Positioned(
                   right: 0,

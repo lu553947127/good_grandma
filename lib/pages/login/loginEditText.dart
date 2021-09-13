@@ -6,12 +6,14 @@ class LoginEditText extends StatelessWidget {
   var text;
   var images;
   TextInputType type;
+  bool passwordVisible = false; //设置密码初始状态
 
   LoginEditText({Key key
     , @required this.textEditingController
     , @required this.text
     , @required this.images
     , @required this.type
+    , @required this.passwordVisible
   }) : super(key: key);
 
   @override
@@ -28,6 +30,7 @@ class LoginEditText extends StatelessWidget {
         keyboardType: type,//输入类型
         style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
         cursorColor: Color(0xFFC68D3E),//修改光标颜色
+        obscureText: passwordVisible,
         decoration: InputDecoration(
             hintText: text,
             hintStyle: TextStyle(fontSize: 15,color: Color(0XFFC1C8D7)),
