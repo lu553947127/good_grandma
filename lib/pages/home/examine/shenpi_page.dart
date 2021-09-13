@@ -4,6 +4,7 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/home/examine/examine_add.dart';
 import 'package:good_grandma/pages/home/examine/examine_detail.dart';
 import 'package:good_grandma/pages/home/examine/examine_select.dart';
 import 'package:good_grandma/pages/home/examine/examine_view.dart';
@@ -137,14 +138,15 @@ class _ShenPiPageState extends State<ShenPiPage> {
                   return ExamineView(
                     data: list[index],
                     type: type,
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineDetail(
+                    onTap: () async{
+                      String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineDetail(
                         processInsId: list[index]['processInstanceId'],
                         taskId: list[index]['taskId'],
                         type: type,
                         processIsFinished: processIsFinished,
                         status: list[index]['status'],
                       ))).then((value) => _sendList());
+                      if(refresh != null && refresh == 'refresh') _refresh();
                     }
                   );
                 }, childCount: list.length)
@@ -161,14 +163,33 @@ class _ShenPiPageState extends State<ShenPiPage> {
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFC68D3E),
         onPressed: () async{
-          showModalBottomSheet(
+          Map result = await showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
                 return ExamineSelectDialog(list: listType);
               }
           );
+          if(result != null){
+            String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdd(
+              name: result['name'],
+              processId: result['id'],
+            )));
+            if(refresh != null && refresh == 'refresh') _refresh();
+
+          }
         },
       ),
     );
+  }
+  _refresh(){
+    if(type == listTitle[0]['name']){
+      _sendList();
+    }
+    else if(type == listTitle[1]['name']){
+      _todoList();
+    }
+    else if(type == listTitle[2]['name']){
+      _copyList();
+    }
   }
 }

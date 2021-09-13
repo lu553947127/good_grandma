@@ -11,7 +11,7 @@ class TextSelectView extends StatefulWidget {
   ///点击回调
   final Future Function() onPressed;
   ///选择回调value
-  String value = '';
+  String value;
   ///分割线间距
   double sizeHeight = 0;
 
@@ -19,7 +19,8 @@ class TextSelectView extends StatefulWidget {
     this.leftTitle,
     this.rightPlaceholder,
     this.onPressed,
-    this.sizeHeight
+    this.sizeHeight,
+    this.value = '',
   }) : super(key: key);
 
   @override
@@ -50,7 +51,7 @@ class _TextSelectViewState extends State<TextSelectView> {
                 Text(widget.leftTitle, style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                 Row(
                   children: [
-                    Text(widget.rightPlaceholder, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
+                    Text(widget.value == '' ?widget.rightPlaceholder:widget.value, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
                     Icon(Icons.keyboard_arrow_right, color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28)
                   ],
                 )
@@ -58,9 +59,10 @@ class _TextSelectViewState extends State<TextSelectView> {
             ),
             onTap: () async{
               widget.value = await widget.onPressed();
-              setState(() {
-                widget.rightPlaceholder =  widget.value;
-              });
+              // print('value = ${widget.value}');
+              // setState(() {
+              //   widget.rightPlaceholder =  widget.value;
+              // });
             },
           )
         ],

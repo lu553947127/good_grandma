@@ -29,8 +29,10 @@ class MyCacheImageView extends StatelessWidget {
             ? Colors.transparent
             : Colors.grey[200],
         child: this.errorWidgetChild ??
-            Image.asset('assets/images/icon_empty_user.png',
-                width: width, height: height),
+            Icon(
+              Icons.image,
+              color: Colors.grey,
+            ),
         width: width,
         height: height,
       );

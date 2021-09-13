@@ -17,12 +17,13 @@ class ExamineReject extends StatelessWidget {
   final String processIsFinished;
   final String processInsId;
   final String taskId;
+  final String wait;
   ExamineReject({Key key
     , this.process
     , this.type
     , this.processIsFinished
     , this.processInsId
-    , this.taskId
+    , this.taskId, this.wait
   }) : super(key: key);
 
   String comment = '';
@@ -70,7 +71,7 @@ class ExamineReject extends StatelessWidget {
             avatar: process['user']['avatar'],
             title: process['processDefinitionName'],
             time: '提交时间: ${process['createTime']}',
-            wait: '等待王武审批',
+            wait: wait,
             status: processIsFinished == '审核中' ? '审核中' : '已审核',
             type: type,
           ),

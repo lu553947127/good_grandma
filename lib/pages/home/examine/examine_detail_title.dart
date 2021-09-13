@@ -44,6 +44,7 @@ class ExamineDetailTitle extends StatelessWidget {
                     imageURL: avatar,
                     width: 50.0,
                     height: 50.0,
+                    errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 50.0, height: 50.0),
                   ),
                 ),
                 SizedBox(width: 10),

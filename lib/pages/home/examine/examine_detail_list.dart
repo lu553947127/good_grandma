@@ -176,7 +176,8 @@ class ExamineDetailList extends StatelessWidget {
                       children: [
                         ClipOval(
                             child: MyCacheImageView(
-                                imageURL: flow['user']['avatar'], width: avatarWH, height: avatarWH)),
+                                imageURL: flow['user']['avatar'], width: avatarWH, height: avatarWH,
+                              errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: avatarWH, height: avatarWH),)),
                         Text(
                           '  ${flow['user']['realName']}',
                           style: const TextStyle(

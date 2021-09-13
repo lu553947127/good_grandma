@@ -258,6 +258,7 @@ class ExamineDetailContent extends StatelessWidget {
                       children: [
                         Offstage(
                             offstage: taskFormList[index]['name'] == '表单附件' ||
+                                taskFormList[index]['name'] == '附件' ||
                                 taskFormList[index]['name'] == '支付对象信息' ||
                                 taskFormList[index]['name'] == '出差明细' ?
                             true : false,
@@ -298,7 +299,7 @@ class ExamineDetailContent extends StatelessWidget {
                             )
                         ),
                         Offstage(
-                            offstage: taskFormList[index]['name'] == '表单附件' ? false : true,
+                            offstage: (taskFormList[index]['name'] == '表单附件' || taskFormList[index]['name'] == '附件') ? false : true,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

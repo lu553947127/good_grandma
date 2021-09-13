@@ -61,7 +61,9 @@ class _ExamineDetailState extends State<ExamineDetail> {
               // List list = (form['column'] as List).cast();
               // LogUtil.d('list----$list');
 
-              List taskFormList = (data['data']['form']['taskForm'] as List).cast();
+              List taskFormList = [];
+              if(data['data']['form']['taskForm'] != null)
+                taskFormList = (data['data']['form']['taskForm'] as List).cast();
               LogUtil.d('taskFormList----$taskFormList');
 
               ///获取审核流程列表数据
@@ -72,7 +74,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                 if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
                   flowList.removeAt(i);
                 }
-                if (flowList[i]['historyActivityType'] == 'candidate'){
+                else if (flowList[i]['historyActivityType'] == 'candidate'){
                   flowList.remove(i);
                 }
               }
@@ -143,14 +145,16 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                             Text('驳回', style: TextStyle(fontSize: 13, color: Color(0XFFDD0000)))
                                           ]
                                         ),
-                                        onPressed: (){
-                                          Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
+                                        onPressed: () async{
+                                          String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
                                             process: process,
                                             type: widget.type,
                                             processIsFinished: widget.processIsFinished,
                                             processInsId: widget.processInsId,
-                                            taskId: widget.taskId
+                                            taskId: widget.taskId,
+                                            wait: '等待${flowList[0]['user']['name']}审批',
                                           )));
+                                          if(refresh2 != null) Navigator.pop(context,'refresh');
                                         },
                                       ),
                                       SizedBox(
@@ -168,14 +172,16 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               Text('通过', style: TextStyle(fontSize: 13, color: Color(0XFF12BD95)))
                                             ],
                                           ),
-                                          onPressed: (){
-                                            Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
+                                          onPressed: () async{
+                                            String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
                                               process: process,
                                               type: widget.type,
                                               processIsFinished: widget.processIsFinished,
                                               processInsId: widget.processInsId,
-                                              taskId: widget.taskId
+                                              taskId: widget.taskId,
+                                              wait: '等待${flowList[0]['user']['name']}审批',
                                             )));
+                                            if(refresh2 != null) Navigator.pop(context,'refresh');
                                           }
                                       )
                                     ]
