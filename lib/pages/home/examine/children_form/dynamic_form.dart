@@ -9,6 +9,7 @@ import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:provider/provider.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 
+///支付对象信息子表单
 class DynamicFormView extends StatefulWidget {
   var data;
   DynamicFormView({Key key, this.data}) : super(key: key);

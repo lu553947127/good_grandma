@@ -5,6 +5,7 @@ typedef OnChanged = void Function(String txt);
 
 ///单行文本输入框
 class TextInputView extends StatefulWidget {
+  TextEditingController controller = new TextEditingController();
   ///左侧标题
   String leftTitle;
 
@@ -33,7 +34,8 @@ class TextInputView extends StatefulWidget {
     this.rightLength,
     this.maxLength,
     this.onChanged,
-    this.sizeHeight
+    this.sizeHeight,
+    this.controller
   }) : super(key: key);
 
   @override
@@ -66,6 +68,7 @@ class _TextInputViewState extends State<TextInputView> {
                 child: ConstrainedBox(
                   child: Expanded(
                       child: TextField(
+                        controller: widget.controller,
                         keyboardType: widget.type,//输入类型
                         style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
                         cursorColor: Color(0xFFC68D3E),//修改光标颜色

@@ -7,6 +7,7 @@ import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/time_select.dart';
 import 'package:provider/provider.dart';
 
+///出差明细子表单
 class DynamicEvectionFormView extends StatefulWidget {
   var data;
   DynamicEvectionFormView({Key key, this.data}) : super(key: key);

@@ -1,13 +1,16 @@
 
-//服务service
+///服务service
 class Api {
 
   static String baseUrl() {
     /// 外网
     return 'http://47.100.191.162:8180';
-    ///本地测试服务器
+    //本地测试服务器
     // return 'http://172.167.40.141:1888/api';
   }
+
+  ///本地公共api
+  static const api = "/api";
 
   ///密码登录
   static const loginPassword = "/hap-auth/oauth/token";
@@ -41,4 +44,17 @@ class Api {
 
   ///上传附件
   static const putFile = "/hap-resource/oss/endpoint/put-file";
+
+
+  ///拜访计划列表
+  static const visitPlanList = "/hap-app/app/visitplan/list";
+
+  ///冰柜销量列表
+  static const freezerSalesList = "/hap-app3/app/freezer/freezerSales";
+
+  ///冰柜销量货物统计列表
+  static const freezerCargoDetail = "/hap-app3/app/freezer/cargoDetail";
+
+  ///冰柜统计列表
+  static const freezerList = "/hap-app3/app/freezer/list";
 }

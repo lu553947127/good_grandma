@@ -66,7 +66,7 @@ class FreezerStatisticsList extends StatelessWidget {
                 children: [
                   Image.asset('assets/images/icon_freezer_statistics.png', width: 25, height: 25),
                   SizedBox(width: 10),
-                  Text(data['title'],style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
+                  Text('冰柜编号: ${data['code']}',style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
                 ],
               ),
             ),
@@ -76,7 +76,7 @@ class FreezerStatisticsList extends StatelessWidget {
               padding: EdgeInsets.only(left: 10.0),
               height: 40,
               color: Color(0XFFEFEFF4),
-              child: Text(data['brand'],style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+              child: Text('品牌/型号: ${data['brand']}/${data['model']}',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
             ),
             //标题头部
             Padding(
@@ -87,9 +87,9 @@ class FreezerStatisticsList extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(data['area'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                        Text('区域: ${data['region'] + data['province'] + data['city']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                         SizedBox(height: 3),
-                        Text(data['name'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                        Text('城市经理: ${data['managerName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                       ],
                     ),
                     Column(
@@ -98,17 +98,17 @@ class FreezerStatisticsList extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: _setBgColor(data['status']), borderRadius: BorderRadius.circular(3),
+                              color: data['status'] == 0 ? Color(0xFFF1EEEA) : Color(0xFFE4F2F1), borderRadius: BorderRadius.circular(3),
                             ),
-                            child: Text(data['status'], style: TextStyle(fontSize: 10, color: _setTextColor(data['status']))),
+                            child: Text(data['status'] == 0 ? '维修中' : '正常', style: TextStyle(fontSize: 10, color: data['status'] == 0 ? Color(0xFFC08A3F) : Color(0xFF12BD95))),
                           ),
                           SizedBox(height: 3),
-                          Container(
+                          Container(//openFreezer 0未开柜 1已开柜
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: data['status2'] == '已开柜' ? Color(0XFFFAEEEA) : Color(0xFFEEEFF2), borderRadius: BorderRadius.circular(3),
+                              color: data['openFreezer'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
                             ),
-                            child: Text(data['status2'], style: TextStyle(fontSize: 10, color: data['status2'] == '已开柜' ? Color(0XFFE45C26) : Color(0xFF999999))),
+                            child: Text(data['openFreezer'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: data['openFreezer'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
                           )
                         ]
                     )

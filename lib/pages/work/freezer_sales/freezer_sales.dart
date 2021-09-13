@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_list.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_type.dart';
 
@@ -12,18 +17,25 @@ class FreezerSales extends StatefulWidget {
 
 class _FreezerSalesState extends State<FreezerSales> {
 
-  List<Map> list = [
-    {'title' : '冰柜编号: 11049901004577', 'region': '大区名称 / 山东省 / 济南市'
-      ,'name' : '客户名称：高速石化济阳服务区', 'address' : '客户地址：济阳高速服务区','number' : '122223'},
-    {'title' : '冰柜编号: 11049901004577', 'region': '大区名称 / 山东省 / 济南市'
-      ,'name' : '客户名称：高速石化济阳服务区', 'address' : '客户地址：济阳高速服务区','number' : '123'},
-    {'title' : '冰柜编号: 11049901004577', 'region': '大区名称 / 山东省 / 济南市'
-      ,'name' : '客户名称：高速石化济阳服务区', 'address' : '客户地址：济阳高速服务区','number' : '123'},
-    {'title' : '冰柜编号: 11049901004577', 'region': '大区名称 / 山东省 / 济南市'
-      ,'name' : '客户名称：高速石化济阳服务区', 'address' : '客户地址：济阳高速服务区','number' : '123'},
-    {'title' : '冰柜编号: 11049901004577', 'region': '大区名称 / 山东省 / 济南市'
-      ,'name' : '客户名称：高速石化济阳服务区', 'address' : '客户地址：济阳高速服务区','number' : '123'},
-   ];
+  List<Map> freezerSalesList = [];
+
+  ///冰柜销量列表
+  _freezerSalesList(){
+    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    requestGet(Api.freezerSalesList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---freezerSalesList----$data');
+      setState(() {
+        freezerSalesList = (data['data'] as List).cast();
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _freezerSalesList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +54,17 @@ class _FreezerSalesState extends State<FreezerSales> {
             FreezerSalesType(
               selEmpBtnOnTap: (selEmployees) {},
             ),
+            freezerSalesList.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return FreezerSalesList(data: list[index]);
-                }, childCount: list.length))
+                  return FreezerSalesList(data: freezerSalesList[index]);
+                }, childCount: freezerSalesList.length)) :
+            SliverToBoxAdapter(
+                child: Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
+            )
           ],
         ),
       ),
