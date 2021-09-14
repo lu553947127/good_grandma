@@ -12,6 +12,7 @@ import 'package:good_grandma/pages/login/forget.dart';
 import 'package:good_grandma/pages/login/loginBackground.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/login/loginEditText.dart';
+import 'package:good_grandma/widgets/progerss_dialog.dart';
 
 ///登录页面
 class LoginPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     Application.appContext = context;
 
     ///密码登录
-    _loginPassword(){
+    _loginPassword() async{
       final username = _username.text;
       final password = _password.text;
 
@@ -47,6 +48,16 @@ class _LoginPageState extends State<LoginPage> {
         showToast("用户名和密码不能为空");
         return;
       }
+
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) {
+            return NetLoadingDialog(
+              requestCallBack: null,
+              outsideDismiss: false,
+            );
+          });
 
       requestPostLogin(Api.loginPassword, formData: {
         'tenantId': '000000',
@@ -59,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---loginPassword----$data');
         if (data['error_description'] != null){
+          Navigator.pop(context);
           showToast(data['error_description']);
         }else {
           Store.saveToken(data['access_token']);
@@ -256,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 10),
               LoginBtn(
                 title: '登录',
-                onPressed: visible ? _loginPassword : _loginCode,
+                onPressed: visible ? _loginPassword : _loginCode
               ),
               SizedBox(height: 10),
               _codeOrForget()

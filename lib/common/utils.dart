@@ -160,13 +160,29 @@ void showPickerDateRange({@required BuildContext context, @required Function(Map
           pe.onConfirm(pe, pe.selecteds);
 
           startTime = formatDate((ps.adapter as DateTimePickerAdapter).value,
-              [yyyy, '-', mm, '-', dd, ' ', hh, ':', nn]);
+              [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]);
           endTime = formatDate((pe.adapter as DateTimePickerAdapter).value,
-              [yyyy, '-', mm, '-', dd, ' ', hh, ':', nn]);
-          print(startTime);
-          print(endTime);
+              [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]);
+          print('startTime--------$startTime');
+          print('endTime--------$endTime');
 
-          var days = (pe.adapter as DateTimePickerAdapter).value.difference((ps.adapter as DateTimePickerAdapter).value).inDays;
+          int inHours = 0;
+          String days = '';
+
+          if (startTime == endTime){
+            inHours = 0;
+          }else {
+            inHours = (pe.adapter as DateTimePickerAdapter).value.difference((ps.adapter as DateTimePickerAdapter).value).inHours + 1;
+          }
+
+          var hour = inHours / 24;
+
+          print('inHours--------$inHours');
+          print('hour--------$hour');
+
+          days = formatNum(hour, 2);
+
+          print('days--------$days');
 
           param = {'startTime': startTime, 'endTime': endTime, 'days': days};
 
@@ -198,6 +214,23 @@ void showPickerDateRange({@required BuildContext context, @required Function(Map
 
   if (param != null) {
     if (callBack != null) callBack(param);
+  }
+}
+
+///取小数点后几位
+///num 数据
+///location 几位
+String formatNum(double num, int location) {
+  if ((num.toString().length - num.toString().lastIndexOf(".") - 1) <
+      location) {
+    //小数点后有几位小数
+    return num.toStringAsFixed(location)
+        .substring(0, num.toString().lastIndexOf(".") + location + 1)
+        .toString();
+  } else {
+    return num.toString()
+        .substring(0, num.toString().lastIndexOf(".") + location + 1)
+        .toString();
   }
 }
 

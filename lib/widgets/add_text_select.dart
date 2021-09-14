@@ -51,7 +51,8 @@ class _TextSelectViewState extends State<TextSelectView> {
                 Text(widget.leftTitle, style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                 Row(
                   children: [
-                    Text(widget.value == '' ?widget.rightPlaceholder:widget.value, style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
+                    Text(widget.value == '' ?widget.rightPlaceholder:widget.value,
+                        style: TextStyle(color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28, fontSize: 15.0)),
                     Icon(Icons.keyboard_arrow_right, color: widget.value == '' ? AppColors.FFC1C8D7 : AppColors.FF070E28)
                   ],
                 )
@@ -59,10 +60,6 @@ class _TextSelectViewState extends State<TextSelectView> {
             ),
             onTap: () async{
               widget.value = await widget.onPressed();
-              // print('value = ${widget.value}');
-              // setState(() {
-              //   widget.rightPlaceholder =  widget.value;
-              // });
             },
           )
         ],

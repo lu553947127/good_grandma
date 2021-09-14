@@ -178,6 +178,8 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
 
     ///发起流程
     _startProcess(){
+      addData['feiyongleibie'] = timeSelectProvider.select;
+
       addData['file'] = imagesProvider.imagePath;
       addData['zhifuduixiangxinxi'] = formProvider.mapList;
       LogUtil.d('addData----$addData');

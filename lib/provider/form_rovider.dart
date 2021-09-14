@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:good_grandma/common/log.dart';
 
 class FormProvider with ChangeNotifier{
 
@@ -9,6 +10,8 @@ class FormProvider with ChangeNotifier{
   List<FormModel> get form => _form;
 
   List<Map> mapList;
+
+  double heji = 0.0;
 
   FormProvider() {
     _form = [];
@@ -54,6 +57,11 @@ class FormProvider with ChangeNotifier{
 
     print('addData------------$addData');
     print('mapList------------$mapList');
+    // for (Map map in mapList) {
+    //   heji += double.parse(map['jine']);
+    // }
+    //
+    // LogUtil.d('heji----$heji');
 
     notifyListeners();
   }

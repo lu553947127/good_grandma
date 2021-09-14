@@ -65,35 +65,30 @@ class _TextInputViewState extends State<TextInputView> {
               Text(widget.leftTitle, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
               Container(
                 width: widget.rightLength,
-                child: ConstrainedBox(
-                  child: Expanded(
-                      child: TextField(
-                        controller: widget.controller,
-                        keyboardType: widget.type,//输入类型
-                        style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
-                        cursorColor: Color(0xFFC68D3E),//修改光标颜色
-                        maxLength: widget.maxLength,
-                        decoration: InputDecoration(
-                          hintText: widget.rightPlaceholder,
-                          hintStyle: TextStyle(fontSize: 15,color: Color(0XFFC1C8D7)),
-                          border: InputBorder.none,//去掉下划线
-                        ),
-                        onChanged: (String txt){
-                          setState(() {
-                            if(widget.onChanged != null){
-                              widget.onChanged(txt);
-                            }
-                          });
-                        },
-                      )
+                child: TextField(
+                  controller: widget.controller,
+                  keyboardType: widget.type,//输入类型
+                  style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
+                  cursorColor: Color(0xFFC68D3E),//修改光标颜色
+                  maxLength: widget.maxLength,
+                  decoration: InputDecoration(
+                    hintText: widget.rightPlaceholder,
+                    hintStyle: TextStyle(fontSize: 15,color: Color(0XFFC1C8D7)),
+                    border: InputBorder.none,//去掉下划线
                   ),
-                  constraints: BoxConstraints.tightFor(width: 100.0),
-                ),
+                  onChanged: (String txt){
+                    setState(() {
+                      if(widget.onChanged != null){
+                        widget.onChanged(txt);
+                      }
+                    });
+                  }
+                )
               )
-            ],
+            ]
           )
-        ],
-      ),
+        ]
+      )
     );
   }
 }

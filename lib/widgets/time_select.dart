@@ -15,14 +15,14 @@ class TimeSelectView extends StatefulWidget {
   ///分割线间距
   double sizeHeight = 0;
   ///请假天数
-  int dayNumber;
+  String dayNumber;
 
   TimeSelectView({Key key,
     this.leftTitle,
     this.rightPlaceholder,
     this.onPressed,
     this.sizeHeight,
-    this.dayNumber = 0,
+    this.dayNumber = '0',
     this.value = '',
   }) : super(key: key);
 

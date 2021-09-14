@@ -7,7 +7,7 @@ class TimeSelectProvider with ChangeNotifier{
   ///结束时间
   String endTime = '';
 
-  int dayNumber = 0;
+  String dayNumber = '0';
 
   ///普通选择value
   String select = '';

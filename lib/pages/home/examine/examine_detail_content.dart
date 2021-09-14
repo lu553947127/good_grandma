@@ -162,6 +162,36 @@ class ExamineDetailContent extends StatelessWidget {
       }
     }
 
+    if(variables['fujian'] != null){
+      fileList = (variables['fujian'] as List).cast();
+      LogUtil.d('fileList----$fileList');
+
+      for (Map file in fileList) {
+        _views.add(InkWell(
+          child: Container(
+              margin: EdgeInsets.only(top: 3),
+              child: MyCacheImageView(
+                  imageURL: file['value'],
+                  width: 112,
+                  height: 63
+              )
+          ),
+          onTap: (){
+            List<String> imagesList = [];
+            for (Map file in fileList) {
+              imagesList.add(file['value']);
+            }
+
+            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+              images: imagesList,//传入图片list
+              index: 0,//传入当前点击的图片的index
+              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+            )));
+          },
+        ));
+      }
+    }
+
     if(variables['zhifuduixiangxinxi'] != null){
       zhifuList = (variables['zhifuduixiangxinxi'] as List).cast();
 
@@ -260,6 +290,7 @@ class ExamineDetailContent extends StatelessWidget {
                             offstage: taskFormList[index]['name'] == '表单附件' ||
                                 taskFormList[index]['name'] == '附件' ||
                                 taskFormList[index]['name'] == '支付对象信息' ||
+                                taskFormList[index]['name'] == '系统附件' ||
                                 taskFormList[index]['name'] == '出差明细' ?
                             true : false,
                             child: Text.rich(TextSpan(
@@ -267,7 +298,7 @@ class ExamineDetailContent extends StatelessWidget {
                                 style: const TextStyle(color: AppColors.FF959EB1, fontSize: 15.0),
                                 children: [
                                   TextSpan(
-                                      text: taskFormList[index]['value'].isEmpty ? '暂无' : taskFormList[index]['value'],
+                                      text: '${taskFormList[index]['value']}'.isEmpty ? '暂无' : '${taskFormList[index]['value']}',
                                       style: const TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                 ]
                             ))

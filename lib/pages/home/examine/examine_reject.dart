@@ -12,13 +12,16 @@ import 'package:good_grandma/widgets/introduce_input.dart';
 
 ///审核驳回页面
 class ExamineReject extends StatelessWidget {
+  final String title;
   var process;
   final String type;
   final String processIsFinished;
   final String processInsId;
   final String taskId;
   final String wait;
+
   ExamineReject({Key key
+    , this.title
     , this.process
     , this.type
     , this.processIsFinished
@@ -47,7 +50,7 @@ class ExamineReject extends StatelessWidget {
       LogUtil.d('请求结果---completeTask----$data');
 
       if (data['code'] == 200){
-        showToast("驳回成功");
+        showToast("$title成功");
         Navigator.of(Application.appContext).pop('refresh');
       }else {
         showToast(data['msg']);
@@ -63,7 +66,7 @@ class ExamineReject extends StatelessWidget {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text('驳回原因',style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text(title, style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
       body: CustomScrollView(
         slivers: [
@@ -80,7 +83,7 @@ class ExamineReject extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: InputWidget(
-              placeholder: '请填写驳回原因',
+              placeholder: '请填写$title原因',
               onChanged: (String txt){
                 comment = txt;
               },
