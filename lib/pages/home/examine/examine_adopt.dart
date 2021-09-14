@@ -12,6 +12,7 @@ import 'package:good_grandma/widgets/introduce_input.dart';
 
 ///审核意见页面
 class ExamineAdopt extends StatelessWidget {
+  final String title;
   var process;
   final String type;
   final String processIsFinished;
@@ -19,6 +20,7 @@ class ExamineAdopt extends StatelessWidget {
   final String taskId;
   final String wait;
   ExamineAdopt({Key key
+    , this.title
     , this.process
     , this.type
     , this.processIsFinished
@@ -31,6 +33,12 @@ class ExamineAdopt extends StatelessWidget {
   ///通过
   _completeTask(){
 
+    LogUtil.d('---comment----$comment');
+    if (comment == '') {
+      showToast("原因不能为空");
+      return;
+    }
+
     Map<String, dynamic> map = {
       'pass': true,
       'processInstanceId': processInsId,
@@ -42,7 +50,7 @@ class ExamineAdopt extends StatelessWidget {
       LogUtil.d('请求结果---completeTask----$data');
 
       if (data['code'] == 200){
-        showToast("通过成功");
+        showToast("$title成功");
         Navigator.of(Application.appContext).pop('refresh');
       }else {
         showToast(data['msg']);
@@ -58,7 +66,7 @@ class ExamineAdopt extends StatelessWidget {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text('审核意见',style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text(title,style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
       body: CustomScrollView(
         slivers: [
@@ -75,9 +83,9 @@ class ExamineAdopt extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: InputWidget(
-              placeholder: '请填写审核意见',
+              placeholder: '请填写$title原因',
               onChanged: (String txt){
-                // inputText = txt;
+                comment = txt;
               },
             ),
           ),

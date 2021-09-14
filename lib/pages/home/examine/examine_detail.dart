@@ -34,6 +34,9 @@ class _ExamineDetailState extends State<ExamineDetail> {
 
     Map<String, dynamic> map = {'processInsId': widget.processInsId, 'taskId': widget.taskId};
 
+    bool wf_re_commit = false;//重新提交
+    bool wf_cancel = false;//取消申请
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -48,6 +51,19 @@ class _ExamineDetailState extends State<ExamineDetail> {
             if (snapshot.hasData) {
               var data = jsonDecode(snapshot.data.toString());
               LogUtil.d('请求结果---processDetail----$data');
+
+              ///获取审核按钮显示列表
+              List<Map> buttonList = (data['data']['button'] as List).cast();
+
+              for(int i=0; i < buttonList.length; i++) {
+                if (buttonList[i]['buttonKey'] == 'wf_re_commit'){
+                  wf_re_commit = true;
+                }
+
+                if (buttonList[i]['buttonKey'] == 'wf_cancel'){
+                  wf_cancel = true;
+                }
+              }
 
               ///获取基本信息详情数据
               var process = data['data']['process'];
@@ -77,7 +93,28 @@ class _ExamineDetailState extends State<ExamineDetail> {
               }
 
               for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['historyActivityType'] == 'candidate'){
+                  LogUtil.d('candidate----$i');
+                  flowList.removeAt(i);
+                }
+              }
+
+              for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['historyActivityType'] == 'candidate'){
+                  LogUtil.d('candidate----$i');
+                  flowList.removeAt(i);
+                }
+              }
+
+              for(int i=0; i < flowList.length; i++) {
                 if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
+                  flowList.removeAt(i);
+                }
+              }
+
+              for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
+                  LogUtil.d('sequenceFlow----$i');
                   flowList.removeAt(i);
                 }
               }
@@ -85,7 +122,13 @@ class _ExamineDetailState extends State<ExamineDetail> {
               for(int i=0; i < flowList.length; i++) {
                 if (flowList[i]['user']['id'] == null){
                   flowList.removeAt(i);
-                  LogUtil.d('flowList--user--$i');
+                }
+              }
+
+              for(int i=0; i < flowList.length; i++) {
+                if (flowList[i]['user']['id'] == null){
+                  LogUtil.d('user----$i');
+                  flowList.removeAt(i);
                 }
               }
 
@@ -132,7 +175,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                         right: 0,
                         bottom: 0,
                         child: Offstage(
-                            offstage: widget.type == '我审批的' ? false : widget.status == 'todo' ? false : true,
+                            offstage: widget.type == '知会我的' ? true : widget.processIsFinished == '已审核' ? true : false,
                             child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.white,
@@ -152,11 +195,12 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                           children: [
                                             Image.asset('assets/images/icon_examine_reject.png', width: 15, height: 15),
                                             SizedBox(height: 3),
-                                            Text('驳回', style: TextStyle(fontSize: 13, color: Color(0XFFDD0000)))
+                                            Text(widget.type == '我审批的' ? '驳回' : '取消申请', style: TextStyle(fontSize: 13, color: Color(0XFFDD0000)))
                                           ]
                                         ),
                                         onPressed: () async{
                                           String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
+                                            title: widget.type == '我审批的' ? '驳回' : '取消申请',
                                             process: process,
                                             type: widget.type,
                                             processIsFinished: widget.processIsFinished,
@@ -174,25 +218,29 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                           decoration: BoxDecoration(color: Color(0xFFC1C8D7)),
                                         ),
                                       ),
-                                      TextButton(
-                                          child: Column(
-                                            children: [
-                                              Image.asset('assets/images/icon_examine_adopt.png', width: 15, height: 15),
-                                              SizedBox(height: 3),
-                                              Text('通过', style: TextStyle(fontSize: 13, color: Color(0XFF12BD95)))
-                                            ],
-                                          ),
-                                          onPressed: () async{
-                                            String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
-                                              process: process,
-                                              type: widget.type,
-                                              processIsFinished: widget.processIsFinished,
-                                              processInsId: widget.processInsId,
-                                              taskId: widget.taskId,
-                                              wait: '等待${flowList[0]['user']['name']}审批',
-                                            )));
-                                            if(refresh2 != null) Navigator.pop(context,'refresh');
-                                          }
+                                      Offstage(
+                                        offstage: widget.type == '我审批的' ? false : wf_re_commit == true ? false : true,
+                                        child: TextButton(
+                                            child: Column(
+                                              children: [
+                                                Image.asset('assets/images/icon_examine_adopt.png', width: 15, height: 15),
+                                                SizedBox(height: 3),
+                                                Text(widget.type == '我审批的' ? '通过' : '重新申请', style: TextStyle(fontSize: 13, color: Color(0XFF12BD95)))
+                                              ],
+                                            ),
+                                            onPressed: () async{
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
+                                                title: widget.type == '我审批的' ? '通过' : '重新申请',
+                                                process: process,
+                                                type: widget.type,
+                                                processIsFinished: widget.processIsFinished,
+                                                processInsId: widget.processInsId,
+                                                taskId: widget.taskId,
+                                                wait: '等待${flowList[0]['user']['name']}审批',
+                                              )));
+                                              if(refresh2 != null) Navigator.pop(context,'refresh');
+                                            }
+                                        ),
                                       )
                                     ]
                                 )

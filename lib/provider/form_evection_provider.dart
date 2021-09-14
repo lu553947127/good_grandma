@@ -94,7 +94,7 @@ class FormEvectionModel {
   String end_time;
 
   ///合计天数
-  int hejitianshu;
+  String hejitianshu;
 
   ///起止地点
   String qizhididian;
@@ -120,7 +120,7 @@ class FormEvectionModel {
   FormEvectionModel({
     this.start_time = '',
     this.end_time = '',
-    this.hejitianshu = 0,
+    this.hejitianshu = '0',
     this.qizhididian = '',
     this.chuchaimudi = '',
     this.jiaotongjine = '',

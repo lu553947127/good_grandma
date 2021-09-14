@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/declaration_form/add_declaration_form_page.dart';
@@ -34,8 +35,8 @@ class MinePage extends StatelessWidget {
         slivers: [
           //用户信息
           MineHeaderView(
-            avatar: avatar,
-            userName: userName,
+            avatar: Store.readUserAvatar(),
+            userName: Store.readNickName(),
             local: local,
             type: type,
             phone: phone,

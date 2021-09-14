@@ -71,29 +71,34 @@ class _NumberInputViewState extends State<NumberInputView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(widget.leftTitle, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
-                SizedBox(width: 150),
-                Text(widget.leftInput, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
-                Expanded(
-                    child: TextField(
-                      keyboardType: widget.type,//输入类型
-                      style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
-                      cursorColor: Color(0xFFC68D3E),//修改光标颜色
-                      maxLength: widget.maxLength,
-                      decoration: InputDecoration(
-                        hintText: widget.rightPlaceholder,
-                        hintStyle: TextStyle(fontSize: 15,color: Color(0XFFC1C8D7)),
-                        border: InputBorder.none,//去掉下划线
-                      ),
-                      onChanged: (String txt){
-                        setState(() {
-                          if(widget.onChanged != null){
-                            widget.onChanged(txt);
-                          }
-                        });
-                      },
-                    )
-                ),
-                Text(widget.rightInput, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(widget.leftInput, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                    Container(
+                        width: widget.rightLength,
+                        child: TextField(
+                            keyboardType: widget.type,//输入类型
+                            style: TextStyle(fontSize: 15,color: Color(0xFF333333)),
+                            cursorColor: Color(0xFFC68D3E),//修改光标颜色
+                            maxLength: widget.maxLength,
+                            decoration: InputDecoration(
+                              hintText: widget.rightPlaceholder,
+                              hintStyle: TextStyle(fontSize: 15,color: Color(0XFFC1C8D7)),
+                              border: InputBorder.none,//去掉下划线
+                            ),
+                            onChanged: (String txt){
+                              setState(() {
+                                if(widget.onChanged != null){
+                                  widget.onChanged(txt);
+                                }
+                              });
+                            }
+                        )
+                    ),
+                    Text(widget.rightInput, style: const TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                  ],
+                )
               ],
             ),
           )

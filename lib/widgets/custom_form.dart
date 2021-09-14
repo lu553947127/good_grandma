@@ -9,6 +9,7 @@ import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
+import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
@@ -80,7 +81,7 @@ class _CustomFormViewState extends State<CustomFormView> {
           }
           break;
         case 'input':
-          if (data['detail'] != null && data['detail'] == true){
+          if (data['label'] == '申请人'){
 
             addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
 
@@ -94,6 +95,7 @@ class _CustomFormViewState extends State<CustomFormView> {
               leftTitle: data['label'],
               rightPlaceholder: '请输入${data['label']}',
               sizeHeight: 1,
+              rightLength: 120,
               onChanged: (tex){
                 for (String prop in dataList) {
                   if (data['prop'] == prop){
@@ -155,10 +157,13 @@ class _CustomFormViewState extends State<CustomFormView> {
           if (widget.name == '请假流程'){
             return Container();
           }
-          return TextInputView(
+          return NumberInputView(
             leftTitle: data['label'],
             rightPlaceholder: '请输入${data['label']}',
+            leftInput: '',
+            rightInput: '',
             type: TextInputType.number,
+            rightLength: 120,
             sizeHeight: 1,
             onChanged: (tex){
               for (String prop in dataList) {
@@ -210,11 +215,15 @@ class _CustomFormViewState extends State<CustomFormView> {
     ///发起流程
     _startProcess(){
 
-      for (String prop in dataList) {
-        if ('fujian' == prop){
-          addData['file'] = imagesProvider.imagePath;
+      for (Map map in widget.list) {
+        if ('upload' == map['type']){
+          addData[map['prop']] = imagesProvider.imagePath;
+          LogUtil.d('请求结果---prop----${map['prop']}');
         }
       }
+
+      LogUtil.d('addData----$addData');
+
       requestPost(Api.startProcess, json: addData).then((val) async{
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---startProcess----$data');

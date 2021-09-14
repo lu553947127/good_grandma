@@ -151,6 +151,7 @@ class _ExamineCostApplyState extends State<ExamineCostApply> {
 
     ///发起流程
     _startProcess(){
+      addData['type'] = timeSelectProvider.select;
       addData['file'] = imagesProvider.imagePath;
       LogUtil.d('addData----$addData');
       requestPost(Api.startProcess, json: addData).then((val) async{

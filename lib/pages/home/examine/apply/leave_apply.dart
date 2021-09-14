@@ -126,6 +126,16 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
 
     ///发起流程
     _startProcess(){
+      addData['type'] = timeSelectProvider.select;
+
+      List<String> timeList = [];
+      timeList.add(timeSelectProvider.startTime);
+      timeList.add(timeSelectProvider.endTime);
+
+      addData['datetime'] = timeList;
+      addData['days'] = timeSelectProvider.dayNumber;
+      LogUtil.d('addData----$addData');
+
       requestPost(Api.startProcess, json: addData).then((val) async{
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---startProcess----$data');
