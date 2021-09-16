@@ -65,7 +65,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                   children: [
                     Image.asset('assets/images/icon_freezer_statistics.png', width: 25, height: 25),
                     SizedBox(width: 10),
-                    Text(widget.data['title'],style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
+                    Text('冰柜编号: ${widget.data['code']}',style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
                   ],
                 ),
               ),
@@ -94,7 +94,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                       SizedBox(width: 3),
                                       Text('品牌: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                       SizedBox(width: 3),
-                                      Text('海荣',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                      Text('${widget.data['brand']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                     ],
                                   ),
                                   SizedBox(height: 5),
@@ -104,7 +104,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                       SizedBox(width: 3),
                                       Text('型号: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                       SizedBox(width: 3),
-                                      Text('SD2015-',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                      Text('${widget.data['model']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                     ],
                                   ),
                                   SizedBox(height: 5),
@@ -114,7 +114,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                       SizedBox(width: 3),
                                       Text('年份: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                       SizedBox(width: 3),
-                                      Text('2015',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                      Text('${widget.data['birthday']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                     ],
                                   )
                                 ]
@@ -125,17 +125,17 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                      color: _setBgColor(widget.data['status']), borderRadius: BorderRadius.circular(3),
+                                      color: widget.data['status'] == 0 ? Color(0xFFF1EEEA) : Color(0xFFE4F2F1), borderRadius: BorderRadius.circular(3),
                                     ),
-                                    child: Text(widget.data['status'], style: TextStyle(fontSize: 10, color: _setTextColor(widget.data['status']))),
+                                    child: Text(widget.data['status'] == 0 ? '维修中' : '正常', style: TextStyle(fontSize: 10, color: widget.data['status'] == 0 ? Color(0xFFC08A3F) : Color(0xFF12BD95))),
                                   ),
                                   SizedBox(height: 3),
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                      color: widget.data['status2'] == '已开柜' ? Color(0XFFFAEEEA) : Color(0xFFEEEFF2), borderRadius: BorderRadius.circular(3),
+                                      color: widget.data['openFreezer'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
                                     ),
-                                    child: Text(widget.data['status2'], style: TextStyle(fontSize: 10, color: widget.data['status2'] == '已开柜' ? Color(0XFFE45C26) : Color(0xFF999999))),
+                                    child: Text(widget.data['openFreezer'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: widget.data['openFreezer'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
                                   )
                                 ]
                             )
@@ -155,7 +155,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('大区',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('大区一',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['region']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -171,7 +171,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('城市',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('济南市',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['province']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -187,7 +187,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('区县',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('历城区',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['city']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -203,7 +203,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('城市经理',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('张三',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['managerName']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -219,7 +219,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('经理电话',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('18888888888',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['cityPhone']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         )
                       ]
@@ -237,7 +237,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('店铺名称',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('高速石化济阳服务区',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['shop']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -253,7 +253,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('店主姓名',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('李四',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['shop']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -269,7 +269,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('店主电话',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('16666666666',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['shopPhone']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -285,7 +285,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('所在地址',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('济阳高速服务区',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['address']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         )
                       ]

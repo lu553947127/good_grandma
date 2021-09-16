@@ -71,7 +71,7 @@ class _ExamineCostApplyState extends State<ExamineCostApply> {
             sizeHeight: 1,
             value: timeSelectProvider.select,
             onPressed: () async{
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
+              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
               LogUtil.d('select----$select');
 
               timeSelectProvider.addValue(select);

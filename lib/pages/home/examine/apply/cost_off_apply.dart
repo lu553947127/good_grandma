@@ -60,6 +60,7 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
     LogUtil.d('dataList----$dataList');
 
     _childWidget(data){
+
       switch(data['type']){
         case 'date':
           addData[data['prop']] = nowTime;
@@ -70,31 +71,58 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
           );
           break;
         case 'select':
-          return TextSelectView(
-            leftTitle: data['label'],
-            rightPlaceholder: '请选择${data['label']}',
-            sizeHeight: 1,
-            value: timeSelectProvider.select,
-            onPressed: () async{
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
-              LogUtil.d('select----$select');
+          if (data['label'] == '费用类别'){
+            return TextSelectView(
+              leftTitle: data['label'],
+              rightPlaceholder: '请选择${data['label']}',
+              sizeHeight: 1,
+              value: timeSelectProvider.select,
+              onPressed: () async{
 
-              timeSelectProvider.addValue(select);
+                String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
 
-              for (String prop in dataList) {
-                if (data['prop'] == prop){
-                  addData[prop] = select;
+                LogUtil.d('select----$select');
+
+                timeSelectProvider.addValue(select);
+
+                for (String prop in dataList) {
+                  if (data['prop'] == prop){
+                    addData[prop] = select;
+                  }
                 }
-              }
 
-              LogUtil.d('addData----$addData');
-              return select;
-            },
-          );
+                LogUtil.d('addData----$addData');
+                return select;
+              },
+            );
+          }else {
+            return TextSelectView(
+              leftTitle: data['label'],
+              rightPlaceholder: '请选择${data['label']}',
+              sizeHeight: 1,
+              value: timeSelectProvider.value,
+              onPressed: () async{
+
+                String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
+
+                LogUtil.d('select----$select');
+
+                timeSelectProvider.addValue2(select);
+
+                for (String prop in dataList) {
+                  if (data['prop'] == prop){
+                    addData[prop] = select;
+                  }
+                }
+
+                LogUtil.d('addData----$addData');
+                return select;
+              },
+            );
+          }
           break;
         case 'input':
-          if (data['label'] == '申请人'){
-
+          if (data['prop'] == 'shenqingren'){
             addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
 
             return TextDefaultView(
@@ -102,6 +130,10 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
                 rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
                 sizeHeight: 1
             );
+          }else if (data['prop'] == 'hejidaxie'){
+            return Container();
+          }else if (data['prop'] == 'hejixiaoxie'){
+            return Container();
           }else {
             return NumberInputView(
               leftTitle: data['label'],
@@ -179,6 +211,7 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
     ///发起流程
     _startProcess(){
       addData['feiyongleibie'] = timeSelectProvider.select;
+      addData['feiyongshenqing'] = timeSelectProvider.valueList;
 
       addData['file'] = imagesProvider.imagePath;
       addData['zhifuduixiangxinxi'] = formProvider.mapList;

@@ -22,6 +22,36 @@ class ExamineDetailTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    _setTextColor(status){
+      switch(status){
+        case '已审核':
+          return Color(0xFF12BD95);
+          break;
+        case '审核中':
+          return Color(0xFFDD0000);
+          break;
+        case '已驳回':
+          return Color(0xFFC08A3F);
+          break;
+      }
+    }
+
+    _setBgColor(status){
+      switch(status){
+        case '已审核':
+          return Color(0xFFE4F2F1);
+          break;
+        case '审核中':
+          return Color(0xFFF1E1E2);
+          break;
+        case '已驳回':
+          return Color(0xFFF1EEEA);
+          break;
+      }
+    }
+
+
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.all(20),
@@ -62,7 +92,7 @@ class ExamineDetailTitle extends StatelessWidget {
                     ),
                     SizedBox(height: 3),
                     Visibility(
-                        visible: type == '知会我的' ? false : status == '审核中' ? true : false,
+                        visible: type == '知会我的' ? false : status == '审核中' || status == '已驳回' ? true : false,
                         child: Row(
                           children: [
                             Image.asset('assets/images/icon_examine_wait.png', width: 12, height: 12),
@@ -80,17 +110,17 @@ class ExamineDetailTitle extends StatelessWidget {
               child: Row(
                 children: [
                   Visibility(
-                    visible: status == '审核中' ? true  : false,
+                    visible: status == '审核中' || status == '已驳回' ? true  : false,
                     child: Container(
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                        color: Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
+                        color: _setBgColor(status), borderRadius: BorderRadius.circular(3),
                       ),
-                      child: Text(status == '审核中' ? '审核中' : '已审核', style: TextStyle(fontSize: 10, color: Color(0XFFE45C26))),
+                      child: Text(status, style: TextStyle(fontSize: 10, color: _setTextColor(status))),
                     ),
                   ),
                   Visibility(
-                    visible: status == '审核中' ? false : true,
+                    visible: status == '审核中' || status == '已驳回' ? false : true,
                     child: Container(
                       padding: EdgeInsets.all(5),
                       child: Image.asset('assets/images/icon_examine_complete.png', width: 50, height: 50),

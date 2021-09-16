@@ -91,10 +91,13 @@ class _ExamineAddState extends State<ExamineAdd> {
                 );
                 break;
               default:
-                return CustomFormView(
-                    name: widget.name,
-                    processId: widget.processId,
-                    list: list
+                return ChangeNotifierProvider<TimeSelectProvider>.value(
+                    value: timeSelectProvider,
+                    child: CustomFormView(
+                        name: widget.name,
+                        processId: widget.processId,
+                        list: list
+                    )
                 );
                 break;
             }

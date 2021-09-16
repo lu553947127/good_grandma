@@ -34,10 +34,6 @@ class ExamineAdopt extends StatelessWidget {
   _completeTask(){
 
     LogUtil.d('---comment----$comment');
-    if (comment == '') {
-      showToast("原因不能为空");
-      return;
-    }
 
     Map<String, dynamic> map = {
       'pass': true,
@@ -75,7 +71,7 @@ class ExamineAdopt extends StatelessWidget {
             title: process['processDefinitionName'],
             time: '提交时间: ${process['createTime']}',
             wait: wait,
-            status: processIsFinished == '审核中' ? '审核中' : '已审核',
+            status: processIsFinished,
             type: type
           ),
           SliverToBoxAdapter(

@@ -37,7 +37,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               rightPlaceholder: '请输入客户名称',
               onChanged: (tex){
 
-              },
+              }
             ),
             ContentInputView(
               sizeHeight: 10,
@@ -46,7 +46,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               rightPlaceholder: '行动过程',
               onChanged: (tex){
 
-              },
+              }
             ),
             ChangeNotifierProvider<ImagesProvider>.value(
                 value: imagesProvider,
@@ -64,8 +64,8 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                   Image.asset('assets/images/icon_address.png', width: 12, height: 12),
                   SizedBox(width: 3),
                   Text('济南市历城区舜华路舜泰广场', style: TextStyle(fontSize: 12, color: Color(0XFF2F4058)))
-                ],
-              ),
+                ]
+              )
             ),
             Padding(
               padding: EdgeInsets.all(20),
@@ -73,12 +73,12 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                 title: '提交',
                 onPressed: (){
 
-                },
-              ),
+                }
+              )
             )
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
 }

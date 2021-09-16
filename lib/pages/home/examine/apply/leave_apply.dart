@@ -54,7 +54,7 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
             sizeHeight: 0,
             value: timeSelectProvider.select,
             onPressed: () async{
-              String type = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
+              String type = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
               print('type -------- $type');
 
               timeSelectProvider.addValue(type);
@@ -129,8 +129,8 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
       addData['type'] = timeSelectProvider.select;
 
       List<String> timeList = [];
-      timeList.add(timeSelectProvider.startTime);
-      timeList.add(timeSelectProvider.endTime);
+      timeList.add(timeSelectProvider.startTime + ':00');
+      timeList.add(timeSelectProvider.endTime + ':00');
 
       addData['datetime'] = timeList;
       addData['days'] = timeSelectProvider.dayNumber;
