@@ -21,7 +21,6 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
   @override
   void initState() {
     super.initState();
-    _refresh();
   }
 
   @override
@@ -39,17 +38,23 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
                 SizedBox(height: 10.0),
                 //附件信息
                 Visibility(
-                  visible: model.enclosureName != null ||
-                      model.enclosureName.isNotEmpty,
+                  visible: model.haveEnclosure,
                   child: Container(
                     color: Colors.white,
                     child: ListTile(
                       leading: Image.asset('assets/images/msg_enclosure.png',
                           width: 30, height: 30),
-                      title: Text(model.enclosureName ?? '',
+                      title: Text(
+                          model.enclosureName.isNotEmpty
+                              ? model.enclosureName
+                              : '附件',
                           style: const TextStyle(
                               color: AppColors.FF2F4058, fontSize: 14.0)),
-                      subtitle: Text(model.enclosureSize ?? '',
+                      subtitle: Text(
+                          (model.enclosureSize.isNotEmpty
+                                  ? model.enclosureSize
+                                  : '0') +
+                              ' MB',
                           style: const TextStyle(
                               color: AppColors.FFC1C8D7, fontSize: 11.0)),
                       trailing: SizedBox(
@@ -99,7 +104,7 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
     );
   }
 
-  void _showDialog(BuildContext context) async{
+  void _showDialog(BuildContext context) async {
     bool result = await showDialog(
         context: context,
         builder: (context) {
@@ -108,17 +113,17 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
             editingController: _textEditingController,
             focusNode2: _focusNode2,
             editingController2: _textEditingController2,
-            submitBtnOnTap: (){
+            submitBtnOnTap: () {
+              //todo:没有请求验证码的接口
               ///网络请求后
-              Navigator.pop(context,true);
+              Navigator.pop(context, true);
             },
           );
         });
     if (result != null && result) {
+      //todo:没有签署对账单的接口
     }
   }
-
-  void _refresh() {}
 
   @override
   void dispose() {

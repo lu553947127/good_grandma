@@ -24,9 +24,6 @@ class MinePage extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    final avatar =
-        'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg';
-    final userName = '黑夜骑士';
     final local = '鲁西省';
     final type = '经销商';
     final phone = '18888888888';

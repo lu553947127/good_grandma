@@ -6,7 +6,10 @@ import 'package:good_grandma/pages/work/work_text.dart';
 
 ///合同顶部筛选
 class ContractSelectType extends StatefulWidget {
-  const ContractSelectType({Key key}) : super(key: key);
+  const ContractSelectType({Key key, @required this.onSelect})
+      : super(key: key);
+  final Function(String selArea, List<CustomerModel> selCustomers,
+      String selType, String selState) onSelect;
 
   @override
   _ContractSelectTypeState createState() => _ContractSelectTypeState();
@@ -18,9 +21,10 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
   String _btnName2 = '所有客户';
   String _btnName3 = '所有类型';
   String _btnName4 = '所有状态';
+  String _selArea = '';
   @override
   Widget build(BuildContext context) {
-    final double w = (MediaQuery.of(context).size.width - 15 * 2) / 4 - 1;
+    final double w = MediaQuery.of(context).size.width / 4 - 1;
     final Widget div =
         Container(width: 1.0, height: 12.0, color: AppColors.FFC1C8D7);
 
@@ -36,10 +40,8 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
       });
     }
 
-    return SliverToBoxAdapter(
-        child: Container(
+    return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 15.0),
       child: Row(
         children: [
           //所有区域
@@ -49,9 +51,13 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_btnName1,
-                      style:
-                          TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
+                  Expanded(
+                    child: Text(_btnName1,
+                        style:
+                            TextStyle(fontSize: 14, color: AppColors.FF2F4058),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 4.5),
                     child: Image.asset('assets/images/ic_work_down.png',
@@ -61,6 +67,16 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result = await showPickerModal(context, PickerData);
+                if(result != null) {
+                  _selArea = result;
+                  String re = result.replaceFirst('[', '');
+                  re = re.replaceFirst(']', '');
+                  List<String> areas = re.split(',');
+                  _btnName1 = areas[areas.length - 2] + ',' + areas.last;
+                  if (mounted) setState(() {});
+                  if (widget.onSelect != null)
+                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
+                }
               },
             ),
           ),
@@ -104,6 +120,8 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                   _customers.clear();
                   _customers.addAll(list);
                   if (mounted) setState(() {});
+                  if (widget.onSelect != null)
+                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
                 }
               },
             ),
@@ -130,9 +148,9 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                 String result =
                     await showPicker(['所有类型', '类型一', '类型二'], context);
                 if (result != null && result.isNotEmpty) {
-                  setState(() {
-                    _btnName3 = result;
-                  });
+                  setState(() => _btnName3 = result);
+                  if (widget.onSelect != null)
+                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
                 }
               },
             ),
@@ -159,15 +177,15 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                 String result =
                     await showPicker(['所有状态', '未签署', '已签署'], context);
                 if (result != null && result.isNotEmpty) {
-                  setState(() {
-                    _btnName4 = result;
-                  });
+                  setState(() => _btnName4 = result);
+                  if (widget.onSelect != null)
+                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
                 }
               },
             ),
           ),
         ],
       ),
-    ));
+    );
   }
 }

@@ -33,16 +33,19 @@ class _Body extends State<MsgEnclosurePage> {
                 Container(
                   color: Colors.white,
                   child: TextButton(
-                    onPressed:
-                        model.enclosureURL == null || model.enclosureURL.isEmpty
-                            ? null
-                            : () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return PicSwiperRoute(
-                                      index: 0, pics: [model.enclosureURL]);
-                                }));
-                              },
+                    onPressed: model.enclosureViewURL.isNotEmpty ||
+                            model.enclosureURL.isNotEmpty
+                        ? null
+                        : () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return PicSwiperRoute(index: 0, pics: [
+                                model.enclosureViewURL.isNotEmpty
+                                    ? model.enclosureViewURL
+                                    : model.enclosureURL
+                              ]);
+                            }));
+                          },
                     style: TextButton.styleFrom(
                         padding: const EdgeInsets.all(15.0)),
                     child: Container(
@@ -97,7 +100,9 @@ class _Body extends State<MsgEnclosurePage> {
                 ),
                 SubmitBtn(
                   title: '提  交',
-                  onPressed: () {},
+                  onPressed: () {
+                    //todo:没有提交对账单反馈的接口
+                  },
                 ),
               ],
             ),

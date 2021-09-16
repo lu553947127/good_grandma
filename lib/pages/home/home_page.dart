@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
@@ -16,12 +18,14 @@ import 'package:good_grandma/widgets/home_table_header.dart';
 class HomePage extends StatefulWidget {
   final Function(int index) switchTabbarIndex;
 
-  const HomePage({Key key,@required this.switchTabbarIndex}) : super(key: key);
+  const HomePage({Key key, @required this.switchTabbarIndex}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _Body();
 }
 
 class _Body extends State<HomePage> {
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
   String _msgTime = '2021-07-09';
   String _msgCount = '66';
   List<HomeReportModel> _reportList = [];
@@ -29,29 +33,24 @@ class _Body extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _getBaoGaoList();
+    _controller.callRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text("好阿婆"),
-        // actions: [
-        //   TextButton(
-        //       onPressed: () {},
-        //       child: Image.asset('assets/images/home_scan.png',
-        //           width: 20.0, height: 20.0)),
-        // ],
-      ),
-      body: Scrollbar(
-        child: CustomScrollView(
+      appBar: AppBar(automaticallyImplyLeading: false, title: Text("好阿婆")),
+      body: MyEasyRefreshSliverWidget(
+          controller: _controller,
+          scrollController: _scrollController,
+          dataCount: _reportList.length + 1,
+          onRefresh: _getBaoGaoList,
+          onLoad: null,
           slivers: [
             //顶部按钮
-            HomeTableHeader(onTap: (name){
-              _titleBtnOnTap(context,name);
-            },),
+            HomeTableHeader(
+              onTap: (name) => _titleBtnOnTap(context, name),
+            ),
             //消息通知
             SliverToBoxAdapter(
                 child: Visibility(
@@ -59,10 +58,14 @@ class _Body extends State<HomePage> {
                     child: HomeGroupTitle(title: '消息通知', showMore: false))),
             //消息cell
             SliverToBoxAdapter(
-                child: HomeMsgTitle(msgTime: _msgTime, msgCount: _msgCount,onTap: (){
-                  if(widget.switchTabbarIndex != null)
-                    widget.switchTabbarIndex(1);
-                },)),
+                child: HomeMsgTitle(
+              msgTime: _msgTime,
+              msgCount: _msgCount,
+              onTap: () {
+                if (widget.switchTabbarIndex != null)
+                  widget.switchTabbarIndex(1);
+              },
+            )),
             //拜访计划
             SliverToBoxAdapter(
                 child: HomeGroupTitle(title: '拜访计划', showMoreBtnOnTap: () {})),
@@ -74,80 +77,103 @@ class _Body extends State<HomePage> {
             //报告列表
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  HomeReportModel model = _reportList[index];
+              HomeReportModel model = _reportList[index];
               return HomeReportCell(model: model);
             }, childCount: _reportList.length)),
-          ],
-        ),
-      ),
+          ]),
+      // body: buildScrollbar(context),
     );
   }
 
-
   ///按钮点击事件
   void _titleBtnOnTap(BuildContext context, String name) {
-    switch(name){
+    switch (name) {
       case '工作报告':
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => WorkReport()));
         break;
       case '市场活动':
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketingActivityPage()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => MarketingActivityPage()));
         break;
       case '审批申请':
         {
-          if(widget.switchTabbarIndex != null)
-            widget.switchTabbarIndex(3);
+          if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(3);
         }
         break;
       case '签到':
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignInPage()));
         break;
       case '业绩统计':
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PerformanceStatisticsPage()));
         break;
       case '冰柜销量':
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => FreezerSales()));
         break;
       case '冰柜统计':
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => FreezerStatistics()));
         break;
       case '更多':
         {
-          if(widget.switchTabbarIndex != null)
-            widget.switchTabbarIndex(2);
+          if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(2);
         }
         break;
     }
   }
 
-  void _getBaoGaoList() async {
-    for (int i = 0; i < 3; i++) {
-      _reportList.add(HomeReportModel(
-        avatar: 'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        userName: '猫和老鼠',
-        time: '2012-05-29 16:31:50',
-        postType: i +1,
-        target: 45667.0,
-        cumulative: 34567.0,
-        actual: 12345441.0,
-        summary: [
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-        ],
-        plans: [
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-        ],
-      ));
+  Future<void> _getBaoGaoList() async {
+    try {
+      await Future.delayed(Duration(seconds: 1));
+      _reportList.clear();
+      for (int i = 0; i < 3; i++) {
+        _reportList.add(HomeReportModel(
+          avatar:
+              'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
+          userName: '猫和老鼠',
+          time: '2012-05-29 16:31:50',
+          postType: i + 1,
+          target: 45667.0,
+          cumulative: 34567.0,
+          actual: 12345441.0,
+          summary: [
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+          ],
+          plans: [
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
+          ],
+        ));
+      }
+      bool noMore = false;
+      if (_reportList == null || _reportList.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
     }
-    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
   }
 }

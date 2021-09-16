@@ -39,22 +39,32 @@ class _IndexPageState extends State<IndexPage> {
         activeIcon: Image.asset('assets/images/tabbar_mine_sel.png',width: 22.0,height: 22.0),
         label: '我的'),
   ];
-  List _pages = [];
+  List<Widget> _pages = [];
+
+  void _switchTabbarIndex(int index){
+    setState(() => _selectedIndex = index);
+  }
 
   @override
   void initState() {
     super.initState();
-    _pages.addAll([HomePage(switchTabbarIndex: (index){
-      setState(() => _selectedIndex = index);
-    },), MsgPage(), AppPage(shenpiOnTap: (){
-      setState(() => _selectedIndex = 3);
-    },), ShenPiPage(), MinePage()]);
+    _pages.addAll([
+      HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index),),
+      MsgPage(),
+      AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3),),
+      ShenPiPage(),
+      MinePage()]);
   }
 
   @override
   Widget build(BuildContext context) {
     Application.appContext = context;
     return Scaffold(
+      ///使用BottomNavigationBar 切换页面时重新加载的解决方案
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: _bottomNavItems,
         selectedItemColor: AppColors.FFC68D3E,
@@ -67,7 +77,6 @@ class _IndexPageState extends State<IndexPage> {
         enableFeedback: true,
         type: BottomNavigationBarType.fixed,
       ),
-      body: _pages[_selectedIndex],
     );
   }
 

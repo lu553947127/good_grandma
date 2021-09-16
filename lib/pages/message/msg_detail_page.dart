@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
+import 'package:good_grandma/pages/home/pic_swiper_route.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
 import 'package:provider/provider.dart';
 
@@ -32,26 +33,37 @@ class _Body extends State<MsgDetailPage> {
                 SizedBox(height: 10.0),
                 //附件信息
                 Visibility(
-                  visible: model.enclosureName != null ||
-                      model.enclosureName.isNotEmpty,
+                  visible: model.haveEnclosure,
                   child: Container(
                     color: Colors.white,
                     child: ListTile(
                       leading: Image.asset('assets/images/msg_enclosure.png',
                           width: 30, height: 30),
                       title: Text(
-                        model.enclosureName ?? '',
-                        style: const TextStyle(
-                            color: AppColors.FF2F4058, fontSize: 14.0),
-                        // maxLines: 1,
-                        // overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(model.enclosureSize ?? '',
+                          model.enclosureName.isEmpty
+                              ? '附件'
+                              : model.enclosureName,
+                          style: const TextStyle(
+                              color: AppColors.FF2F4058, fontSize: 14.0)),
+                      subtitle: Text(
+                          (model.enclosureSize.isNotEmpty
+                                  ? model.enclosureSize
+                                  : '0') +
+                              ' MB',
                           style: const TextStyle(
                               color: AppColors.FFC1C8D7, fontSize: 11.0)),
                       trailing: Image.asset('assets/images/msg_book.png',
                           width: 24, height: 24),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return PicSwiperRoute(index: 0, pics: [
+                            model.enclosureViewURL.isNotEmpty
+                                ? model.enclosureViewURL
+                                : model.enclosureURL
+                          ]);
+                        }));
+                      },
                     ),
                   ),
                 ),

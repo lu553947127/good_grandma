@@ -20,7 +20,7 @@ class GuaranteeCell extends StatelessWidget {
     '店主姓名',
     '店铺电话',
     '所在位置',
-    '保修时间'
+    '报修时间'
   ];
 
   @override

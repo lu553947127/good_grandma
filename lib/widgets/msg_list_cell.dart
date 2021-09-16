@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:provider/provider.dart';
 ///消息列表cell样式，也用于规章文件
@@ -31,6 +34,7 @@ class MsgListCell extends StatelessWidget {
                 ]
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //标题 已读未读
                   Row(
@@ -84,7 +88,7 @@ class MsgListCell extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 7, bottom: 14),
                     child: Text(
-                      model.content ?? '',
+                      model.text ?? '',
                       style: TextStyle(
                           color: model.read
                               ? AppColors.FF959EB1
@@ -97,7 +101,7 @@ class MsgListCell extends StatelessWidget {
                   //附件
                   Visibility(
                     visible:
-                        model.enclosureName != null && model.enclosureName.isNotEmpty,
+                        model.haveEnclosure,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 11),
                       child: Container(
@@ -110,7 +114,7 @@ class MsgListCell extends StatelessWidget {
                                 width: 24, height: 24),
                             Expanded(
                               child: Text(
-                                '  ' + (model.enclosureName ?? ''),
+                                '  ' + (model.enclosureName.isNotEmpty ?model.enclosureName: '附件'),
                                 style: TextStyle(
                                     color: AppColors.FF959EB1, fontSize: 12.0),
                                 maxLines: 1,
@@ -170,12 +174,20 @@ class MsgListCell extends StatelessWidget {
             ),
             onTap: () {
               if(!model.forRegularDoc)
-                model.setRead(true);
+                _setReadRequest(context, model);
               if (cellOnTap != null) cellOnTap();
             },
           ),
         ],
       ),
     );
+  }
+  _setReadRequest(BuildContext context,MsgListModel model){
+    if(model.read) return;
+    requestGet(
+        Api.settingRead + '/' + model.id).then((value) {
+          LogUtil.d('settingRead value = $value');
+      model.setRead(true);
+    });
   }
 }

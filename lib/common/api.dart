@@ -54,4 +54,18 @@ class Api {
 
   ///冰柜统计列表
   static const freezerList = "/api/hap-app3/app/freezer/list";
+  ///报修列表
+  static const getFreezerRepairList = "/api/hap-app3/app/freezerRepair/getFreezerRepairList";
+  ///签到
+  static const signAdd = "/api/hap-apptony/app/sign/signAdd";
+  static const signList = "/api/hap-apptony/app/sign/signList";
+  // static const signList = "/api/hap-app/app/sign/signList";
+  ///规章文件
+  static const regularDocList = "/api/hap-app3/app/manage/list";
+  ///消息
+  static const getCategoryCount = "/api/hap-app3/app/notice/getCategoryCount";
+  ///公告list
+  static const getNoticeCategoryList = "/api/hap-app3/app/notice/getNoticeCategoryList";
+  ///消息已读
+  static const settingRead = "/api/hap-app3/app/notice/settingRead";
 }

@@ -419,4 +419,9 @@ class AppUtil {
       if (callBack != null) callBack(result);
     }
   }
+
+  ///不足两位数前面补零
+  static String dateForZero(int num) {
+    return num < 10 ? '0$num' : num.toString();
+  }
 }

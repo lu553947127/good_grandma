@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:amap_flutter_location/amap_flutter_location.dart';
@@ -6,8 +7,12 @@ import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/sign_in/sign_in_census_page.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,24 +24,47 @@ class SignInPage extends StatefulWidget {
 }
 
 class _Body extends State<SignInPage> {
-  final avatar =
-      'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg';
-  final name = '黑夜骑士';
-  final position = '黑夜骑士';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           //签到页面顶部标题栏和用户信息区域
-          _SignInHeader(avatar: avatar, name: name, position: position),
+          _SignInHeader(
+              avatar: Store.readUserAvatar(),
+              name: Store.readNickName(),
+              position: Store.readPostName()),
           //签到按钮
           _SignInButton(
-            onPressed: () {},
+            onPressed: (address, latitude, longitude) =>
+                _signInOnTap(context, address, latitude, longitude),
           ),
         ],
       ),
     );
+  }
+
+  _signInOnTap(BuildContext context, String address, String latitude,
+      String longitude) async {
+    print('address = $address');
+    if (address.isEmpty || latitude.isEmpty || longitude.isEmpty) {
+      Fluttertoast.showToast(
+          msg: '未获取到定位信息，无法打卡', gravity: ToastGravity.CENTER);
+      return;
+    }
+    Map param = {
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
+      'signTime':
+          '${DateTime.now().year}-${AppUtil.dateForZero(DateTime.now().month)}-${AppUtil.dateForZero(DateTime.now().day)} ${AppUtil.dateForZero(DateTime.now().hour)}:${AppUtil.dateForZero(DateTime.now().minute)}:${AppUtil.dateForZero(DateTime.now().second)}'
+    };
+    requestPost(Api.signAdd, json: jsonEncode(param)).then((value) {
+      LogUtil.d('value = $value');
+      Map map = jsonDecode(value);
+      final msg = map['msg']??'';
+      Fluttertoast.showToast(msg: msg??'', gravity: ToastGravity.CENTER);
+    });
   }
 }
 
@@ -46,7 +74,7 @@ class _SignInButton extends StatefulWidget {
     Key key,
     @required this.onPressed,
   }) : super(key: key);
-  final VoidCallback onPressed;
+  final Function(String address, String latitude, String longitude) onPressed;
   @override
   State<StatefulWidget> createState() => _SignInButtonState();
 }
@@ -55,6 +83,10 @@ class _SignInButtonState extends State<_SignInButton> {
   Timer _timer;
   String _currentTime = '';
   String _locationStr = '未获取到位置信息，点击获取';
+
+  String _latitude = '';
+  String _longitude = '';
+  String _address = '';
 
   ///标记是否可以签到
   bool _canSignIn = false;
@@ -73,8 +105,7 @@ class _SignInButtonState extends State<_SignInButton> {
     /// 动态申请定位权限
     _requestPermission();
 
-    AMapFlutterLocation.setApiKey(
-        AppUtil.aMapAndroidKey, AppUtil.aMapiOSKey);
+    AMapFlutterLocation.setApiKey(AppUtil.aMapAndroidKey, AppUtil.aMapiOSKey);
 
     ///iOS 获取native精度类型
     if (Platform.isIOS) _requestAccuracyAuthorization();
@@ -111,7 +142,8 @@ class _SignInButtonState extends State<_SignInButton> {
             TextButton(
               onPressed: () {
                 _stopLocation();
-                if (widget.onPressed != null) widget.onPressed();
+                if (widget.onPressed != null)
+                  widget.onPressed(_address, _latitude, _longitude);
               },
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(0),
@@ -321,8 +353,8 @@ class _SignInButtonState extends State<_SignInButton> {
     // final street = result['street'];
     final address = result['address'];
     // final streetNumber = result['streetNumber'];
-    // final latitude = result['latitude'];
-    // final longitude = result['longitude'];
+    final latitude = result['latitude'];
+    final longitude = result['longitude'];
     // //海拔高度 Android: 定位类型为非GPS时，返回0
     // final altitude = result['altitude'];
     final int errorCode = result['errorCode'];
@@ -332,6 +364,9 @@ class _SignInButtonState extends State<_SignInButton> {
       setState(() {
         _canSignIn = true;
         _locationStr = address ?? '未获取到位置信息，点击获取';
+        _latitude = latitude.toString();
+        _longitude = longitude.toString();
+        _address = address ?? '';
       });
       return;
     }
@@ -341,6 +376,9 @@ class _SignInButtonState extends State<_SignInButton> {
         setState(() {
           _canSignIn = true;
           _locationStr = address ?? '未获取到位置信息，点击获取';
+          _latitude = latitude.toString();
+          _longitude = longitude.toString();
+          _address = address ?? '';
         });
         return;
       }
@@ -546,7 +584,6 @@ class _SignInHeader extends StatelessWidget {
                 ],
               ),
               ListTile(
-                // contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                 leading: ClipOval(
                   child: Container(
                     child: MyCacheImageView(
@@ -572,7 +609,8 @@ class _SignInHeader extends StatelessWidget {
                   width: 71,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
                         return SignInCensusPage();
                       }));
                     },

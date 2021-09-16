@@ -25,3 +25,21 @@ class LoadFailWidget extends StatelessWidget {
     );
   }
 }
+///没有数据的样式
+class NoDataWidget extends StatelessWidget {
+  const NoDataWidget({Key key, this.emptyRetry}) : super(key: key);
+  final VoidCallback emptyRetry; //无数据事件处理
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: emptyRetry,
+        child: Container(
+            margin: EdgeInsets.all(40),
+            child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+        ),
+      ),
+    );
+  }
+}

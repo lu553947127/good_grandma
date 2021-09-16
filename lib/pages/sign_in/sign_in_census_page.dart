@@ -1,7 +1,12 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -15,17 +20,19 @@ class _Body extends State<SignInCensusPage> {
   DateTime _selectedDay;
   DateTime _focusedDay = DateTime.now();
   ValueNotifier<List<Map>> _selectedMaps;
+  int _count = 0;
+  int _missing = 0;
+  List<dynamic> _list = [];
 
   @override
   void initState() {
     super.initState();
+    _selectedDay = _focusedDay;
     _refresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _count = 20;
-    final _missing = 3;
     return Scaffold(
       appBar: AppBar(title: const Text('签到')),
       body: Scrollbar(
@@ -47,7 +54,11 @@ class _Body extends State<SignInCensusPage> {
                 child: Column(
                   children: [
                     //顶部显示统计信息的视图
-                    _TopCountWidget(count: _count, missing: _missing),
+                    _TopCountWidget(
+                      count: _count,
+                      missing: _missing,
+                      month: _focusedDay.month,
+                    ),
                     TableCalendar(
                       focusedDay: _focusedDay,
                       firstDay: DateTime.utc(2010, 10, 16),
@@ -63,7 +74,6 @@ class _Body extends State<SignInCensusPage> {
                         _focusedDay = focusedDay;
                         _refresh();
                       },
-                      // headerVisible: false,
                       onFormatChanged: (format) {},
                       calendarStyle: CalendarStyle(
                         markersMaxCount: 1,
@@ -98,10 +108,12 @@ class _Body extends State<SignInCensusPage> {
               child: ValueListenableBuilder<List<Map>>(
                 valueListenable: _selectedMaps,
                 builder: (context, values, _) {
-                  return Column(children: List.generate(values.length, (index) {
+                  return Column(
+                      children: List.generate(values.length, (index) {
                     Map event = values[index];
-                    final time = event['time'];//'${event.time.hour < 10 ? '0' : ''}${event.time.hour}:${event.time.minute < 10 ? '0' : ''}${event.time.minute}:${event.time.second < 10 ? '0' : ''}${event.time.second}';
-                    final address = event['address'];//event.title * 10;
+                    final time = event[
+                        'time']; //'${event.time.hour < 10 ? '0' : ''}${event.time.hour}:${event.time.minute < 10 ? '0' : ''}${event.time.minute}:${event.time.second < 10 ? '0' : ''}${event.time.second}';
+                    final address = event['address']; //event.title * 10;
                     return _SignInMapCell(time: time, address: address);
                   }));
                 },
@@ -113,32 +125,44 @@ class _Body extends State<SignInCensusPage> {
     );
   }
 
-  void _refresh() {
-    _selectedDay = _focusedDay;
-    _selectedMaps = ValueNotifier(_getMapsForDay(_selectedDay));
+  void _refresh() async {
+    _selectedMaps = ValueNotifier(_getMapsForDay(_focusedDay));
+    Map param = {
+      'month': '${_focusedDay.year}-${AppUtil.dateForZero(_focusedDay.month)}'
+    };
+    try {
+      final value = await requestPost(Api.signList, json: jsonEncode(param));
+      LogUtil.d('value = $value');
+      var result = jsonDecode(value.toString());
+      var data = result['data'];
+      int days = data['days'];
+      _missing = data['wdays'];
+      _count = days - _missing;
+      _list = data['list'];
+      if (mounted) setState(() {});
+      _selectedMaps = ValueNotifier(_getMapsForDay(_focusedDay));
+    } catch (error) {}
   }
 
   List<Map> _getMapsForDay(DateTime day) {
-    List<Map> valueList = List.generate(3, (index) {
-      return {'time':'09:23:88','address':'地址地址地址地址地址地址地址地址'};
+    if (_list.isEmpty) return [];
+    Map<DateTime, List<Map>> map1 = {};
+    _list.forEach((map) {
+      String signTime = map['signTime'];
+      DateTime time = DateTime.parse(signTime);
+      map1[time] = [
+        {
+          'time':
+              '${AppUtil.dateForZero(time.hour)}:${AppUtil.dateForZero(time.minute)}:${AppUtil.dateForZero(time.second)}',
+          'address': map['address']
+        }
+      ];
     });
-    Map<DateTime, List<Map>> map = {
-      DateTime.utc(_selectedDay.year,_selectedDay.month,1):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,3):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,5):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,12):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,13):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,15):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,21):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,23):valueList,
-      DateTime.utc(_selectedDay.year,_selectedDay.month,25):valueList,
-    };
-    final map1 = LinkedHashMap<DateTime, List<Map>>(
+    final map2 = LinkedHashMap<DateTime, List<Map>>(
       equals: isSameDay,
       hashCode: getHashCode,
-    )..addAll(map);
-
-    return map1[day] ?? [];
+    )..addAll(map1);
+    return map2[day] ?? [];
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -152,6 +176,7 @@ class _Body extends State<SignInCensusPage> {
     }
   }
 }
+
 ///签到事件cell
 class _SignInMapCell extends StatelessWidget {
   const _SignInMapCell({
@@ -166,20 +191,16 @@ class _SignInMapCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-          left: 10, right: 10, top: 15.0),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 15.0),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 10, vertical: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15.0),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(4)),
+            color: Colors.white, borderRadius: BorderRadius.circular(4)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(right: 10.0, top: 5),
+              padding: const EdgeInsets.only(right: 10.0, top: 5),
               child: Container(
                 width: 8,
                 height: 8,
@@ -188,8 +209,7 @@ class _SignInMapCell extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
-                          color: AppColors.FFC68D3E
-                              .withOpacity(0.4),
+                          color: AppColors.FFC68D3E.withOpacity(0.4),
                           offset: Offset(2, 1),
                           blurRadius: 1.5)
                     ]),
@@ -199,12 +219,11 @@ class _SignInMapCell extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom:8.0),
+                  padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
                     '打卡时间 $time',
                     style: const TextStyle(
-                        color: AppColors.FF2F4058,
-                        fontSize: 14.0),
+                        color: AppColors.FF2F4058, fontSize: 14.0),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -212,10 +231,8 @@ class _SignInMapCell extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                        'assets/images/sign_in_local2.png',
-                        width: 12,
-                        height: 12),
+                    Image.asset('assets/images/sign_in_local2.png',
+                        width: 12, height: 12),
                     Container(
                       constraints: BoxConstraints(
                         maxWidth: 300,
@@ -223,8 +240,7 @@ class _SignInMapCell extends StatelessWidget {
                       child: Text(
                         address ?? '',
                         style: const TextStyle(
-                            color: AppColors.FF959EB1,
-                            fontSize: 12.0),
+                            color: AppColors.FF959EB1, fontSize: 12.0),
                         // maxLines: 1,
                         // overflow: TextOverflow.ellipsis,
                       ),
@@ -246,12 +262,14 @@ class _TopCountWidget extends StatelessWidget {
     Key key,
     @required int count,
     @required int missing,
+    @required this.month,
   })  : _count = count,
         _missing = missing,
         super(key: key);
 
   final int _count;
   final int _missing;
+  final int month;
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +287,7 @@ class _TopCountWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${DateTime.now().month}月汇总',
+          Text('$month月汇总',
               style: const TextStyle(color: Colors.white, fontSize: 16.0)),
           Padding(
             padding: const EdgeInsets.only(top: 18.0, bottom: 3),
