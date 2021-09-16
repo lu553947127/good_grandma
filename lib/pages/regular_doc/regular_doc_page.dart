@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:good_grandma/pages/regular_doc/regular_doc_detail_page.dart';
@@ -42,26 +43,25 @@ class _Body extends State<RegularDocPage> {
           slivers: [
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  MsgListModel model = _dataArray[index];
-                  return ChangeNotifierProvider<MsgListModel>.value(
-                      value: model,
-                      child: MsgListCell(
-                        cellOnTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                                return ChangeNotifierProvider<MsgListModel>.value(
-                                  value: model,
-                                  child: RegularDocDetailPage(),
-                                );
-                              }));
-                        },
-                      ));
-                }, childCount: _dataArray.length)),
+              MsgListModel model = _dataArray[index];
+              return ChangeNotifierProvider<MsgListModel>.value(
+                  value: model,
+                  child: MsgListCell(
+                    cellOnTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return ChangeNotifierProvider<MsgListModel>.value(
+                          value: model,
+                          child: RegularDocDetailPage(),
+                        );
+                      }));
+                    },
+                  ));
+            }, childCount: _dataArray.length)),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ]),
     );
   }
-
 
   Future<void> _refresh() async {
     _current = 1;
@@ -75,27 +75,15 @@ class _Body extends State<RegularDocPage> {
 
   Future<void> _downloadData() async {
     try {
-      Map<String, dynamic> map = {
-        'current': _current,
-        'size': _pageSize
-      };
+      Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
       final val = await requestGet(Api.regularDocList, param: map);
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
-      print(list.toString());
+      LogUtil.d(list.toString());
       list.forEach((map) {
-        MsgListModel model = MsgListModel(
-          time: map['createTime']??'',
-          title: map['title']??'',
-          content: map['content']??'',
-          //todo:没有
-          enclosureName: map['title']??'',
-          //todo:没有
-          enclosureSize: map['createTime']??'',
-          enclosureURL: map['filePath']??'',
-          forRegularDoc: true,
-        );
+        MsgListModel model = MsgListModel.fromJson(map);
+        model.forRegularDoc = true;
         _dataArray.add(model);
       });
       bool noMore = false;

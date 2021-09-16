@@ -34,10 +34,11 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.jinan.good_grandma"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -58,4 +59,8 @@ dependencies {
     compile 'com.amap.api:location:latest.integration'
     //3D地图
     compile 'com.amap.api:3dmap:latest.integration'
+    // 引入support支持库的multidex库
+    implementation 'com.android.support:multidex:1.0.3'
+    //或androidx支持库的multidex库
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

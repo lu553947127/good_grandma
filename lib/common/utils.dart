@@ -6,13 +6,16 @@ import 'package:app_settings/app_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto/crypto.dart';
 import 'package:date_format/date_format.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'application.dart';
 
 /// 使用 DefaultCacheManager 类（可能无法自动引入，需要手动引入）
@@ -247,7 +250,6 @@ class AppUtil {
   static const aMapiOSKey = '275249e60a6b2da6b74615bce89e23e9';
 
   /// 保存图片到相册
-  ///
   /// 默认为下载网络图片，如需下载资源图片，需要指定 [isAsset] 为 `true`。
   static Future<void> saveImage({BuildContext context, String imageUrl, bool isAsset: false}) async {
     try {
@@ -423,5 +425,72 @@ class AppUtil {
   ///不足两位数前面补零
   static String dateForZero(int num) {
     return num < 10 ? '0$num' : num.toString();
+  }
+
+  ///用浏览器打开链接
+  static void launchURL(String url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+  ///显示位于中间的toast
+  static void showToastCenter(String msg) {
+    if (msg == null || msg.length == 0) {
+      return;
+    }
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+    );
+  }
+  ///请求权限,返回暂时储存路径
+  static Future<String> _requestStoragePermission({String url,String fileName}) async {
+    if (url != null && url.isNotEmpty) {
+      PermissionStatus status = await Permission.storage.request();
+      if (status != PermissionStatus.granted) {
+        AppUtil.showToastCenter("请打开文件读写权限");
+        throw Exception("请打开文件读写权限");
+      }
+      // getApplicationDocumentsDirectory()
+      // 获取文档目录的路径
+      Directory appTempDir = await getApplicationDocumentsDirectory();
+      String path = appTempDir.path + "/附件/" + fileName;
+      if(Platform.isAndroid){
+        path = '/sdcard/download/好阿婆附件/' +fileName;
+      }
+      return path;
+    }
+    return '';
+  }
+  ///下载到暂存目录
+  static Future downloadFile({String url,String fileName,ProgressCallback onReceiveProgress,VoidCallback completedHandle}) async {
+    String path = await _requestStoragePermission(url:url,fileName: fileName);
+    if (path.isEmpty) return;
+    // LogUtil.d('tamp path = $path');
+
+    Dio dio = new Dio();
+    dio.options.baseUrl = url;
+    //设置连接超时时间
+    dio.options.connectTimeout = 10000;
+    //设置数据接收超时时间
+    dio.options.receiveTimeout = 10000;
+    Response response;
+    try {
+      response = await dio.download(
+        '',
+        path,
+        onReceiveProgress: onReceiveProgress,
+      );
+      if (response.statusCode == 200) {
+        AppUtil.showToastCenter('下载完成');
+        if(completedHandle != null)
+          completedHandle();
+      } else {
+        throw Exception('接口出错');
+      }
+    } catch (e) {
+      AppUtil.showToastCenter('服务器出错或网络连接失败！');
+      // showTotast('服务器出错或网络连接失败！');
+      return print('ERROR:======>$e');
+    }
   }
 }

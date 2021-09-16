@@ -83,6 +83,9 @@ dependencies:
   flutter_easyrefresh: ^2.2.1
   # 加载网页
   flutter_html: ^2.1.2
+  # 打开链接
+  url_launcher: ^6.0.10
+  path_provider: ^2.0.4
 
 dev_dependencies:
   flutter_test:

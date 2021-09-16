@@ -52,7 +52,7 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
                               color: AppColors.FF2F4058, fontSize: 14.0)),
                       subtitle: Text(
                           (model.enclosureSize.isNotEmpty
-                                  ? model.enclosureSize
+                                  ? double.parse(model.enclosureSize).toStringAsFixed(2)
                                   : '0') +
                               ' MB',
                           style: const TextStyle(
