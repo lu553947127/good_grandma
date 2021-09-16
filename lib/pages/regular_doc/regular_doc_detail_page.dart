@@ -113,6 +113,8 @@ class _DownloadEnclosureWidgetState extends State<DownloadEnclosureWidget> {
             onTap: () {
               if (widget.model.enclosureViewURL.isNotEmpty)
                 AppUtil.launchURL(widget.model.enclosureViewURL);
+              else
+                AppUtil.showToastCenter('预览地址为空');
             },
           ),
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
-import 'package:good_grandma/pages/home/pic_swiper_route.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
 import 'package:provider/provider.dart';
 
@@ -55,14 +55,10 @@ class _Body extends State<MsgDetailPage> {
                       trailing: Image.asset('assets/images/msg_book.png',
                           width: 24, height: 24),
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return PicSwiperRoute(index: 0, pics: [
-                            model.enclosureViewURL.isNotEmpty
-                                ? model.enclosureViewURL
-                                : model.enclosureURL
-                          ]);
-                        }));
+                        if (model.enclosureViewURL.isNotEmpty)
+                          AppUtil.launchURL(model.enclosureViewURL);
+                        else
+                          AppUtil.showToastCenter('预览地址为空');
                       },
                     ),
                   ),
