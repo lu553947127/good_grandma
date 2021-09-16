@@ -33,49 +33,62 @@ class _DynamicFormViewState extends State<DynamicFormView> {
 
       switch(data['type']){
         case 'select':
-          String value = '';
-          if (data['prop'] == 'danweimingcheng'){
-            value = formModel.danweimingcheng;
-          } else if (data['prop'] == 'zhifufangshi'){
-            value = formModel.zhifufangshi;
-          }
-          return TextSelectView(
-            leftTitle: data['label'],
-            rightPlaceholder: '请选择${data['label']}',
-            sizeHeight: 0,
+          if (data['label'] == '单位名称'){
+            return TextInputView(
+                leftTitle: data['label'],
+                rightPlaceholder: '请输入${data['label']}',
+                sizeHeight: 1,
+                rightLength: 120,
+                onChanged: (tex){
+
+                  if (data['prop'] == 'danweimingcheng'){
+                    formModel.danweimingcheng = tex;
+                  }
+
+                  formProvider.editFormWith(index, formModel);
+                }
+            );
+          }else {
+            String value = '';
+            if (data['prop'] == 'zhifufangshi'){
+              value = formModel.zhifufangshi;
+            }
+            return TextSelectView(
+              leftTitle: data['label'],
+              rightPlaceholder: '请选择${data['label']}',
+              sizeHeight: 0,
               value : value,
-            onPressed: () async{
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
-              LogUtil.d('select----$select');
+              onPressed: () async{
+                String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
+                LogUtil.d('select----$select');
 
-              if (data['prop'] == 'danweimingcheng'){
-                formModel.danweimingcheng = select;
-              } else if (data['prop'] == 'zhifufangshi'){
-                formModel.zhifufangshi = select;
-              }
+                if (data['prop'] == 'zhifufangshi'){
+                  formModel.zhifufangshi = select;
+                }
 
-              formProvider.editFormWith(index, formModel);
+                formProvider.editFormWith(index, formModel);
 
-              return select;
-            },
-          );
+                return select;
+              },
+            );
+          }
           break;
         case 'input':
           return TextInputView(
-            leftTitle: data['label'],
-            rightPlaceholder: '请输入${data['label']}',
-            sizeHeight: 1,
-            rightLength: 120,
-            onChanged: (tex){
+              leftTitle: data['label'],
+              rightPlaceholder: '请输入${data['label']}',
+              sizeHeight: 1,
+              rightLength: 120,
+              onChanged: (tex){
 
-              if (data['prop'] == 'zhanghao'){
-                formModel.zhanghao = tex;
-              } else if (data['prop'] == 'kaihuhangmingcheng'){
-                formModel.kaihuhangmingcheng = tex;
+                if (data['prop'] == 'zhanghao'){
+                  formModel.zhanghao = tex;
+                } else if (data['prop'] == 'kaihuhangmingcheng'){
+                  formModel.kaihuhangmingcheng = tex;
+                }
+
+                formProvider.editFormWith(index, formModel);
               }
-
-              formProvider.editFormWith(index, formModel);
-            }
           );
           break;
         case 'number':

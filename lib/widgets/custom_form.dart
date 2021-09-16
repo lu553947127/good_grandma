@@ -8,6 +8,7 @@ import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
+import 'package:good_grandma/provider/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
@@ -37,6 +38,7 @@ class _CustomFormViewState extends State<CustomFormView> {
   @override
   Widget build(BuildContext context) {
     ImagesProvider imagesProvider = new ImagesProvider();
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
 
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
@@ -54,31 +56,13 @@ class _CustomFormViewState extends State<CustomFormView> {
     _childWidget(data){
       switch(data['type']){
         case 'date':
-          if (data['detail'] != null && data['detail'] == true){
-            addData[data['prop']] = nowTime;
-            return TextDefaultView(
-                leftTitle: data['label'],
-                rightPlaceholder: nowTime,
-                sizeHeight: 0
-            );
-          } else {
-            return TextSelectView(
+          addData[data['prop']] = nowTime;
+          timeSelectProvider.addValue(nowTime);
+          return TextDefaultView(
               leftTitle: data['label'],
-              rightPlaceholder: '请选择${data['label']}',
-              sizeHeight: 0,
-              onPressed: () async{
-                String time = await showPickerDate(context);
-                for (String prop in dataList) {
-                  if (data['prop'] == prop){
-                    addData[prop] = time;
-                  }
-                }
-
-                LogUtil.d('addData----$addData');
-                return time;
-              },
-            );
-          }
+              rightPlaceholder: nowTime,
+              sizeHeight: 0
+          );
           break;
         case 'input':
           if (data['label'] == '申请人'){
@@ -101,6 +85,21 @@ class _CustomFormViewState extends State<CustomFormView> {
                   if (data['prop'] == prop){
                     addData[prop] = tex;
                   }
+
+                  if (data['prop'] == 'chufadi'){
+                    addData[prop] = tex;
+                    timeSelectProvider.addchufadi(tex);
+                  }
+
+                  if (data['prop'] == 'mudidi'){
+                    addData[prop] = tex;
+                    timeSelectProvider.addmudidi(tex);
+                  }
+
+                  if (data['prop'] == 'chuchaishiyou'){
+                    addData[prop] = tex;
+                    timeSelectProvider.addchuchaishiyou(tex);
+                  }
                 }
 
                 LogUtil.d('addData----$addData');
@@ -113,8 +112,9 @@ class _CustomFormViewState extends State<CustomFormView> {
             leftTitle: data['label'],
             rightPlaceholder: '请选择${data['label']}',
             sizeHeight: 1,
+            value: timeSelectProvider.value,
             onPressed: () async{
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
+              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
               LogUtil.d('select----$select');
 
               for (String prop in dataList) {
@@ -122,6 +122,8 @@ class _CustomFormViewState extends State<CustomFormView> {
                   addData[prop] = select;
                 }
               }
+
+              timeSelectProvider.addValue2(select);
 
               LogUtil.d('addData----$addData');
               return select;
@@ -133,9 +135,15 @@ class _CustomFormViewState extends State<CustomFormView> {
               leftTitle: data['label'],
               rightPlaceholder: '请选择${data['label']}',
               sizeHeight: 1,
+              value: (timeSelectProvider.startTime.isNotEmpty && timeSelectProvider.endTime.isNotEmpty)
+                  ? '${timeSelectProvider.startTime + ' - ' + timeSelectProvider.endTime}'
+                  : '',
+              dayNumber: timeSelectProvider.dayNumber,
               onPressed: (param) {
                 print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
                 print('param--------onPressed--------- $param');
+
+                timeSelectProvider.addStartTime(param['startTime'], param['endTime'], param['days']);
 
                 List<String> timeList = [];
                 timeList.add(param['startTime']);
@@ -156,25 +164,28 @@ class _CustomFormViewState extends State<CustomFormView> {
         case 'number':
           if (widget.name == '请假流程'){
             return Container();
-          }
-          return NumberInputView(
-            leftTitle: data['label'],
-            rightPlaceholder: '请输入${data['label']}',
-            leftInput: '',
-            rightInput: '',
-            type: TextInputType.number,
-            rightLength: 120,
-            sizeHeight: 1,
-            onChanged: (tex){
-              for (String prop in dataList) {
-                if (data['prop'] == prop){
-                  addData[prop] = tex;
+          }else if (data['label'] == '出差天数'){
+            return Container();
+          }else {
+            return NumberInputView(
+              leftTitle: data['label'],
+              rightPlaceholder: '请输入${data['label']}',
+              leftInput: '',
+              rightInput: '',
+              type: TextInputType.number,
+              rightLength: 120,
+              sizeHeight: 1,
+              onChanged: (tex){
+                for (String prop in dataList) {
+                  if (data['prop'] == prop){
+                    addData[prop] = tex;
+                  }
                 }
-              }
 
-              LogUtil.d('addData----$addData');
-            },
-          );
+                LogUtil.d('addData----$addData');
+              },
+            );
+          }
           break;
         case 'textarea':
           return ContentInputView(
@@ -219,6 +230,23 @@ class _CustomFormViewState extends State<CustomFormView> {
         if ('upload' == map['type']){
           addData[map['prop']] = imagesProvider.imagePath;
           LogUtil.d('请求结果---prop----${map['prop']}');
+        }else if ('date' == map['type']){
+          addData[map['prop']] = timeSelectProvider.select;
+        }else if ('datetimerange' == map['type']){
+          List<String> timeList = [];
+          timeList.add(timeSelectProvider.startTime + ':00');
+          timeList.add(timeSelectProvider.endTime + ':00');
+
+          addData['yujichuchairiqi'] = timeList;
+          addData['days'] = timeSelectProvider.dayNumber;
+        }
+
+        if ('chufadi' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.chufadi;
+        }else if ('mudidi' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.mudidi;
+        }else if ('chuchaishiyou' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.chuchaishiyou;
         }
       }
 

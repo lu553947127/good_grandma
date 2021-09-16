@@ -12,7 +12,46 @@ class ExamineView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     ///转化当前审核状态 英译汉
-    String processIsFinished = data['processIsFinished'] == 'unfinished' ? '审核中' : '已审核';
+    String processIsFinished = '';
+    switch(data['processIsFinished']){
+      case 'unfinished':
+        processIsFinished = '审核中';
+        break;
+      case 'finished':
+        processIsFinished = '已审核';
+        break;
+      case 'reject':
+        processIsFinished = '已驳回';
+        break;
+    }
+
+    _setTextColor(status){
+      switch(status){
+        case '已审核':
+          return Color(0xFF12BD95);
+          break;
+        case '审核中':
+          return Color(0xFFDD0000);
+          break;
+        case '已驳回':
+          return Color(0xFFC08A3F);
+          break;
+      }
+    }
+
+    _setBgColor(status){
+      switch(status){
+        case '已审核':
+          return Color(0xFFE4F2F1);
+          break;
+        case '审核中':
+          return Color(0xFFF1E1E2);
+          break;
+        case '已驳回':
+          return Color(0xFFF1EEEA);
+          break;
+      }
+    }
 
     return Container(
       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
@@ -50,10 +89,10 @@ class ExamineView extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: processIsFinished == '审核中' ? Color(0XFFFAEEEA) : Color(0XFFEFEFF4), borderRadius: BorderRadius.circular(3),
+                      color: _setBgColor(processIsFinished), borderRadius: BorderRadius.circular(3),
                     ),
-                    child: Text(processIsFinished == '审核中' ? '审核中' : '已审核'
-                        , style: TextStyle(fontSize: 10, color: processIsFinished == '审核中' ? Color(0XFFE45C26) : Color(0XFF959EB1))),
+                    child: Text(processIsFinished
+                        , style: TextStyle(fontSize: 10, color: _setTextColor(processIsFinished))),
                   )
                 )
               ],

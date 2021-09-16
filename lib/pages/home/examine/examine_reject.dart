@@ -75,7 +75,7 @@ class ExamineReject extends StatelessWidget {
             title: process['processDefinitionName'],
             time: '提交时间: ${process['createTime']}',
             wait: wait,
-            status: processIsFinished == '审核中' ? '审核中' : '已审核',
+            status: processIsFinished,
             type: type,
           ),
           SliverToBoxAdapter(

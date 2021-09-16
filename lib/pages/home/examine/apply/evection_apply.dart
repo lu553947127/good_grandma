@@ -60,12 +60,16 @@ class _ExamineEvectionApplyState extends State<ExamineEvectionApply> {
           );
           break;
         case 'input':
-          addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
-          return TextDefaultView(
-              leftTitle: data['label'],
-              rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
-              sizeHeight: 1
-          );
+          if (data['prop'] == 'shenqingren'){
+            addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
+            return TextDefaultView(
+                leftTitle: data['label'],
+                rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
+                sizeHeight: 1
+            );
+          }else {
+            return Container();
+          }
           break;
         case 'dynamic':
           return ChangeNotifierProvider<FormEvectionProvider>.value(

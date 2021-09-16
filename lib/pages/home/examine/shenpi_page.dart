@@ -134,7 +134,19 @@ class _ShenPiPageState extends State<ShenPiPage> {
             list.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  String processIsFinished = list[index]['processIsFinished'] == 'unfinished' ? '审核中' : '已审核';
+                  String processIsFinished = '';
+                  switch(list[index]['processIsFinished']){
+                    case 'unfinished':
+                      processIsFinished = '审核中';
+                      break;
+                    case 'finished':
+                      processIsFinished = '已审核';
+                      break;
+                    case 'reject':
+                      processIsFinished = '已驳回';
+                      break;
+                  }
+
                   return ExamineView(
                     data: list[index],
                     type: type,

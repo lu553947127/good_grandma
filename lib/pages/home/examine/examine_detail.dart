@@ -143,7 +143,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                           title: process['processDefinitionName'],
                           time: '提交时间: ${process['createTime']}',
                           wait: '等待${flowList[0]['user']['name']}审批',
-                          status: widget.processIsFinished == '审核中' ? '审核中' : '已审核',
+                          status: widget.processIsFinished,
                           type: widget.type,
                         ),
                         ExamineDetailContent(
@@ -190,26 +190,30 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      TextButton(
-                                        child: Column(
-                                          children: [
-                                            Image.asset('assets/images/icon_examine_reject.png', width: 15, height: 15),
-                                            SizedBox(height: 3),
-                                            Text(widget.type == '我审批的' ? '驳回' : '取消申请', style: TextStyle(fontSize: 13, color: Color(0XFFDD0000)))
-                                          ]
-                                        ),
-                                        onPressed: () async{
-                                          String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
-                                            title: widget.type == '我审批的' ? '驳回' : '取消申请',
-                                            process: process,
-                                            type: widget.type,
-                                            processIsFinished: widget.processIsFinished,
-                                            processInsId: widget.processInsId,
-                                            taskId: widget.taskId,
-                                            wait: '等待${flowList[0]['user']['name']}审批',
-                                          )));
-                                          if(refresh2 != null) Navigator.pop(context,'refresh');
-                                        },
+                                      Offstage(
+                                        offstage: widget.type == '我审批的' ? false : true,
+                                        child: TextButton(
+                                          child: Column(
+                                              children: [
+                                                Image.asset('assets/images/icon_examine_reject.png', width: 15, height: 15),
+                                                SizedBox(height: 3),
+                                                Text('驳回', style: TextStyle(fontSize: 13, color: Color(0XFFDD0000)))
+                                              ]
+                                          ),
+                                          onPressed: () async{
+                                            String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
+                                              // title: widget.type == '我审批的' ? '驳回' : '取消申请',
+                                              title: '驳回',
+                                              process: process,
+                                              type: widget.type,
+                                              processIsFinished: widget.processIsFinished,
+                                              processInsId: widget.processInsId,
+                                              taskId: widget.taskId,
+                                              wait: '等待${flowList[0]['user']['name']}审批',
+                                            )));
+                                            if(refresh2 != null) Navigator.pop(context,'refresh');
+                                          },
+                                        )
                                       ),
                                       SizedBox(
                                         width: 0.5,

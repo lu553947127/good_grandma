@@ -53,8 +53,8 @@ class FormEvectionProvider with ChangeNotifier{
     Map addData = new Map();
 
     List<String> timeList = [];
-    timeList.add(formModel.start_time);
-    timeList.add(formModel.end_time);
+    timeList.add(formModel.start_time + ':00');
+    timeList.add(formModel.end_time + ':00');
 
     addData['qizhishijian'] = timeList;
     addData['days'] = formModel.hejitianshu;

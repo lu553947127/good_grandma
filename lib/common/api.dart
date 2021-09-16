@@ -46,6 +46,12 @@ class Api {
   ///拜访计划列表
   static const visitPlanList = "/api/hap-app/app/visitplan/list";
 
+  ///拜访计划新增
+  static const visitPlanAdd= "/api/hap-app/app/visitplan/submit";
+
+  ///客户列表
+  static const customerList= "/api/hap-app/app/user/areaUser";
+
   ///冰柜销量列表
   static const freezerSalesList = "/api/hap-app3/app/freezer/freezerSales";
 

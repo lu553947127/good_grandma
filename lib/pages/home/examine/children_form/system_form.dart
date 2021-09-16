@@ -36,7 +36,7 @@ class _SystemFormViewState extends State<SystemFormView> {
             sizeHeight: 0,
             value: formSysProvider.select,
             onPressed: () async{
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}');
+              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
               LogUtil.d('select----$select');
 
 
