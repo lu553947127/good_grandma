@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/login.dart';
@@ -53,6 +54,7 @@ Future requestPost(url, {formData, json}) async{
     headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
     headers['Blade-Auth'] = 'bearer ${Store.readToken()}';
     Response response;
+    // LogUtil.d('Store.readToken() = ${Store.readToken()}');
     BaseOptions options = new BaseOptions(
         connectTimeout: 1000 * 10,
         receiveTimeout: 1000 * 5,
@@ -79,13 +81,14 @@ Future requestPost(url, {formData, json}) async{
 
     return response.data;
   } on DioError catch(e){
-    if (e.response.statusCode == 401){
+    if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
-      return;
+      throw e;
     }
-    return print('ERROR:===$url===>$e');
+    print('ERROR:===$url===>$e');
+    throw e;
   }
 }
 
@@ -98,6 +101,7 @@ Future requestGet(url, {param})async{
     headers['Tenant-Id'] = '000000';
     headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
     headers['Blade-Auth'] = 'bearer ${Store.readToken()}';
+    // LogUtil.d('Store.readToken() = ${Store.readToken()}');
     BaseOptions options = new BaseOptions(
       connectTimeout: 1000 * 10,
       receiveTimeout: 1000 * 5,
@@ -112,19 +116,21 @@ Future requestGet(url, {param})async{
     }else{
       response = await dio.get(Api.baseUrl() + url, queryParameters: param);
     }
-
     return response.data;
   } on DioError catch(e){
-    if (e.response.statusCode == 401 || e.response.statusCode == 404){
+    if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
-      return print('ERROR:===$url===>$e');
+      print('ERROR:===$url===>$e');
+      throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
-      return print('ERROR:===$url===>$e');
+      print('ERROR:===$url===>$e');
+      throw e;
     }
-    return print('ERROR:===$url===>$e');
+    print('ERROR:===$url===>$e');
+    throw e;
   }
 }
 
@@ -151,12 +157,14 @@ Future getPutFile(url, file) async{
     response = await dio.post(Api.baseUrl() + url, data: formData);
     return response.data;
   } on DioError catch(e){
-    if (e.response.statusCode == 401 || e.response.statusCode == 404){
+    if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
-      return print('ERROR:==putFile===>$e');
+      print('ERROR:==putFile===>$e');
+      throw e;
     }
-    return print('ERROR:==putFile===>$e');
+    print('ERROR:==putFile===>$e');
+    throw e;
   }
 }
