@@ -70,7 +70,7 @@ class AddPageGoodsCell extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            model.spec,
+                            model.specs.toString(),
                             style: const TextStyle(
                                 color: AppColors.FF959EB1, fontSize: 12.0),
                           ),

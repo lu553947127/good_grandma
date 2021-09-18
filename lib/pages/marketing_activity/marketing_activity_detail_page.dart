@@ -100,7 +100,7 @@ class _MarketingActivityDetailPageState
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(model.spec,
+                              Text(model.specs.toString(),
                                   style: const TextStyle(fontSize: 12.0)),
                               Text('x${model.count}',
                                   style: const TextStyle(fontSize: 12.0)),

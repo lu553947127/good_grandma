@@ -4,7 +4,7 @@ import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/add_dealer_model.dart';
 import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/pages/open_account/select_city_manager_page.dart';
-import 'package:good_grandma/pages/work/work_report/type_btn.dart';
+import 'package:good_grandma/widgets/type_btn.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';

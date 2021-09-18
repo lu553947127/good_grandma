@@ -109,14 +109,14 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
           image:
               'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
           count: 100,
-          spec: '规格：1*40',
+          // spec: '规格：1*40',
         ),
         GoodsModel(
           name: '商品名称',
           image:
               'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
           count: 100,
-          spec: '规格：1*40',
+          // spec: '规格：1*40',
         ),
       ]);
       _dataArray.add(model);

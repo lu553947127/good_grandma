@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/stock_add_model.dart';
 import 'package:good_grandma/pages/stock/stock_add_page.dart';
 import 'package:good_grandma/pages/stock/stock_detail_page.dart';
@@ -18,11 +25,16 @@ class StockPage extends StatefulWidget {
 class _StockPageState extends State<StockPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
   List<Map> _dataArray = [];
+  int _current = 1;
+  int _pageSize = 15;
+
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _controller.callRefresh();
   }
 
   @override
@@ -32,105 +44,107 @@ class _StockPageState extends State<StockPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: AppColors.FFC68D3E,
-        onPressed: () async{
+        onPressed: () async {
           final StockAddModel _model = StockAddModel();
-          final result = await Navigator.push(context, MaterialPageRoute(builder: (context){
-            return ChangeNotifierProvider.value(value: _model,child: StockAddPage(),);
+          final result = await Navigator.push(context,
+              MaterialPageRoute(builder: (context) {
+            return ChangeNotifierProvider.value(
+              value: _model,
+              child: StockAddPage(),
+            );
           }));
-          if(result != null){
-            _refresh();
+          if (result != null && result) {
+            _controller.callRefresh();
           }
         },
       ),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              //搜索区域
-              SearchTextWidget(
-                  hintText: '请输入客户名称',
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  onSearch: (text) {}),
-              //列表
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                Map map = _dataArray[index];
-                String avatar = map['avatar'];
-                String name = map['name'];
-                String number = map['number'];
-                String id = map['id'];
-                return _StockCell(
-                  avatar: avatar,
-                  name: name,
-                  number: number,
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => StockDetailPage(id: id))),
-                );
-              }, childCount: _dataArray.length)),
-            ],
-          ),
-        ),
-      ),
+      body: MyEasyRefreshSliverWidget(
+          controller: _controller,
+          scrollController: _scrollController,
+          dataCount: _dataArray.length,
+          onRefresh: _refresh,
+          onLoad: _onLoad,
+          slivers: [
+            //搜索区域
+            SearchTextWidget(
+                hintText: '请输入客户名称',
+                editingController: _editingController,
+                focusNode: _focusNode,
+                onSearch: _searchAction),
+            //列表
+            SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+              Map map = _dataArray[index];
+              String avatar = map['avatar'] ?? '';
+              String shopName = map['realName'] ?? '商户名称';
+              String name = map['juridical'] ?? '';
+              String juridicalPhone = map['juridicalPhone'] ?? '';
+              String address = map['address'] ?? '';
+              int number = map['count'] ?? 0;
+              String id = map['userId'].toString() ?? '';
+              return _StockCell(
+                avatar: avatar,
+                name: shopName,
+                number: number.toString(),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => StockDetailPage(
+                      id: id,
+                      shopName: shopName,
+                      avatar: avatar,
+                      name: name,
+                      phone: juridicalPhone,
+                      address: address,
+                      boxNum: number.toString(),))),
+              );
+            }, childCount: _dataArray.length)),
+            SliverSafeArea(sliver: SliverToBoxAdapter()),
+          ]),
     );
   }
 
-  Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
+  _searchAction(String text){
+    if(text.isEmpty) {
+      _controller.callRefresh();
+      return;
+    }
+    List<Map> tempList = [];
+    tempList.addAll(_dataArray.where((element) => (element['corporate'] as String).contains(text)));
     _dataArray.clear();
-    _dataArray.addAll([
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333',
-        'id': ''
-      },
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333',
-        'id': ''
-      },
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333',
-        'id': ''
-      },
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333',
-        'id': ''
-      },
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333'
-      },
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333'
-      },
-      {
-        'avatar':
-            'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-        'name': '荣格超市',
-        'number': '2333',
-        'id': ''
-      },
-    ]);
+    _dataArray.addAll(tempList);
     setState(() {});
+  }
+
+  Future<void> _refresh() async {
+    _current = 1;
+    _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    _downloadData();
+  }
+
+  Future<void> _downloadData() async {
+    try {
+      Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
+      final val = await requestGet(Api.customerStockList, param: map);
+      LogUtil.d('customerStockList value = $val');
+      var data = jsonDecode(val.toString());
+      if (_current == 1) _dataArray.clear();
+      final List<dynamic> list = data['data'];
+      // print(list.toString());
+      list.forEach((map) {
+        _dataArray.add(map as Map);
+      });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
   }
 
   @override
@@ -138,6 +152,8 @@ class _StockPageState extends State<StockPage> {
     super.dispose();
     _focusNode?.dispose();
     _editingController?.dispose();
+    _scrollController?.dispose();
+    _controller?.dispose();
   }
 }
 
@@ -166,9 +182,19 @@ class _StockCell extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: ClipOval(
-                    child: MyCacheImageView(
-                        imageURL: avatar, width: 30, height: 30)),
+                child: Hero(
+                  tag: avatar,
+                  child: ClipOval(
+                      child: MyCacheImageView(
+                    imageURL: avatar,
+                    width: 30,
+                    height: 30,
+                    errorWidgetChild: Image.asset(
+                        'assets/images/icon_empty_user.png',
+                        width: 30,
+                        height: 30),
+                  )),
+                ),
               ),
               Expanded(
                   child: Text(

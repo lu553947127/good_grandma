@@ -167,7 +167,7 @@ class _DeclarationFormDetailPageState extends State<DeclarationFormDetailPage> {
                   image:
                       'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
                   count: 100 + i,
-                  spec: '规格：1*40',
+                  // specs: ['规格：1*40'],
                   price: 234.0,
                   weight: 1000,
                 )));

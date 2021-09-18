@@ -5,24 +5,22 @@ import 'package:good_grandma/models/goods_model.dart';
 ///商品添加model
 class StockAddModel extends ChangeNotifier {
   ///客户
-  List<EmployeeModel> _customers;
+  EmployeeModel _customer;
 
   ///商品列表
   List<StockModel> _stockList;
 
   ///客户
-  List<EmployeeModel> get customers => _customers;
+  EmployeeModel get customer => _customer;
 
   ///商品列表
   List<StockModel> get stockList => _stockList;
   StockAddModel() {
-    _customers = [];
+    _customer = EmployeeModel();
     _stockList = [];
   }
-  setCustomers(List<EmployeeModel> customers) {
-    if (_customers == null) _customers = [];
-    _customers.clear();
-    _customers.addAll(customers);
+  setCustomer(EmployeeModel customer) {
+    _customer = customer;
     notifyListeners();
   }
 
@@ -52,29 +50,20 @@ class StockAddModel extends ChangeNotifier {
     _stockList.removeAt(index);
     notifyListeners();
   }
+
 }
 
 ///库存模型
 class StockModel {
-  List<GoodsModel> goodsList;
-
-  ///整箱40只个数
-  String fBoxNum;
-
-  ///整箱20只个数
-  String tBoxNum;
-
-  ///非整箱(支)个数
-  String unboxNum;
+  GoodsModel goodsModel;
 
   ///生产时间
   String time;
   StockModel({
-    this.fBoxNum = '',
-    this.tBoxNum = '',
-    this.unboxNum = '',
+    //todo:key必须传，否则修改数目会出错
+    @required Key key,
     this.time = '',
   }) {
-    goodsList = [];
+    goodsModel = GoodsModel();
   }
 }

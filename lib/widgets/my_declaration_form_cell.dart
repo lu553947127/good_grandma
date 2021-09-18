@@ -136,7 +136,7 @@ class DeclarationGoodsCell extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(goodsModel.spec,
+                      child: Text(goodsModel.specs.toString(),
                           style: const TextStyle(
                               color: AppColors.FF959EB1, fontSize: 12.0)),
                     ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
@@ -69,7 +70,6 @@ class MineHeaderView extends StatelessWidget {
                         ),
                       ),
                       //信息
-                      //todo:一行不适合放很多元素，如果数据超标 容易显示错误
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -87,49 +87,76 @@ class MineHeaderView extends StatelessWidget {
                                 constraints: BoxConstraints(maxWidth: 120.0),
                               ),
                               //省份
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Container(
-                                  height: 24,
-                                  constraints: BoxConstraints(maxWidth: 80),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24 / 2),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(24 / 2),
-                                      border: Border.all(
-                                          color: Colors.white, width: 1)),
-                                  child: Text(local ?? '',
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 14.0),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,),
+                              Visibility(
+                                visible: local != null && local.isNotEmpty,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Container(
+                                    height: 24,
+                                    constraints: BoxConstraints(maxWidth: 100),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24 / 2),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(24 / 2),
+                                        border: Border.all(
+                                            color: Colors.white, width: 1)),
+                                    child: Text(local ?? '',
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 14.0),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/mine_user.png',
-                                width: 14,
-                                height: 14,
+                          Visibility(
+                            visible: type != null && type.isNotEmpty,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 200),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/mine_user.png',
+                                    width: 14,
+                                    height: 14,
+                                  ),
+                                  //身份
+                                  Expanded(
+                                    child: Text(' ' + (type ?? '') + '  ',
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 14.0),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              //身份
-                              Text(' ' + (type ?? '') + '  ',
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 14.0)),
-                              Image.asset(
-                                'assets/images/mine_phone.png',
-                                width: 14,
-                                height: 14,
+                            ),
+                          ),
+                          Visibility(
+                            visible: phone != null && phone.isNotEmpty,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: 200),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/mine_phone.png',
+                                    width: 14,
+                                    height: 14,
+                                  ),
+                                  //电话
+                                  Expanded(
+                                    child: Text(' ' + (phone ?? ''),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 14.0),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,),
+                                  ),
+                                ],
                               ),
-                              //电话
-                              Text(' ' + (phone ?? ''),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 14.0)),
-                            ],
+                            ),
                           ),
                         ],
                       ),

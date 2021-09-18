@@ -83,7 +83,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                         List<GoodsModel> _selGoodsList = await Navigator.push(
                             context, MaterialPageRoute(builder: (_) {
                           return SelectGoodsPage(
-                              selGoods: activityModel.goodsList);
+                              selGoods: activityModel.goodsList, customerId: '',);
                         }));
                         if (_selGoodsList != null) {
                           activityModel.setGoodsList(_selGoodsList);
@@ -131,7 +131,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                                       ),
                                     ),
                                     Text(
-                                      model.spec,
+                                      model.specs.toString(),
                                       style: const TextStyle(
                                           color: AppColors.FF959EB1,
                                           fontSize: 12.0),

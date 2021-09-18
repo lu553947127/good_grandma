@@ -1,252 +1,197 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/widgets/stock_detail_cell.dart';
 
 ///库存详细
 class StockDetailPage extends StatefulWidget {
-  const StockDetailPage({Key key, @required this.id}) : super(key: key);
+  const StockDetailPage({Key key,
+    @required this.id,
+    @required this.avatar,
+    @required this.shopName,
+    @required this.name,
+    @required this.phone,
+    @required this.address,
+    @required this.boxNum}) : super(key: key);
   final String id;
+  final String avatar;
+  final String shopName;
+  final String name;
+  final String phone;
+  final String address;
+  final String boxNum;
 
   @override
   _StockDetailPageState createState() => _StockDetailPageState();
 }
 
 class _StockDetailPageState extends State<StockDetailPage> {
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
   List<Map> _dataArray = [];
-  String _avatar = '';
-  String _shopName = '';
-  String _name = '';
-  String _phone = '';
-  String _address = '';
-  String _boxNum = '';
-  String _unboxNum = '';
+  int _current = 1;
+  int _pageSize = 10;
 
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _controller.callRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('库存详细')),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              //顶部显示信息的视图
-              _StockDetailHeader(
-                  avatar: _avatar,
-                  shopName: _shopName,
-                  name: _name,
-                  phone: _phone,
-                  address: _address),
-              _GroupTitle(boxNum: _boxNum, unboxNum: _unboxNum),
-              //列表
-              SliverSafeArea(
-                sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                  Map map = _dataArray[index];
-                  String month = map['month'];
-                  List<Map> goods = map['goods'];
-                  return _StockDetailCell(
-                    month: month,
-                    goods: goods,
-                  );
-                }, childCount: _dataArray.length)),
+      body: MyEasyRefreshSliverWidget(
+          controller: _controller,
+          scrollController: _scrollController,
+          dataCount: _dataArray.length,
+          onRefresh: _refresh,
+          onLoad: _onLoad,
+          slivers: [
+            SliverAppBar(
+              title: const Text('库存详细'),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              floating: true,
+              pinned: true,
+              expandedHeight: 175.0 + MediaQuery.of(context).padding.top + kToolbarHeight,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.none,
+                background: Container(
+                  color: AppColors.FFF4F5F8,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).padding.top + kToolbarHeight,
+                        color: Colors.white,
+                      ),
+                      //顶部显示信息的视图
+                      _StockDetailHeader(
+                          avatar: widget.avatar,
+                          shopName: widget.shopName,
+                          name: widget.name,
+                          phone: widget.phone,
+                          address: widget.address),
+                      _GroupTitle(boxNum: widget.boxNum),
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+            //列表
+            SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  Map map = _dataArray[index];
+                  return StockDetailCell(map: map);
+                }, childCount: _dataArray.length)),
+            SliverSafeArea(sliver: SliverToBoxAdapter()),
+          ],),
     );
   }
 
   Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
-    _avatar =
-        'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg';
-    _shopName = '荣格超市';
-    _name = '荣格超市111';
-    _phone = '13244445555';
-    _address = '济阳高速服务区';
-    _boxNum = '1234';
-    _unboxNum = '12345';
-
-    _dataArray.clear();
-    _dataArray.addAll([
-      {
-        'month': '8月',
-        'goods': [
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-        ]
-      },
-      {
-        'month': '7月',
-        'goods': [
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-        ]
-      },
-      {
-        'month': '6月',
-        'goods': [
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-          {'name': '巧克力口味冰淇淋', 'num1': '12', 'num2': '222', 'num3': '333'},
-        ]
-      },
-    ]);
-    setState(() {});
+    _current = 1;
+    _downloadData();
   }
-}
 
-class _StockDetailCell extends StatelessWidget {
-  const _StockDetailCell({
-    Key key,
-    @required this.month,
-    @required this.goods,
-  }) : super(key: key);
+  Future<void> _onLoad() async {
+    _current++;
+    _downloadData();
+  }
 
-  final String month;
-  final List<Map> goods;
+  Future<void> _downloadData() async {
+    if(widget.id == null || widget.id.isEmpty) return;
+    try {
+      Map<String, dynamic> map = {'customerId': widget.id,'current': _current, 'size': _pageSize};
+      // await Future.delayed(Duration(seconds: 1));
+      // List<Map> list = List.generate(5, (index) => jsonDecode(_str));
+      // if (_current == 1) _dataArray.clear();
+      // _dataArray.addAll(list);
+      final val = await requestGet(Api.customerStockDetail, param: map);
+      LogUtil.d('customerStockDetail value = ${jsonEncode(val)}');
+      var data = jsonDecode(val.toString());
+      final List<dynamic> list = data['data'];
+      print(list.toString());
+      list.forEach((map) {
+        _dataArray.add(map as Map);
+      });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
+  }
 
   @override
-  Widget build(BuildContext context) {
-    List<Widget> views = [];
-    goods.forEach((map) {
-      String name = map['name'];
-      String num1 = map['num1'];
-      String num2 = map['num2'];
-      String num3 = map['num3'];
-      views.add(Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 9),
-            child: Text(name,
-                style:
-                    const TextStyle(color: AppColors.FF2F4058, fontSize: 14.0)),
-          ),
-          Text.rich(TextSpan(
-              text: '整箱(40支)：',
-              style: const TextStyle(color: AppColors.FF959EB1, fontSize: 12.0),
-              children: [
-                TextSpan(
-                  text: num1,
-                  style:
-                  const TextStyle(color: AppColors.FFE45C26, fontSize: 14.0),
-                ),
-                TextSpan(text: '   整箱(20支)：'),
-                TextSpan(
-                  text: num2,
-                  style:
-                  const TextStyle(color: AppColors.FFE45C26, fontSize: 14.0),
-                ),
-                TextSpan(text: '   非整箱：'),
-                TextSpan(
-                  text: num3,
-                  style:
-                  const TextStyle(color: AppColors.FFE45C26, fontSize: 14.0),
-                ),
-                TextSpan(text: '支')
-              ])),
-          const Divider(color: AppColors.FFEFEFF4, thickness: 1.0)
-        ],
-      ));
-    });
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 16.0),
-                child: Text(month,
-                    style: const TextStyle(
-                        color: AppColors.FF2F4058, fontSize: 14.0)),
-              ),
-              Column(children: views),
-            ],
-          ),
-          const Divider(color: AppColors.FFEFEFF4, thickness: 1.0, height: 1.0)
-        ],
-      ),
-    );
+  void dispose() {
+    super.dispose();
+    _scrollController?.dispose();
+    _controller?.dispose();
   }
 }
+
 
 class _GroupTitle extends StatelessWidget {
   const _GroupTitle({
     Key key,
     @required String boxNum,
-    @required String unboxNum,
   })  : _boxNum = boxNum,
-        _unboxNum = unboxNum,
         super(key: key);
 
   final String _boxNum;
-  final String _unboxNum;
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text('最近6个月库存',
-                    style: const TextStyle(
-                        color: AppColors.FF959EB1, fontSize: 12.0)),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                        text: '总库存整箱：',
-                        style: const TextStyle(
-                            color: AppColors.FF2F4058, fontSize: 12.0),
-                        children: [
-                          TextSpan(
-                            text: _boxNum,
-                            style: const TextStyle(
-                                color: AppColors.FFE45C26, fontSize: 14.0),
-                          ),
-                          TextSpan(text: '   非整箱：'),
-                          TextSpan(
-                            text: _unboxNum,
-                            style: const TextStyle(
-                                color: AppColors.FFE45C26, fontSize: 14.0),
-                          ),
-                          TextSpan(text: '支'),
-                        ]),
-                    textAlign: TextAlign.end,
-                  ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text('最近6个月库存',
+                  style: const TextStyle(
+                      color: AppColors.FF959EB1, fontSize: 12.0)),
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                      text: '总库存(箱)：',
+                      style: const TextStyle(
+                          color: AppColors.FF2F4058, fontSize: 12.0),
+                      children: [
+                        TextSpan(
+                          text: _boxNum,
+                          style: const TextStyle(
+                              color: AppColors.FFE45C26, fontSize: 14.0),
+                        ),
+                      ]),
+                  textAlign: TextAlign.end,
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 13.0),
-              child: Container(
-                width: double.infinity,
-                color: AppColors.FFEFEFF4,
-                padding: const EdgeInsets.all(10.0),
-                child: const Text('月份    商品名称',
-                    style:
-                        TextStyle(color: AppColors.FF2F4058, fontSize: 12.0)),
               ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 13.0),
+            child: Container(
+              width: double.infinity,
+              color: AppColors.FFEFEFF4,
+              padding: const EdgeInsets.all(10.0),
+              child: const Text('时间    商品/存量',
+                  style:
+                      TextStyle(color: AppColors.FF2F4058, fontSize: 12.0)),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -308,23 +253,28 @@ class _StockDetailHeader extends StatelessWidget {
         ],
       ));
     });
-    return SliverToBoxAdapter(
-      child: Card(
-        child: ListTile(
-          leading: ClipOval(
+    return Card(
+      child: ListTile(
+        leading: Hero(
+          tag: _avatar,
+          child: ClipOval(
               child:
-                  MyCacheImageView(imageURL: _avatar, width: 50, height: 50)),
-          title: Padding(
-            padding: const EdgeInsets.only(top: 16, bottom: 10),
-            child: Text(_shopName,
-                style:
-                    const TextStyle(color: AppColors.FF2F4058, fontSize: 14)),
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, children: views),
-          ),
+                  MyCacheImageView(imageURL: _avatar, width: 50, height: 50,
+                    errorWidgetChild: Image.asset(
+                        'assets/images/icon_empty_user.png',
+                        width: 50,
+                        height: 50),)),
+        ),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 10),
+          child: Text(_shopName,
+              style:
+                  const TextStyle(color: AppColors.FF2F4058, fontSize: 14)),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(bottom: 15.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, children: views),
         ),
       ),
     );

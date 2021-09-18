@@ -65,7 +65,6 @@ class Api {
   ///签到
   static const signAdd = "/api/hap-apptony/app/sign/signAdd";
   static const signList = "/api/hap-apptony/app/sign/signList";
-  // static const signList = "/api/hap-app/app/sign/signList";
   ///规章文件
   static const regularDocList = "/api/hap-app3/app/manage/list";
   ///消息
@@ -74,4 +73,16 @@ class Api {
   static const getNoticeCategoryList = "/api/hap-app3/app/notice/getNoticeCategoryList";
   ///消息已读
   static const settingRead = "/api/hap-app3/app/notice/settingRead";
+  ///客户库存list
+  static const customerStockList = "/api/hap-app3/app/customerStock/list";
+  ///商品list
+  static const customerStockGoodsList = "/api/hap-app3/app/customerStock/goodsList";
+  ///新增库存
+  static const customerStockAdd = "/api/hap-app3/app/customerStock/addStock";
+  ///库存detail
+  static const customerStockDetail = "/api/hap-app3/app/customerStock/detail";
+  ///获取用户信息
+  static const getUserInfoById = "/api/hap-app/app/user/loginUser";
+  ///报告列表
+  static const reportList = "/api/hap-apptony/app/report/reportList";
 }

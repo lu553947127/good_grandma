@@ -102,37 +102,6 @@ class _Body extends State<MsgDuiZhangDanListPage> {
       _controller.finishRefresh(success: false);
       _controller.finishLoad(success: false, noMore: false);
     }
-
-    // try{
-    //   await Future.delayed(Duration(seconds: 1));
-    //   if(_current == 1)
-    //     _dataArray.clear();
-    //   List list = [];
-    //   for (int i = 0; i < 13; i++) {
-    //     MsgListModel model = MsgListModel(
-    //       time: '12:00:00',
-    //       title: '关于财务发出的返利对账单中的应扣',
-    //       content:
-    //           '各位经理： 财务发出的返利对账单中有一项是应扣返利，是指冰柜总数减掉系统录入数和上报库存之间的差是指冰柜总数减掉系统录入数和上报库存之间的差是指冰柜总数减掉系统录入数和上报库存之间的差是指冰柜总数减掉系统录入数和上报库存之间的差是指冰柜总数减掉系统录入数和上报库存之间的差',
-    //       enclosureName: '附件名称',
-    //       enclosureSize: '1.2M',
-    //       enclosureURL:
-    //           'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-    //       forDuiZhangDan: true,
-    //     );
-    //     list.add(model);
-    //     if (i % 2 == 0) model.setSign(true);
-    //     _dataArray.add(model);
-    //   }
-    //   bool noMore = false;
-    //   if (list == null || list.isEmpty) noMore = true;
-    //   _controller.finishRefresh(success: true);
-    //   _controller.finishLoad(success: true, noMore: noMore);
-    //   if (mounted) setState(() {});
-    // } catch (error) {
-    //   _controller.finishRefresh(success: false);
-    //   _controller.finishLoad(success: false, noMore: false);
-    // }
   }
 
   @override
