@@ -25,6 +25,8 @@ class _VisitStatisticsSelectState extends State<VisitStatisticsSelect> {
   @override
   Widget build(BuildContext context) {
 
+    print(widget.type);
+
     _setTextColor(title){
       if(title.contains(widget.type)){
         return Colors.white;
@@ -58,11 +60,7 @@ class _VisitStatisticsSelectState extends State<VisitStatisticsSelect> {
                     ),
                     child: TextButton(
                       child: Text(widget.list[0]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[0]['name']))),
-                      onPressed: (){
-                        setState(() {
-                          widget.type = widget.list[0]['name'];
-                        });
-                      },
+                      onPressed: widget.onPressed
                     ),
                   ),
                   Container(
@@ -75,11 +73,7 @@ class _VisitStatisticsSelectState extends State<VisitStatisticsSelect> {
                     ),
                     child: TextButton(
                       child: Text(widget.list[1]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[1]['name']))),
-                      onPressed: (){
-                        setState(() {
-                          widget.type = widget.list[1]['name'];
-                        });
-                      },
+                      onPressed: widget.onPressed2
                     ),
                   )
                 ]

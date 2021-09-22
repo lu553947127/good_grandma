@@ -1,12 +1,14 @@
 import 'dart:ffi';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_add.dart';
 import 'package:good_grandma/widgets/post_progress_view.dart';
 
 ///物料详细
 class MarketMaterialDetail extends StatefulWidget {
-  const MarketMaterialDetail({Key key}) : super(key: key);
+  var data;
+  MarketMaterialDetail({Key key, this.data}) : super(key: key);
 
   @override
   _MarketMaterialDetailState createState() => _MarketMaterialDetailState();
@@ -14,12 +16,7 @@ class MarketMaterialDetail extends StatefulWidget {
 
 class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
 
-  List<Map> list = [
-    {'name' : '总量', 'number': '10000.0', 'current': '1'},
-    {'name' : '已使用', 'number': '5000.0', 'current': '0.25'},
-    {'name' : '库存', 'number': '4900.0', 'current': '0.22'},
-    {'name' : '耗损', 'number': '100.0', 'current': '0.1'},
-  ];
+  List<Map> list = [];
 
   _setTextColor(status){
     switch(status){
@@ -40,6 +37,16 @@ class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
 
   @override
   Widget build(BuildContext context) {
+
+    list.add({'name' : '总量', 'number': '${double.parse(widget.data['quantity'])}'
+      , 'current': '${double.parse(widget.data['quantity']) / double.parse(widget.data['quantity'])}'});
+    list.add({'name' : '已使用', 'number': '${double.parse(widget.data['inuse'])}'
+      , 'current': '${double.parse(widget.data['inuse']) / double.parse(widget.data['quantity'])}'});
+    list.add({'name' : '库存', 'number': '${double.parse(widget.data['stock'])}'
+      , 'current': '${double.parse(widget.data['stock']) / double.parse(widget.data['quantity'])}'});
+    list.add({'name' : '耗损', 'number': '${double.parse(widget.data['loss'])}'
+      , 'current': '${double.parse(widget.data['loss']) / double.parse(widget.data['quantity'])}'});
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -51,7 +58,9 @@ class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
           TextButton(
               child: Text("编辑", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialAdd()));
+                Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialAdd(
+                  id: widget.data['id'],
+                )));
               }
           )
         ],
@@ -76,9 +85,9 @@ class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('地区1',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                    Text('${widget.data['areaName']} ${widget.data['provinceName']} ${widget.data['cityName']}', style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                     SizedBox(height: 5),
-                    Text('物料名称物料名称物料名称物料名称物料名称物料名称物料名称物料名称物料名称物料名称物料名称物料名称'
+                    Text(widget.data['materialName']
                         ,style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7))),
                   ]
                 )

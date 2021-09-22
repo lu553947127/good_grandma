@@ -42,12 +42,32 @@ class Api {
   ///上传附件
   static const putFile = "/api/hap-resource/oss/endpoint/put-file";
 
-
   ///拜访计划列表
   static const visitPlanList = "/api/hap-app/app/visitplan/list";
 
   ///拜访计划新增
   static const visitPlanAdd= "/api/hap-app/app/visitplan/submit";
+
+  ///市场物料列表
+  static const materialList = "/api/hap-app/app/material/list";
+
+  ///市场物料添加
+  static const materialAdd= "/api/hap-app/app/material/submit";
+
+  ///市场物料详情
+  static const materialDetail = "/api/hap-app/app/material/detail";
+
+  ///获取区域列表
+  static const deptTreeList = "/api/hap-app/app/system/getDeptListDeptId";
+
+  ///获取下级区域列表
+  static const deptNextList = "/api/hap-app/app/system/getNextDept";
+
+  ///客户拜访列表
+  static const customerVisitList= "/api/hap-app/app/visitplan/customerVisitList";
+
+  ///客户拜访新增
+  static const customerVisitAdd= "/api/hap-app/app/visitplan/customerVisitSave";
 
   ///客户列表
   static const customerList= "/api/hap-app/app/user/areaUser";

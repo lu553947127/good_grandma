@@ -6,6 +6,8 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_list.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_type.dart';
+import 'package:good_grandma/widgets/select_form.dart';
+import 'package:good_grandma/widgets/select_tree.dart';
 
 ///冰柜销量
 class FreezerSales extends StatefulWidget {
@@ -16,6 +18,9 @@ class FreezerSales extends StatefulWidget {
 }
 
 class _FreezerSalesState extends State<FreezerSales> {
+
+  String areaName = '区域';
+  String customerName = '客户';
 
   List<Map> freezerSalesList = [];
 
@@ -52,7 +57,20 @@ class _FreezerSalesState extends State<FreezerSales> {
         child: CustomScrollView(
           slivers: [
             FreezerSalesType(
-              selEmpBtnOnTap: (selEmployees) {},
+              areaName: areaName,
+              customerName: customerName,
+              onPressed: () async{
+                Map area = await showSelectTreeList(context);
+                setState(() {
+                  areaName = area['areaName'];
+                });
+              },
+              onPressed2: () async{
+                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                setState(() {
+                  customerName = select['realName'];
+                });
+              },
             ),
             freezerSalesList.length > 0 ?
             SliverList(

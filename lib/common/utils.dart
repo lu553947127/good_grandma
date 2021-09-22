@@ -244,6 +244,17 @@ String passwordMD5(String data) {
   return digest.toString();
 }
 
+///list集合转化成,相隔的字符串
+String listToString(List<String> list) {
+  if (list == null) {
+    return null;
+  }
+  String result;
+  list.forEach((string) =>
+  {if (result == null) result = string else result = '$result,$string'});
+  return result.toString();
+}
+
 class AppUtil {
   ///todo:
   static const aMapAndroidKey = '9826f8c8e4d7b4b3eaafd13c6213bfcc';

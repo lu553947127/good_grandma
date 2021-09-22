@@ -1,7 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_list.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_select.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_type.dart';
+import 'package:good_grandma/widgets/select_form.dart';
 
 ///拜访统计
 class VisitStatistics extends StatefulWidget {
@@ -13,20 +20,38 @@ class VisitStatistics extends StatefulWidget {
 
 class _VisitStatisticsState extends State<VisitStatistics> {
 
-  List<Map> list = [
-    {'title' : '拜访鲁信影城营业点经营情况', 'name': '拜访人：张三'
-      ,'time' : '拜访日期: 2021-05-29 16:00:00', 'customer' : '拜访客户：鲁信影城','status' : '未开始'},
-    {'title' : '拜访鲁信影城营业点经营情况', 'name': '拜访人：张三'
-      ,'time' : '拜访日期: 2021-05-29 16:00:00', 'customer' : '拜访客户：鲁信影城','status' : '进行中'},
-    {'title' : '拜访鲁信影城营业点经营情况', 'name': '拜访人：张三'
-      ,'time' : '拜访日期: 2021-05-29 16:00:00', 'customer' : '拜访客户：鲁信影城','status' : '已结束'},
-    {'title' : '拜访鲁信影城营业点经营情况', 'name': '拜访人：张三'
-      ,'time' : '拜访日期: 2021-05-29 16:00:00', 'customer' : '拜访客户：鲁信影城','status' : '已结束'},
-    {'title' : '拜访鲁信影城营业点经营情况', 'name': '拜访人：张三'
-      ,'time' : '拜访日期: 2021-05-29 16:00:00', 'customer' : '拜访客户：鲁信影城','status' : '未开始'},
-    {'title' : '拜访鲁信影城营业点经营情况', 'name': '拜访人：张三'
-      ,'time' : '拜访日期: 2021-05-29 16:00:00', 'customer' : '拜访客户：鲁信影城','status' : '进行中'},
+  List<Map> customerVisitList = [];
+  String type = '员工统计';
+  List<Map> listTitle = [
+    {'name': '员工统计'},
+    {'name': '客户统计'},
   ];
+
+  String customerName = '所有人';
+  String time = '所有日期';
+
+  ///拜访统计列表
+  _customerVisitList(typeId){
+    Map<String, dynamic> map = {'type': typeId, 'current': '1', 'size': '999'};
+    requestGet(Api.customerVisitList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---customerVisitList----$data');
+      setState(() {
+        if (typeId == '1'){
+          type = listTitle[0]['name'];
+        }else {
+          type = listTitle[1]['name'];
+        }
+        customerVisitList = (data['data'] as List).cast();
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _customerVisitList('1');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +67,46 @@ class _VisitStatisticsState extends State<VisitStatistics> {
         slivers: [
           VisitStatisticsSelect(
             color: Colors.white,
-            type: '员工统计',
-            list: [
-              {'name': '员工统计'},
-              {'name': '客户统计'},
-            ],
-            onPressed: () {},
-            onPressed2: () {}
+            type: type,
+            list: listTitle,
+            onPressed: () {
+              _customerVisitList('1');
+            },
+            onPressed2: () {
+              _customerVisitList('2');
+            }
           ),
           VisitStatisticsType(
-            selEmpBtnOnTap: (selEmployees) {},
+            customerName: customerName,
+            time: time,
+            onPressed: ()async{
+              Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+              setState(() {
+                customerName = select['realName'];
+              });
+            },
+            onPressed2: () async {
+              showPickerDateRange(
+                  context: Application.appContext,
+                  callBack: (Map param){
+                    setState(() {
+                      time = param['startTime'] + param['endTime'];
+                    });
+                  }
+              );
+            },
           ),
+          customerVisitList.length > 0 ?
           SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                return VisitStatisticsList(data: list[index]);
-              }, childCount: list.length))
+                return VisitStatisticsList(data: customerVisitList[index]);
+              }, childCount: customerVisitList.length)) :
+          SliverToBoxAdapter(
+              child: Container(
+                  margin: EdgeInsets.all(40),
+                  child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+              )
+          )
         ],
       )
     );

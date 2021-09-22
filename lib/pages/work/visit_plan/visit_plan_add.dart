@@ -30,7 +30,6 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
 
   ///新增
   _visitPlanAdd(){
-    LogUtil.d('请求结果---userId----$userId');
     Map<String, dynamic> map = {
       'title': title,
       'visitTime': visitTime,

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_list.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_type.dart';
+import 'package:good_grandma/widgets/select_form.dart';
+import 'package:good_grandma/widgets/select_tree.dart';
 
 ///冰柜统计
 class FreezerStatistics extends StatefulWidget {
@@ -15,6 +18,10 @@ class FreezerStatistics extends StatefulWidget {
 }
 
 class _FreezerStatisticsState extends State<FreezerStatistics> {
+
+  String areaName = '区域';
+  String customerName = '客户';
+  String statusName = '状态';
 
   List<Map> freezerList = [];
 
@@ -51,7 +58,27 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
         child: CustomScrollView(
           slivers: [
             FreezerStatisticsType(
-              selEmpBtnOnTap: (selEmployees) {},
+              areaName: areaName,
+              customerName: customerName,
+              statusName: statusName,
+              onPressed: () async{
+                Map area = await showSelectTreeList(context);
+                setState(() {
+                  areaName = area['areaName'];
+                });
+              },
+              onPressed2: () async{
+                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                setState(() {
+                  customerName = select['realName'];
+                });
+              },
+              onPressed3: () async {
+                String result = await showPicker(['所有状态', '未开柜', '已开柜'], context);
+                setState(() {
+                  statusName = result;
+                });
+              },
             ),
             freezerList.length > 0 ?
             SliverList(

@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_add.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_detail.dart';
 import 'package:good_grandma/widgets/custom_progress_circle.dart';
@@ -15,22 +19,25 @@ class MarketMaterial extends StatefulWidget {
 
 class _MarketMaterialState extends State<MarketMaterial> {
 
-  List<Map> list = [
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-    {'area' : '地区1', 'name': '物料名称物料名称物料','use' : 1, 'use_total' : 10,'stock' : 2
-      ,'stock_total' : 10,'wastage' : 5,'wastage_total' : 10},
-  ];
+  List<Map> materialList = [];
+
+  ///市场物料列表
+  _materialList(){
+    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    requestGet(Api.materialList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---materialList----$data');
+      setState(() {
+        materialList = (data['data'] as List).cast();
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _materialList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +47,11 @@ class _MarketMaterialState extends State<MarketMaterial> {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text("市场物料",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
       body: Container(
           child: ListView.builder(
-            itemCount: list.length,
+            itemCount: materialList.length,
             itemBuilder: (context, index){
               return InkWell(
                 child: Container(
@@ -66,9 +73,9 @@ class _MarketMaterialState extends State<MarketMaterial> {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(list[index]['area'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                                Text(materialList[index]['areaName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                                 SizedBox(height: 3),
-                                Text(list[index]['name'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                                Text(materialList[index]['materialName'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                               ]
                           ),
                           Row(
@@ -78,7 +85,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                     children: [
                                       CustomProgressCircle(
                                         size: 25,
-                                        ratio: list[index]['use'] / list[index]['use_total'],
+                                        ratio: double.parse(materialList[index]['inuse']) / double.parse(materialList[index]['quantity']),
                                         color: Color(0XFF959EB1),
                                         width: 30,
                                         height: 30,
@@ -95,7 +102,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                     children: [
                                       CustomProgressCircle(
                                         size: 25,
-                                        ratio: list[index]['stock'] / list[index]['stock_total'],
+                                        ratio: double.parse(materialList[index]['stock']) / double.parse(materialList[index]['quantity']),
                                         color: Color(0XFF05A8C6),
                                         width: 30,
                                         height: 30,
@@ -112,7 +119,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                     children: [
                                       CustomProgressCircle(
                                         size: 25,
-                                        ratio: list[index]['wastage'] / list[index]['wastage_total'],
+                                        ratio: double.parse(materialList[index]['loss']) / double.parse(materialList[index]['quantity']),
                                         color: Color(0XFFE45C26),
                                         width: 30,
                                         height: 30,
@@ -129,7 +136,9 @@ class _MarketMaterialState extends State<MarketMaterial> {
                     )
                 ),
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialDetail()));
+                  Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialDetail(
+                    data: materialList[index],
+                  )));
                 }
               );
             },
@@ -139,7 +148,9 @@ class _MarketMaterialState extends State<MarketMaterial> {
         child: Icon(Icons.add),
         backgroundColor: AppColors.FFC68D3E,
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialAdd()));
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialAdd(
+            id: '',
+          )));
         }
       ),
     );
