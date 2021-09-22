@@ -55,16 +55,20 @@ class VisitStatisticsDetail extends StatelessWidget {
                     children: [
                       Image.asset('assets/images/icon_visit_statistics.png', width: 25, height: 25),
                       SizedBox(width: 10),
-                      Text(data['title'],style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
+                      Container(
+                          width: 280,
+                          child: Text(data['visitContent'], style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))
+                              , overflow: TextOverflow.ellipsis, maxLines: 1)
+                      ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: _setBgColor(data['status']), borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Text(data['status'], style: TextStyle(fontSize: 10, color: _setTextColor(data['status']))),
-                  )
+                  // Container(
+                  //   padding: EdgeInsets.all(5),
+                  //   decoration: BoxDecoration(
+                  //     color: _setBgColor(data['status']), borderRadius: BorderRadius.circular(3),
+                  //   ),
+                  //   child: Text(data['status'], style: TextStyle(fontSize: 10, color: _setTextColor(data['status']))),
+                  // )
                 ],
               ),
             ),
@@ -93,7 +97,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                                     SizedBox(width: 3),
                                     Text('拜访人: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                     SizedBox(width: 3),
-                                    Text('张三',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                    Text(data['userName'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                   ],
                                 ),
                                 SizedBox(height: 5),
@@ -103,7 +107,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                                     SizedBox(width: 3),
                                     Text('拜访日期: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                     SizedBox(width: 3),
-                                    Text('2021年7月20日 周二 11：00 - 12：00',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                    Text(data['visitTime'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                   ],
                                 ),
                                 SizedBox(height: 5),
@@ -113,7 +117,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                                     SizedBox(width: 3),
                                     Text('拜访客户: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                     SizedBox(width: 3),
-                                    Text('客户名称',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                    Text(data['customerName'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                   ],
                                 ),
                                 SizedBox(height: 5),
@@ -123,7 +127,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                                     SizedBox(width: 3),
                                     Text('客户地址: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                     SizedBox(width: 3),
-                                    Text('山东省济南市历城区',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                    Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                   ],
                                 )
                               ]
@@ -139,7 +143,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                 children: [
                   Text("备注", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
                   SizedBox(height: 10),
-                  Text("拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内容拜访内",
+                  Text(data['visitContent'],
                       style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)))
                 ],
               ),

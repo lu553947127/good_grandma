@@ -21,6 +21,9 @@ class TextInputView extends StatefulWidget {
   ///输入最大字数长度
   int maxLength = 12;
 
+  ///输入框文字
+  String text = '';
+
   ///输入监听
   final OnChanged onChanged;
 
@@ -35,7 +38,8 @@ class TextInputView extends StatefulWidget {
     this.maxLength,
     this.onChanged,
     this.sizeHeight,
-    this.controller
+    this.controller,
+    this.text
   }) : super(key: key);
 
   @override
@@ -80,6 +84,10 @@ class _TextInputViewState extends State<TextInputView> {
                     setState(() {
                       if(widget.onChanged != null){
                         widget.onChanged(txt);
+                      }
+
+                      if(widget.text != ''){
+                        widget.controller.text = widget.text;
                       }
                     });
                   }

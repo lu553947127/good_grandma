@@ -1,5 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
@@ -17,9 +22,38 @@ class CustomerVisitAdd extends StatefulWidget {
 
 class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
+  ImagesProvider imagesProvider = new ImagesProvider();
+  String customerName = '';
+  String visitContent = '';
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String address = '';
+
+  ///新增
+  _customerVisitAdd(){
+    Map<String, dynamic> map = {
+      'customerName': customerName,
+      'visitContent': visitContent,
+      'ipicture': listToString(imagesProvider.urlList),
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address};
+
+    requestPost(Api.customerVisitAdd, json: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---customerVisitAdd----$data');
+      if (data['code'] == 200){
+        showToast("添加成功");
+        Navigator.of(Application.appContext).pop('refresh');
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    ImagesProvider imagesProvider = new ImagesProvider();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -36,7 +70,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               leftTitle: '客户姓名',
               rightPlaceholder: '请输入客户名称',
               onChanged: (tex){
-
+                customerName = tex;
               }
             ),
             ContentInputView(
@@ -45,7 +79,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               leftTitle: '行动过程',
               rightPlaceholder: '行动过程',
               onChanged: (tex){
-
+                visitContent = tex;
               }
             ),
             ChangeNotifierProvider<ImagesProvider>.value(
@@ -71,9 +105,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               padding: EdgeInsets.all(20),
               child: LoginBtn(
                 title: '提交',
-                onPressed: (){
-
-                }
+                onPressed: _customerVisitAdd
               )
             )
           ]
