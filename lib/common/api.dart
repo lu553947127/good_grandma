@@ -105,4 +105,14 @@ class Api {
   static const getUserInfoById = "/api/hap-app/app/user/loginUser";
   ///报告列表
   static const reportList = "/api/hap-apptony/app/report/reportList";
+  ///提交日报
+  static const reportDayAdd = "/api/hap-apptony/app/report/reportDayAdd";
+  ///提交week报
+  static const reportWeekAdd = "/api/hap-apptony/app/report/reportWeekAdd";
+  ///区域选择
+  static const regionList = "/api/hap-apptony/app/report/regionList";
+  ///筛选下级员工
+  static const regionUserList = "/api/hap-app/app/report/userList";
+  ///客户反馈
+  static const feedback = "/api/hap-app3/app/feedback/save";
 }

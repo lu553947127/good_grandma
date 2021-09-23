@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
@@ -72,13 +76,38 @@ class _FeedbackPageState extends State<FeedbackPage> {
             SliverToBoxAdapter(
               child: SubmitBtn(
                 title: '提  交',
-                onPressed: () {},
+                onPressed: () => _feedbackRequest(context),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _feedbackRequest(BuildContext context){
+    if(_editingController.text.isEmpty){
+      AppUtil.showToastCenter('请填写反馈信息');
+      return;
+    }
+    String images = '';
+    if(_imagesProvider.urlList.isNotEmpty) {
+      int  i = 0;
+      _imagesProvider.urlList.forEach((imageURL) {
+        images += imageURL;
+        if(i < _imagesProvider.urlList.length - 1)
+          images += ',';
+        i++;
+      });
+    }
+    Map param = {'content':_editingController.text,'imgs':images};
+    requestPost(Api.feedback,json: jsonEncode(param)).then((value) {
+      var data = jsonDecode(value.toString());
+      if (data['code'] == 200) {
+        AppUtil.showToastCenter('提交成功');
+        Navigator.pop(context, true);
+      }
+    });
   }
 
   @override
