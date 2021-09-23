@@ -590,10 +590,7 @@ class _SignInHeader extends StatelessWidget {
                       imageURL: avatar,
                       width: 50,
                       height: 50,
-                      errorWidgetChild: const Icon(
-                          Icons.supervised_user_circle_rounded,
-                          size: 50,
-                          color: AppColors.FF2F4058),
+                      errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 50.0, height: 50.0),
                     ),
                   ),
                 ),

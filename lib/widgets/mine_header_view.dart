@@ -60,10 +60,7 @@ class MineHeaderView extends StatelessWidget {
                                 imageURL: avatar,
                                 width: 65,
                                 height: 65,
-                                errorWidgetChild: const Icon(
-                                    Icons.supervised_user_circle_rounded,
-                                    size: 65,
-                                    color: AppColors.FF2F4058),
+                                errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
                               ),
                             ),
                           ),
