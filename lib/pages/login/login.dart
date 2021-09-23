@@ -79,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
           Store.savePostName(data['post_name']);
           Store.saveNickName(data['nick_name']);
           Store.saveUserAvatar(data['avatar']);
+          Store.saveUserType(data['user_type']);
           Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
         }
       });

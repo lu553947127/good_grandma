@@ -13,7 +13,16 @@ class Store {
   static const _postName = "post_name";
   static const _nickName = "nick_name";
   static const _userAvatar = "avatar";
+  ///用户类别，主要判断是不是职能
+  static const _userType = "userType";
 
+  static saveUserType(String userType) {
+    _box.write(_userType, userType);
+  }
+
+  static String readUserType() {
+    return _box.read(_userType);
+  }
 
   static saveToken(String token) {
     _box.write(_kToken, token);

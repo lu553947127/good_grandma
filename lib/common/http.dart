@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
@@ -78,16 +79,16 @@ Future requestPost(url, {formData, json}) async{
     }else{
       response = await dio.post(Api.baseUrl() + url);
     }
-
+    _dealResponseDataFroError(response);
     return response.data;
   } on DioError catch(e){
+    LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }
-    print('ERROR:===$url===>$e');
     throw e;
   }
 }
@@ -116,6 +117,7 @@ Future requestGet(url, {param})async{
     }else{
       response = await dio.get(Api.baseUrl() + url, queryParameters: param);
     }
+    _dealResponseDataFroError(response);
     return response.data;
   } on DioError catch(e){
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
@@ -132,6 +134,15 @@ Future requestGet(url, {param})async{
     print('ERROR:===$url===>$e');
     throw e;
   }
+}
+///对接口返回的非200的错误信息进行显示
+void _dealResponseDataFroError(Response response){
+  var data = jsonDecode(response.data.toString());
+  if(data['code'] == 200) return;
+  String msg = data['msg'];
+  if(msg != null && msg.isNotEmpty)
+    AppUtil.showToastCenter(msg);
+  throw DioError(requestOptions: response.requestOptions,error: response.data);
 }
 
 ///上传附件
@@ -155,6 +166,7 @@ Future getPutFile(url, file) async{
       "file": await MultipartFile.fromFile(file, filename:name)
     });
     response = await dio.post(Api.baseUrl() + url, data: formData);
+    _dealResponseDataFroError(response);
     return response.data;
   } on DioError catch(e){
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
