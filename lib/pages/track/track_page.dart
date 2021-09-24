@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:amap_flutter_map/amap_flutter_map.dart';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/models/track_model.dart';
@@ -25,12 +29,29 @@ class _TrackPageState extends State<TrackPage> {
   //需要先设置一个空的map赋值给AMapWidget的markers，否则后续无法添加marker
   final Map<String, Marker> _markers = <String, Marker>{};
   AMapController _mapController;
+  String _startTime = '';
+  String _endTime = '';
 
   final _key = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    DateTime now = DateTime.now();
+    _startTime = now.year.toString() +
+        '-' +
+        AppUtil.dateForZero(now.month) +
+        '-' +
+        AppUtil.dateForZero(now.day) +
+        ' ' +
+        '00:00';
+    _endTime = now.year.toString() +
+        '-' +
+        AppUtil.dateForZero(now.month) +
+        '-' +
+        AppUtil.dateForZero(now.day) +
+        ' ' +
+        '23:59';
     _getUserList();
   }
 
@@ -43,7 +64,7 @@ class _TrackPageState extends State<TrackPage> {
         children: [
           AMapWidget(
             apiKey: _aMapApiKey,
-            compassEnabled: true,
+            rotateGesturesEnabled: false,
             polylines: Set<Polyline>.of(_polyLines.values),
             markers: Set<Marker>.of(_markers.values),
             onMapCreated: (controller) => _mapController = controller,
@@ -54,10 +75,10 @@ class _TrackPageState extends State<TrackPage> {
               child: _selUserModel != null
                   ? Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: AppColors.FFC1C8D7, width: 1)
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          border:
+                              Border.all(color: AppColors.FFC1C8D7, width: 1)),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15.0, vertical: 9.0),
                       child: GestureDetector(
@@ -81,6 +102,43 @@ class _TrackPageState extends State<TrackPage> {
                       ),
                     )
                   : Container()),
+          Positioned(
+              top: 15,
+              right: 15,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.FFE45C26, width: 1)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
+                child: GestureDetector(
+                  onTap: () {
+                    showPickerDateRange(
+                        context: context,
+                        callBack: (Map param) {
+                          setState(() {
+                            _startTime = param['startTime'];
+                            _endTime = param['endTime'];
+                          });
+                          _getTrackWithUser(_selUserModel);
+                        });
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                          _startTime.isEmpty
+                              ? '选择时间段'
+                              : _startTime + '\n' + _endTime,
+                          style: const TextStyle(color: AppColors.FFE45C26)),
+                      Icon(
+                        Icons.arrow_drop_down,
+                        color: AppColors.FFE45C26,
+                      ),
+                    ],
+                  ),
+                ),
+              )),
         ],
       ),
     );
@@ -88,55 +146,55 @@ class _TrackPageState extends State<TrackPage> {
 
   ///获取用户列表
   void _getUserList() async {
-    await Future.delayed(Duration(seconds: 1));
-    _userList.clear();
-    _userList.addAll(List.generate(
-        5, (index) => EmployeeModel(name: '张$index', id: index.toString())));
-    if (_userList.isNotEmpty) {
-      _selUserModel = _userList.first;
-      _getTrackWithUser(_selUserModel);
-    }
-    if (mounted) setState(() {});
+    try {
+      final val = await requestPost(Api.reportUserList);
+      // LogUtil.d('reportList value = $val');
+      _userList.clear();
+      var data = jsonDecode(val.toString());
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        Map re = map as Map;
+        EmployeeModel model = EmployeeModel(
+            name: re['name'] ?? '', id: re['id'] ?? '', isSelected: false);
+        _userList.add(model);
+      });
+      if (_userList.isNotEmpty) {
+        _selUserModel = _userList.first;
+        _getTrackWithUser(_selUserModel);
+      }
+      if (mounted) setState(() {});
+    } catch (error) {}
   }
 
   ///从服务器请求用户轨迹
   void _getTrackWithUser(EmployeeModel userModel) async {
-    await Future.delayed(Duration(seconds: 1));
-    _dataArray.clear();
-    _dataArray.addAll([
-      TrackModel(
-          name: _selUserModel.name,
-          positionName: '荣格超市1',
-          time: '2021-7-23 11:00:40',
-          duration: '40',
-          latLng: LatLng(39.938698, 116.275177)),
-      TrackModel(
-          name: _selUserModel.name,
-          positionName: '荣格超市2',
-          time: '2021-7-23 11:00:41',
-          duration: '40',
-          latLng: LatLng(39.966069, 116.289253)),
-      TrackModel(
-          name: _selUserModel.name,
-          positionName: '荣格超市3',
-          time: '2021-7-23 11:00:42',
-          duration: '40',
-          latLng: LatLng(39.944226, 116.306076)),
-      TrackModel(
-          name: _selUserModel.name,
-          positionName: '荣格超市4',
-          time: '2021-7-23 11:00:43',
-          duration: '40',
-          latLng: LatLng(39.966069, 116.322899)),
-      TrackModel(
-          name: _selUserModel.name,
-          positionName: '荣格超市5',
-          time: '2021-7-23 11:00:44',
-          duration: '40',
-          latLng: LatLng(39.938698, 116.336975)),
-    ]);
-    _addLine();
-    if (mounted) setState(() {});
+    try {
+      Map param = {
+        'userId': userModel.id,
+        'startDate': _startTime + ':00',
+        'endDate': _endTime + ':00'
+      };
+      // print('param = ${jsonEncode(param)}');
+      final val =
+          await requestPost(Api.trajectoryList, json: jsonEncode(param));
+      // LogUtil.d('trajectoryList value = $val');
+      _dataArray.clear();
+      var data = jsonDecode(val.toString());
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        Map re = map as Map;
+        TrackModel model = TrackModel(
+            name: _selUserModel.name,
+            positionName: re['customerName'] ?? '',
+            time: re['visitTime'] ?? '',
+            duration: '',
+            latLng: LatLng(double.parse(re['latitude']) ?? 0,
+                double.parse(re['longitude']) ?? 0));
+        _dataArray.add(model);
+      });
+      _addLine();
+      if (mounted) setState(() {});
+    } catch (error) {}
   }
 
   ///添加一个marker 点
@@ -155,6 +213,7 @@ class _TrackPageState extends State<TrackPage> {
 
   ///添加线
   void _addLine() {
+    _polyLines = {};
     final Polyline polyline = Polyline(
       color: AppColors.FFE45C26,
       width: 2.5,
@@ -207,7 +266,7 @@ class _TrackPageState extends State<TrackPage> {
           List<Map> values = [
             {'title': '拜访人：', 'value': model.name ?? ''},
             {'title': '拜访时间：', 'value': model.time ?? ''},
-            {'title': '停留时间：', 'value': model.duration ?? ''},
+            // {'title': '停留时间：', 'value': model.duration ?? ''},
           ];
           return Container(
             height: 150,
@@ -254,10 +313,10 @@ class _TrackPageState extends State<TrackPage> {
                                       text: e['value'],
                                       style: const TextStyle(
                                           color: AppColors.FF2F4058)),
-                                  TextSpan(
-                                      text: e['title'] == values.last['title']
-                                          ? '分钟'
-                                          : ''),
+                                  // TextSpan(
+                                  //     text: e['title'] == values.last['title']
+                                  //         ? '分钟'
+                                  //         : ''),
                                 ])))
                         .toList(),
                   ),
@@ -275,4 +334,3 @@ class _TrackPageState extends State<TrackPage> {
     _mapController?.disponse();
   }
 }
-

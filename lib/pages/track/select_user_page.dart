@@ -15,6 +15,14 @@ class SelectUserPage extends StatefulWidget {
 class _SelectUserPageState extends State<SelectUserPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
+  List<EmployeeModel> _employees = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Divider divider = const Divider(
@@ -25,31 +33,52 @@ class _SelectUserPageState extends State<SelectUserPage> {
         endIndent: 15.0);
     return Scaffold(
       appBar: AppBar(title: const Text('选择人员')),
-      body: Scrollbar(
-        child: CustomScrollView(
-          slivers: [
-            //搜索区域
-            SearchTextWidget(
-                editingController: _editingController,
-                focusNode: _focusNode,
-                onSearch: (text) {}),
-            //列表
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              EmployeeModel model = widget.userList[index];
-              return Column(
-                children: [
-                  ListTile(
-                      title: Text(model.name ?? ''),
-                      onTap: () => Navigator.pop(context, model)),
-                  divider
-                ],
-              );
-            }, childCount: widget.userList.length)),
-          ],
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: Scrollbar(
+          child: CustomScrollView(
+            slivers: [
+              //搜索区域
+              SearchTextWidget(
+                  editingController: _editingController,
+                  focusNode: _focusNode,
+                  onSearch: _searchAction),
+              //列表
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                EmployeeModel model = _employees[index];
+                return Column(
+                  children: [
+                    ListTile(
+                        title: Text(model.name ?? ''),
+                        onTap: () => Navigator.pop(context, model)),
+                    divider
+                  ],
+                );
+              }, childCount: _employees.length)),
+            ],
+          ),
         ),
       ),
     );
+  }
+  _searchAction(String text) {
+    if (text.isEmpty) {
+      _refresh();
+      return;
+    }
+    List<EmployeeModel> tempList = [];
+    tempList.addAll(_employees.where((element) => element.name.contains(text)));
+    _employees.clear();
+    _employees.addAll(tempList);
+    setState(() {});
+  }
+
+  Future<void> _refresh()async{
+    _employees.clear();
+    _employees.addAll(widget.userList);
+    if(mounted)
+      setState(() {});
   }
 
   @override
