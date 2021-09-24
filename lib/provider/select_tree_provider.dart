@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:good_grandma/common/store.dart';
 
 ///树状选择
 class SelectTreeProvider with ChangeNotifier{
@@ -6,8 +7,12 @@ class SelectTreeProvider with ChangeNotifier{
   ///横向集合
   List<Map> horizontalList = [];
 
-  SelectTreeProvider(){
-    addData('1123598813738675201', '全国', 0);
+  SelectTreeProvider(type){
+    addData(
+        type == '全国' ? '1123598813738675201' : Store.readDeptId(),
+        type == '全国' ? '全国' : Store.readDeptName(),
+        0
+    );
   }
 
   //生成接口添加的数据

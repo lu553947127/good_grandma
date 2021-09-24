@@ -76,6 +76,8 @@ class _LoginPageState extends State<LoginPage> {
           Store.saveToken(data['access_token']);
           Store.saveUserId(data['user_id']);
           Store.saveUserName(data['user_name']);
+          Store.saveDeptId(data['dept_id']);
+          Store.saveDeptName(data['post_name']);
           Store.savePostName(data['post_name']);
           Store.saveNickName(data['nick_name']);
           Store.saveUserAvatar(data['avatar']);

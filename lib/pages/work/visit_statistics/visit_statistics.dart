@@ -20,19 +20,53 @@ class VisitStatistics extends StatefulWidget {
 
 class _VisitStatisticsState extends State<VisitStatistics> {
 
+  ///拜访统计列表
   List<Map> customerVisitList = [];
+
+  ///拜访统计类型中文名称
   String type = '员工统计';
+
+  ///类型数组
   List<Map> listTitle = [
     {'name': '员工统计'},
     {'name': '客户统计'},
   ];
 
+  ///类型id
+  String typeId = '1';
+
+  ///员工id
+  String userId = '';
+
+  ///客户id
+  String customerId = '';
+
+  ///客户中文名称
   String customerName = '所有人';
+
+  ///时间显示文字
   String time = '所有日期';
 
+  ///开始时间
+  String startDate = '';
+
+  ///结束时间
+  String endDate = '';
+
   ///拜访统计列表
-  _customerVisitList(typeId){
-    Map<String, dynamic> map = {'type': typeId, 'current': '1', 'size': '999'};
+  _customerVisitList(){
+    Map<String, dynamic> map = {
+      'type': typeId,
+      'userId': userId,
+      'customerId': customerId,
+      'startDate': startDate,
+      'endDate': endDate,
+      'current': '1',
+      'size': '999'
+    };
+
+    LogUtil.d('请求结果---map----$map');
+
     requestGet(Api.customerVisitList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---customerVisitList----$data');
@@ -50,7 +84,7 @@ class _VisitStatisticsState extends State<VisitStatistics> {
   @override
   void initState() {
     super.initState();
-    _customerVisitList('1');
+    _customerVisitList();
   }
 
   @override
@@ -70,28 +104,43 @@ class _VisitStatisticsState extends State<VisitStatistics> {
             type: type,
             list: listTitle,
             onPressed: () {
-              _customerVisitList('1');
+              typeId = '1';
+              userId = '';
+              customerId = '';
+              customerName = '所有人';
+              _customerVisitList();
             },
             onPressed2: () {
-              _customerVisitList('2');
+              typeId = '2';
+              userId = '';
+              customerId = '';
+              customerName = '所有人';
+              _customerVisitList();
             }
           ),
           VisitStatisticsType(
             customerName: customerName,
             time: time,
-            onPressed: ()async{
-              Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
-              setState(() {
-                customerName = select['realName'];
-              });
+            onPressed: () async {
+              Map select = await showSelectList(
+                  context,
+                  typeId == '1' ? Api.userList : Api.customerList,
+                  typeId == '1' ? '请选择员工' : '请选择客户',
+                  'realName'
+              );
+
+              typeId == '1' ? userId = select['id'] : customerId = select['id'];
+              customerName = select['realName'];
+              _customerVisitList();
             },
             onPressed2: () async {
               showPickerDateRange(
                   context: Application.appContext,
                   callBack: (Map param){
-                    setState(() {
-                      time = param['startTime'] + param['endTime'];
-                    });
+                    time = '${param['startTime'] + '\n' + param['endTime']}';
+                    startDate = param['startTime'];
+                    endDate = param['endTime'];
+                    _customerVisitList();
                   }
               );
             },

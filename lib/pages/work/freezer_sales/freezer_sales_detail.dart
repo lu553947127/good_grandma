@@ -81,14 +81,18 @@ class _FreezerSalesDetailState extends State<FreezerSalesDetail> {
                       padding: EdgeInsets.all(20),
                       child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Image.asset('assets/images/icon_freezer_area.png', width: 15, height: 15),
-                                SizedBox(width: 3),
-                                Text('所属区域: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
-                                SizedBox(width: 3),
-                                Text('${widget.data['region'] + widget.data['province'] + widget.data['city']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
-                              ],
+                            Container(
+                              height: 30,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Image.asset('assets/images/icon_freezer_area.png', width: 15, height: 15),
+                                  SizedBox(width: 3),
+                                  Text('所属区域: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                                  SizedBox(width: 3),
+                                  Expanded(child: Text('${widget.data['deptName']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058)), maxLines: 2)),
+                                ],
+                              )
                             ),
                             SizedBox(height: 5),
                             Row(
@@ -97,7 +101,7 @@ class _FreezerSalesDetailState extends State<FreezerSalesDetail> {
                                 SizedBox(width: 3),
                                 Text('客户名称: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                 SizedBox(width: 3),
-                                Text('${widget.data['shop']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                Text('${widget.data['realName']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                               ],
                             ),
                             SizedBox(height: 5),
@@ -107,7 +111,7 @@ class _FreezerSalesDetailState extends State<FreezerSalesDetail> {
                                 SizedBox(width: 3),
                                 Text('客户电话: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                 SizedBox(width: 3),
-                                Text('${widget.data['shopPhone']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                Text('${widget.data['phone']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                               ],
                             ),
                             SizedBox(height: 5),

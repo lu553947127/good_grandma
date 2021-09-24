@@ -7,6 +7,7 @@ import 'package:good_grandma/pages/performance/performance_statistics_page.dart'
 import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
+import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/widgets/home_group_title.dart';
 import 'package:good_grandma/widgets/home_msg_title.dart';
@@ -68,7 +69,9 @@ class _Body extends State<HomePage> {
             )),
             //拜访计划
             SliverToBoxAdapter(
-                child: HomeGroupTitle(title: '拜访计划', showMoreBtnOnTap: () {})),
+                child: HomeGroupTitle(title: '拜访计划', showMoreBtnOnTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitPlan()));
+                })),
             //日历和计划
             SliverToBoxAdapter(child: HomePlanCell()),
             //工作报告

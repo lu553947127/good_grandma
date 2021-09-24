@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
@@ -9,7 +10,9 @@ import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
+import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
+import 'package:good_grandma/widgets/select_form.dart';
 import 'package:provider/provider.dart';
 
 ///客户拜访
@@ -22,7 +25,10 @@ class CustomerVisitAdd extends StatefulWidget {
 
 class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
+  bool _isNewCustomer = false;//是否新客户
+
   ImagesProvider imagesProvider = new ImagesProvider();
+  String customerId = '';
   String customerName = '';
   String visitContent = '';
   double latitude = 0.0;
@@ -32,6 +38,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
   ///新增
   _customerVisitAdd(){
     Map<String, dynamic> map = {
+      'customerId': customerId,
       'customerName': customerName,
       'visitContent': visitContent,
       'ipicture': listToString(imagesProvider.urlList),
@@ -65,13 +72,54 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            TextInputView(
-              rightLength: 120,
-              leftTitle: '客户姓名',
-              rightPlaceholder: '请输入客户名称',
-              onChanged: (tex){
-                customerName = tex;
-              }
+            Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                color: Colors.white,
+                height: 60,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('是否新客户',style: TextStyle(fontSize: 15, color: AppColors.FF070E28)),
+                      Checkbox(
+                          value: _isNewCustomer,
+                          activeColor: Color(0xFFC68D3E),
+                          onChanged: (value){
+                            setState(() {
+                              _isNewCustomer = value;
+                            });
+                          }
+                      )
+                    ]
+                )
+            ),
+            Offstage(
+                offstage: _isNewCustomer ? false : true,
+                child: TextInputView(
+                    rightLength: 120,
+                    leftTitle: '客户姓名',
+                    rightPlaceholder: '请输入客户名称',
+                    onChanged: (tex){
+                      customerName = tex;
+                    }
+                )
+            ),
+            Offstage(
+                offstage: _isNewCustomer ? true : false,
+                child: TextSelectView(
+                    sizeHeight: 1,
+                    leftTitle: '客户名称',
+                    rightPlaceholder: '请选择客户',
+                    value: customerName,
+                    onPressed: () async{
+                      Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                      LogUtil.d('请求结果---select----$select');
+                      setState(() {
+                        customerName = select['realName'];
+                        customerId = select['id'];
+                      });
+                      return select['realName'];
+                    }
+                )
             ),
             ContentInputView(
               sizeHeight: 10,

@@ -10,6 +10,8 @@ class Store {
   static const _kToken = "keyToken";
   static const _userId = "userid";
   static const _userName = "user_name";
+  static const _deptId = "dept_id";
+  static const _deptName = "dept_name";
   static const _postName = "post_name";
   static const _nickName = "nick_name";
   static const _userAvatar = "avatar";
@@ -46,6 +48,22 @@ class Store {
 
   static String readUserName() {
     return _box.read(_userName);
+  }
+
+  static saveDeptId(String deptId) {
+    _box.write(_deptId, deptId);
+  }
+
+  static String readDeptId() {
+    return _box.read(_deptId);
+  }
+
+  static saveDeptName(String deptName) {
+    _box.write(_deptName, deptName);
+  }
+
+  static String readDeptName() {
+    return _box.read(_deptName);
   }
 
   static savePostName(String postName) {
