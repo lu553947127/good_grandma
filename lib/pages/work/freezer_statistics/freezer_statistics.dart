@@ -19,15 +19,24 @@ class FreezerStatistics extends StatefulWidget {
 
 class _FreezerStatisticsState extends State<FreezerStatistics> {
 
+  String deptId = '';
   String areaName = '区域';
+  String customerId = '';
   String customerName = '客户';
+  String status= '';
   String statusName = '状态';
 
   List<Map> freezerList = [];
 
   ///冰柜销量列表
   _freezerList(){
-    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    Map<String, dynamic> map = {
+      'dealerId': customerId,
+      'deptId': deptId,
+      'openFreezer': status,
+      'current': '1',
+      'size': '999'
+    };
     requestGet(Api.freezerList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---freezerList----$data');
@@ -62,22 +71,32 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
               customerName: customerName,
               statusName: statusName,
               onPressed: () async{
-                Map area = await showSelectTreeList(context);
-                setState(() {
-                  areaName = area['areaName'];
-                });
+                Map area = await showSelectTreeList(context, '全国');
+                deptId = area['deptId'];
+                areaName = area['areaName'];
+                _freezerList();
               },
               onPressed2: () async{
                 Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
-                setState(() {
-                  customerName = select['realName'];
-                });
+                customerId = select['id'];
+                customerName = select['realName'];
+                _freezerList();
               },
               onPressed3: () async {
                 String result = await showPicker(['所有状态', '未开柜', '已开柜'], context);
-                setState(() {
-                  statusName = result;
-                });
+                switch(result){
+                  case '所有状态':
+                    status = '';
+                    break;
+                  case '未开柜':
+                    status = '0';
+                    break;
+                  case '已开柜':
+                    status = '1';
+                    break;
+                }
+                statusName = result;
+                _freezerList();
               },
             ),
             freezerList.length > 0 ?

@@ -26,29 +26,32 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
 
     if (areaName == ''){
       showToast("区域不能为空");
+      return;
     }
 
     if (name == ''){
       showToast("物料名称不能为空");
+      return;
     }
 
     if (quantity == ''){
       showToast("物料总量不能为空");
+      return;
     }
 
     if (inuse == ''){
       showToast("物料使用量不能为空");
+      return;
     }
 
     if (loss == ''){
       showToast("物料损耗量不能为空");
+      return;
     }
 
     Map<String, dynamic> map = {
-      'areaName': areaName,
-      'areaId': areaId,
-      'provinceId': provinceId,
-      'cityId': cityId,
+      'id': widget.id,
+      'deptId': deptId,
       'materialName': name,
       'quantity': quantity,
       'inuse': inuse,
@@ -70,9 +73,7 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
 
   String title = '新增市场物料';
   String areaName = '';
-  String areaId = '';
-  String provinceId = '';
-  String cityId = '';
+  String deptId = '';
   String name = '';
   String quantity = '';
   String inuse = '';
@@ -85,11 +86,17 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---materialDetail----$data');
       setState(() {
-        areaName = data['data']['areaId'];
+        deptId = data['data']['deptId'];
+        areaName = data['data']['deptName'];
         name = data['data']['materialName'].isEmpty ? '请输入物料名称' : data['data']['materialName'];
         quantity = data['data']['quantity'].isEmpty ? '请输入物料总量' : data['data']['quantity'];
         inuse = data['data']['inuse'].isEmpty ? '请输入物料使用' : data['data']['inuse'];
         loss = data['data']['loss'].isEmpty ? '请输入物料耗损' : data['data']['loss'];
+
+        controller_name.text = name;
+        controller_quantity.text = quantity;
+        controller_inuse.text = inuse;
+        controller_loss.text = loss;
       });
     });
   }
@@ -102,6 +109,11 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
       _materialDetail();
     }
   }
+
+  TextEditingController controller_name = new TextEditingController();
+  TextEditingController controller_quantity = new TextEditingController();
+  TextEditingController controller_inuse = new TextEditingController();
+  TextEditingController controller_loss = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -122,12 +134,10 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
                 rightPlaceholder: widget.id == '' ? '请选择区域' : areaName,
                 value: areaName,
                 onPressed: () async{
-                  Map area = await showSelectTreeList(context);
+                  Map area = await showSelectTreeList(context, '');
                   setState(() {
                     areaName = area['areaName'];
-                    areaId = area['areaId'];
-                    provinceId = area['provinceId'];
-                    cityId = area['cityId'];
+                    deptId = area['deptId'];
                   });
                   return area['areaName'];
                 }
@@ -135,7 +145,8 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
               TextInputView(
                   rightLength: 120,
                   leftTitle: '物料',
-                  rightPlaceholder: widget.id == '' ? '请输入物料名称' : name,
+                  controller: controller_name,
+                  rightPlaceholder: '请输入物料名称',
                   onChanged: (tex){
                     name = tex;
                   }
@@ -143,7 +154,8 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
               TextInputView(
                   rightLength: 120,
                   leftTitle: '物料总量',
-                  rightPlaceholder: widget.id == '' ? '请输入物料总量' : quantity,
+                  controller: controller_quantity,
+                  rightPlaceholder: '请输入物料总量',
                   type: TextInputType.number,
                   onChanged: (tex){
                     quantity = tex;
@@ -152,7 +164,8 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
               TextInputView(
                   rightLength: 120,
                   leftTitle: '物料使用',
-                  rightPlaceholder: widget.id == '' ? '请输入物料使用' : inuse,
+                  controller: controller_inuse,
+                  rightPlaceholder: '请输入物料使用',
                   type: TextInputType.number,
                   onChanged: (tex){
                     inuse = tex;
@@ -161,8 +174,8 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
               TextInputView(
                   rightLength: 120,
                   leftTitle: '物料耗损',
+                  controller: controller_loss,
                   rightPlaceholder: '请输入物料耗损',
-                  text: widget.id == '' ? '' : loss,
                   type: TextInputType.number,
                   onChanged: (tex){
                     loss = tex;

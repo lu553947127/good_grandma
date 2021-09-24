@@ -43,34 +43,37 @@ class Api {
   static const putFile = "/api/hap-resource/oss/endpoint/put-file";
 
   ///拜访计划列表
-  static const visitPlanList = "/api/hap-app/app/visitplan/list";
+  static const visitPlanList = "/api/hap-app1/app/visitplan/list";
 
   ///拜访计划新增
-  static const visitPlanAdd= "/api/hap-app/app/visitplan/submit";
+  static const visitPlanAdd= "/api/hap-app1/app/visitplan/submit";
 
   ///市场物料列表
-  static const materialList = "/api/hap-app/app/material/list";
+  static const materialList = "/api/hap-app1/app/material/list";
 
   ///市场物料添加
-  static const materialAdd= "/api/hap-app/app/material/submit";
+  static const materialAdd= "/api/hap-app1/app/material/submit";
 
   ///市场物料详情
-  static const materialDetail = "/api/hap-app/app/material/detail";
+  static const materialDetail = "/api/hap-app1/app/material/detail";
 
   ///获取区域列表
-  static const deptTreeList = "/api/hap-app/app/system/getDeptListDeptId";
+  static const deptTreeList = "/api/hap-app1/app/system/getDeptListDeptId";
 
   ///获取下级区域列表
-  static const deptNextList = "/api/hap-app/app/system/getNextDept";
+  static const deptNextList = "/api/hap-app1/app/system/getNextDept";
 
   ///客户拜访列表
-  static const customerVisitList= "/api/hap-app/app/visitplan/customerVisitList";
+  static const customerVisitList= "/api/hap-app1/app/visitplan/customerVisitList";
 
   ///客户拜访新增
-  static const customerVisitAdd= "/api/hap-app/app/visitplan/customerVisitSave";
+  static const customerVisitAdd= "/api/hap-app1/app/visitplan/customerVisitSave";
 
   ///客户列表
-  static const customerList= "/api/hap-app/app/user/areaUser";
+  static const customerList= "/api/hap-app1/app/user/areaUser";
+
+  ///员工列表
+  static const userList= "/api/hap-app1/app/user/areaSaleUsers";
 
   ///冰柜销量列表
   static const freezerSalesList = "/api/hap-app3/app/freezer/freezerSales";
@@ -80,6 +83,9 @@ class Api {
 
   ///冰柜统计列表
   static const freezerList = "/api/hap-app3/app/freezer/list";
+
+  ///文件柜列表
+  static const fileCabinetList = "/api/hap-app1/app/file/selectFileFolder";
   ///报修列表
   static const getFreezerRepairList = "/api/hap-app3/app/freezerRepair/getFreezerRepairList";
   ///签到

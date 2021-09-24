@@ -85,7 +85,7 @@ class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${widget.data['areaName']} ${widget.data['provinceName']} ${widget.data['cityName']}', style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                    Text('${widget.data['deptName']}', style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                     SizedBox(height: 5),
                     Text(widget.data['materialName']
                         ,style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7))),

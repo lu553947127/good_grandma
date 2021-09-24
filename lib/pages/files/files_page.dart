@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/models/file_model.dart';
 import 'package:good_grandma/pages/files/add_folder_page.dart';
+import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
 import 'package:good_grandma/widgets/file_cell.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 // import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +23,14 @@ class _FilesPageState extends State<FilesPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   List<FileModel> _files = [];
+
+  String type = '我的文档';
+  List<Map> listTitle = [
+    {'name': '我的文档'},//1
+    {'name': '部门文档'},//2
+    {'name': '公开库'},//0
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -38,11 +47,32 @@ class _FilesPageState extends State<FilesPage> {
           child: CustomScrollView(
             slivers: [
               //搜索区域
-              SearchTextWidget(
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  hintText: '输入搜索关键字',
-                  onSearch: (text) {}),
+              //切换选项卡
+              WorkTypeTitle(
+                color: Colors.white,
+                type: type,
+                list: listTitle,
+                onPressed: () {
+                  setState(() {
+                    type = listTitle[0]['name'];
+                  });
+                },
+                onPressed2: () {
+                  setState(() {
+                    type = listTitle[1]['name'];
+                  });
+                },
+                onPressed3: () {
+                  setState(() {
+                    type = listTitle[2]['name'];
+                  });
+                },
+              ),
+              // SearchTextWidget(
+              //     editingController: _editingController,
+              //     focusNode: _focusNode,
+              //     hintText: '输入搜索关键字',
+              //     onSearch: (text) {}),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, top: 16, bottom: 10),

@@ -45,8 +45,8 @@ class _VisitPlanState extends State<VisitPlan> {
   }
 
   static String _twoDigits(int n) {
-    if (n >= 10) return "${n}";
-    return "0${n}";
+    if (n >= 10) return "$n";
+    return "0$n";
   }
 
   ///点击日期刷新事件

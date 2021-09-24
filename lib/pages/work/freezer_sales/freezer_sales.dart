@@ -19,14 +19,21 @@ class FreezerSales extends StatefulWidget {
 
 class _FreezerSalesState extends State<FreezerSales> {
 
+  String deptId = '';
   String areaName = '区域';
+  String customerId = '';
   String customerName = '客户';
 
   List<Map> freezerSalesList = [];
 
   ///冰柜销量列表
   _freezerSalesList(){
-    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    Map<String, dynamic> map = {
+      'dealerId': customerId,
+      'deptId': deptId,
+      'current': '1',
+      'size': '999'
+    };
     requestGet(Api.freezerSalesList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---freezerSalesList----$data');
@@ -60,16 +67,16 @@ class _FreezerSalesState extends State<FreezerSales> {
               areaName: areaName,
               customerName: customerName,
               onPressed: () async{
-                Map area = await showSelectTreeList(context);
-                setState(() {
-                  areaName = area['areaName'];
-                });
+                Map area = await showSelectTreeList(context, '全国');
+                deptId = area['deptId'];
+                areaName = area['areaName'];
+                _freezerSalesList();
               },
               onPressed2: () async{
                 Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
-                setState(() {
-                  customerName = select['realName'];
-                });
+                customerId = select['id'];
+                customerName = select['realName'];
+                _freezerSalesList();
               },
             ),
             freezerSalesList.length > 0 ?

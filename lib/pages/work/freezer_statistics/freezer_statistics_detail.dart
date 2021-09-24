@@ -253,7 +253,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('店主姓名',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('${widget.data['shop']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['realName']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
@@ -281,12 +281,17 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                             )
                         ),
                         SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('所在地址',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('${widget.data['address']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
-                          ],
+                        Container(
+                          height: 35,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('所在地址',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                              SizedBox(width: 15),
+                              Expanded(child: Text('${widget.data['address']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)), maxLines: 2)),
+                            ],
+                          ),
                         )
                       ]
                   )

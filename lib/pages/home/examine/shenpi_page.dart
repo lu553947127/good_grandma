@@ -193,6 +193,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
       ),
     );
   }
+
   _refresh(){
     if(type == listTitle[0]['name']){
       _sendList();

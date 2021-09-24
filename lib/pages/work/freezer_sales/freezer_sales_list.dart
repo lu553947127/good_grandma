@@ -41,7 +41,7 @@ class FreezerSalesList extends StatelessWidget {
               padding: EdgeInsets.only(left: 10.0),
               height: 40,
               color: Color(0XFFEFEFF4),
-              child: Text('${data['region'] + data['province'] + data['city']}',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+              child: Text('大区名称: ${data['deptName']}',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
             ),
             //标题头部
             Padding(
@@ -54,7 +54,7 @@ class FreezerSalesList extends StatelessWidget {
                     child: Expanded(child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('客户名称: ${data['shop']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                        Text('客户名称: ${data['realName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                         SizedBox(height: 3),
                         Text('客户地址: ${data['address']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                       ]
