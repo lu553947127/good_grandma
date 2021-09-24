@@ -44,127 +44,133 @@ class MineHeaderView extends StatelessWidget {
                 //用户信息
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Row(
+                  child: Stack(
                     children: [
-                      //头像
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: AppColors.FFD9B887, width: 4),
-                              shape: BoxShape.circle),
-                          child: ClipOval(
+                      Row(
+                        children: [
+                          //头像
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
                             child: Container(
-                              child: MyCacheImageView(
-                                imageURL: avatar,
-                                width: 65,
-                                height: 65,
-                                errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: AppColors.FFD9B887, width: 4),
+                                  shape: BoxShape.circle),
+                              child: ClipOval(
+                                child: Container(
+                                  child: MyCacheImageView(
+                                    imageURL: avatar,
+                                    width: 65,
+                                    height: 65,
+                                    errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      //信息
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                          //信息
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              //用户名
-                              Container(
-                                child: Text(
-                                  userName ?? '',
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 20.0),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                constraints: BoxConstraints(maxWidth: 120.0),
-                              ),
-                              //省份
-                              Visibility(
-                                visible: local != null && local.isNotEmpty,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Container(
-                                    height: 24,
-                                    constraints: BoxConstraints(maxWidth: 100),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24 / 2),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(24 / 2),
-                                        border: Border.all(
-                                            color: Colors.white, width: 1)),
-                                    child: Text(local ?? '',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14.0),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Visibility(
-                            visible: type != null && type.isNotEmpty,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: 200),
-                              child: Row(
+                              Row(
                                 children: [
-                                  Image.asset(
-                                    'assets/images/mine_user.png',
-                                    width: 14,
-                                    height: 14,
-                                  ),
-                                  //身份
-                                  Expanded(
-                                    child: Text(' ' + (type ?? '') + '  ',
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14.0),
+                                  //用户名
+                                  Container(
+                                    child: Text(
+                                      userName ?? '',
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 20.0),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
+                                    ),
+                                    constraints: BoxConstraints(maxWidth: 120.0),
+                                  ),
+                                  //省份
+                                  Visibility(
+                                    visible: local != null && local.isNotEmpty,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(
+                                        height: 24,
+                                        constraints: BoxConstraints(maxWidth: 100),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24 / 2),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(24 / 2),
+                                            border: Border.all(
+                                                color: Colors.white, width: 1)),
+                                        child: Text(local ?? '',
+                                          style: const TextStyle(
+                                              color: Colors.white, fontSize: 14.0),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,),
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: phone != null && phone.isNotEmpty,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: 200),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/mine_phone.png',
-                                    width: 14,
-                                    height: 14,
+                              Visibility(
+                                visible: type != null && type.isNotEmpty,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 200),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/mine_user.png',
+                                        width: 14,
+                                        height: 14,
+                                      ),
+                                      //身份
+                                      Expanded(
+                                        child: Text(' ' + (type ?? '') + '  ',
+                                          style: const TextStyle(
+                                              color: Colors.white, fontSize: 14.0),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  //电话
-                                  Expanded(
-                                    child: Text(' ' + (phone ?? ''),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14.0),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
+                              Visibility(
+                                visible: phone != null && phone.isNotEmpty,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: 200),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/mine_phone.png',
+                                        width: 14,
+                                        height: 14,
+                                      ),
+                                      //电话
+                                      Expanded(
+                                        child: Text(' ' + (phone ?? ''),
+                                          style: const TextStyle(
+                                              color: Colors.white, fontSize: 14.0),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ]
                       ),
-                      Spacer(),
-                      //设置按钮
-                      TextButton(
-                        onPressed: setBtnOnTap,
-                        child: Image.asset('assets/images/mine_set.png',
-                            width: 24, height: 24),
+                      // //设置按钮
+                      Positioned(
+                        right: 0,
+                        child: TextButton(
+                          onPressed: setBtnOnTap,
+                          child: Image.asset('assets/images/mine_set.png',
+                              width: 24, height: 24),
+                        )
                       )
-                    ],
+                    ]
                   ),
                 ),
                 //开通账号功能

@@ -35,6 +35,16 @@ class _LoginPageState extends State<LoginPage> {
   int _countdownTime = 60;
   String _autoCodeText = '获取验证码';
 
+  ///获取部门名称
+  _getDeptName(dept_id){
+    Map<String, dynamic> map = {'id': dept_id};
+    requestGet(Api.getDeptName, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---getDeptName----$data');
+      Store.saveDeptName(data['data']);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Application.appContext = context;
@@ -77,12 +87,12 @@ class _LoginPageState extends State<LoginPage> {
           Store.saveUserId(data['user_id']);
           Store.saveUserName(data['user_name']);
           Store.saveDeptId(data['dept_id']);
-          Store.saveDeptName(data['post_name']);
           Store.savePostName(data['post_name']);
           Store.saveNickName(data['nick_name']);
           Store.saveUserAvatar(data['avatar']);
           Store.saveUserType(data['user_type']);
           Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
+          _getDeptName(data['dept_id']);
         }
       });
     }

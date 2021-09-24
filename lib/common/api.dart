@@ -63,6 +63,9 @@ class Api {
   ///获取下级区域列表
   static const deptNextList = "/api/hap-app1/app/system/getNextDept";
 
+  ///获取部门名称
+  static const getDeptName = "/api/hap-app1/app/system/getDeptName";
+
   ///客户拜访列表
   static const customerVisitList= "/api/hap-app1/app/visitplan/customerVisitList";
 
