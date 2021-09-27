@@ -6,23 +6,30 @@ import 'package:good_grandma/common/colors.dart';
 class LineChartWidget extends StatelessWidget {
   const LineChartWidget({
     Key key,
-    @required this.dataMap,
+    @required this.totalMap,
+    @required this.targetMap,
     this.title = '',
     this.height = 290,
     this.width = double.infinity,
   }) : super(key: key);
 
   ///月份为key，数值为金额的map
-  final Map<double, double> dataMap;
+  final Map<double, double> totalMap;
+  final Map<double, double> targetMap;
   final String title;
   final double height;
   final double width;
+  final Color _color1 = AppColors.FFC1C8D7;
+  final Color _color2 = AppColors.FFE45C26;
 
   @override
   Widget build(BuildContext context) {
     /// !!Step2: convert data into a list of [FlSpot].
     final spots1 = <FlSpot>[
-      for (final entry in dataMap.entries) FlSpot(entry.key, entry.value)
+      for (final entry in totalMap.entries) FlSpot(entry.key, entry.value)
+    ];
+    final spots2 = <FlSpot>[
+      for (final entry in targetMap.entries) FlSpot(entry.key, entry.value)
     ];
 
     /// !!Step3: prepare LineChartData
@@ -33,7 +40,7 @@ class LineChartWidget extends StatelessWidget {
         // ! Here we can style each data line.
         LineChartBarData(
           spots: spots1,
-          colors: [AppColors.FFE45C26],
+          colors: [_color2],
           barWidth: 2,
           isCurved: true,
           dotData: FlDotData(
@@ -45,12 +52,33 @@ class LineChartWidget extends StatelessWidget {
               return FlDotCirclePainter(
                 radius: 3.5,
                 color: Colors.white,
-                strokeColor: AppColors.FFE45C26,
+                strokeColor: _color2,
                 strokeWidth: 2,
               );
             },
           ),
-          // belowBarData: BarAreaData(show: false, colors: [AppColors.FFE45C26.withOpacity(0.4)]),
+          // belowBarData: BarAreaData(show: false, colors: [_color2.withOpacity(0.4)]),
+        ),
+        LineChartBarData(
+          spots: spots2,
+          colors: [_color1],
+          barWidth: 2,
+          isCurved: true,
+          dotData: FlDotData(
+            //节点
+            show: true,
+            getDotPainter: (FlSpot spot, double xPercentage,
+                LineChartBarData bar, int index,
+                {double size}) {
+              return FlDotCirclePainter(
+                radius: 3.5,
+                color: Colors.white,
+                strokeColor: _color1,
+                strokeWidth: 2,
+              );
+            },
+          ),
+          // belowBarData: BarAreaData(show: false, colors: [_color2.withOpacity(0.4)]),
         ),
       ],
       // ! Behavior when touching the chart:
@@ -120,7 +148,17 @@ class LineChartWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('金额（万元）'),
+          Row(
+            children: [
+              Text('金额（万元）'),
+              Spacer(),
+              Container(width: 22, height: 2, color: _color1),
+              Text('目标业绩'),
+              SizedBox(width: 20),
+              Container(width: 22, height: 2, color: _color2),
+              Text('完成业绩'),
+            ],
+          ),
           Container(
             height: height,
             width: width,

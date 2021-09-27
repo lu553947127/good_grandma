@@ -148,6 +148,6 @@ class Api {
   ///业务人员统计每个月业绩
   static const selectSaleMonthStatistics = "/api/hap-app1/app/contract/selectSaleMonthStatistics";
   ///客户统计每个月业绩
-  static const selectMonthStatistics = "/api/hap-app1/hap-app/app/contract/selectMonthStatistics";
+  static const selectMonthStatistics = "/api/hap-app1/app/contract/selectMonthStatistics";
 
 }
