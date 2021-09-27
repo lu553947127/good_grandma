@@ -74,6 +74,18 @@ class MarketingActivityModel extends ChangeNotifier {
   ///活动商品
   List<GoodsModel> get goodsList => _goodsList;
 
+  // MarketingActivityModel.fromJson(Map<String, dynamic> json) {
+  //   _title = json['name'] ?? '';
+  //   size = json['size'] ?? '';
+  //   isFolder = json['fileId'] == -1 ?? '';
+  //   createTime = json['createTime'] ?? '';
+  //   id = json['id'] ?? '';
+  //   updateTime = json['updateTime'] ?? '';
+  //   path = json['path'] ?? '';
+  //   author = json['createUserName'] ?? '无';
+  //   userId = json['createUser'] ?? '';
+  // }
+
   setTitle(String title) {
     _title = title;
     notifyListeners();

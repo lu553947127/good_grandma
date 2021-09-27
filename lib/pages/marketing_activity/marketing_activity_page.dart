@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/marketing_activity_model.dart';
 import 'package:good_grandma/pages/marketing_activity/add_marketing_activity_page.dart';
@@ -23,6 +28,25 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
     {'name': '已完结'},
   ];
   List<MarketingActivityModel> _dataArray = [];
+
+  // ///市场活动列表
+  // _activityList(){
+  //   Map<String, dynamic> map = {
+  //     'parentId': 'parentId',
+  //     'isDeleted': '0'
+  //   };
+  //   requestGet(Api.activityList).then((val) async{
+  //     var data = json.decode(val.toString());
+  //     LogUtil.d('请求结果---fileCabinetList----$data');
+  //     activityList.clear();
+  //     final List<dynamic> list = data['data'];
+  //     list.forEach((map) {
+  //       MarketingActivityModel model = MarketingActivityModel.fromJson(map);
+  //       activityList.add(model);
+  //     });
+  //     setState(() {});
+  //   });
+  // }
 
   @override
   void initState() {
@@ -58,13 +82,24 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
                 });
               },
             ),
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              return MarketingActivityCell(
-                model: _dataArray[index],
-                state: _type,
-              );
-            }, childCount: _dataArray.length)),
+            SliverToBoxAdapter(
+              child: Offstage(
+                offstage: _type == '待审核',
+                child: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return MarketingActivityCell(
+                        model: _dataArray[index],
+                        state: _type,
+                      );
+                    }, childCount: _dataArray.length)),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Offstage(
+                offstage: _type != '待审核',
+                child: Text('放到沙发上'),
+              ),
+            ),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ],
         ),
