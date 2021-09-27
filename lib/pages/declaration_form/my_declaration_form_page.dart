@@ -66,7 +66,7 @@ class _MyDeclarationFormPageState extends State<MyDeclarationFormPage> {
               return MyDeclarationFormCell(
                 model: model,
                 onTap: () async {
-                  ///根据账户信息判断是否能够审核报单
+                  //todo:根据账户信息判断是否能够审核报单
                   bool canDecision = true;
                   bool stateChanged = await Navigator.push(
                       context,
@@ -118,14 +118,17 @@ class _MyDeclarationFormPageState extends State<MyDeclarationFormPage> {
           model.goodsList,
           List.generate(
               3,
-              (i) => GoodsModel(
-                    name: '商品名称$i',
-                    image:
-                        'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-                    count: 100 + i,
-                    // specs: ['规格：1*40'],
-                    price: 234.0,
-                  )));
+              (i) {
+                GoodsModel goodsModel = GoodsModel(
+                  name: '商品名称$i',
+                  image:
+                  'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
+                  count: 100 + i,
+                  invoice: 234.0,
+                );
+                goodsModel.specs.add(SpecModel(spec: '20'));
+                return goodsModel;
+              }));
       return model;
     }));
     if (mounted) setState(() {});

@@ -6,8 +6,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
@@ -17,13 +19,17 @@ class SelectGoodsPage extends StatefulWidget {
       {Key key,
       @required this.selGoods,
       @required this.customerId,
-      this.selectSingle = false})
+      this.selectSingle = false,
+      this.forStock = true})
       : super(key: key);
   final List<GoodsModel> selGoods;
   final String customerId;
 
-  /// 是否直选一个
+  /// 是否只选一个
   final bool selectSingle;
+
+  /// 是否库存管理
+  final bool forStock;
 
   @override
   _SelectGoodsPageState createState() => _SelectGoodsPageState();
@@ -120,44 +126,55 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
   }
 
   Future<void> _downloadData() async {
-    if (widget.customerId == null || widget.customerId.isEmpty) return;
+    if (widget.customerId == null || widget.customerId.isEmpty) {
+      AppUtil.showToastCenter('用户ID不能为空');
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+      return;
+    }
     try {
       Map<String, dynamic> map = {
         'current': _current,
         'size': _pageSize,
         'customerId': widget.customerId
       };
-      final val = await requestGet(Api.customerStockGoodsList, param: map);
+      // print('map = $map');
+      String url = Api.customerStockGoodsList;
+      if (!widget.forStock) url = Api.goodsList;
+      final val = await requestGet(url, param: map);
       // LogUtil.d('customerStockGoodsList value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _goodsList.clear();
       final List<dynamic> list = data['data'];
       int i = 0;
       list.forEach((map) {
-        GoodsModel model = GoodsModel.fromJson((map as Map));
-        model.id = i.toString();
+        GoodsModel model;
+        if (widget.forStock) {
+          model = GoodsModel.fromJson((map as Map));
+          model.id = i.toString();
+        } else {
+          double invoice = double.parse(map['invoice']) ?? 0;
+          double middleman = double.parse(map['middleman']) ?? 0;
+          double weight = map['weight'] == null
+              ? double.parse(map['weight'].toString())
+              : 0;
+          model = GoodsModel(
+            name: map['name'] ?? '',
+            invoice: invoice,
+            middleman: middleman,
+            weight: weight,
+            image: map['path'] ?? '',
+            id: map['id'] ?? '',
+          );
+          String spec = map['spec'] ?? '';
+          if (spec.isNotEmpty) {
+            SpecModel specModel = SpecModel(spec: spec);
+            model.specs.add(specModel);
+          }
+        }
         _goodsList.add(model);
         i++;
       });
-
-      ///for test
-//       List.generate(5, (index) {
-//         String json = '''{
-//     "name": "雪糕",
-//     "path": "http://47.118.95.219:9000/hap-file/upload/20210830/74ee9fe32e097693eb339bb8615e2da2.jpg",
-//     "specList": [
-//         {
-//             "spec": "20"
-//         },
-//         {
-//             "spec": "40"
-//         }
-//     ]
-// }''';
-//         GoodsModel model = GoodsModel.fromJson((jsonDecode(json) as Map));
-//         model.id = index.toString();
-//         _goodsList.add(model);
-//       });
 
       if (widget.selGoods.isNotEmpty && !widget.selectSingle) {
         _goodsList.forEach((goods) {
@@ -207,7 +224,7 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
     int i = 0;
     widget.goodsModel.specs.forEach((spec) {
       if (i == 0) specStr += '规格：';
-      specStr += '1*${spec.spec}';
+      specStr += '1x${spec.spec}';
       if (i < widget.goodsModel.specs.length - 1) specStr += ',';
       i++;
     });

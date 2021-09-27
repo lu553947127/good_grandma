@@ -120,18 +120,16 @@ Future requestGet(url, {param})async{
     _dealResponseDataFroError(response);
     return response.data;
   } on DioError catch(e){
+    LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
-      print('ERROR:===$url===>$e');
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
-      print('ERROR:===$url===>$e');
       throw e;
     }
-    print('ERROR:===$url===>$e');
     throw e;
   }
 }
@@ -169,14 +167,13 @@ Future getPutFile(url, file) async{
     _dealResponseDataFroError(response);
     return response.data;
   } on DioError catch(e){
+    LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
-      print('ERROR:==putFile===>$e');
       throw e;
     }
-    print('ERROR:==putFile===>$e');
     throw e;
   }
 }

@@ -32,7 +32,7 @@ class MyDeclarationFormCell extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                      child: Text(model.storeModel.name,
+                      child: Text(model.storeModel.name ?? '',
                           style: TextStyle(
                               color: model.completed
                                   ? Colors.black
@@ -58,7 +58,7 @@ class MyDeclarationFormCell extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(model.time,
+              Text(model.time ?? '',
                   style: const TextStyle(
                       color: AppColors.FF959EB1, fontSize: 12.0)),
               const Divider(),
@@ -125,7 +125,7 @@ class DeclarationGoodsCell extends StatelessWidget {
                           style: const TextStyle(
                               color: AppColors.FF2F4058, fontSize: 12.0)),
                     ),
-                    Text('¥' + goodsModel.price.toStringAsFixed(2),
+                    Text('¥' + goodsModel.invoice.toStringAsFixed(2),
                         style: const TextStyle(
                             color: AppColors.FF959EB1, fontSize: 12.0)),
                   ],
@@ -136,9 +136,12 @@ class DeclarationGoodsCell extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(goodsModel.specs.toString(),
-                          style: const TextStyle(
-                              color: AppColors.FF959EB1, fontSize: 12.0)),
+                      child: Visibility(
+                        visible: goodsModel.specs.isNotEmpty,
+                        child: Text('规格：1x' + goodsModel.specs.first.spec,
+                            style: const TextStyle(
+                                color: AppColors.FF959EB1, fontSize: 12.0)),
+                      ),
                     ),
                     Text('x' + goodsModel.count.toStringAsFixed(0),
                         style: const TextStyle(
