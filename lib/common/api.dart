@@ -89,6 +89,22 @@ class Api {
 
   ///文件柜列表
   static const fileCabinetList = "/api/hap-app1/app/file/selectFileFolder";
+
+  ///创建文件夹
+  static const fileAdd = "/api/hap-app1/app/file/add";
+
+  ///文件夹重命名
+  static const fileChangeName = "/api/hap-app1/app/file/change";
+
+  ///文件夹删除
+  static const fileDelete = "/api/hap-app1/app/file/deleteof";
+
+  ///文件夹复制
+  static const fileCopy = "/api/hap-app1/app/file/copyAdd";
+
+  ///上传文件到文件夹
+  static const fileAddFile = "/api/hap-app1/app/file/fileAdd";
+
   ///报修列表
   static const getFreezerRepairList = "/api/hap-app3/app/freezerRepair/getFreezerRepairList";
   ///签到

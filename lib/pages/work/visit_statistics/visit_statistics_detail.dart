@@ -41,10 +41,11 @@ class VisitStatisticsDetail extends StatelessWidget {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text("冰柜详细",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text("拜访统计详细", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               padding: EdgeInsets.all(15),
@@ -122,13 +123,17 @@ class VisitStatisticsDetail extends StatelessWidget {
                                 ),
                                 SizedBox(height: 5),
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Image.asset('assets/images/icon_visit_statistics_address.png', width: 15, height: 15),
                                     SizedBox(width: 3),
                                     Text('客户地址: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                     SizedBox(width: 3),
-                                    Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
-                                  ],
+                                    Container(
+                                      width: 200,
+                                      child: Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058)), maxLines: 2)
+                                    )
+                                  ]
                                 )
                               ]
                           )
@@ -139,14 +144,13 @@ class VisitStatisticsDetail extends StatelessWidget {
             Container(
               margin: EdgeInsets.all(10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("备注", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
                   SizedBox(height: 10),
                   Text(data['visitContent'],
                       style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)))
-                ],
-              ),
+                ]
+              )
             )
           ]
         )

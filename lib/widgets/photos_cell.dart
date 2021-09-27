@@ -70,13 +70,13 @@ class CustomPhotoWidget extends StatelessWidget {
                           url: url
                         );
                       }
-                  ),
+                  )
                 )
-              ],
-            ),
+              ]
+            )
           )
-        ],
-      ),
+        ]
+      )
     );
   }
 }

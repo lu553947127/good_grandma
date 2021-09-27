@@ -1,18 +1,24 @@
+import 'dart:convert';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/file_model.dart';
 
 ///新建文件夹
 class AddFolderPage extends StatelessWidget {
-  AddFolderPage({Key key, this.model}) : super(key: key);
+  final String parentId;
+  AddFolderPage({Key key, this.model, this.parentId}) : super(key: key);
 
   ///重命名传model
   final FileModel model;
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     if(model != null)
@@ -63,13 +69,18 @@ class AddFolderPage extends StatelessWidget {
                   maxLines: 1,
                   selectionHeightStyle: BoxHeightStyle.max,
                   textInputAction: TextInputAction.done,
+                  cursorColor: Color(0xFFC68D3E),//修改光标颜色
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                     hintText: '请填写名称',
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(2.5),
+                      borderSide: BorderSide(color: AppColors.FFC68D3E, width: 2),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(2.5),
-                      borderSide:
-                          BorderSide(color: AppColors.FFEFEFF4, width: 1),
+                      borderSide: BorderSide(color: AppColors.FFEFEFF4, width: 1),
+
                     ),
                     hintStyle: const TextStyle(
                         color: AppColors.FFC1C8D7, fontSize: 14),
@@ -82,10 +93,42 @@ class AddFolderPage extends StatelessWidget {
       ),
     );
   }
+
+  ///创建文件夹
   void _addNewFolderRequest(BuildContext context){
-    Navigator.pop(context, '');
+    Map<String, dynamic> map = {
+      'parentId': parentId,
+      'fileName': _editingController.text};
+
+    requestGet(Api.fileAdd, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---fileAdd----$data');
+
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, '');
+      }else {
+        showToast(data['msg']);
+      }
+    });
   }
+
+  ///编辑文件夹
   void _renameRequest(BuildContext context){
-    Navigator.pop(context, _editingController.text);
+    Map<String, dynamic> map = {
+      'id': model.id,
+      'fileName': _editingController.text};
+
+    requestGet(Api.fileChangeName, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---fileChangeName----$data');
+
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, _editingController.text);
+      }else {
+        showToast(data['msg']);
+      }
+    });
   }
 }

@@ -16,7 +16,7 @@ class _FileReaderPageState extends State<FileReaderPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text(widget.fileName)),
-      body:FileReaderView(
+      body: FileReaderView(
         filePath: widget.filePath,
       )
     );

@@ -4,7 +4,7 @@ class FileModel {
   bool isFolder;
   String name;
   //B
-  double size;
+  String size;
   String author;
   String updateTime;
   String createTime;
@@ -12,9 +12,10 @@ class FileModel {
   String url;
   String path;
   String type;
+  String userId;
   FileModel({
     this.name = '',
-    this.size = 0,
+    this.size = '',
     this.author = '',
     this.updateTime = '',
     this.isFolder = false,
@@ -23,10 +24,23 @@ class FileModel {
     this.url = '',
     this.path = '',
     this.type = '',
+    this.userId = ''
   });
 
-  String get iconName => _getTypeFromName(fileName: name);
-  String get sizeString => CleanCache.renderSize(size);
+  FileModel.fromJson(Map<String, dynamic> json) {
+    name = json['fileName'] ?? '';
+    size = json['size'] ?? '';
+    isFolder = json['fileId'] == -1 ?? '';
+    createTime = json['createTime'] ?? '';
+    id = json['id'] ?? '';
+    updateTime = json['updateTime'] ?? '';
+    path = json['path'] ?? '';
+    author = json['createUserName'] ?? '无';
+    userId = json['createUser'] ?? '';
+  }
+
+  String get iconName => _getTypeFromName(fileName: path);
+  String get sizeString => CleanCache.renderSize(double.parse(size));
 
   String _getTypeFromName({String fileName = ''}) {
     String name = 'assets/images/file_other.png';

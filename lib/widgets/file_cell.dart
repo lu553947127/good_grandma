@@ -1,30 +1,30 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/models/file_model.dart';
-import 'package:good_grandma/pages/files/add_folder_page.dart';
 import 'package:good_grandma/pages/files/file_detail_page.dart';
-import 'package:good_grandma/pages/files/file_move_copy_page.dart';
-import 'package:good_grandma/pages/files/file_reader_page.dart';
 import 'package:good_grandma/pages/files/in_folder_page.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:good_grandma/widgets/picture_big_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FileCell extends StatelessWidget {
   const FileCell({
     Key key,
+    this.parentId,
     @required this.model,
     this.showMenu = true,
+    this.editAction,
+    this.copyAction,
     this.deleteAction,
   }) : super(key: key);
 
+  final String parentId;
   final FileModel model;
   final bool showMenu;
+  final VoidCallback editAction;
+  final VoidCallback copyAction;
   final VoidCallback deleteAction;
 
   @override
@@ -37,13 +37,19 @@ class FileCell extends StatelessWidget {
           if (model.isFolder) {
             _openFolder(context);
           } else {
-            _onTap(context,model);
+            _onTap(context, model);
           }
         },
         leading: Image.asset(model.iconName, width: 25, height: 25),
         title: Text(model.name),
-        subtitle: Text(
-            model.sizeString + ' ' + model.author + ' ' + model.updateTime),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(model.isFolder == true ? model.author : model.sizeString + ' ' + model.author),
+            SizedBox(height: 5),
+            Text(model.updateTime)
+          ],
+        ),
         trailing: Visibility(
             visible: showMenu,
             child: IconButton(
@@ -53,72 +59,37 @@ class FileCell extends StatelessWidget {
     );
   }
 
-  _onTap(BuildContext context,FileModel fileModel) async {
-    bool isGranted = await Permission.storage.isGranted;
-    if (!isGranted) {
-      isGranted = (await Permission.storage.request()).isGranted;
-      if (!isGranted) {
-        Fluttertoast.showToast(msg: 'NO Storage Permission');
-        return;
-      }
+  ///跳转打开文件页面
+  _onTap(BuildContext context, FileModel fileModel) async {
+    if (fileModel.type == 'png' || fileModel.type == 'jpg' || fileModel.type == 'jpeg'){
+      List<String> imagesList = [];
+      imagesList.add(fileModel.path);
+      Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+        images: imagesList,//传入图片list
+        index: 0,//传入当前点击的图片的index
+        heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+      )));
+    }else {
+      _launchURL(fileModel.path);
     }
-    String localPath = await fileLocalName(fileModel.type, fileModel.path);
-    if (!await File(localPath).exists()) {
-      if (!await asset2Local(fileModel.type, fileModel.path)) {
-        return;
-      }
-    }
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return FileReaderPage(
-        filePath: localPath,
-        fileName: fileModel.name,
-      );
-    }));
   }
 
-  fileLocalName(String type, String assetPath) async {
-    String dic = await _localSavedDir() + "/filereader/files/";
-    return dic + base64.encode(utf8.encode(assetPath)) + "." + type;
+  ///打开文件夹页面
+  void _openFolder(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (_) => InFolderPage(folderModel: model)));
   }
 
-  fileExists(String type, String assetPath) async {
-    String fileName = await fileLocalName(type, assetPath);
-    if (await File(fileName).exists()) {
-      return true;
+  ///用内置浏览器打开网页
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
     }
-    return false;
   }
 
-  asset2Local(String type, String assetPath) async {
-    if (Platform.isAndroid) {
-      if (!await Permission.storage.isGranted) {
-        debugPrint("没有存储权限");
-        return false;
-      }
-    }
-
-    File file = File(await fileLocalName(type, assetPath));
-    if (await fileExists(type, assetPath)) {
-      await file.delete();
-    }
-    await file.create(recursive: true);
-    //await file.create();
-    debugPrint("文件路径->" + file.path);
-    ByteData bd = await rootBundle.load(assetPath);
-    await file.writeAsBytes(bd.buffer.asUint8List(), flush: true);
-    return true;
-  }
-
-  _localSavedDir() async {
-    Directory dic;
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      dic = await getExternalStorageDirectory();
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      dic = await getApplicationDocumentsDirectory();
-    }
-    return dic?.path;
-  }
-
+  ///更多菜单点击事件
   void _menuBtnOnTap(BuildContext context) async {
     String result = await _buildMenuDialog(context);
     if (result != null) {
@@ -133,30 +104,12 @@ class FileCell extends StatelessWidget {
           break;
         case '重命名':
           {
-            String rename = await Navigator.push(context,
-                MaterialPageRoute(builder: (_) => AddFolderPage(model: model)));
-            if (rename != null && rename.isNotEmpty) {
-              model.name = rename;
-            }
-          }
-          break;
-        case '移动':
-          {
-            bool needRefresh = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => FileMoveCopyPage(model: model)));
-            if (needRefresh != null && needRefresh) {}
+            if (editAction != null) editAction();
           }
           break;
         case '复制':
           {
-            bool needRefresh = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) =>
-                        FileMoveCopyPage(model: model, move: false)));
-            if (needRefresh != null && needRefresh) {}
+            if (copyAction != null) copyAction();
           }
           break;
         case '删除':
@@ -164,19 +117,17 @@ class FileCell extends StatelessWidget {
             if (deleteAction != null) deleteAction();
           }
           break;
-        case '下载':
-          {}
-          break;
       }
     }
   }
 
+  ///更多菜单选择弹窗
   Future<String> _buildMenuDialog(BuildContext context) {
     return showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
         builder: (_) {
-          List<String> titles = ['详细信息', '重命名', '移动', '复制', '删除', '下载'];
+          List<String> titles = ['详细信息', '重命名', '复制', '删除'];
           return Container(
             height: 350 + MediaQuery.of(context).padding.bottom,
             decoration: BoxDecoration(
@@ -222,10 +173,5 @@ class FileCell extends StatelessWidget {
             ),
           );
         });
-  }
-
-  void _openFolder(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (_) => InFolderPage(folderModel: model)));
   }
 }

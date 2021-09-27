@@ -1,13 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/file_model.dart';
 import 'package:good_grandma/pages/files/add_folder_page.dart';
 
 ///文件夹列表
 class FileMoveCopyPage extends StatefulWidget {
   const FileMoveCopyPage(
-      {Key key, @required this.model, this.move = true, this.folderModel})
+      {Key key, @required this.model, this.id, this.parentId, this.folderModel})
       : super(key: key);
+
+  ///当前文件夹的Id
+  final String id;
+
+  ///最上级的id
+  final String parentId;
 
   ///要移动的文件
   final FileModel model;
@@ -15,19 +27,55 @@ class FileMoveCopyPage extends StatefulWidget {
   ///要打开的文件夹，可以为空
   final FileModel folderModel;
 
-  ///标记是移动还是复制
-  final bool move;
-
   @override
   _FileMoveCopyPageState createState() => _FileMoveCopyPageState();
 }
 
 class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
-  List<FileModel> _files = [];
+  List<FileModel> fileCabinetList = [];
+
+  ///文件柜列表
+  _fileCabinetList(){
+    Map<String, dynamic> map = {
+      'parentId': widget.id,
+      'isDeleted': '0'
+    };
+    requestGet(Api.fileCabinetList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---fileCabinetList----$data');
+      fileCabinetList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        FileModel model = FileModel.fromJson(map);
+        fileCabinetList.add(model);
+      });
+      setState(() {});
+    });
+  }
+
+  ///文件夹添加文件
+  void _fileCopy(BuildContext context){
+    Map<String, dynamic> map = {
+      'id': widget.model.id,
+      'parentId': widget.parentId,
+      'superiorId': widget.id};
+
+    requestGet(Api.fileAddFile, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---fileCopy----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _fileCabinetList();
   }
 
   @override
@@ -39,37 +87,37 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
       appBar: AppBar(
           title: Text(
               widget.folderModel != null ? widget.folderModel.name : '我的文件')),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: Scrollbar(
-            child: ListView.builder(
-          itemBuilder: (c, index) {
-            FileModel model = _files[index];
-            return Padding(
-              padding:
-                  const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
-              child: Card(
-                  child: ListTile(
-                onTap: () {
-                  if (model.isFolder) {
-                    _openFolder(context, model);
-                  }
-                },
-                leading: Image.asset(model.iconName, width: 25, height: 25),
-                title: Text(model.name),
-                subtitle: Text(model.sizeString +
-                    ' ' +
-                    model.author +
-                    ' ' +
-                    model.updateTime),
-                trailing: Visibility(
-                    visible: model.isFolder, child: Icon(Icons.chevron_right)),
-              )),
-            );
-          },
-          itemCount: _files.length,
-        )),
-      ),
+      body: Scrollbar(
+          child: ListView.builder(
+            itemBuilder: (c, index) {
+              FileModel model = fileCabinetList[index];
+              return Padding(
+                padding:
+                const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
+                child: Card(
+                    child: ListTile(
+                      onTap: () {
+                        if (model.isFolder) {
+                          _openFolder(context, model);
+                        }
+                      },
+                      leading: Image.asset(model.iconName, width: 25, height: 25),
+                      title: Text(model.name),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(model.isFolder == true ? model.author : model.sizeString + ' ' + model.author),
+                          SizedBox(height: 5),
+                          Text(model.updateTime)
+                        ],
+                      ),
+                      trailing: Visibility(
+                          visible: model.isFolder, child: Icon(Icons.chevron_right)),
+                    )),
+              );
+            },
+            itemCount: fileCabinetList.length,
+          )),
       bottomNavigationBar: Padding(
         padding:
             EdgeInsets.only(bottom: 17 + MediaQuery.of(context).padding.bottom),
@@ -79,9 +127,9 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
             OutlinedButton(
                 onPressed: () async{
                   String needRefresh = await Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => AddFolderPage()));
+                      MaterialPageRoute(builder: (_) => AddFolderPage(parentId: widget.model.id)));
                   if(needRefresh != null){
-                    _refresh();
+                    _fileCabinetList();
                   }
                 },
                 style: OutlinedButton.styleFrom(backgroundColor: Colors.white),
@@ -96,7 +144,7 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
                     )))),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context,true);
+                  _fileCopy(context);
                 },
                 style: ElevatedButton.styleFrom(primary: AppColors.FFC08A3F),
                 child: SizedBox(
@@ -114,6 +162,7 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
     );
   }
 
+  ///打开下级文件夹
   void _openFolder(BuildContext context, FileModel folderModel) {
     Navigator.push(
         context,
@@ -121,51 +170,7 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
             builder: (_) => FileMoveCopyPage(
                 folderModel: folderModel,
                 model: widget.model,
-                move: widget.move)));
-  }
-
-  Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
-    _files.clear();
-    _files.addAll([
-      FileModel(
-        name: '文件夹名称',
-        size: 12345,
-        author: '张思',
-        updateTime: '2020-09-09 00:00:00',
-        isFolder: true,
-      ),
-      FileModel(
-        name: '文件名称.doc',
-        size: 12345,
-        author: '张思',
-        updateTime: '2020-09-09 00:00:00',
-      ),
-      FileModel(
-        name: '文件名称.pptx',
-        size: 12345,
-        author: '张思',
-        updateTime: '2020-09-09 00:00:00',
-      ),
-      FileModel(
-        name: '文件名称.pptx',
-        size: 12345,
-        author: '张思',
-        updateTime: '2020-09-09 00:00:00',
-      ),
-      FileModel(
-        name: '文件名称.pptx',
-        size: 12345,
-        author: '张思',
-        updateTime: '2020-09-09 00:00:00',
-      ),
-      FileModel(
-        name: '文件名称.pptx',
-        size: 12345,
-        author: '张思',
-        updateTime: '2020-09-09 00:00:00',
-      ),
-    ]);
-    setState(() {});
+                id: widget.model.id,
+                parentId: widget.parentId)));
   }
 }
