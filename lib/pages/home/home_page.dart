@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
@@ -28,7 +32,7 @@ class _Body extends State<HomePage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
   String _msgTime = '2021-07-09';
-  String _msgCount = '66';
+  String _msgCount = '0';
   List<HomeReportModel> _reportList = [];
 
   @override
@@ -100,9 +104,7 @@ class _Body extends State<HomePage> {
             MaterialPageRoute(builder: (context) => MarketingActivityPage()));
         break;
       case '审批申请':
-        {
-          if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(3);
-        }
+        if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(3);
         break;
       case '签到':
         Navigator.push(
@@ -123,14 +125,13 @@ class _Body extends State<HomePage> {
             MaterialPageRoute(builder: (context) => FreezerStatistics()));
         break;
       case '更多':
-        {
-          if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(2);
-        }
+        if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(2);
         break;
     }
   }
 
   Future<void> _getBaoGaoList() async {
+    _getMsgCountRequest();
     try {
       await Future.delayed(Duration(seconds: 1));
       _reportList.clear();
@@ -171,6 +172,22 @@ class _Body extends State<HomePage> {
       _controller.finishRefresh(success: false);
       _controller.finishLoad(success: false, noMore: false);
     }
+  }
+
+
+  Future<void> _getMsgCountRequest() async{
+    requestGet(Api.getCategoryCount).then((value) {
+      var data = jsonDecode(value.toString());
+      final List<dynamic> list = data['data'];
+      if(list.isNotEmpty){
+        int count = 0;
+        list.forEach((map) {
+          String read = map['read']??'0';
+          count += int.parse(read);
+        });
+        if (mounted) setState(() => _msgCount = count.toString());
+      }
+    });
   }
 
   @override

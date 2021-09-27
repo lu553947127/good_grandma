@@ -144,28 +144,49 @@ class _MsgPageState extends State<MsgPage> {
   }
 
   Future<void> _refresh() async{
+    _dataArray.clear();
+    List<String> titles = ['公告','系统通知','对账单','电子合同'];
+    titles.forEach((title) {
+      Map imageHintMap = _getImageHintWithTitle(title);
+      String image = imageHintMap['image'];
+      String hint = imageHintMap['hint'];
+      String read = '0';
+      _dataArray.add({
+        "image": image,
+        'unreadCount': read,
+        'title': title,
+        'subtitle': read == '0'?'':hint,
+        'time': '',
+        'noticeCategory':'',
+      });
+    });
+    if (mounted) setState(() {});
+
     requestGet(Api.getCategoryCount).then((value) {
       var data = jsonDecode(value.toString());
       final List<dynamic> list = data['data'];
-      _dataArray.clear();
-      list.forEach((map) {
-        String title = map['noticeCategoryName']??'';
-        String read = map['read']??'';
-        String time = map['createTime']??'';
-        String noticeCategory = map['noticeCategory']??'';
-        Map imageHintMap = _getImageHintWithTitle(title);
-        String image = imageHintMap['image'];
-        String hint = imageHintMap['hint'];
-        _dataArray.add({
-          "image": image,
-          'unreadCount': read,
-          'title': title,
-          'subtitle': read == '0'?'':hint,
-          'time': time,
-          'noticeCategory':noticeCategory,
+      // print('list = $list');
+      if(list.isNotEmpty){
+        _dataArray.clear();
+        list.forEach((map) {
+          String title = map['noticeCategoryName']??'';
+          String read = map['read']??'0';
+          String time = map['createTime']??'';
+          String noticeCategory = map['noticeCategory']??'';
+          Map imageHintMap = _getImageHintWithTitle(title);
+          String image = imageHintMap['image'];
+          String hint = imageHintMap['hint'];
+          _dataArray.add({
+            "image": image,
+            'unreadCount': read,
+            'title': title,
+            'subtitle': read == '0'?'':hint,
+            'time': time,
+            'noticeCategory':noticeCategory,
+          });
         });
-      });
-      if (mounted) setState(() {});
+        if (mounted) setState(() {});
+      }
     });
   }
   Map _getImageHintWithTitle(String title){
