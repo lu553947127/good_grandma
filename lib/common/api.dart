@@ -145,6 +145,7 @@ class Api {
   ///报修列表
   static const getFreezerRepairList =
       "/api/hap-app3/app/freezerRepair/getFreezerRepairList";
+
   ///签到
   static const signAdd =
       "/api/hap-apptony/app/sign/signAdd";
