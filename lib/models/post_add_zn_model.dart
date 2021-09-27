@@ -1,6 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class PostAddZNModel extends ChangeNotifier {
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    //工作内容
+    data['currentWorks'] = jsonEncode(_currentWorks.map((e) => e.toString()).toList());
+    //工作中存在的问题及需改进的方面
+    data['problems'] = jsonEncode(_problems.map((e) => e.toString()).toList());
+    //工作计划
+    data['plans'] = jsonEncode(_plans.map((e) => e.toString()).toList());
+    //建议
+    data['suggests'] = jsonEncode(_suggests.map((e) => e.toString()).toList());
+    return data;
+  }
+
   PostAddZNModel() {
     _currentWorks = [];
     _problems = [];

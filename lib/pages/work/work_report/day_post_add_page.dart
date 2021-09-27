@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/day_post_add_model.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
@@ -48,7 +52,7 @@ class _Body extends State<DayPostAddPage> {
           title: const Text('新增日报'),
           actions: [
             TextButton(
-                onPressed: () => _saveDraftAction(context),
+                onPressed: () => _submitAction(context,model,1),
                 child:
                     const Text('保存草稿', style: TextStyle(color: Colors.black))),
           ],
@@ -186,7 +190,7 @@ class _Body extends State<DayPostAddPage> {
                 sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
                     title: '提  交',
-                    onPressed: () => _submitAction(context),
+                    onPressed: () => _submitAction(context,model,2),
                   ),
                 ),
               ),
@@ -197,16 +201,48 @@ class _Body extends State<DayPostAddPage> {
     );
   }
 
-  ///保存草稿
-  void _saveDraftAction(BuildContext context) async {
-    // final DayPostAddModel model =
-    //     Provider.of<DayPostAddModel>(context, listen: false);
-  }
-
   ///提  交
-  void _submitAction(BuildContext context) async {
-    // final DayPostAddModel model =
-    //     Provider.of<DayPostAddModel>(context, listen: false);
+  void _submitAction(BuildContext context,DayPostAddModel model,int status) async {
+    String param = _dealModelToJson(context, model,2);
+    if(param.isEmpty) return;
+    // print('param = $param');
+    requestPost(Api.reportDayAdd,json: param).then((value) {
+      var data = jsonDecode(value.toString());
+      // print('data = $data');
+      if (data['code'] == 200) Navigator.pop(context, true);
+    });
+  }
+  ///status 1:草稿 2：提交
+  String _dealModelToJson(BuildContext context,DayPostAddModel model,int status){
+    if(model.target.isEmpty) {
+      AppUtil.showToastCenter('请填写本月目标');
+      return '';
+    }
+    if(model.actual.isEmpty) {
+      AppUtil.showToastCenter('请填写今日销售');
+      return '';
+    }
+    if(model.cumulative.isEmpty) {
+      AppUtil.showToastCenter('请填写本月累计');
+      return '';
+    }
+    if(model.summaries.isEmpty) {
+      AppUtil.showToastCenter('请填写工作总结');
+      return '';
+    }
+    if(model.plans.isEmpty) {
+      AppUtil.showToastCenter('请填写工作计划');
+      return '';
+    }
+    Map param = {
+      'targetmonth':model.target,
+      'saleday':model.actual,
+      'salemonth':model.cumulative,
+      'daywork':jsonEncode(model.summaries),
+      'tomwork':jsonEncode(model.plans),
+      'status':status,
+    };
+   return jsonEncode(param);
   }
 
   @override

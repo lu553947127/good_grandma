@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/post_add_zn_model.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
@@ -41,7 +46,7 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
           title: Text('新增' + typeName + '报'),
           actions: [
             TextButton(
-                onPressed: () => _saveDraftAction(context),
+                onPressed: () => _submitAction(context,model,1),
                 child: const Text('保存草稿',
                     style: TextStyle(color: Colors.black))),
           ],
@@ -240,7 +245,7 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
                 sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
                     title: '提  交',
-                    onPressed: () => _submitAction(context),
+                    onPressed: () => _submitAction(context,model,2),
                   ),
                 ),
               ),
@@ -251,16 +256,24 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
     );
   }
 
-  ///保存草稿
-  void _saveDraftAction(BuildContext context) async {
-    // final DayPostAddModel model =
-    //     Provider.of<DayPostAddModel>(context, listen: false);
-  }
-
   ///提  交
-  void _submitAction(BuildContext context) async {
-    // final DayPostAddModel model =
-    //     Provider.of<DayPostAddModel>(context, listen: false);
+  void _submitAction(BuildContext context, PostAddZNModel model, int status) async {
+    if (model.currentWorks.isEmpty) {
+      AppUtil.showToastCenter('请填写工作内容');
+      return;
+    }
+    Map param = model.toJson();
+    param['status'] = status;
+    // LogUtil.d('param = ${jsonEncode(param)}');
+    String url = Api.reportMonthAdd;
+    if(widget.isWeek){
+      url = Api.reportWeekAdd;
+    }
+    requestPost(url, json: param).then((value) {
+      var data = jsonDecode(value.toString());
+      // print('data = $data');
+      if (data['code'] == 200) Navigator.pop(context, true);
+    });
   }
 
   @override

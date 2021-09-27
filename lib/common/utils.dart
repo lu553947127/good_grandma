@@ -256,8 +256,10 @@ String listToString(List<String> list) {
 }
 
 class AppUtil {
-  ///todo:
   static const aMapAndroidKey = '9826f8c8e4d7b4b3eaafd13c6213bfcc';
+  //todo:aMapiOSKey是暂时，不要更新到git
+  // static const aMapiOSKey = '275249e60a6b2da6b74615bce89e23e9';
+  ///正式的
   static const aMapiOSKey = '330ac281e8e9fdcee0cb9e2011a0323c';
 
   /// 保存图片到相册
@@ -503,5 +505,64 @@ class AppUtil {
       // showTotast('服务器出错或网络连接失败！');
       return print('ERROR:======>$e');
     }
+  }
+  ///字符串转list，主要是在工作报告的接口中使用
+  static List<String> getListFromString(String str){
+    if(str == null && str.isEmpty) return [];
+    List list = jsonDecode(str);
+    if(list == null && list.isEmpty) return [];
+    List<String> targetList = [];
+    list.forEach((element) {
+      targetList.add(element);
+    });
+    return targetList;
+  }
+  ///月份转数字
+  static double monthToNumber(String month){
+    switch(month){
+      case '一月':
+        return 1;
+      case '二月':
+        return 2;
+      case '三月':
+        return 3;
+      case '四月':
+        return 4;
+      case '五月':
+        return 5;
+      case '六月':
+        return 6;
+      case '七月':
+        return 7;
+      case '八月':
+        return 8;
+      case '九月':
+        return 9;
+      case '十月':
+        return 10;
+      case '十一月':
+        return 11;
+      case '十二月':
+        return 12;
+    }
+    return 1;
+  }
+  ///季度转数字
+  static double sessionToNumber(String month){
+    switch(month){
+      case '一季度':
+        return 1;
+      case '二季度':
+        return 2;
+      case '三季度':
+        return 3;
+      case '四季度':
+        return 4;
+    }
+    return 1;
+  }
+  ///String转double
+  static double stringToDouble(String str){
+    return  double.parse((str != null && str.isNotEmpty) ? str : '0');
   }
 }
