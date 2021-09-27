@@ -7,6 +7,7 @@ class Api {
     // return 'http://47.100.191.162';
     /// 本地测试服务器
     return 'http://172.167.40.141:1888';
+    // return 'http://tmdapp.yicp.top:36530';
   }
 
   ///密码登录
@@ -89,26 +90,12 @@ class Api {
 
   ///文件柜列表
   static const fileCabinetList = "/api/hap-app1/app/file/selectFileFolder";
-
-  ///创建文件夹
-  static const fileAdd = "/api/hap-app1/app/file/add";
-
-  ///文件夹重命名
-  static const fileChangeName = "/api/hap-app1/app/file/change";
-
-  ///文件夹删除
-  static const fileDelete = "/api/hap-app1/app/file/deleteof";
-
-  ///文件夹复制
-  static const fileCopy = "/api/hap-app1/app/file/copyAdd";
-
-  ///上传文件到文件夹
-  static const fileAddFile = "/api/hap-app1/app/file/fileAdd";
-
   ///报修列表
   static const getFreezerRepairList = "/api/hap-app3/app/freezerRepair/getFreezerRepairList";
   ///签到
   static const signAdd = "/api/hap-apptony/app/sign/signAdd";
+
+  ///签到统计
   static const signList = "/api/hap-apptony/app/sign/signList";
   ///规章文件
   static const regularDocList = "/api/hap-app3/app/manage/list";
@@ -120,6 +107,11 @@ class Api {
   static const settingRead = "/api/hap-app3/app/notice/settingRead";
   ///客户库存list
   static const customerStockList = "/api/hap-app3/app/customerStock/list";
+
+  ///库存商品list
+  static const customerStockGoodsList =
+      "/api/hap-app3/app/goods/goodsListStock";
+
   ///商品list
   static const customerStockGoodsList = "/api/hap-app3/app/customerStock/goodsList";
   ///新增库存
@@ -134,10 +126,51 @@ class Api {
   static const reportDayAdd = "/api/hap-apptony/app/report/reportDayAdd";
   ///提交week报
   static const reportWeekAdd = "/api/hap-apptony/app/report/reportWeekAdd";
+
+  ///提交Month报
+  static const reportMonthAdd = "/api/hap-apptony/app/report/reportMonthAdd";
+
   ///区域选择
   static const regionList = "/api/hap-apptony/app/report/regionList";
   ///筛选下级员工
-  static const regionUserList = "/api/hap-app/app/report/userList";
+  static const reportUserList = "/api/hap-apptony/app/report/userList";
+
   ///客户反馈
   static const feedback = "/api/hap-app3/app/feedback/save";
+
+  ///轨迹查询
+  static const trajectoryList =
+      "/api/hap-apptony/app/trajectory/trajectoryList";
+
+  ///下单
+  static const orderAdd = "/api/hap-apptony/app/order/orderAdd";
+
+  ///订单列表
+  static const orderList = "/api/hap-apptony/app/order/orderList";
+
+  ///订单detail
+  static const orderDetail = "/api/hap-apptony/app/order/orderDetail";
+
+  ///订单Confirm
+  static const orderConfirm = "/api/hap-apptony/app/order/orderConfirm";
+
+  ///feedbackType
+  static const feedbackType =
+      "/api/hap-system3/dict/dictionary?code=feedback_type";
+
+  ///业绩统计
+  static const selectContractStatistics =
+      "/api/hap-app1/app/contract/selectContractStatistics";
+
+  ///查询下级所有业绩总和
+  static const selectSaleSubordinate =
+      "/api/hap-app1/app/contract/selectSaleSubordinate";
+
+  ///业务人员统计每个月业绩
+  static const selectSaleMonthStatistics =
+      "/api/hap-app1/app/contract/selectSaleMonthStatistics";
+
+  ///客户统计每个月业绩
+  static const selectMonthStatistics =
+      "/api/hap-app1/app/contract/selectMonthStatistics";
 }

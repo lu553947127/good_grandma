@@ -10,6 +10,7 @@ class AddPageGoodsCell extends StatelessWidget {
   const AddPageGoodsCell({
     Key key,
     @required this.model,
+    this.middleman = false,
     @required TextEditingController editingController,
     @required FocusNode focusNode,
     @required this.deleteAction,
@@ -19,6 +20,7 @@ class AddPageGoodsCell extends StatelessWidget {
         super(key: key);
 
   final GoodsModel model;
+  final bool middleman;
   final VoidCallback deleteAction;
   final TextEditingController _editingController;
   final FocusNode _focusNode;
@@ -26,6 +28,12 @@ class AddPageGoodsCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double price = model.invoice;
+    double countPrice = model.countPrice;
+    if(middleman) {
+      price = model.middleman;
+      countPrice = model.countMiddlemanPrice;
+    }
     return Container(
       color: Colors.white,
       child: Column(
@@ -69,14 +77,17 @@ class AddPageGoodsCell extends StatelessWidget {
                       constraints: BoxConstraints(maxWidth: 260),
                       child: Row(
                         children: [
-                          Text(
-                            model.specs.toString(),
-                            style: const TextStyle(
-                                color: AppColors.FF959EB1, fontSize: 12.0),
+                          Visibility(
+                            visible: model.specs.isNotEmpty,
+                            child: Text(
+                              '规格：1x' + model.specs.first.spec,
+                              style: const TextStyle(
+                                  color: AppColors.FF959EB1, fontSize: 12.0),
+                            ),
                           ),
                           Spacer(),
                           Text(
-                            '¥' + model.price.toStringAsFixed(2),
+                            '¥' + price.toStringAsFixed(2),
                             style: const TextStyle(
                                 color: AppColors.FF959EB1, fontSize: 12.0),
                           ),
@@ -93,7 +104,7 @@ class AddPageGoodsCell extends StatelessWidget {
                                   color: AppColors.FFE45C26, fontSize: 12.0),
                               children: [
                                 TextSpan(
-                                  text: model.countPrice.toStringAsFixed(2),
+                                  text: countPrice.toStringAsFixed(2),
                                   style: const TextStyle(fontSize: 18.0),
                                 )
                               ])),

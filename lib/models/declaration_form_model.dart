@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/goods_model.dart';
@@ -23,6 +25,36 @@ class DeclarationFormModel extends ChangeNotifier {
     _address = '';
     _remark = '';
     _completed = false;
+  }
+
+  DeclarationFormModel.fromJson(Map<String, dynamic> json) {
+    String name = json['cusName'] ?? '';
+    String customerId = json['customerId'] ?? '';
+    String phone = json['phone'] ?? '';
+    String address = json['address'] ?? '';
+    _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
+    _goodsList = [];
+    if (json['goodsList'] != null) {
+      json['goodsList'].forEach((v) {
+        goodsList.add(new GoodsModel.fromJsonForList(v));
+      });
+    }
+    _rewardGoodsList = [];
+    if (json['gifts'] != null) {
+      json['gifts'].forEach((v) {
+        _rewardGoodsList.add(new GoodsModel.fromJsonForList(v));
+      });
+    }
+    id = json['id'] ?? '';
+    time = json['time'] ?? '';
+    _remark = json['remark'] ?? '';
+    _phone = json['phone'] ?? '';
+    _address = json['address'] ?? '';
+
+    _completed = false;
+    int status = json['status'] ?? 1;
+    if(status == 2)
+      _completed = true;
   }
 
   ///店铺
@@ -71,6 +103,23 @@ class DeclarationFormModel extends ChangeNotifier {
       count += goodsModel.countPrice;
     });
     return count;
+  }
+
+  ///商品二批价总额
+  double get goodsMiddlemanPrice {
+    double count = 0;
+    _goodsList.forEach((goodsModel) {
+      count += goodsModel.countMiddlemanPrice;
+    });
+    return count;
+  }
+
+  String get goodsListToString{
+    return jsonEncode(_goodsList.map((goodsModel) => goodsModel.toMap()).toList());
+  }
+
+  String get rewardGoodsListToString{
+    return jsonEncode(_rewardGoodsList.map((goodsModel) => goodsModel.toMap()).toList());
   }
 
   setCompleted(bool completed) {
@@ -135,6 +184,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _address = model.address;
     _remark = model.remark;
     _goodsList = model.goodsList;
+    _rewardGoodsList = model.rewardGoodsList;
     id = model.id;
     time = model.time;
   }

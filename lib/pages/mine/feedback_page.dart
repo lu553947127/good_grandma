@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
+import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +25,29 @@ class _FeedbackPageState extends State<FeedbackPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   ImagesProvider _imagesProvider = new ImagesProvider();
+  Map _type = {};
+  List<Map> _types = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getTypes();
+  }
+
+  _getTypes()async{
+    requestGet(Api.feedbackType).then((value) {
+      LogUtil.d('value = $value');
+      var data = jsonDecode(value.toString());
+      final List<dynamic> list = data['data'];
+      list.forEach((element) {
+        String dictKey = element['dictKey'];
+        String dictValue = element['dictValue'];
+        _types.add({'dictKey':dictKey,'dictValue':dictValue});
+      });
+      if(_types.isNotEmpty) setState(() => _type = _types.first);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -30,6 +56,27 @@ class _FeedbackPageState extends State<FeedbackPage> {
         appBar: AppBar(title: const Text('意见反馈')),
         body: CustomScrollView(
           slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 13.0),
+              sliver: SliverToBoxAdapter(
+                child: Card(
+                  child: PostAddInputCell(
+                      title: '反馈类别',
+                      value: _type.isNotEmpty?_type['dictValue']:'',
+                      hintText: '请选择反馈类别',
+                      endWidget: Icon(Icons.chevron_right, color: AppColors.FF2F4058),
+                      onTap: () async{
+                        List<String> typeNames = _types.map((e) => e['dictValue'].toString()).toList();
+                        String result = await showPicker(typeNames, context);
+                        if(result != null && result.isNotEmpty){
+                          List<Map> list = _types.where((element) => element['dictValue'] == result).toList();
+                          if(list.isNotEmpty)
+                            setState(() => _type = list.first);
+                        }
+                  }),
+                ),
+              ),
+            ),
             PostDetailGroupTitle(color: null, name: '意见反馈'),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 13.0),
@@ -86,6 +133,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   void _feedbackRequest(BuildContext context){
+    if(_type.isEmpty){
+      AppUtil.showToastCenter('请选择反馈类别');
+      return;
+    }
     if(_editingController.text.isEmpty){
       AppUtil.showToastCenter('请填写反馈信息');
       return;
@@ -100,7 +151,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         i++;
       });
     }
-    Map param = {'content':_editingController.text,'imgs':images};
+    Map param = {'content':_editingController.text,'imgs':images,'type':_type['dictKey']};
     requestPost(Api.feedback,json: jsonEncode(param)).then((value) {
       var data = jsonDecode(value.toString());
       if (data['code'] == 200) {

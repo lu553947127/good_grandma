@@ -35,113 +35,83 @@ class _Body extends State<WorkSelectType> {
     }
 
 
-    return SliverToBoxAdapter(
-      child: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 15.0),
-        child: Row(
-          children: [
-            //选人
-            Container(
-              width: w,
-              child: TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: selCount > 0 ? 1 : 0,
-                      child: Text(
-                        _btnName1,
-                        style: const TextStyle(
-                            fontSize: 14, color: AppColors.FF2F4058),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.end,
-                      ),
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: Row(
+        children: [
+          //选人
+          Container(
+            width: w,
+            child: TextButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: selCount > 0 ? 1 : 0,
+                    child: Text(
+                      _btnName1,
+                      style: const TextStyle(
+                          fontSize: 14, color: AppColors.FF2F4058),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
                     ),
-                    Visibility(
-                      visible: selCount > 0,
-                      child: Text(
-                        '($selCount)',
-                        style: const TextStyle(
-                            fontSize: 14, color: AppColors.FF2F4058),
-                      ),
+                  ),
+                  Visibility(
+                    visible: selCount > 0,
+                    child: Text(
+                      '($selCount)',
+                      style: const TextStyle(
+                          fontSize: 14, color: AppColors.FF2F4058),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.5),
-                      child: Image.asset('assets/images/ic_work_down.png',
-                          width: 10, height: 10),
-                    )
-                  ],
-                ),
-                onPressed: () async {
-                  List<EmployeeModel> list = await Navigator.push(context,
-                      MaterialPageRoute(builder: (_) {
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.5),
+                    child: Image.asset('assets/images/ic_work_down.png',
+                        width: 10, height: 10),
+                  )
+                ],
+              ),
+              onPressed: () async {
+                List<EmployeeModel> list = await Navigator.push(context,
+                    MaterialPageRoute(builder: (_) {
+                  List<EmployeeModel> _selEmployees = _employees
+                      .where((employee) => employee.isSelected)
+                      .toList();
+                  return SelectEmployeePage(
+                    selEmployees: _selEmployees,
+                  );
+                }));
+                if (list != null && list.isNotEmpty) {
+                  _employees.clear();
+                  _employees.addAll(list);
+                  if (widget.selEmpBtnOnTap != null) {
                     List<EmployeeModel> _selEmployees = _employees
                         .where((employee) => employee.isSelected)
                         .toList();
-                    return SelectEmployeePage(
-                      selEmployees: _selEmployees,
-                    );
-                  }));
-                  if (list != null && list.isNotEmpty) {
-                    _employees.clear();
-                    _employees.addAll(list);
-                    if (widget.selEmpBtnOnTap != null) {
-                      List<EmployeeModel> _selEmployees = _employees
-                          .where((employee) => employee.isSelected)
-                          .toList();
-                      widget.selEmpBtnOnTap(_selEmployees);
-                    }
-                    if (mounted) setState(() {});
+                    widget.selEmpBtnOnTap(_selEmployees);
                   }
-                },
-              ),
+                  if (mounted) setState(() {});
+                }
+              },
             ),
-            //所有类型
-            Container(
-              width: w,
-              child: TextButton(
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.symmetric(
-                          vertical:
-                              BorderSide(color: AppColors.FFC1C8D7, width: 1))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(_btnName2,
-                          style: TextStyle(
-                              fontSize: 14, color: AppColors.FF2F4058)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.5),
-                        child: Image.asset('assets/images/ic_work_down.png',
-                            width: 10, height: 10),
-                      )
-                    ],
-                  ),
-                ),
-                onPressed: () async {
-                  String result =
-                      await showPicker(['所有类型', '日报', '周报', '月报'], context);
-                  if (result != null && result.isNotEmpty) {
-                    setState(() {
-                      _btnName2 = result;
-                    });
-                  }
-                },
-              ),
-            ),
-            //所有日期
-            Container(
-              width: w,
-              child: TextButton(
+          ),
+          //所有类型
+          Container(
+            width: w,
+            child: TextButton(
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.symmetric(
+                        vertical:
+                            BorderSide(color: AppColors.FFC1C8D7, width: 1))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(_btnName3,
-                        style:
-                            TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
+                    Text(_btnName2,
+                        style: TextStyle(
+                            fontSize: 14, color: AppColors.FF2F4058)),
                     Padding(
                       padding: const EdgeInsets.only(left: 4.5),
                       child: Image.asset('assets/images/ic_work_down.png',
@@ -149,19 +119,47 @@ class _Body extends State<WorkSelectType> {
                     )
                   ],
                 ),
-                onPressed: () async {
-                  String result =
-                      await showPicker(['所有日期', '上周', '上月'], context);
-                  if (result != null && result.isNotEmpty) {
-                    setState(() {
-                      _btnName3 = result;
-                    });
-                  }
-                },
               ),
+              onPressed: () async {
+                String result =
+                    await showPicker(['所有类型', '日报', '周报', '月报'], context);
+                if (result != null && result.isNotEmpty) {
+                  setState(() {
+                    _btnName2 = result;
+                  });
+                }
+              },
             ),
-          ],
-        ),
+          ),
+          //所有日期
+          Container(
+            width: w,
+            child: TextButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(_btnName3,
+                      style:
+                          TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.5),
+                    child: Image.asset('assets/images/ic_work_down.png',
+                        width: 10, height: 10),
+                  )
+                ],
+              ),
+              onPressed: () async {
+                String result =
+                    await showPicker(['所有日期', '上周', '上月'], context);
+                if (result != null && result.isNotEmpty) {
+                  setState(() {
+                    _btnName3 = result;
+                  });
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

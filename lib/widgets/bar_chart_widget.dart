@@ -6,16 +6,16 @@ import 'package:good_grandma/common/colors.dart';
 class BarChartWidget extends StatelessWidget {
   const BarChartWidget({
     Key key,
-    @required this.dataMap1,
-    @required this.dataMap2,
+    @required this.targetMap,
+    @required this.totalMap,
     this.title = '',
     this.height = 300,
     this.width = double.infinity,
   }) : super(key: key);
 
   ///年份为key，数值为金额的map
-  final Map<double, double> dataMap1;
-  final Map<double, double> dataMap2;
+  final Map<double, double> targetMap;
+  final Map<double, double> totalMap;
   final String title;
   final double height;
   final double width;
@@ -26,12 +26,12 @@ class BarChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     /// !!Step2: convert data into barGroups.
     final barGroups = <BarChartGroupData>[
-      for (final entry in dataMap1.entries)
+      for (final entry in targetMap.entries)
         BarChartGroupData(
           x: entry.key.toInt(),
           barRods: [
             BarChartRodData(y: entry.value, colors: [_color1]),
-            BarChartRodData(y: dataMap2[entry.key], colors: [_color2]),
+            BarChartRodData(y: totalMap[entry.key], colors: [_color2]),
           ],
         ),
     ];
@@ -79,7 +79,7 @@ class BarChartWidget extends StatelessWidget {
           showTitles: true, // this is false by-default.
           //横坐标 年
           getTitles: (double val) {
-            return '${val.toInt()}' + '年';
+            return '${val.toInt()}' + '季度';
           },
         ),
         leftTitles: SideTitles(

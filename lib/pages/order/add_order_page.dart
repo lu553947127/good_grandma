@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
@@ -15,10 +20,14 @@ import 'package:provider/provider.dart';
 
 ///新增订单
 class AddOrderPage extends StatefulWidget {
-  const AddOrderPage({Key key, this.editing = false}) : super(key: key);
+  const AddOrderPage({Key key, this.editing = false, this.middleman = false})
+      : super(key: key);
 
   ///是否是编辑订单
   final bool editing;
+
+  ///是否是二级订单
+  final bool middleman;
 
   @override
   _AddOrderPageState createState() => _AddOrderPageState();
@@ -32,7 +41,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
     final DeclarationFormModel addModel =
         Provider.of<DeclarationFormModel>(context);
 
-    double countWeight = 0;
+    double countWeight = addModel.goodsWeight;
     countWeight /= 1000;
 
     List<Map> list = [
@@ -40,8 +49,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
       {'title': '收货地址', 'hintText': '请输入收货地址', 'value': addModel.address},
     ];
 
-    //TODO:下单人员信息需要从登录用户的信息中获取
-    String userName = '李四';
+    String userName = Store.readNickName();
     return WillPopScope(
       onWillPop: () => AppUtil.onWillPop(context),
       child: Scaffold(
@@ -89,10 +97,16 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             color: AppColors.FF2F4058, fontSize: 14.0)),
                     trailing: IconButton(
                         onPressed: () async {
+                          if (addModel.storeModel.id.isEmpty) {
+                            AppUtil.showToastCenter('请先选择客户');
+                            return;
+                          }
                           List<GoodsModel> _selGoodsList = await Navigator.push(
                               context, MaterialPageRoute(builder: (_) {
                             return SelectGoodsPage(
-                                selGoods: addModel.goodsList);
+                                selGoods: addModel.goodsList,
+                                customerId: addModel.storeModel.id,
+                                forStock: false);
                           }));
                           if (_selGoodsList != null) {
                             addModel.setArrays(
@@ -109,6 +123,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                 GoodsModel model = addModel.goodsList[index];
                 return AddPageGoodsCell(
                   model: model,
+                  middleman: widget.middleman,
                   editingController: _editingController,
                   focusNode: _focusNode,
                   deleteAction: () =>
@@ -122,7 +137,9 @@ class _AddOrderPageState extends State<AddOrderPage> {
                 child: OrderGoodsCountView(
                   count: addModel.goodsCount,
                   countWeight: countWeight,
-                  countPrice: addModel.goodsPrice,
+                  countPrice: widget.middleman
+                      ? addModel.goodsMiddlemanPrice
+                      : addModel.goodsPrice,
                 ),
               ),
               //奖励商品
@@ -137,11 +154,17 @@ class _AddOrderPageState extends State<AddOrderPage> {
                               color: AppColors.FF2F4058, fontSize: 14.0)),
                       trailing: IconButton(
                           onPressed: () async {
+                            if (addModel.storeModel.id.isEmpty) {
+                              AppUtil.showToastCenter('请先选择客户');
+                              return;
+                            }
                             List<GoodsModel> _selGoodsList =
                                 await Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
                               return SelectGoodsPage(
-                                  selGoods: addModel.rewardGoodsList);
+                                  selGoods: addModel.rewardGoodsList,
+                                  customerId: addModel.storeModel.id,
+                                  forStock: false);
                             }));
                             if (_selGoodsList != null) {
                               addModel.setArrays(
@@ -204,7 +227,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                 sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
                     title: '提  交',
-                    onPressed: () {},
+                    onPressed: () => _submitAction(context, addModel),
                   ),
                 ),
               ),
@@ -213,6 +236,40 @@ class _AddOrderPageState extends State<AddOrderPage> {
         ),
       ),
     );
+  }
+
+  void _submitAction(BuildContext context, DeclarationFormModel model) async {
+    if (model.storeModel.id.isEmpty) {
+      AppUtil.showToastCenter('请选择客户');
+      return;
+    }
+    if (model.goodsList.isEmpty) {
+      AppUtil.showToastCenter('请选择商品');
+      return;
+    }
+    if (model.address.isEmpty) {
+      AppUtil.showToastCenter('请填写收货地址');
+      return;
+    }
+    Map param = {
+      'customerId': model.storeModel.id,
+      'address': model.address,
+      'remark': model.remark,
+      'totalPrice':
+          widget.middleman ? model.goodsMiddlemanPrice : model.goodsPrice,
+      'totalWeight': model.goodsWeight,
+      'totalCount': model.goodsCount,
+      'goodsList': model.goodsListToString,
+      'gifts': model.rewardGoodsListToString,
+      'middleman': widget.middleman ? 2 : 1,
+      'id':model.id
+    };
+    print('param = ${jsonEncode(param)}');
+    requestPost(Api.orderAdd, json: jsonEncode(param)).then((value) {
+      var data = jsonDecode(value.toString());
+      // print('data = $data');
+      if (data['code'] == 200) Navigator.pop(context, true);
+    });
   }
 
   void _onTap({
@@ -229,7 +286,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
         focusNode: _focusNode,
         text: value,
         hintText: hintText,
-        keyboardType: index == 0 ? TextInputType.number : TextInputType.text,
+        keyboardType: TextInputType.text,
         callBack: (text) {
           switch (index) {
             case 0:

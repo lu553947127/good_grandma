@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/my_progress_view.dart';
+import 'package:good_grandma/common/utils.dart';
 
 class StatisticsCell extends StatelessWidget {
-  const StatisticsCell({Key key,
+  const StatisticsCell({
+    Key key,
     @required this.avatar,
     @required this.name,
     @required this.target,
@@ -20,8 +22,8 @@ class StatisticsCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double ratio = 0;
-    final double budgetCountD = double.parse(target);
-    final double budgetCurrentD = double.parse(current);
+    final double budgetCountD = AppUtil.stringToDouble(target);
+    final double budgetCurrentD = AppUtil.stringToDouble(current);
     if (budgetCountD > 0 && budgetCurrentD > 0)
       ratio = budgetCurrentD / budgetCountD;
     return Container(
@@ -34,24 +36,29 @@ class StatisticsCell extends StatelessWidget {
               children: [
                 ClipOval(
                     child: MyCacheImageView(
-                        imageURL: avatar, width: 30, height: 30)),
+                  imageURL: avatar,
+                  width: 30,
+                  height: 30,
+                  errorWidgetChild: Image.asset(
+                      'assets/images/icon_empty_user.png',
+                      width: 30.0,
+                      height: 30.0),
+                )),
                 Expanded(
                     child: Text('  ' + name,
                         style: const TextStyle(
-                            color: AppColors.FF2F4058,
-                            fontSize: 14.0))),
+                            color: AppColors.FF2F4058, fontSize: 14.0))),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text.rich(
                         TextSpan(
-                            text: '￥' + current.toString(),
+                            text: '￥' + budgetCurrentD.toString(),
                             style: const TextStyle(
-                                color: AppColors.FFE45C26,
-                                fontSize: 12.0),
+                                color: AppColors.FFE45C26, fontSize: 12.0),
                             children: [
                               TextSpan(
-                                  text: ' / ￥' + target.toString(),
+                                  text: ' / ￥' + budgetCountD.toString(),
                                   style: const TextStyle(
                                       color: AppColors.FFC1C8D7,
                                       fontSize: 12.0))
@@ -64,16 +71,12 @@ class StatisticsCell extends StatelessWidget {
                           height: 6.0,
                           width: 180,
                           borderRadius: 3,
-                          backgroundColor:
-                          AppColors.FFE45C26.withOpacity(0.1),
+                          backgroundColor: AppColors.FFE45C26.withOpacity(0.1),
                           valueColor: AppColors.FFE45C26),
                     ),
                   ],
                 ),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey,
-                ),
+                Icon(Icons.chevron_right, color: Colors.grey),
               ],
             ),
             // trailing: Icon(Icons.chevron_right),

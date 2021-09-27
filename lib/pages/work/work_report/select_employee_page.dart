@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
@@ -45,7 +49,7 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
               SearchTextWidget(
                   editingController: _editingController,
                   focusNode: _focusNode,
-                  onSearch: (text) {}),
+                  onSearch: _searchAction),
               //所有人
               SliverToBoxAdapter(
                 child: Column(
@@ -106,24 +110,47 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
     );
   }
 
-  Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
+  _searchAction(String text) {
+    if (text.isEmpty) {
+      _refresh();
+      return;
+    }
+    List<EmployeeModel> tempList = [];
+    tempList.addAll(_employees.where((element) => element.name.contains(text)));
     _employees.clear();
-    for (int i = 0; i < 15; i++) {
-      _employees.add(EmployeeModel(
-          name: '张${i + 1}', id: '${i + 1}', isSelected: _selectedAll));
-    }
-    if(widget.selEmployees.isNotEmpty){
-      _selectedAll = false;
-      _employees.forEach((employee) {
-        employee.isSelected = false;
-        widget.selEmployees.forEach((selEmployee) {
-          if(selEmployee.id == employee.id)
-            employee.isSelected = true;
-        });
-      });
-    }
+    _employees.addAll(tempList);
     setState(() {});
+  }
+
+  Future<void> _refresh() async {
+    try{
+      final val = await requestPost(Api.reportUserList);
+      // LogUtil.d('reportList value = $val');
+      var data = jsonDecode(val.toString());
+      _employees.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        Map re = map as Map;
+        EmployeeModel model = EmployeeModel(
+            name: re['name']??'',
+            id: re['id']??'',
+            isSelected: _selectedAll);
+        _employees.add(model);
+      });
+      if(widget.selEmployees.isNotEmpty){
+        _selectedAll = false;
+        _employees.forEach((employee) {
+          employee.isSelected = false;
+          widget.selEmployees.forEach((selEmployee) {
+            if(selEmployee.id == employee.id)
+              employee.isSelected = true;
+          });
+        });
+      }
+      if (mounted) setState(() {});
+    }catch(error){
+
+    }
   }
 
   void _selectedAllBtnOnTap(BuildContext context) {

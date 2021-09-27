@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/models/StoreModel.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
-import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/widgets/my_declaration_form_cell.dart';
 import 'package:good_grandma/widgets/order_goods_count_view.dart';
 import 'package:good_grandma/pages/order/add_order_page.dart';
@@ -23,12 +28,14 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   DeclarationFormModel _model = DeclarationFormModel();
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _model.setModelWithModel(widget.model);
-    _refresh();
+    _controller.callRefresh();
   }
 
   @override
@@ -54,7 +61,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 ),
                               )));
                   if (needRefresh != null && needRefresh) {
-                    _refresh();
+                    _controller.callRefresh();
                   }
                 },
                 child: const Text('编辑',
@@ -63,8 +70,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ),
         ],
       ),
-      body: Scrollbar(
-        child: CustomScrollView(
+      body: MyEasyRefreshSliverWidget(
+          controller: _controller,
+          scrollController: _scrollController,
+          dataCount: _model.goodsList.length,
+          onRefresh: _refresh,
+          onLoad: null,
           slivers: [
             _Header(model: _model),
             SliverPadding(
@@ -77,20 +88,20 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     child: Column(
                       children: [
                         ..._model.goodsList.map((goodsModel) => Column(
-                              children: [
-                                DeclarationGoodsCell(goodsModel: goodsModel),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    '总额：¥ ' +
-                                        goodsModel.countPrice
-                                            .toStringAsFixed(2),
-                                    style: const TextStyle(fontSize: 12.0),
-                                  ),
-                                ),
-                                const Divider(),
-                              ],
-                            )),
+                          children: [
+                            DeclarationGoodsCell(goodsModel: goodsModel),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '总额：¥ ' +
+                                    goodsModel.countPrice
+                                        .toStringAsFixed(2),
+                                style: const TextStyle(fontSize: 12.0),
+                              ),
+                            ),
+                            const Divider(),
+                          ],
+                        )),
                         OrderGoodsCountView(
                           count: _model.goodsCount,
                           countWeight: countWeight,
@@ -105,7 +116,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             ),
             SliverPadding(
               padding:
-                  const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+              const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
               sliver: SliverToBoxAdapter(
                 child: Card(
                   child: Container(
@@ -142,7 +153,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               style: TextStyle(
                                   color: AppColors.FF959EB1, fontSize: 12.0)),
                           SizedBox(height: 12.0),
-                          Text(_model.remark,
+                          Text(_model.remark  ?? '',
                               style: TextStyle(
                                   color: AppColors.FF2F4058, fontSize: 12.0)),
                         ],
@@ -164,7 +175,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           builder: (_) {
                             return Container(
                               height:
-                                  116 + MediaQuery.of(context).padding.bottom,
+                              116 + MediaQuery.of(context).padding.bottom,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.vertical(
@@ -179,7 +190,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                     children: [
                                       SizedBox(
                                         width: 137,
@@ -189,7 +200,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                                 Navigator.pop(context, false),
                                             style: TextButton.styleFrom(
                                               backgroundColor:
-                                                  AppColors.FFEFEFF4,
+                                              AppColors.FFEFEFF4,
                                               shape: StadiumBorder(),
                                             ),
                                             child: const Text('取消',
@@ -205,7 +216,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                                 Navigator.pop(context, true),
                                             style: TextButton.styleFrom(
                                               backgroundColor:
-                                                  AppColors.FFC08A3F,
+                                              AppColors.FFC08A3F,
                                               shape: StadiumBorder(),
                                             ),
                                             child: const Text('确定',
@@ -221,55 +232,39 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           });
                       if (result != null && result) {
                         ///确认收货请求
-                        setState(() => _model.setCompleted(true));
+                        _submitAction();
                       }
                     }),
               ),
             ),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ],
-        ),
-      ),
+          ]),
     );
   }
+  
+  void _submitAction()async{
+    print('_model.id = ${_model.id}');
+    requestPost(Api.orderConfirm,json: jsonEncode({'id':_model.id})).then((value) {
+      var data = jsonDecode(value.toString());
+      // print('data = $data');
+      if (data['code'] == 200) Navigator.pop(context, true);
+    });
+  }
 
-  void _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
-    _model.setStoreModel(StoreModel(
-      name: _model.storeModel.name,
-      phone: '1234567890',
-      address: '山东省济南市历下区舜华路',
-    ));
-    _model.setPhone('1234567890');
-    _model.setAddress('山东省济南市历下区舜华路');
-    _model.setRemark('备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体。');
-    _model.setArrays(
-        _model.goodsList,
-        List.generate(
-            3,
-            (i) => GoodsModel(
-                  name: '商品名称$i',
-                  image:
-                      'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-                  count: 100 + i,
-                  // spec: '规格：1*40',
-                  price: 234.0,
-                  weight: 1000,
-                )));
-    _model.setArrays(
-        _model.rewardGoodsList,
-        List.generate(
-            2,
-            (i) => GoodsModel(
-                  name: '商品名称$i',
-                  image:
-                      'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-                  count: 100 + i,
-                  // spec: '规格：1*40',
-                  price: 234.0,
-                  weight: 1000,
-                )));
-    if (mounted) setState(() {});
+  Future<void> _refresh() async {
+    try {
+      Map<String, dynamic> param = {'id':widget.model.id};
+      final val = await requestPost(Api.orderDetail, json: jsonEncode(param));
+      LogUtil.d('orderDetail value = $val');
+      var data = jsonDecode(val.toString());
+      Map<String, dynamic> map = data['data'];
+      DeclarationFormModel model = DeclarationFormModel.fromJson(map);
+      _model.setModelWithModel(model);
+      _controller.finishRefresh(success: true);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+    }
   }
 }
 

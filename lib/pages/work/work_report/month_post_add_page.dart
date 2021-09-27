@@ -1,12 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/models/month_post_add_model.dart';
-import 'package:good_grandma/models/week_post_add_model.dart';
+import 'package:good_grandma/models/month_post_add_new_model.dart';
+import 'package:good_grandma/models/week_post_add_new_model.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
+import 'package:good_grandma/widgets/post_sales_tracking_cell.dart';
 import 'package:good_grandma/widgets/postadd_delete_plan_cell.dart';
+import 'package:good_grandma/widgets/select_tree.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
+import 'package:good_grandma/widgets/white_bg_title_view.dart';
 import 'package:provider/provider.dart';
 
 ///新增月报
@@ -19,13 +28,6 @@ class MonthPostAddPage extends StatefulWidget {
 }
 
 class _Body extends State<MonthPostAddPage> {
-  final List<Map> _list1 = [
-    {'title': '本月目标', 'end': '元', 'hintText': '请填写金额'},
-    {'title': '本月实际', 'end': '元', 'hintText': '请填写金额'},
-    {'title': '本月累计', 'end': '元', 'hintText': '请填写金额'},
-    {'title': '月度达成率', 'end': '%', 'hintText': ''},
-    {'title': '下月规划进货金额', 'end': '元', 'hintText': '请填写金额'},
-  ];
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
 
@@ -34,6 +36,7 @@ class _Body extends State<MonthPostAddPage> {
 
   ///明日工作计划暂存
   String _plan = '';
+
   ///问题反馈以及解决方案暂存
   String _report = '';
 
@@ -44,90 +47,158 @@ class _Body extends State<MonthPostAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    final MonthPostAddModel model = Provider.of<MonthPostAddModel>(context);
-    final List values = [
-      model.target,
-      model.actual,
-      model.cumulative,
-      model.achievementRate,
-      model.nextTarget,
+    final MonthPostAddNewModel model =
+        Provider.of<MonthPostAddNewModel>(context);
+    List<Map> list1 = [
+      {'title': '本月目标', 'value': model.target.toStringAsFixed(2), 'end': '万元'},
+      {'title': '本月实际', 'value': model.actual.toStringAsFixed(2), 'end': '万元'},
+      {
+        'title': '本月累计',
+        'value': model.cumulative.toStringAsFixed(2),
+        'end': '万元'
+      },
+      {
+        'title': '月度差额',
+        'value': model.difference.toStringAsFixed(2),
+        'end': '万元'
+      },
+      {
+        'title': '月度达成率',
+        'value': (model.completionRate * 100).toStringAsFixed(2),
+        'end': '%'
+      },
+      {
+        'title': '下月规划进货金额',
+        'value': model.nextTarget.toStringAsFixed(2),
+        'end': '万元'
+      }
     ];
 
     List<Widget> slivers = [
-      //销量进度追踪
-      PostDetailGroupTitle(color: null, name: '销量进度追踪'),
+      SliverToBoxAdapter(
+        child: Column(
+          children: [
+            PostAddInputCell(
+                title: '报告人',
+                value: Store.readNickName() + ' - ' + Store.readPostName(),
+                hintText: '',
+                onTap: null),
+            PostAddInputCell(
+              title: '时间',
+              value: model.time,
+              hintText: '请选择时间',
+              endWidget: Icon(Icons.chevron_right),
+              onTap: () async {
+                String time = await showPickerDate(context);
+                if (time != null && time.isNotEmpty) {
+                  model.setTime(time);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+      //销量进度追踪 +
+      SliverToBoxAdapter(
+        child: ListTile(
+          title: const Text('销量进度追踪',
+              style: TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
+          trailing: IconButton(
+              onPressed: () =>
+                  model.addToSalesTrackingList(SalesTrackingModel()),
+              icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+        ),
+      ),
+      ////销量进度追踪list
       SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-            Map map = _list1[index];
-            String title = map['title'];
-            String end = map['end'];
-            String hintText = map['hintText'];
-            String value = values[index];
-            return PostAddInputCell(
-              title: title,
-              value: value,
-              hintText: hintText,
-              end: end,
-              onTap: () => AppUtil.showInputDialog(
-                  context: context,
-                  text: value,
-                  hintText: hintText,
-                  focusNode: _focusNode,
-                  editingController: _editingController,
-                  keyboardType:
-                  TextInputType.numberWithOptions(signed: false, decimal: true),
-                  callBack: (text) {
-                    switch (index) {
-                      case 0:
-                        model.setTarget(text);
-                        break;
-                      case 1:
-                        model.setActual(text);
-                        break;
-                      case 2:
-                        model.setCumulative(text);
-                        break;
-                      case 4:
-                        model.setNextTarget(text);
-                        break;
-                    }
-                  }),
-            );
-          }, childCount: _list1.length)),
-      //本周行程及工作内容
-      PostDetailGroupTitle(color: null, name: '本周行程及工作内容'),
-      //本周区域重点工作总结
-      SliverToBoxAdapter(child: _WhiteBGTitleView(title: '本周区域重点工作总结')),
+        SalesTrackingModel salesTrackingModel = model.salesTrackingList[index];
+        return PostSalesTrackingCell(
+          salesTrackingModel: salesTrackingModel,
+          forWeek: false,
+          selectAction: () async {
+            Map area = await showSelectTreeList(context, '');
+            // print('area = $area');
+            if (area != null && area.isNotEmpty) {
+              String areaName = area['areaName'];
+              String deptId = area['deptId'];
+              salesTrackingModel.area.city = areaName;
+              salesTrackingModel.area.cityId = deptId;
+              model.editSalesTrackingListWith(index, salesTrackingModel);
+            }
+          },
+          setTextAction: () =>
+              model.editSalesTrackingListWith(index, salesTrackingModel),
+          deleteAction: () => model.deleteSalesTrackingListWith(index),
+        );
+      }, childCount: model.salesTrackingList.length)),
+      //合计
+      SliverToBoxAdapter(
+        child: Container(
+          padding: const EdgeInsets.all(15.0),
+          color: Colors.white,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text('合计',
+                style: const TextStyle(color: Colors.red, fontSize: 14.0)),
+          ),
+        ),
+      ),
+      SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+        Map map = list1[index];
+        String title = map['title'];
+        String value = map['value'];
+        String hintText = map['hintText'];
+        String end = map['end'];
+        return Container(
+          color: Colors.white,
+          child: PostAddInputCellCore(
+            onTap: null,
+            title: title,
+            value: value,
+            hintText: hintText,
+            endWidget: null,
+            end: end,
+            titleColor: AppColors.FF959EB1,
+          ),
+        );
+      }, childCount: list1.length)),
+
+      //本月重点工作总结
+      PostDetailGroupTitle(color: null, name: '本月重点工作总结'),
       //列表
       SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-            String text = model.summaries[index];
-            return PostAddDeletePlanCell(
-              value: text,
-              hintText: '请填写本周区域重点工作总结',
-              isAdd: false,
-              textOnTap: () => AppUtil.showInputDialog(
-                context: context,
-                text: text,
-                hintText: '请填写本周区域重点工作总结',
-                focusNode: _focusNode,
-                editingController: _editingController,
-                keyboardType: TextInputType.text,
-                callBack: (text) => model.editSummariesWith(index, text),
-              ),
-              rightBtnOnTap: () => model.deleteSummariesWith(index),
-            );
-          }, childCount: model.summaries.length)),
+        String text = model.summaries[index];
+        return PostAddDeletePlanCell(
+          value: text,
+          hintText: '请填写本月重点工作总结',
+          isAdd: false,
+          textOnTap: () => AppUtil.showInputDialog(
+            context: context,
+            text: text,
+            hintText: '请填写本月重点工作总结',
+            focusNode: _focusNode,
+            editingController: _editingController,
+            keyboardType: TextInputType.text,
+            callBack: (text) =>
+                model.editStringArrayWith(model.summaries, index, text),
+          ),
+          rightBtnOnTap: () =>
+              model.deleteStringArrayWith(model.summaries, index),
+        );
+      }, childCount: model.summaries.length)),
       //添加按钮
       SliverToBoxAdapter(
         child: PostAddDeletePlanCell(
             value: _todaySummary,
-            hintText: '请填写本周区域重点工作总结',
+            hintText: '请填写本月重点工作总结',
             isAdd: true,
             textOnTap: () => AppUtil.showInputDialog(
                 context: context,
                 text: _todaySummary,
-                hintText: '请填写本周区域重点工作总结',
+                hintText: '请填写本月重点工作总结',
                 focusNode: _focusNode,
                 editingController: _editingController,
                 keyboardType: TextInputType.text,
@@ -135,22 +206,22 @@ class _Body extends State<MonthPostAddPage> {
                   if (mounted) setState(() => _todaySummary = text);
                 }),
             rightBtnOnTap: () {
-              if (_todaySummary.isNotEmpty) model.addSummary(_todaySummary);
+              if (_todaySummary.isNotEmpty)
+                model.addToStringArray(model.summaries, _todaySummary);
               if (mounted) setState(() => _todaySummary = '');
             }),
       ),
       //白底
-      SliverToBoxAdapter(
-          child: Container(color: Colors.white, height: 10.0)),
+      SliverToBoxAdapter(child: Container(color: Colors.white, height: 10.0)),
       //下月行程及工作内容
       PostDetailGroupTitle(color: null, name: '下月行程及工作内容'),
     ];
     //下月行程及工作内容
     model.itineraries.forEach((itineraryModel) {
       slivers.add(SliverToBoxAdapter(
-          child: _WhiteBGTitleView(title: itineraryModel.title)));
-      slivers.add(_buildWeekSliverList(context, itineraryModel));
-      slivers.add(_buildWeekAddBtn(context, itineraryModel));
+          child: WhiteBGTitleView(title: itineraryModel.title)));
+      slivers.add(_buildWeekSliverList(context, itineraryModel, model));
+      slivers.add(_buildWeekAddBtn(context, itineraryModel, model));
     });
     //白底
     slivers.add(SliverToBoxAdapter(
@@ -161,22 +232,23 @@ class _Body extends State<MonthPostAddPage> {
     //列表
     slivers.add(SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          String text = model.plans[index];
-          return PostAddDeletePlanCell(
-            value: text,
+      String text = model.plans[index];
+      return PostAddDeletePlanCell(
+        value: text,
+        hintText: '请填写重点工作内容',
+        isAdd: false,
+        textOnTap: () => AppUtil.showInputDialog(
+            context: context,
+            text: text,
             hintText: '请填写重点工作内容',
-            isAdd: false,
-            textOnTap: () => AppUtil.showInputDialog(
-                context: context,
-                text: text,
-                hintText: '请填写重点工作内容',
-                focusNode: _focusNode,
-                editingController: _editingController,
-                keyboardType: TextInputType.text,
-                callBack: (text) => model.editPlanWith(index, text)),
-            rightBtnOnTap: () => model.deletePlanWith(index),
-          );
-        }, childCount: model.plans.length)));
+            focusNode: _focusNode,
+            editingController: _editingController,
+            keyboardType: TextInputType.text,
+            callBack: (text) =>
+                model.editStringArrayWith(model.plans, index, text)),
+        rightBtnOnTap: () => model.deleteStringArrayWith(model.plans, index),
+      );
+    }, childCount: model.plans.length)));
     //添加按钮
     slivers.add(SliverToBoxAdapter(
       child: PostAddDeletePlanCell(
@@ -194,7 +266,7 @@ class _Body extends State<MonthPostAddPage> {
                 if (mounted) setState(() => _plan = text);
               }),
           rightBtnOnTap: () {
-            if (_plan.isNotEmpty) model.addPlan(_plan);
+            if (_plan.isNotEmpty) model.addToStringArray(model.plans, _plan);
             if (mounted) setState(() => _plan = '');
           }),
     ));
@@ -202,28 +274,28 @@ class _Body extends State<MonthPostAddPage> {
     slivers.add(SliverToBoxAdapter(
         child: Container(color: Colors.white, height: 10.0)));
 
-
     //问题反馈以及解决方案
     slivers.add(PostDetailGroupTitle(color: null, name: '问题反馈以及解决方案'));
     //列表
     slivers.add(SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          String text = model.reports[index];
-          return PostAddDeletePlanCell(
-            value: text,
+      String text = model.reports[index];
+      return PostAddDeletePlanCell(
+        value: text,
+        hintText: '请填写问题反馈以及解决方案',
+        isAdd: false,
+        textOnTap: () => AppUtil.showInputDialog(
+            context: context,
+            text: text,
             hintText: '请填写问题反馈以及解决方案',
-            isAdd: false,
-            textOnTap: () => AppUtil.showInputDialog(
-                context: context,
-                text: text,
-                hintText: '请填写问题反馈以及解决方案',
-                focusNode: _focusNode,
-                editingController: _editingController,
-                keyboardType: TextInputType.text,
-                callBack: (text) => model.editReportWith(index, text)),
-            rightBtnOnTap: () => model.deleteReportWith(index),
-          );
-        }, childCount: model.reports.length)));
+            focusNode: _focusNode,
+            editingController: _editingController,
+            keyboardType: TextInputType.text,
+            callBack: (text) =>
+                model.editStringArrayWith(model.reports, index, text)),
+        rightBtnOnTap: () => model.deleteStringArrayWith(model.reports, index),
+      );
+    }, childCount: model.reports.length)));
     //添加按钮
     slivers.add(SliverToBoxAdapter(
       child: PostAddDeletePlanCell(
@@ -241,7 +313,8 @@ class _Body extends State<MonthPostAddPage> {
                 if (mounted) setState(() => _report = text);
               }),
           rightBtnOnTap: () {
-            if (_report.isNotEmpty) model.addPlan(_report);
+            if (_report.isNotEmpty)
+              model.addToStringArray(model.reports, _report);
             if (mounted) setState(() => _report = '');
           }),
     ));
@@ -253,7 +326,7 @@ class _Body extends State<MonthPostAddPage> {
       sliver: SliverToBoxAdapter(
         child: SubmitBtn(
           title: '提  交',
-          onPressed: () => _submitAction(context),
+          onPressed: () => _submitAction(context, model, 2),
         ),
       ),
     ));
@@ -265,9 +338,9 @@ class _Body extends State<MonthPostAddPage> {
           title: const Text('新增月报'),
           actions: [
             TextButton(
-                onPressed: () => _saveDraftAction(context),
+                onPressed: () => _submitAction(context, model, 1),
                 child:
-                const Text('保存草稿', style: TextStyle(color: Colors.black))),
+                    const Text('保存草稿', style: TextStyle(color: Colors.black))),
           ],
         ),
         body: Scrollbar(
@@ -277,21 +350,41 @@ class _Body extends State<MonthPostAddPage> {
     );
   }
 
-  ///保存草稿
-  void _saveDraftAction(BuildContext context) async {
-    // final WeekPostAddModel model =
-    //     Provider.of<WeekPostAddModel>(context, listen: false);
-  }
-
   ///提  交
-  void _submitAction(BuildContext context) async {
-    // final WeekPostAddModel model =
-    //     Provider.of<WeekPostAddModel>(context, listen: false);
+  void _submitAction(
+      BuildContext context, MonthPostAddNewModel model, int status) async {
+    if (model.time.isEmpty) {
+      AppUtil.showToastCenter('请选择时间');
+      return;
+    }
+    if (model.salesTrackingList.isEmpty) {
+      AppUtil.showToastCenter('请填写销量进度追踪');
+      return;
+    }
+    bool needShow = false;
+    model.salesTrackingList.forEach((SalesTrackingModel saModel) {
+      if (saModel.area.cityId.isEmpty) {
+        needShow = true;
+      }
+    });
+    if (needShow) {
+      AppUtil.showToastCenter('请选择区域');
+      return;
+    }
+    Map param = model.toJson();
+    param['userName'] = Store.readNickName();
+    param['postName'] = Store.readPostName();
+    param['status'] = status;
+    LogUtil.d('param = ${jsonEncode(param)}');
+    requestPost(Api.reportMonthAdd, json: param).then((value) {
+      var data = jsonDecode(value.toString());
+      // print('data = $data');
+      if (data['code'] == 200) Navigator.pop(context, true);
+    });
   }
 
-  SliverToBoxAdapter _buildWeekAddBtn(
-      BuildContext context, ItineraryModel itineraryModel) {
-    final MonthPostAddModel model = Provider.of<MonthPostAddModel>(context);
+  SliverToBoxAdapter _buildWeekAddBtn(BuildContext context,
+      ItineraryModel itineraryModel, MonthPostAddNewModel model) {
     return SliverToBoxAdapter(
       child: PostAddDeletePlanCell(
           value: itineraryModel.tempWork,
@@ -316,34 +409,33 @@ class _Body extends State<MonthPostAddPage> {
     );
   }
 
-  SliverList _buildWeekSliverList(
-      BuildContext context, ItineraryModel itineraryModel) {
-    final MonthPostAddModel model = Provider.of<MonthPostAddModel>(context);
+  SliverList _buildWeekSliverList(BuildContext context,
+      ItineraryModel itineraryModel, MonthPostAddNewModel model) {
     return SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          String text = itineraryModel.works[index];
-          return Column(
-            children: [
-              PostAddDeletePlanCell(
-                value: text,
-                hintText: '请填写行程及工作内容',
-                isAdd: false,
-                textOnTap: () => AppUtil.showInputDialog(
-                  context: context,
-                  text: text,
-                  hintText: '请填写行程及工作内容',
-                  focusNode: _focusNode,
-                  editingController: _editingController,
-                  keyboardType: TextInputType.text,
-                  callBack: (text) => model.editItineraryWorksWith(
-                      model: itineraryModel, index: index, value: text),
-                ),
-                rightBtnOnTap: () => model.deleteItineraryWorksWith(
-                    model: itineraryModel, index: index),
-              ),
-            ],
-          );
-        }, childCount: itineraryModel.works.length));
+      String text = itineraryModel.works[index];
+      return Column(
+        children: [
+          PostAddDeletePlanCell(
+            value: text,
+            hintText: '请填写行程及工作内容',
+            isAdd: false,
+            textOnTap: () => AppUtil.showInputDialog(
+              context: context,
+              text: text,
+              hintText: '请填写行程及工作内容',
+              focusNode: _focusNode,
+              editingController: _editingController,
+              keyboardType: TextInputType.text,
+              callBack: (text) => model.editItineraryWorksWith(
+                  model: itineraryModel, index: index, value: text),
+            ),
+            rightBtnOnTap: () => model.deleteItineraryWorksWith(
+                model: itineraryModel, index: index),
+          ),
+        ],
+      );
+    }, childCount: itineraryModel.works.length));
   }
 
   @override
@@ -351,28 +443,5 @@ class _Body extends State<MonthPostAddPage> {
     super.dispose();
     _editingController?.dispose();
     _focusNode?.dispose();
-  }
-}
-
-class _WhiteBGTitleView extends StatelessWidget {
-  const _WhiteBGTitleView({
-    Key key,
-    @required String title,
-  })  : _title = title,
-        super(key: key);
-
-  final String _title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      width: double.infinity,
-      padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-      child: Text(
-        _title,
-        style: const TextStyle(color: AppColors.FF2F4058, fontSize: 14.0),
-      ),
-    );
   }
 }

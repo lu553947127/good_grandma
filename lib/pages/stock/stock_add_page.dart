@@ -192,6 +192,7 @@ class _StockAddPageState extends State<StockAddPage> {
       return SelectCustomerPage();
     }));
     if (model != null) {
+      _model.setStockList([]);
       _model.setCustomer(model);
     }
   }

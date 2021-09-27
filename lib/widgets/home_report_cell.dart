@@ -13,16 +13,16 @@ import 'package:good_grandma/widgets/post_progress_view.dart';
 
 class HomeReportCell extends StatelessWidget {
   final HomeReportModel model;
+  ///是否是职能
+  final isZN;
 
-  HomeReportCell({Key key, @required this.model}) : super(key: key);
+  HomeReportCell({Key key, @required this.model,this.isZN = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final Map map = transInfoFromPostType(model.postType);
     final Color color = map['color'];
     final String name = map['name'];
-    //是否是职能
-    bool isZN = false;
     return ListTile(
       onTap: () {
         if (model.postType == 1) {
@@ -79,8 +79,7 @@ class HomeReportCell extends StatelessWidget {
                       imageURL: model.avatar,
                       width: 30.0,
                       height: 30.0,
-                      errorWidgetChild:
-                      Icon(Icons.supervised_user_circle, size: 30.0),
+                      errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 30.0, height: 30.0),
                     ),
                   ),
                   Text('  ' + (model.userName ?? '') + '  ',
@@ -111,21 +110,21 @@ class HomeReportCell extends StatelessWidget {
               ),
             ),
             const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1.0),
-            //本周目标
+            //目标
             PostProgressView(
                 count: model.target,
                 current: model.target,
                 color: color.withOpacity(0.4),
-                title: '本$name目标',
+                title: '本月目标',
                 textColor: color),
-            //本周累计
+            //累计
             PostProgressView(
                 count: model.target,
                 current: model.cumulative,
                 color: color.withOpacity(0.6),
-                title: '本$name累计',
+                title: '本月累计',
                 textColor: color),
-            //本周实际
+            //实际
             PostProgressView(
                 count: model.target,
                 current: model.actual,

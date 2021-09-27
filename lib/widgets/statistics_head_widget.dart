@@ -24,110 +24,108 @@ class StatisticsHeadWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double ratio = 0;
     if (target > 0 && current > 0) ratio = current / target;
-    return SliverToBoxAdapter(
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Container(
-                  color: Colors.white,
-                  width: MediaQuery.of(context).size.width - 15 * 2,
-                  height: 50,
-                ),
-              )
-          ),
-          Image.asset('assets/images/performance_head.png',
-              fit: BoxFit.fill, width: double.infinity),
-          SafeArea(
-            child: GestureDetector(
-              onTap: onTap,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //标题
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width - 15 * 2,
+                height: 50,
+              ),
+            )
+        ),
+        Image.asset('assets/images/performance_head.png',
+            fit: BoxFit.fill, width: double.infinity),
+        SafeArea(
+          child: GestureDetector(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //标题
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BackButton(color: Colors.white),
+                      Text(title,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18)),
+                      BackButton(color: Colors.transparent, onPressed: () {}),
+                    ],
+                  ),
+                  //内容
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Row(
                       children: [
-                        BackButton(color: Colors.white),
-                        Text(title,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 18)),
-                        BackButton(color: Colors.transparent, onPressed: () {}),
-                      ],
-                    ),
-                    //内容
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25),
-                      child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              titleView,
-                              _TitleCell(
-                                  color: Colors.white.withOpacity(0.4),
-                                  title: '年度目标：',
-                                  value: target.toStringAsFixed(2)),
-                              _TitleCell(
-                                  color: Colors.white.withOpacity(0.6),
-                                  title: '已完成：',
-                                  value: current.toStringAsFixed(2)),
-                              _TitleCell(
-                                  color: Colors.white,
-                                  title: '完成比：',
-                                  value:
-                                      (ratio * 100).toStringAsFixed(0) + '%'),
-                            ],
-                          ),
-                          Spacer(),
-                          CustomPaint(
-                            painter: CircleBorderPinter(
-                                size: 110,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            titleView,
+                            _TitleCell(
+                                color: Colors.white.withOpacity(0.4),
+                                title: '年度目标：',
+                                value: target.toStringAsFixed(2)),
+                            _TitleCell(
+                                color: Colors.white.withOpacity(0.6),
+                                title: '已完成：',
+                                value: current.toStringAsFixed(2)),
+                            _TitleCell(
                                 color: Colors.white,
-                                ratio: ratio,
-                                strokeWidth: 10),
-                            child: SizedBox(
-                              width: 110,
-                              height: 110,
-                              child: Center(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 9.0),
-                                      child: Text('已完成',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10)),
-                                    ),
-                                    Text((ratio * 100).toStringAsFixed(0) + '%',
+                                title: '完成比：',
+                                value:
+                                    (ratio * 100).toStringAsFixed(0) + '%'),
+                          ],
+                        ),
+                        Spacer(),
+                        CustomPaint(
+                          painter: CircleBorderPinter(
+                              size: 110,
+                              color: Colors.white,
+                              ratio: ratio,
+                              strokeWidth: 10),
+                          child: SizedBox(
+                            width: 110,
+                            height: 110,
+                            child: Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 9.0),
+                                    child: Text('已完成',
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 24)),
-                                  ],
-                                ),
+                                            color: Colors.white,
+                                            fontSize: 10)),
+                                  ),
+                                  Text((ratio * 100).toStringAsFixed(0) + '%',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 24)),
+                                ],
                               ),
                             ),
                           ),
-                          Visibility(
-                              visible: showRightArrow,
-                              child: Icon(Icons.chevron_right,
-                                  color: Colors.white)),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                        ),
+                        Visibility(
+                            visible: showRightArrow,
+                            child: Icon(Icons.chevron_right,
+                                color: Colors.white)),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

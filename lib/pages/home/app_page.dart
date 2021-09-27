@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
-import 'package:good_grandma/pages/order/first_order_page.dart';
-import 'package:good_grandma/pages/order/second_order_page.dart';
+import 'package:good_grandma/pages/order/order_page.dart';
 import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
 import 'package:good_grandma/pages/sales_statistics/sales_statistics_page.dart';
 import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
@@ -56,10 +55,10 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> RegularDocPage()));
           break;
         case '一级订单':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> FirstOrderPage()));
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage()));
           break;
         case '二级订单':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> SecondOrderPage()));
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(middleman: true)));
           break;
         case '审批申请':{
           if(shenpiOnTap != null)
