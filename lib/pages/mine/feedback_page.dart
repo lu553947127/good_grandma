@@ -22,7 +22,6 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  //todo：需要添加一个选择类型 接口feedbackType
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   ImagesProvider _imagesProvider = new ImagesProvider();
