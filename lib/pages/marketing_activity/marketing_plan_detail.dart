@@ -39,7 +39,7 @@ class _MarketingPlanDetailPageState extends State<MarketingPlanDetailPage> {
     ];
 
     return Scaffold(
-        appBar: AppBar(title: const Text('市场活动详情')),
+        appBar: AppBar(title: const Text('行销规划详情')),
         body: Scrollbar(
             child: CustomScrollView(
                 slivers: [

@@ -49,16 +49,16 @@ class FreezerSalesList extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 230,
-                    child: Expanded(child: Column(
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('客户名称: ${data['realName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                         SizedBox(height: 3),
-                        Text('客户地址: ${data['address']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                        Container(
+                          width: 200,
+                          child: Text('客户地址: ${data['address']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                        )
                       ]
-                    ))
                   ),
                   Container(
                     padding: EdgeInsets.all(5),

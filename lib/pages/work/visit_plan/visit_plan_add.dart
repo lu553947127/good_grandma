@@ -30,6 +30,32 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
 
   ///新增
   _visitPlanAdd(){
+
+    if (title == ''){
+      showToast('标题不能为空');
+      return;
+    }
+
+    if (visitTime == ''){
+      showToast('拜访时间不能为空');
+      return;
+    }
+
+    if (userId == ''){
+      showToast('客户不能为空');
+      return;
+    }
+
+    if (address == ''){
+      showToast('地址不能为空');
+      return;
+    }
+
+    if (visitContent == ''){
+      showToast('拜访内容不能为空');
+      return;
+    }
+
     Map<String, dynamic> map = {
       'title': title,
       'visitTime': visitTime,
@@ -111,8 +137,8 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
             ContentInputView(
               sizeHeight: 10,
               color: Colors.white,
-              leftTitle: '备注',
-              rightPlaceholder: '备注信息',
+              leftTitle: '拜访内容',
+              rightPlaceholder: '拜访内容',
               onChanged: (tex){
                 visitContent = tex;
               }
