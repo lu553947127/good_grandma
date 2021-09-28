@@ -84,19 +84,16 @@ class FreezerStatisticsList extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 200,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 30,
-                            child: Expanded(child: Text('区域: ${data['deptName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)), maxLines: 2,),),
-                          ),
-                          SizedBox(height: 3),
-                          Text('城市经理: ${data['managerName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: Text('区域: ${data['deptName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)), maxLines: 2),
+                        ),
+                        SizedBox(height: 3),
+                        Text('城市经理: ${data['managerName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                      ]
                     ),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.end,

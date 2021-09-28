@@ -281,17 +281,17 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                             )
                         ),
                         SizedBox(height: 15),
-                        Container(
-                          height: 35,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('所在地址',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                              SizedBox(width: 15),
-                              Expanded(child: Text('${widget.data['address']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)), maxLines: 2)),
-                            ],
-                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('所在地址',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                            SizedBox(width: 15),
+                            Container(
+                                width: 200,
+                                child: Text('${widget.data['address']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)), maxLines: 2)
+                            )
+                          ],
                         )
                       ]
                   )

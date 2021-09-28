@@ -82,7 +82,7 @@ class _VisitPlanDetailState extends State<VisitPlanDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("备注", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                Text("拜访内容", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
                 SizedBox(height: 10),
                 Text(widget.data['visitContent'],
                     style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)))

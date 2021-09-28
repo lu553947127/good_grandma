@@ -71,7 +71,7 @@ class _ActivityProfitPageState extends State<ActivityProfitPage> {
                             color: AppColors.FF959EB1, fontSize: 14.0),
                         children: [
                           TextSpan(
-                            text: '￥' + widget.model.budgetCurrent,
+                            text: '￥' + widget.model.purchaseMoney,
                             style: const TextStyle(
                                 color: AppColors.FFE45C26, fontSize: 18.0),
                           ),

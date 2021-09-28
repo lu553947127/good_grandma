@@ -15,10 +15,10 @@ class MarketActivityDetailBudgetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double ratio = 0;
-    final double budgetCountD = double.parse(model.budgetCount);
-    final double budgetCurrentD = double.parse(model.budgetCurrent);
-    if (budgetCountD > 0 && budgetCurrentD > 0)
-      ratio = budgetCurrentD / budgetCountD;
+    // final double budgetCountD = double.parse(model.budgetCount);
+    // final double budgetCurrentD = double.parse(model.budgetCurrent);
+    // if (budgetCountD > 0 && budgetCurrentD > 0)
+    //   ratio = budgetCurrentD / budgetCountD;
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       sliver: SliverToBoxAdapter(
@@ -27,35 +27,35 @@ class MarketActivityDetailBudgetView extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text.rich(TextSpan(
-                        text: '总  预  算  ',
-                        style: const TextStyle(
-                            color: AppColors.FF959EB1, fontSize: 14.0),
-                        children: [
-                          TextSpan(
-                              text: '￥' + model.budgetCount,
-                              style: const TextStyle(color: AppColors.FFE45C26))
-                        ])),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Container(
-                          width: 200, height: 1, color: AppColors.FFEFEFF4),
-                    ),
-                    Text.rich(TextSpan(
-                        text: '已用预算  ',
-                        style: const TextStyle(
-                            color: AppColors.FF959EB1, fontSize: 14.0),
-                        children: [
-                          TextSpan(
-                              text: '￥' + model.budgetCurrent,
-                              style: const TextStyle(color: AppColors.FFE45C26))
-                        ])),
-                  ],
-                ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     Text.rich(TextSpan(
+                //         text: '总  预  算  ',
+                //         style: const TextStyle(
+                //             color: AppColors.FF959EB1, fontSize: 14.0),
+                //         children: [
+                //           TextSpan(
+                //               text: '￥' + model.budgetCount,
+                //               style: const TextStyle(color: AppColors.FFE45C26))
+                //         ])),
+                //     Padding(
+                //       padding: const EdgeInsets.symmetric(vertical: 10.0),
+                //       child: Container(
+                //           width: 200, height: 1, color: AppColors.FFEFEFF4),
+                //     ),
+                //     Text.rich(TextSpan(
+                //         text: '已用预算  ',
+                //         style: const TextStyle(
+                //             color: AppColors.FF959EB1, fontSize: 14.0),
+                //         children: [
+                //           TextSpan(
+                //               text: '￥' + model.budgetCurrent,
+                //               style: const TextStyle(color: AppColors.FFE45C26))
+                //         ])),
+                //   ],
+                // ),
                 Spacer(),
                 CustomPaint(
                   painter: CircleBorderPinter(

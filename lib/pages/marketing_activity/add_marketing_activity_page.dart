@@ -1,13 +1,14 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/common/my_cache_image_view.dart';
-import 'package:good_grandma/common/number_counter.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/marketing_activity_model.dart';
-import 'package:good_grandma/pages/stock/select_goods_page.dart';
 import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
+import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
@@ -26,9 +27,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    final MarketingActivityModel activityModel =
-        Provider.of<MarketingActivityModel>(context);
-    List<Map> infos = _getInfos(context);
+    final MarketingActivityModel activityModel = Provider.of<MarketingActivityModel>(context);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -45,166 +44,248 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                         style: TextStyle(
                             color: AppColors.FF959EB1, fontSize: 12.0))),
               ),
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                Map map = infos[index];
-                String title = map['title'];
-                String hintText = map['hintText'];
-                String value = map['value'];
-                String trailingStr = map['trailing'];
-                bool isSelect = map['isSelect'];
-                TextInputType keyboardType = map['keyboardType'];
-                Widget trailing;
-                if (isSelect)
-                  trailing = Icon(Icons.chevron_right);
-                else if (trailingStr.isNotEmpty) trailing = Text(trailingStr);
-                return ActivityAddTextCell(
-                  title: title,
-                  hintText: hintText,
-                  value: value,
-                  trailing: trailing,
-                  onTap: () => _infoCellOnTap(
+              SliverToBoxAdapter(
+                child: ActivityAddTextCell(
+                  title: '活动名称',
+                  hintText: '请输入活动名称',
+                  value: activityModel.name,
+                  trailing: null,
+                  onTap: () => AppUtil.showInputDialog(
                       context: context,
-                      index: index,
-                      isSelect: isSelect,
-                      value: value,
-                      hintText: hintText,
-                      keyboardType: keyboardType),
-                );
-              }, childCount: infos.length)),
-              //活动商品
+                      editingController: _editingController,
+                      focusNode: _focusNode,
+                      text: activityModel.name,
+                      hintText: '请输入活动名称',
+                      keyboardType: null,
+                      callBack: (text) {
+                        activityModel.setName(text);
+                      })
+                )
+              ),
+              SliverToBoxAdapter(
+                  child: ActivityAddTextCell(
+                      title: '开始时间',
+                      hintText: '请选择开始时间',
+                      value: activityModel.startTime,
+                      trailing: Icon(Icons.chevron_right),
+                      onTap: () async{
+                        //开始时间
+                        String result = await showPickerDate(context);
+                        if (result != null && result.isNotEmpty) {
+                          activityModel.setStartTime(result);
+                        }
+                      }
+                  )
+              ),
+              SliverToBoxAdapter(
+                  child: ActivityAddTextCell(
+                      title: '结束时间',
+                      hintText: '请选择结束时间',
+                      value: activityModel.endTime,
+                      trailing: Icon(Icons.chevron_right),
+                      onTap: () async{
+                        //开始时间
+                        String result = await showPickerDate(context);
+                        if (result != null && result.isNotEmpty) {
+                          activityModel.setEndTime(result);
+                        }
+                      }
+                  )
+              ),
+              SliverToBoxAdapter(
+                  child: ActivityAddTextCell(
+                      title: '上级通路客户',
+                      hintText: '请输入上级通路客户',
+                      value: activityModel.customerName,
+                      trailing: null,
+                      onTap: () => AppUtil.showInputDialog(
+                          context: context,
+                          editingController: _editingController,
+                          focusNode: _focusNode,
+                          text: activityModel.customerName,
+                          hintText: '请输入上级通路客户',
+                          keyboardType: null,
+                          callBack: (text) {
+                            activityModel.setCustomerName(text);
+                          })
+                  )
+              ),
+              //活动简述
+              SliverToBoxAdapter(
+                  child: ContentInputView(
+                      sizeHeight: 10,
+                      color: Colors.white,
+                      leftTitle: '活动简述',
+                      rightPlaceholder: '请输入活动简述',
+                      onChanged: (tex) {
+                        activityModel.setSketch(tex);
+                      }
+                  )
+              ),
               SliverToBoxAdapter(
                 child: ListTile(
-                  title: const Text('商品名称',
-                      style:
-                          TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
-                  trailing: IconButton(
-                      onPressed: () async {
-                        List<GoodsModel> _selGoodsList = await Navigator.push(
-                            context, MaterialPageRoute(builder: (_) {
-                          return SelectGoodsPage(
-                              selGoods: activityModel.goodsList, customerId: '',);
-                        }));
-                        if (_selGoodsList != null) {
-                          activityModel.setGoodsList(_selGoodsList);
-                          setState(() {});
-                        }
-                      },
-                      icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+                    title: const Text('试吃品',
+                        style: TextStyle(
+                            color: AppColors.FF959EB1, fontSize: 12.0))),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 60,
+                  color: Colors.white,
+                  child: ListTile(
+                    title: const Text('请添加试吃品',
+                        style:
+                        TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                    trailing: IconButton(
+                        onPressed: () async {
+                          Map select = await showSelectList(context, Api.materialListNoPage, '请选择物料', 'materialName');
+                          activityModel.addSampleModel(select['id'], select['materialName']);
+                        },
+                        icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+                  ),
                 ),
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                GoodsModel model = activityModel.goodsList[index];
-                return Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: 10.0),
-                        title: Stack(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 9),
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: MyCacheImageView(
-                                          imageURL: model.image,
-                                          width: 90,
-                                          height: 82)),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 8.0),
-                                      child: Text(
-                                        model.name,
-                                        style: const TextStyle(
-                                            color: AppColors.FF2F4058,
-                                            fontSize: 14.0),
-                                      ),
-                                    ),
-                                    Text(
-                                      model.specs.toString(),
-                                      style: const TextStyle(
-                                          color: AppColors.FF959EB1,
-                                          fontSize: 12.0),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            //删除按钮
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                  onTap: () =>
-                                      activityModel.deleteGoodsWith(index),
-                                  child: Icon(Icons.delete_forever_outlined)),
-                            ),
-                            //修改数量
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: NumberCounter(
-                                num: model.count,
-                                subBtnOnTap: (){
-                                  if(model.count==0)
-                                    return;
-                                  model.count--;
-                                  activityModel.editGoodsWith(index, model);
+                    Map sampleMap = activityModel.sampleList[index];
+                    return Column(
+                      children: [
+                        SizedBox(height: 1),
+                        ActivityAddTextCell(
+                            title: '物料名称',
+                            hintText: '',
+                            value: sampleMap['name'],
+                            trailing: IconButton(
+                                onPressed: (){
+                                  activityModel.deleteSampleModelWith(index);
                                 },
-                                addBtnOnTap: (){
-                                  model.count++;
-                                  activityModel.editGoodsWith(index, model);
-                                },
-                                numOnTap: () => AppUtil.showInputDialog(
-                                    context: context,
-                                    editingController: _editingController,
-                                    focusNode: _focusNode,
-                                    text: model.count.toString(),
-                                    hintText: '请输入数字',
-                                    keyboardType: TextInputType.number,
-                                    callBack: (num){
-                                      if(num.isEmpty)
-                                        model.count = 0;
-                                      else
-                                        model.count = int.parse(num);
-                                      activityModel.editGoodsWith(index, model);
-                                    }),
-                              ),
+                                icon: Icon(Icons.delete, color: AppColors.FFDD0000)
                             ),
-                          ],
-                        ),
-                      ),
-                      const Divider(
-                          color: AppColors.FFEFEFF4,
-                          thickness: 1,
-                          height: 1,
-                          indent: 15,
-                          endIndent: 15)
-                    ],
-                  ),
-                );
-              }, childCount: activityModel.goodsList.length)),
-              //活动描述
+                            onTap: null
+                        )
+                      ]
+                    );
+                  }, childCount: activityModel.sampleList.length)),
               SliverToBoxAdapter(
-                child: ContentInputView(
-                  sizeHeight: 10,
+                child: ListTile(
+                    title: const Text('费用信息',
+                        style: TextStyle(
+                            color: AppColors.FF959EB1, fontSize: 12.0))),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  height: 60,
                   color: Colors.white,
-                  leftTitle: '活动描述',
-                  rightPlaceholder: '请输入活动描述',
-                  onChanged: (tex) {
-                    activityModel.setDescription(tex);
-                  },
+                  child: ListTile(
+                    title: const Text('请添加费用信息',
+                        style:
+                        TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                    trailing: IconButton(
+                        onPressed: () async {
+                          activityModel.addCostModel(CostModel(
+                              costType: '4',
+                              costTypeName: '其他费用',
+                              costCash: '',
+                              sample: '',
+                              costDescribe: ''
+                          ));
+                        },
+                        icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+                  ),
                 ),
+              ),
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    CostModel costModel = activityModel.costList[index];
+                    return Column(
+                      children: [
+                        SizedBox(height: index == 0 ? 1 : 10),
+                        ActivityAddTextCell(
+                            title: '费用类别',
+                            hintText: '',
+                            value: costModel.costTypeName,
+                            trailing: costModel.costTypeName == '其他费用' ?
+                            IconButton(
+                                onPressed: (){
+                                  activityModel.deleteCostModelWith(index);
+                                },
+                                icon: Icon(Icons.delete, color: AppColors.FFDD0000)
+                            ) : null,
+                            onTap: null
+                        ),
+                        ActivityAddTextCell(
+                            title: '现金',
+                            hintText: '请输入现金',
+                            value: costModel.costCash,
+                            trailing: Text('元'),
+                            onTap: () => AppUtil.showInputDialog(
+                                context: context,
+                                editingController: _editingController,
+                                focusNode: _focusNode,
+                                text: costModel.costCash,
+                                hintText: '请输入现金',
+                                keyboardType: TextInputType.number,
+                                callBack: (text) {
+                                  costModel.costCash = text;
+                                  activityModel.editCostModelWith(index, costModel);
+                                })
+                        ),
+                        ActivityAddTextCell(
+                            title: '试吃品',
+                            hintText: '请输入数量',
+                            value: costModel.sample,
+                            trailing: Text('箱'),
+                            onTap: () => AppUtil.showInputDialog(
+                                context: context,
+                                editingController: _editingController,
+                                focusNode: _focusNode,
+                                text: costModel.sample,
+                                hintText: '请输入数量',
+                                keyboardType: TextInputType.number,
+                                callBack: (text) {
+                                  costModel.sample = text;
+                                  activityModel.editCostModelWith(index, costModel);
+                                })
+                        ),
+                        ContentInputView(
+                            sizeHeight: 0,
+                            color: Colors.white,
+                            leftTitle: '费用描述',
+                            rightPlaceholder: '请输入费用描述',
+                            onChanged: (tex) {
+                              costModel.costDescribe = tex;
+                              activityModel.editCostModelWith(index, costModel);
+                            }
+                        ),
+                      ],
+                    );
+                  }, childCount: activityModel.costList.length)),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                    width: double.infinity,
+                    height: 10,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+                    )
+                ),
+              ),
+              SliverToBoxAdapter(
+                  child: ActivityAddTextCell(
+                      title: '预计进货额',
+                      hintText: '请输入预计进货额',
+                      value: activityModel.purchaseMoney,
+                      trailing: null,
+                      onTap: () => AppUtil.showInputDialog(
+                          context: context,
+                          editingController: _editingController,
+                          focusNode: _focusNode,
+                          text: activityModel.purchaseMoney,
+                          hintText: '请输入预计进货额',
+                          keyboardType: TextInputType.number,
+                          callBack: (text) {
+                            activityModel.setPurchaseMoney(text);
+                          })
+                  )
               ),
               //提  交
               SliverSafeArea(
@@ -212,171 +293,48 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                   child: SubmitBtn(
                       title: '提  交',
                       onPressed: () {
-                        _submitAction(context);
-                      }),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                        _submitAction(context, activityModel);
+                      })
+                )
+              )
+            ]
+          )
+        )
+      )
     );
   }
 
-  void _infoCellOnTap({
-    @required BuildContext context,
-    @required int index,
-    @required bool isSelect,
-    @required String value,
-    @required String hintText,
-    @required TextInputType keyboardType,
-  }) async {
-    final MarketingActivityModel activityModel =
-        Provider.of<MarketingActivityModel>(context, listen: false);
-    if (isSelect) {
-      switch (index) {
-        case 2:
-          {
-            //活动类型
-            String result = await showPicker(['类型一', '类型二'], context);
-            if (result != null && result.isNotEmpty) {
-              activityModel.setType(result);
-            }
-          }
-          break;
-        case 3:
-          {
-            //开始时间
-            String result = await showPickerDate(context);
-            if (result != null && result.isNotEmpty) {
-              activityModel.setStartTime(result);
-            }
-          }
-          break;
-        case 4:
-          {
-            //结束时间
-            String result = await showPickerDate(context);
-            if (result != null && result.isNotEmpty) {
-              activityModel.setEndTime(result);
-            }
-          }
-          break;
+  ///添加市场活动
+  void _submitAction(BuildContext context, MarketingActivityModel activityModel) async {
+
+    List<String> materIdList = [];
+    activityModel.sampleList.forEach((element) {
+      materIdList.add(element['id']);
+    });
+
+    Map<String, dynamic> map = {
+      'name': activityModel.name,
+      'starttime': activityModel.startTime + ' 00:00:00',
+      'endtime': activityModel.endTime + ' 00:00:00',
+      'customerName': activityModel.customerName,
+      'sketch': activityModel.sketch,
+      'materialId': listToString(materIdList),
+      'activityCostList': activityModel.mapList,
+      'purchasemoney': activityModel.purchaseMoney
+    };
+
+    LogUtil.d('请求结果---activityAdd----$map');
+
+    requestPost(Api.activityAdd, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---activityAdd----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
       }
-    } else {
-      AppUtil.showInputDialog(
-          context: context,
-          editingController: _editingController,
-          focusNode: _focusNode,
-          text: value,
-          hintText: hintText,
-          keyboardType: keyboardType,
-          callBack: (text) {
-            switch (index) {
-              case 0: //活动名称
-                activityModel.setTitle(text);
-                break;
-              case 1: //负责人
-                activityModel.setLeading(text);
-                break;
-              case 5: //主办方
-                activityModel.setSponsor(text);
-                break;
-              case 6: //目标群体
-                activityModel.setTarget(text);
-                break;
-              case 7: //目标数量
-                activityModel.setTargetCount(text);
-                break;
-              case 8: //预算成本
-                activityModel.setBudgetCount(text);
-                break;
-            }
-          });
-    }
-  }
-
-  List<Map> _getInfos(BuildContext context) {
-    final MarketingActivityModel activityModel =
-        Provider.of<MarketingActivityModel>(context);
-    return [
-      {
-        'title': '活动名称',
-        'hintText': '请输入活动名称',
-        'value': activityModel.title,
-        'trailing': '',
-        'isSelect': false,
-        'keyboardType': null,
-      },
-      {
-        'title': '负责人',
-        'hintText': '请输入负责人姓名',
-        'value': activityModel.leading,
-        'trailing': '',
-        'isSelect': false,
-        'keyboardType': null,
-      },
-      {
-        'title': '活动类型',
-        'hintText': '请选择活动类型',
-        'value': activityModel.type,
-        'trailing': '',
-        'isSelect': true,
-        'keyboardType': null,
-      },
-      {
-        'title': '开始时间',
-        'hintText': '请选择开始时间',
-        'value': activityModel.startTime,
-        'trailing': '',
-        'isSelect': true,
-        'keyboardType': null,
-      },
-      {
-        'title': '结束时间',
-        'hintText': '请选择结束时间',
-        'value': activityModel.endTime,
-        'trailing': '',
-        'isSelect': true,
-        'keyboardType': null,
-      },
-      {
-        'title': '主办方',
-        'hintText': '请输入主办方名称',
-        'value': activityModel.sponsor,
-        'trailing': '',
-        'isSelect': false,
-        'keyboardType': null,
-      },
-      {
-        'title': '目标群体',
-        'hintText': '请输入目标群体',
-        'value': activityModel.target,
-        'trailing': '',
-        'isSelect': false,
-        'keyboardType': null,
-      },
-      {
-        'title': '目标数量',
-        'hintText': '请输入目标群体数量',
-        'value': activityModel.targetCount,
-        'trailing': '',
-        'isSelect': false,
-        'keyboardType': TextInputType.number,
-      },
-      {
-        'title': '预算成本',
-        'hintText': '请输入预算成本',
-        'value': activityModel.budgetCount,
-        'trailing': '万元',
-        'isSelect': false,
-        'keyboardType': TextInputType.numberWithOptions(decimal: true),
-      },
-    ];
-  }
-
-  void _submitAction(BuildContext context) async {
-    Navigator.pop(context, true);
+    });
   }
 
   @override

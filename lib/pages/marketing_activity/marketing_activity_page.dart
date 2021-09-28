@@ -1,15 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/marketing_activity_model.dart';
 import 'package:good_grandma/pages/marketing_activity/add_marketing_activity_page.dart';
 import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
 import 'package:good_grandma/widgets/marketing_activity_cell.dart';
+import 'package:good_grandma/widgets/marketing_plan_activity_cell.dart';
 import 'package:provider/provider.dart';
 
 ///市场活动
@@ -21,37 +20,64 @@ class MarketingActivityPage extends StatefulWidget {
 }
 
 class _MarketingActivityPageState extends State<MarketingActivityPage> {
-  String _type = '待审核';
+
+  ///活动状态id
+  String status = '1';
+
+  ///活动状态名称
+  String statusName = '未进行';
+
+  ///未进行类型id
+  String statusChild = '我发布的';
+
+  ///活动状态集合
   List<Map> _listTitle = [
-    {'name': '待审核'},
+    {'name': '未进行'},
     {'name': '进行中'},
     {'name': '已完结'},
   ];
-  List<MarketingActivityModel> _dataArray = [];
 
-  // ///市场活动列表
-  // _activityList(){
-  //   Map<String, dynamic> map = {
-  //     'parentId': 'parentId',
-  //     'isDeleted': '0'
-  //   };
-  //   requestGet(Api.activityList).then((val) async{
-  //     var data = json.decode(val.toString());
-  //     LogUtil.d('请求结果---fileCabinetList----$data');
-  //     activityList.clear();
-  //     final List<dynamic> list = data['data'];
-  //     list.forEach((map) {
-  //       MarketingActivityModel model = MarketingActivityModel.fromJson(map);
-  //       activityList.add(model);
-  //     });
-  //     setState(() {});
-  //   });
-  // }
+  ///活动列表
+  List<MarketingActivityModel> activityList = [];
+  List<Map> activityPlanList = [];
+
+  ///市场活动列表
+  _activityList(){
+    Map<String, dynamic> map = {
+      'status': status
+    };
+    requestGet(Api.activityList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---fileCabinetList----$data');
+      activityList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        MarketingActivityModel model = MarketingActivityModel.fromJson(map);
+        activityList.add(model);
+      });
+      setState(() {});
+    });
+  }
+
+  ///行销规划列表
+  _activityPlanList(){
+    Map<String, dynamic> map = {
+      'status': status
+    };
+    requestGet(Api.activityPlanList).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---activityPlanList----$data');
+
+      activityPlanList = (data['data'] as List).cast();
+      setState(() {});
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _activityList();
+    _activityPlanList();
   }
 
   @override
@@ -64,45 +90,68 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
             //切换选项卡
             WorkTypeTitle(
               color: Colors.transparent,
-              type: _type,
+              type: statusName,
               list: _listTitle,
               onPressed: () {
-                setState(() {
-                  _type = _listTitle[0]['name'];
-                });
+                status = '1';
+                statusName = '未进行';
+                _activityList();
               },
               onPressed2: () {
-                setState(() {
-                  _type = _listTitle[1]['name'];
-                });
+                status = '2';
+                statusName = '进行中';
+                _activityList();
               },
               onPressed3: () {
-                setState(() {
-                  _type = _listTitle[2]['name'];
-                });
+                status = '3';
+                statusName = '已完结';
+                _activityList();
               },
             ),
-            SliverToBoxAdapter(
-              child: Offstage(
-                offstage: _type == '待审核',
-                child: SliverList(
+            SliverVisibility(
+              visible: statusName == '未进行' ? true : false,
+              sliver: SliverToBoxAdapter(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(onPressed: (){
+                      setState(() {
+                        statusChild = '我发布的';
+                      });
+                    }, child: Text('我发布的', style: TextStyle(color: statusChild == '我发布的' ? AppColors.FFC08A3F : AppColors.FF2F4058))),
+                    TextButton(onPressed: (){
+                      setState(() {
+                        statusChild = '行销规划';
+                      });
+                    }, child: Text('行销规划', style: TextStyle(color: statusChild == '行销规划' ? AppColors.FFC08A3F : AppColors.FF2F4058))),
+                  ]
+                )
+              )
+            ),
+            SliverVisibility(
+                visible: statusName != '未进行' || statusChild == '我发布的' ? true : false,
+                sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return MarketingActivityCell(
-                        model: _dataArray[index],
-                        state: _type,
+                        model: activityList[index],
+                        state: statusName
                       );
-                    }, childCount: _dataArray.length)),
-              ),
+                    }, childCount: activityList.length)
+                )
             ),
-            SliverToBoxAdapter(
-              child: Offstage(
-                offstage: _type != '待审核',
-                child: Text('放到沙发上'),
-              ),
+            SliverVisibility(
+              visible: statusName == '未进行' ? statusChild == '行销规划' ? true : false : false,
+              sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return MarketingPlanActivityCell(
+                        model: activityPlanList[index]
+                    );
+                  }, childCount: activityPlanList.length)
+              )
             ),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ],
-        ),
+          ]
+        )
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -118,44 +167,10 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
                         child: AddMarketingActivityPage(),
                       )));
           if(needRefresh != null && needRefresh){
-            _refresh();
+            _activityList();
           }
-        },
-      ),
+        }
+      )
     );
-  }
-
-  void _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
-    _dataArray.clear();
-    for (int i = 0; i < 2; i++) {
-      MarketingActivityModel model = MarketingActivityModel();
-      model.setTitle('活动名称活动名称活动名称活动名称');
-      model.setType('活动类型');
-      model.setLeading('负责人');
-      model.setStartTime('2021-08-30 00:00:00');
-      model.setEndTime('2021-08-30 00:00:00');
-      model.setSponsor('主办方');
-      model.setBudgetCurrent('12345');
-      model.setBudgetCount('123456');
-      model.setGoodsList([
-        GoodsModel(
-          name: '商品名称',
-          image:
-              'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-          count: 100,
-          // spec: '规格：1*40',
-        ),
-        GoodsModel(
-          name: '商品名称',
-          image:
-              'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-          count: 100,
-          // spec: '规格：1*40',
-        ),
-      ]);
-      _dataArray.add(model);
-    }
-    if (mounted) setState(() {});
   }
 }
