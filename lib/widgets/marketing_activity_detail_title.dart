@@ -32,7 +32,7 @@ class MarketingActivityDetailTitle extends StatelessWidget {
                 children: [
                   Expanded(
                       child: Text(
-                    model.title,
+                    model.name,
                     style: const TextStyle(
                         color: AppColors.FF2F4058, fontSize: 16.0),
                   )),
@@ -57,7 +57,7 @@ class MarketingActivityDetailTitle extends StatelessWidget {
                     Image.asset('assets/images/icon_visit_statistics_time.png',
                         width: 12, height: 12),
                     Text(
-                      '  发布时间：' + (model.time ?? ''),
+                      '  发布时间：' + (model.createTime ?? ''),
                       style: const TextStyle(
                           color: AppColors.FF959EB1, fontSize: 12.0),
                     ),

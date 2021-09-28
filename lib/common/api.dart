@@ -66,6 +66,10 @@ class Api {
   static const materialList =
       "/api/hap-app1/app/material/list";
 
+  ///市场物料不分页列表
+  static const materialListNoPage =
+      "/api/hap-app1/app/material/noPagingList";
+
   ///市场物料添加
   static const materialAdd=
       "/api/hap-app1/app/material/submit";
@@ -140,7 +144,15 @@ class Api {
 
   ///市场活动列表
   static const activityList =
-      "/api//hap-app1/app/activity/list";
+      "/api/hap-app1/app/activity/list";
+
+  ///市场活动 行销规划列表
+  static const activityPlanList=
+      "/api/hap-app1/app/activity/planList";
+
+  ///市场活动添加
+  static const activityAdd =
+      "/api/hap-app1/app/activity/submit";
 
   ///报修列表
   static const getFreezerRepairList =

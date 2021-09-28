@@ -44,13 +44,13 @@ class _EditActivityProfitPageState extends State<EditActivityProfitPage> {
                     child: ActivityAddTextCell(
                       title: '活动收益',
                       hintText: '请输入金额',
-                      value: widget.model.budgetCurrent,
+                      value: widget.model.purchaseMoney,
                       trailing: Text('元'),
                       onTap: () => AppUtil.showInputDialog(
                           context: context,
                           editingController: _editingController,
                           focusNode: _focusNode,
-                          text: widget.model.budgetCurrent,
+                          text: widget.model.purchaseMoney,
                           hintText: '请输入金额',
                           keyboardType: TextInputType.numberWithOptions(decimal: true),
                           callBack: (text) {

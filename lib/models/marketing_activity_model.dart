@@ -1,51 +1,56 @@
 import 'package:flutter/cupertino.dart';
-import 'package:good_grandma/models/goods_model.dart';
 
 ///市场活动模型
 class MarketingActivityModel extends ChangeNotifier {
-  String _title;
   String id;
+  String status;
 
   ///发布时间
-  String time;
-  String _type;
-  String _leading;
+  String _name;
   String _startTime;
   String _endTime;
-  String _sponsor;
-  String _budgetCurrent;
-  String _budgetCount;
-  String _target;
-  String _targetCount;
-  String _description;
-  List<GoodsModel> _goodsList;
+  String _customerName;
+  String _costTotal;
+  String _purchaseMoney;
+  String _purchaseRatio;
+  String _sketch;
+  List<CostModel> _costList;
+  List<Map> sampleList;
 
   MarketingActivityModel({
     id: '',
-    time: '',
+    status: '',
   }) {
-    _title = '';
-    _type = '';
-    _leading = '';
+    _name = '';
     _startTime = '';
     _endTime = '';
-    _sponsor = '';
-    _budgetCurrent = '';
-    _budgetCount = '';
-    _target = '';
-    _targetCount = '';
-    _description = '';
-    _goodsList = [];
+    _customerName = '';
+    _costTotal = '';
+    _purchaseMoney = '';
+    _purchaseRatio = '';
+    _sketch = '';
+    _costList = [];
+    mapList = [];
+    sampleList = [];
+
+    addCostModel(CostModel(
+        costType: '1',
+        costTypeName: '促销员费用',
+        costCash: '',
+        sample: '',
+        costDescribe: ''
+    ));
+    addCostModel(CostModel(
+        costType: '2',
+        costTypeName: '生动化工具费',
+        costCash: '',
+        sample: '',
+        costDescribe: ''
+    ));
   }
 
   ///活动名称
-  String get title => _title;
-
-  ///活动类型
-  String get type => _type;
-
-  ///负责人
-  String get leading => _leading;
+  String get name => _name;
 
   ///开始时间
   String get startTime => _startTime;
@@ -53,51 +58,53 @@ class MarketingActivityModel extends ChangeNotifier {
   ///结束时间
   String get endTime => _endTime;
 
-  ///主办方
-  String get sponsor => _sponsor;
+  ///上级通路客户
+  String get customerName => _customerName;
 
-  ///实际成本
-  String get budgetCurrent => _budgetCurrent;
+  ///申请资源费用合计
+  String get costTotal => _costTotal;
 
-  ///预算成本
-  String get budgetCount => _budgetCount;
+  ///预计进货额
+  String get purchaseMoney => _purchaseMoney;
 
-  ///目标群体
-  String get target => _target;
+  ///预计进货投入产出比
+  String get purchaseRatio => _purchaseRatio;
 
-  ///目标数量
-  String get targetCount => _targetCount;
+  ///活动简述
+  String get sketch => _sketch;
 
-  ///活动描述
-  String get description => _description;
+  ///费用信息列表
+  List<Map> mapList;
 
-  ///活动商品
-  List<GoodsModel> get goodsList => _goodsList;
+  ///费用信息列表
+  List<CostModel> get costList => _costList;
 
-  // MarketingActivityModel.fromJson(Map<String, dynamic> json) {
-  //   _title = json['name'] ?? '';
-  //   size = json['size'] ?? '';
-  //   isFolder = json['fileId'] == -1 ?? '';
-  //   createTime = json['createTime'] ?? '';
-  //   id = json['id'] ?? '';
-  //   updateTime = json['updateTime'] ?? '';
-  //   path = json['path'] ?? '';
-  //   author = json['createUserName'] ?? '无';
-  //   userId = json['createUser'] ?? '';
-  // }
+  ///发布时间
+  String createTime = '';
 
-  setTitle(String title) {
-    _title = title;
-    notifyListeners();
+  ///费用信息列表
+  List<dynamic> activityCostList = [];
+
+  ///试吃品
+  String materialName = '';
+
+  MarketingActivityModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'] ?? '';
+    _name = json['name'] ?? '';
+    _startTime = json['starttime'] ?? '';
+    _endTime = json['endtime'] ?? '';
+    _customerName = json['customerName'].toString() ?? '';
+    _costTotal = json['costtotal'] ?? '';
+    _purchaseMoney = json['purchasemoney'] ?? '';
+    _purchaseRatio = json['purchaseratio'] ?? '';
+    _sketch = json['sketch'] ?? '';
+    createTime = json['createTime'] ?? '';
+    activityCostList = json['activityCostList'] ?? '';
+    materialName = json['materialName'] ?? '';
   }
 
-  setType(String type) {
-    _type = type;
-    notifyListeners();
-  }
-
-  setLeading(String leading) {
-    _leading = leading;
+  setName(String name) {
+    _name = name;
     notifyListeners();
   }
 
@@ -111,60 +118,127 @@ class MarketingActivityModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setSponsor(String sponsor) {
-    _sponsor = sponsor;
+  setCustomerName(String customerName) {
+    _customerName = customerName;
     notifyListeners();
   }
 
-  setBudgetCount(String budgetCount) {
-    _budgetCount = budgetCount;
+  setCostTotal(String costTotal) {
+    _costTotal = costTotal;
     notifyListeners();
   }
 
-  setBudgetCurrent(String budgetCurrent) {
-    _budgetCurrent = budgetCurrent;
+  setPurchaseMoney(String purchaseMoney) {
+    _purchaseMoney = purchaseMoney;
     notifyListeners();
   }
 
-  setTarget(String target) {
-    _target = target;
+  setPurchaseRatio(String purchaseRatio) {
+    _purchaseRatio = purchaseRatio;
     notifyListeners();
   }
 
-  setTargetCount(String targetCount) {
-    _targetCount = targetCount;
+  setSketch(String sketch) {
+    _sketch = sketch;
     notifyListeners();
   }
 
-  setDescription(String description) {
-    _description = description;
+  ///添加试吃品
+  addSampleModel(String id, String name){
+    if(sampleList == null)
+      sampleList = [];
+    Map addData = new Map();
+    addData['id'] = id;
+    addData['name'] = name;
+    sampleList.add(addData);
     notifyListeners();
   }
 
-  setGoodsList(List<GoodsModel> goodsList) {
-    if (_goodsList == null) _goodsList = [];
-    _goodsList.clear();
-    _goodsList.addAll(goodsList);
+  ///编辑当前item
+  editSampleModelWith(int index, String id, String name){
+    if(sampleList == null)
+      sampleList = [];
+    if(index >= sampleList.length) return;
+    Map addData = new Map();
+    addData['id'] = id;
+    addData['name'] = name;
+    sampleList.setAll(index, [addData]);
     notifyListeners();
   }
 
-  addGoods(GoodsModel goodsModel) {
-    if (_goodsList == null) _goodsList = [];
-    _goodsList.add(goodsModel);
+  ///删除单个item
+  deleteSampleModelWith(int index){
+    if(sampleList == null)
+      sampleList = [];
+    if(index >= sampleList.length) return;
+    sampleList.removeAt(index);
     notifyListeners();
   }
 
-  editGoodsWith(int index, GoodsModel goodsModel) {
-    if (_goodsList == null) _goodsList = [];
-    if (index >= _goodsList.length) return;
-    _goodsList.setAll(index, [goodsModel]);
+  ///添加item
+  addCostModel(CostModel model){
+    if(_costList == null)
+      _costList = [];
+    _costList.add(model);
+    Map addData = new Map();
+    addData['costType'] = model.costType;
+    addData['costCash'] = model.costCash;
+    addData['sample'] = model.sample;
+    addData['costDescribe'] = model.costDescribe;
+    mapList.add(addData);
+    print('mapList------------$mapList');
     notifyListeners();
   }
 
-  deleteGoodsWith(int index) {
-    if (_goodsList == null) _goodsList = [];
-    if (index >= _goodsList.length) return;
-    _goodsList.removeAt(index);
+  ///编辑当前item
+  editCostModelWith(int index, CostModel model){
+    if(_costList == null)
+      _costList = [];
+    if(index >= _costList.length) return;
+    _costList.setAll(index, [model]);
+    Map addData = new Map();
+    addData['costType'] = model.costType;
+    addData['costCash'] = model.costCash;
+    addData['sample'] = model.sample;
+    addData['costDescribe'] = model.costDescribe;
+    mapList.setAll(index, [addData]);
     notifyListeners();
   }
+
+  ///删除单个item
+  deleteCostModelWith(int index){
+    if(_costList == null)
+      _costList = [];
+    if(index >= _costList.length) return;
+    _costList.removeAt(index);
+    mapList.removeAt(index);
+    notifyListeners();
+  }
+}
+
+///费用模型数据
+class CostModel {
+
+  ///费用类别
+  String costType;
+
+  ///费用类别名称
+  String costTypeName;
+
+  ///现金
+  String costCash;
+
+  ///试吃品(箱)
+  String sample;
+
+  ///费用描述
+  String costDescribe;
+
+  CostModel({
+    this.costType = '',
+    this.costTypeName = '',
+    this.costCash = '',
+    this.sample = '',
+    this.costDescribe = ''
+  });
 }
