@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:good_grandma/common/utils.dart';
 
 class HomeReportModel {
@@ -29,6 +31,8 @@ class HomeReportModel {
   List<String> plans;
 
   String id;
+  ///是否是职能用户
+  bool isZN;
 
   HomeReportModel({
     this.avatar = '',
@@ -41,22 +45,26 @@ class HomeReportModel {
     this.summary,
     this.plans,
     this.id = '',
+    this.isZN = false,
   });
   HomeReportModel.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? '';
-    userName = json['name'] ?? '';
+    userName = json['userName'] ?? '';
     avatar = json['avatar'] ?? '';
     time = json['createTime'] ?? '';
     String type = json['type'] ?? '';
-    if(type != null){
-      postType = int.parse(type);
-    }
-    target = double.parse(json['target']) ?? 0.0;
-    cumulative = double.parse(json['cumulative']) ?? 0.0;
-    actual = double.parse(json['actual']) ?? 0.0;
-
+    postType = 1;
+    if(type != null && type.isNotEmpty) postType = int.parse(type);
+    int zn = json['zn'] ?? 0;
+    //0员工
+    isZN = (zn != 0);
+    target = AppUtil.stringToDouble(json['target']);
+    cumulative = AppUtil.stringToDouble(json['cumulative']);
+    actual = AppUtil.stringToDouble(json['actual']);
     String thisContent = json['thisContent'];
+    // print('thisContent = $thisContent');
     summary = AppUtil.getListFromString(thisContent);
+    // print('json = $json');
     String nextContent = json['nextContent'];
     plans = AppUtil.getListFromString(nextContent);
   }
@@ -65,15 +73,15 @@ class HomeReportModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['name'] = this.userName;
+    data['userName'] = this.userName;
     data['avatar'] = this.avatar;
     data['createTime'] = this.time;
     data['type'] = this.postType.toString();
     data['target'] = this.target.toString();
     data['cumulative'] = this.cumulative.toString();
     data['actual'] = this.actual.toString();
-    // data['thisContent'] = this.thisContent;
-    // data['nextContent'] = this.nextContent;
+    data['summary'] = jsonEncode(summary.map((e) => e.toString()).toList());
+    data['plans'] = jsonEncode(plans.map((e) => e.toString()).toList());
     return data;
   }
 }
