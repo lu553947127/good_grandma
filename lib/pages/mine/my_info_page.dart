@@ -1,12 +1,15 @@
-import 'dart:io';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/loading_widget.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/mine/alert_name_page.dart';
 import 'package:good_grandma/pages/mine/alert_phone_page.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:good_grandma/widgets/select_image.dart';
 
 ///我的信息
 class MyInfoPage extends StatefulWidget {
@@ -22,10 +25,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
   String _avatar = '';
   String _name = '';
   String _gender = '';
+  String _sex = '';
   String _phone = '';
-  String _area = '';
-  String _province = '';
-  String _city = '';
+  String _deptName = '';
 
   ///0:loading 1:success 2:fail
   int _state = 0;
@@ -60,7 +62,32 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           child: Card(
                             child: Column(
                               children: [
-                                AvatarCell(avatar: _avatar),
+                                ListTile(
+                                    title: Row(
+                                        children: [
+                                          const Text('头像'),
+                                          Spacer(),
+                                          ClipOval(
+                                              child: MyCacheImageView(
+                                                imageURL: _avatar,
+                                                width: 40,
+                                                height: 40,
+                                              )
+                                          )
+                                        ]
+                                    ),
+                                    trailing: Icon(Icons.chevron_right),
+                                    onTap: () async {
+                                      showImageRange(
+                                          context: context,
+                                          callBack: (Map param){
+                                            _avatar = param['image'];
+                                            _updateUser(context);
+                                            setState(() {});
+                                          }
+                                      );
+                                    }
+                                ),
                                 divider,
                                 ListTile(
                                   title: Row(
@@ -70,8 +97,8 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                           child: Text(
                                         _name,
                                         textAlign: TextAlign.end,
-                                      )),
-                                    ],
+                                      ))
+                                    ]
                                   ),
                                   trailing: Icon(Icons.chevron_right),
                                   onTap: () async {
@@ -81,12 +108,12 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                             builder: (_) =>
                                                 AlertNamePage(name: _name)));
                                     if (name != null &&
-                                        name.isNotEmpty &&
-                                        name.length == 11 &&
-                                        name != _phone) {
-                                      setState(() => _name = name);
+                                        name.isNotEmpty) {
+                                      _name = name;
+                                      _updateUser(context);
+                                      setState(() {});
                                     }
-                                  },
+                                  }
                                 ),
                                 divider,
                                 ListTile(
@@ -95,15 +122,17 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                       const Text('性别'),
                                       Spacer(),
                                       Text(_gender),
-                                    ],
+                                    ]
                                   ),
                                   trailing: Icon(Icons.chevron_right),
                                   onTap: () async {
-                                    String result =
-                                        await showPicker(['男', '女'], context);
+                                    String result = await showPicker(['男', '女'], context);
                                     if (result != null)
-                                      setState(() => _gender = result);
-                                  },
+                                      _sex = result == '男' ? '1' : '2';
+                                    _gender = result;
+                                    _updateUser(context);
+                                    setState(() {});
+                                  }
                                 ),
                                 divider,
                                 ListTile(
@@ -112,7 +141,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                       const Text('手机号'),
                                       Spacer(),
                                       Text(_phone),
-                                    ],
+                                    ]
                                   ),
                                   trailing: Icon(Icons.chevron_right),
                                   onTap: () async {
@@ -124,76 +153,76 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                         phone.isNotEmpty &&
                                         phone.length == 11 &&
                                         phone != _phone) {
-                                      setState(() => _phone = phone);
+                                      _phone = phone;
+                                      _updateUser(context);
+                                      setState(() {});
                                     }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        sliver: SliverToBoxAdapter(
-                          child: Card(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  title: const Text('大区'),
-                                  trailing: Text(_area),
-                                  onTap: () async {
-                                    String result = await showPicker(
-                                        ['大区1', '大区2'], context);
-                                    if (result != null)
-                                      setState(() => _area = result);
-                                  },
+                                  }
                                 ),
                                 divider,
                                 ListTile(
-                                  title: const Text('省'),
-                                  trailing: Text(_province),
-                                  onTap: () async {
-                                    String result =
-                                        await showPicker(['省1', '省2'], context);
-                                    if (result != null)
-                                      setState(() => _province = result);
-                                  },
-                                ),
-                                divider,
-                                ListTile(
-                                  title: const Text('城市'),
-                                  trailing: Text(_city),
-                                  onTap: () async {
-                                    String result = await showPicker(
-                                        ['城市1', '城市2'], context);
-                                    if (result != null)
-                                      setState(() => _city = result);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                                  title: Row(
+                                    children: [
+                                      const Text('大区'),
+                                      Spacer(),
+                                      Text(_deptName),
+                                    ],
+                                  ),
+                                  trailing: null,
+                                  onTap: null
+                                )
+                              ]
+                            )
+                          )
+                        )
+                      )
+                    ]
+                  )
+                )
     );
   }
 
+  ///刷新用户数据
   void _refresh() async {
-    await Future.delayed(Duration(seconds: 1));
-    _avatar =
-        'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg';
-    _name = '王光宇';
-    _gender = '男';
-    _phone = '18888666669';
-    _area = '';
-    _province = '';
-    _city = '';
-    _state = 1;
-    if (mounted) setState(() {});
+    Map<String, dynamic> map = {
+      'userId': Store.readUserId()
+    };
+
+    requestGet(Api.getUserInfoById, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---getUserInfoById----$data');
+      await Future.delayed(Duration(seconds: 1));
+      _avatar = data['data']['avatar'];
+      _name = data['data']['name'];
+      _gender = data['data']['sex'] == 1 ? '男' : '女';
+      _phone = data['data']['phone'].toString();
+      _deptName = data['data']['deptName'];
+      _state = 1;
+      if (mounted) setState(() {});
+    });
+  }
+
+  ///修改用户信息
+  void _updateUser(BuildContext context){
+    Map<String, dynamic> map = {
+      'name': _name,
+      'sex': _sex,
+      'phone': _phone,
+      'avatar': _avatar
+    };
+
+    LogUtil.d('updateUser---map----$map');
+
+    requestPost(Api.updateUser, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---updateUser----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        _refresh();
+      }else {
+        showToast(data['msg']);
+      }
+    });
   }
 
   @override
@@ -201,95 +230,5 @@ class _MyInfoPageState extends State<MyInfoPage> {
     super.dispose();
     _editingController?.dispose();
     _focusNode?.dispose();
-  }
-}
-
-class AvatarCell extends StatefulWidget {
-  const AvatarCell({Key key, this.avatar = ''}) : super(key: key);
-  final String avatar;
-
-  @override
-  _AvatarCellState createState() => _AvatarCellState();
-}
-
-class _AvatarCellState extends State<AvatarCell> {
-  final _picker = ImagePicker();
-  File _image;
-  String _imageUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Row(
-        children: [
-          const Text('头像'),
-          Spacer(),
-          ClipOval(
-            child: MyCacheImageView(
-              imageURL: widget.avatar,
-              width: 40,
-              height: 40,
-            ),
-          ),
-        ],
-      ),
-      trailing: Icon(Icons.chevron_right),
-      onTap: () async {
-        //show
-        final source = await _showBottomSheet();
-        //image
-        if (source == null) return;
-        final bool result = await _getImage(source);
-        if (!result) return;
-        setState(() {});
-      },
-    );
-  }
-
-  Future<ImageSource> _showBottomSheet() async {
-    return await showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 180.0,
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text('拍照', textAlign: TextAlign.center),
-                  onTap: () {
-                    Navigator.pop(context, ImageSource.camera);
-                  },
-                ),
-                ListTile(
-                  title: Text('从相册选择', textAlign: TextAlign.center),
-                  onTap: () {
-                    Navigator.pop(context, ImageSource.gallery);
-                  },
-                ),
-                ListTile(
-                  title: Text('取消', textAlign: TextAlign.center),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<bool> _getImage(ImageSource source) async {
-    try {
-      final pickedFile = await _picker.getImage(source: source);
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('Pick image error: $e');
-      return false;
-    }
   }
 }

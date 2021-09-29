@@ -17,8 +17,8 @@ class MarketingPlanActivityCell extends StatelessWidget {
     List<Widget> views1 = [];
     List<String> titles = ['渠道类型：', '活动类型：', '活动时间：', '规划参与活动网点数量：', '涉及经销商数量：'];
     List<String> values = [
-      model['channelType'].toString(),
-      model['activityType'].toString(),
+      model['channelTypeName'],
+      model['activityTypeName'],
       model['createTime'],
       model['planJoinBranch'].toString(),
       model['involveDealerNum'].toString()
@@ -47,7 +47,8 @@ class MarketingPlanActivityCell extends StatelessWidget {
                   //活动名称
                   Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Expanded(
+                      child: Container(
+                        width: 200,
                           child: Text(
                             '大区: ${model['regionName']} - ${model['provinceName']} - ${model['cityName']}',
                             style: const TextStyle(

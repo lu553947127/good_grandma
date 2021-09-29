@@ -22,14 +22,14 @@ class _MarketingPlanDetailPageState extends State<MarketingPlanDetailPage> {
   Widget build(BuildContext context) {
     List<Map> _list1 = [
       {'title': '地区', 'value': '${widget.model['regionName']} - ${widget.model['provinceName']} - ${widget.model['cityName']}'},
-      {'title': '城市类型', 'value': widget.model['cityType'].toString()},
+      {'title': '城市类型', 'value': widget.model['cityTypeName']},
       {'title': '2022销量目标', 'value': widget.model['sellTarget']},
       {'title': '城市一铺货渠道网点总数', 'value': widget.model['channelTotal'].toString()}
     ];
 
     List<Map> _list2 = [
-      {'title': '渠道类型', 'value': widget.model['channelType'].toString()},
-      {'title': '活动类型', 'value': widget.model['activityType'].toString()},
+      {'title': '渠道类型', 'value': widget.model['channelTypeName']},
+      {'title': '活动类型', 'value': widget.model['activityTypeName']},
       {'title': '活动时间', 'value': widget.model['createTime']},
       {'title': '规划参与活动网店数量', 'value': widget.model['planJoinBranch'].toString()},
       {'title': '涉及经销商数量', 'value': widget.model['involveDealerNum'].toString()},

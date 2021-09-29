@@ -73,7 +73,10 @@ class _MarketMaterialState extends State<MarketMaterial> {
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(materialList[index]['deptName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                                    Container(
+                                      width: 200,
+                                      child: Text(materialList[index]['deptName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                                    ),
                                     SizedBox(height: 3),
                                     Text(materialList[index]['materialName'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                   ]
