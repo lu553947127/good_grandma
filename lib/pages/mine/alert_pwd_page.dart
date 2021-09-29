@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
 ///修改密码
@@ -18,6 +24,26 @@ class _AlertPWDPAgeState extends State<AlertPWDPAge> {
   TextEditingController _editingController1 = TextEditingController();
   FocusNode _focusNode2 = FocusNode();
   TextEditingController _editingController2 = TextEditingController();
+
+  ///修改登录密码
+  void _restPassword(BuildContext context){
+    Map<String, dynamic> map = {
+      'oldPassword': _editingController.text,
+      'newPassword': _editingController1.text,
+      'newPasswordAgain': _editingController2.text
+    };
+
+    requestGet(Api.restPassword, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---restPassword----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +141,7 @@ class _AlertPWDPAgeState extends State<AlertPWDPAge> {
               Fluttertoast.showToast(msg: '两次输入的新密码不一致',gravity: ToastGravity.CENTER);
               return;
             }
-            Navigator.pop(context);
+            _restPassword(context);
           }),
         ],
       ),

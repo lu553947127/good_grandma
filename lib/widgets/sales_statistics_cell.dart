@@ -40,7 +40,7 @@ class SalesStatisticsCell extends StatelessWidget {
                 count: target,
                 current: salesCountD,
                 color: AppColors.FF05A8C6,
-                title: '销量   ',
+                title: '订单量',
                 titleColor: AppColors.FF959EB1,
                 textColor: AppColors.FF05A8C6),
             PostProgressView(

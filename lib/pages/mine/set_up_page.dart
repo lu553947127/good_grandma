@@ -104,9 +104,26 @@ class _SetUpPageState extends State<SetUpPage> {
               child: SubmitBtn(
                   title: '退  出',
                   onPressed: () {
-                    Store.removeToken();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => LoginPage()));
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                            title: Text('温馨提示'),
+                            content: Text('确认要退出登录吗？'),
+                            actions: <Widget>[
+                              TextButton(child: Text('取消',style: TextStyle(color: Color(0xFF999999))),onPressed: (){
+                                Navigator.of(context).pop('cancel');
+                              }),
+                              TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: (){
+                                Navigator.of(context).pop('ok');
+                                Store.removeToken();
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (_) => LoginPage()));
+                              }),
+                            ],
+                          );
+                        });
                   }),
             )
           ],

@@ -154,6 +154,10 @@ class Api {
   static const activityAdd =
       "/api/hap-app1/app/activity/submit";
 
+  ///商品销量统计列表
+  static const commoditySalesList =
+      "/api/hap-app1/app/goods/getCommoditySales";
+
   ///报修列表
   static const getFreezerRepairList =
       "/api/hap-app3/app/freezerRepair/getFreezerRepairList";
@@ -205,6 +209,18 @@ class Api {
   ///获取用户信息
   static const getUserInfoById =
       "/api/hap-app/app/user/loginUser";
+
+  ///修改用户信息
+  static const updateUser =
+      "/api/hap-app3/app/user/updateUser";
+
+  ///修改登录密码
+  static const restPassword =
+      "/api/hap-app3/app/user/restPassword";
+
+  ///关于我们
+  static const getAbout =
+      "/api/hap-app3/app/about/getAbout";
 
   ///报告列表
   static const reportList =

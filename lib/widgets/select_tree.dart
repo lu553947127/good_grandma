@@ -67,25 +67,36 @@ class _SelectListFormPageState extends State<SelectListFormPage> {
           TextButton(
               child: Text("确定", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
               onPressed: () {
-                if (selectTreeProvider.horizontalList.length == 1){
-                  showToast('选择大区不能为空');
-                  return;
+                if (widget.type == '全国'){
+                  if (selectTreeProvider.horizontalList.length == 1){
+                    showToast('选择大区不能为空');
+                    return;
+                  }
+                  Map addData = new Map();
+                  ///区域名称
+                  List<String> areaString = [];
+                  for (Map map in selectTreeProvider.horizontalList) {
+                    areaString.add(map['name']);
+                  }
+                  areaString.removeAt(0);
+                  addData['areaName'] = listToString(areaString);
+
+                  ///区域id
+                  addData['deptId'] = deptId;
+                  Navigator.of(context).pop(addData);
+                }else {
+                  Map addData = new Map();
+                  ///区域名称
+                  List<String> areaString = [];
+                  for (Map map in selectTreeProvider.horizontalList) {
+                    areaString.add(map['name']);
+                  }
+                  addData['areaName'] = listToString(areaString);
+
+                  ///区域id
+                  addData['deptId'] = deptId;
+                  Navigator.of(context).pop(addData);
                 }
-
-                Map addData = new Map();
-
-                ///区域名称
-                List<String> areaString = [];
-                for (Map map in selectTreeProvider.horizontalList) {
-                  areaString.add(map['name']);
-                }
-                areaString.removeAt(0);
-                addData['areaName'] = listToString(areaString);
-
-                ///区域id
-                addData['deptId'] = deptId;
-
-                Navigator.of(context).pop(addData);
               }
           )
         ],
