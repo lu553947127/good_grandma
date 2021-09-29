@@ -102,8 +102,9 @@ class DeclarationGoodsCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(top: 8.0),
+      width: double.infinity,
       child: Row(
         children: [
           Padding(
@@ -116,39 +117,27 @@ class DeclarationGoodsCell extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                constraints: BoxConstraints(maxWidth: 220),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(goodsModel.name,
-                          style: const TextStyle(
-                              color: AppColors.FF2F4058, fontSize: 12.0)),
-                    ),
-                    Text('¥' + goodsModel.invoice.toStringAsFixed(2),
-                        style: const TextStyle(
-                            color: AppColors.FF959EB1, fontSize: 12.0)),
-                  ],
-                ),
-              ),
-              Container(
-                constraints: BoxConstraints(maxWidth: 220),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Visibility(
-                        visible: goodsModel.specs.isNotEmpty,
-                        child: Text('规格：1x' + goodsModel.specs.first.spec,
-                            style: const TextStyle(
-                                color: AppColors.FF959EB1, fontSize: 12.0)),
-                      ),
-                    ),
-                    Text('x' + goodsModel.count.toStringAsFixed(0),
-                        style: const TextStyle(
-                            color: AppColors.FF959EB1, fontSize: 12.0)),
-                  ],
-                ),
-              ),
+              Text(goodsModel.name,
+                  style: const TextStyle(
+                      color: AppColors.FF2F4058, fontSize: 12.0)),
+              Visibility(
+                visible: goodsModel.specs.isNotEmpty,
+                child: Text('规格：1x' + goodsModel.specs.first.spec,
+                    style: const TextStyle(
+                        color: AppColors.FF959EB1, fontSize: 12.0)),
+              )
+            ],
+          ),
+          Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('¥' + goodsModel.invoice.toStringAsFixed(2),
+                  style: const TextStyle(
+                      color: AppColors.FF959EB1, fontSize: 12.0)),
+              Text('x' + goodsModel.count.toStringAsFixed(0),
+                  style: const TextStyle(
+                      color: AppColors.FF959EB1, fontSize: 12.0)),
             ],
           ),
         ],

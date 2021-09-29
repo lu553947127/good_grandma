@@ -72,7 +72,7 @@ class _AddDeclarationFormPageState extends State<AddDeclarationFormPage> {
                           List<GoodsModel> _selGoodsList = await Navigator.push(
                               context, MaterialPageRoute(builder: (_) {
                             return SelectGoodsPage(
-                                selGoods: addModel.goodsList);
+                                selGoods: addModel.goodsList,customerId: addModel.storeModel.id);
                           }));
                           if (_selGoodsList != null) {
                             addModel.setArrays(

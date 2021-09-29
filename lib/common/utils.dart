@@ -112,14 +112,20 @@ Future<String> showPickerDate(BuildContext context) async {
 }
 
 ///选择开始日期和结束日期
-void showPickerDateRange({@required BuildContext context, @required Function(Map map) callBack}) async {
+void showPickerDateRange({
+  @required BuildContext context,
+  int type,
+  @required Function(Map map) callBack}) async {
   Map param;
   String startTime;
   String endTime;
+  int _type = PickerDateTimeType.kYMDHM;
+  if(type != null)
+    _type = type;
   Picker ps = Picker(
       hideHeader: true,
       adapter: DateTimePickerAdapter(
-          type: PickerDateTimeType.kYMDHM,
+          type: _type,
           isNumberMonth: true,
           // yearSuffix: "年",
           // monthSuffix: "月",
@@ -136,7 +142,7 @@ void showPickerDateRange({@required BuildContext context, @required Function(Map
   Picker pe = Picker(
       hideHeader: true,
       adapter: DateTimePickerAdapter(
-          type: PickerDateTimeType.kYMDHM,
+          type: _type,
           isNumberMonth: true,
           // yearSuffix: "年",
           // monthSuffix: "月",
