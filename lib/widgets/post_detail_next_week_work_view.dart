@@ -25,7 +25,7 @@ class _PostDetailNextWeekWorkViewState
     int i = 0;
     cities.forEach((element) {
       String title = element['title'];
-      String city = element['city'];
+      String city = element['id'];
       weekViews.add(Column(
         children: [
           Padding(

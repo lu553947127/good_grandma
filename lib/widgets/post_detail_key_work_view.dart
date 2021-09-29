@@ -37,13 +37,13 @@ class WorkListWithTitle extends StatelessWidget {
     if(title != null && title.isNotEmpty)
       _views.add(Padding(
         padding: const EdgeInsets.only(bottom: 15.0,top: 10.0),
-        child: Text(title,style: const TextStyle(color: AppColors.FF959EB1,fontSize: 12.0),),
+        child: Text(title,style: const TextStyle(color: AppColors.FF959EB1,fontSize: 15.0),),
       ));
     int i = 1;
     for (String title1 in _works) {
       _views.add(Text.rich(TextSpan(
         text: '$i.',
-        style: const TextStyle(color: AppColors.FF959EB1, fontSize: 12.0),
+        style: const TextStyle(color: AppColors.FF959EB1, fontSize: 14.0),
         children: [
           TextSpan(
               text: title1 ?? '',

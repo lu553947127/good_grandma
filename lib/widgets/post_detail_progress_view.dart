@@ -9,6 +9,7 @@ import 'package:good_grandma/widgets/post_progress_view.dart';
 class PostDetailProgressView extends StatelessWidget {
   ///本月目标总数
   final double target;
+
   ///下一周期的目标总数
   final double nextTarget;
 
@@ -17,6 +18,12 @@ class PostDetailProgressView extends StatelessWidget {
 
   ///本日（周、月）实际
   final double current;
+
+  ///月度差额
+  final double difference;
+
+  ///月度达成率
+  final double completionRate;
   final Color color;
 
   ///日：今日销售，周：本周实际，月：本月实际
@@ -29,19 +36,28 @@ class PostDetailProgressView extends StatelessWidget {
     @required this.target,
     @required this.typeName,
     this.nextTarget = 0.0,
+    @required this.difference,
+    @required this.completionRate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    _CoreView coreView = _CoreView(
-        target: target,
-        color: color,
-        cumulative: cumulative,
-        current: current,
-        typeName: typeName);
+    PostDetailProgressCoreView coreView = PostDetailProgressCoreView(
+      target: target,
+      color: color,
+      cumulative: cumulative,
+      current: current,
+      typeName: typeName,
+      difference: difference,
+      completionRate: completionRate,
+    );
     Widget view = coreView;
-    if(typeName == '本周实际' || typeName == '本月实际'){
-      final divider = Divider(color: AppColors.FFEFEFF4,thickness: 1,indent: 10.0,endIndent: 10.0);
+    if (typeName == '本周实际' || typeName == '本月实际') {
+      final divider = Divider(
+          color: AppColors.FFEFEFF4,
+          thickness: 1,
+          indent: 10.0,
+          endIndent: 10.0);
       view = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -55,7 +71,8 @@ class PostDetailProgressView extends StatelessWidget {
               textColor: color,
               fontSize: 14.0,
               width: 0,
-              height: 8),
+              height: 8,
+              showWY: false),
         ],
       );
     }
@@ -74,14 +91,16 @@ class PostDetailProgressView extends StatelessWidget {
   }
 }
 
-class _CoreView extends StatelessWidget {
-  const _CoreView({
+class PostDetailProgressCoreView extends StatelessWidget {
+  const PostDetailProgressCoreView({
     Key key,
     @required this.target,
     @required this.color,
     @required this.cumulative,
     @required this.current,
     @required this.typeName,
+    @required this.difference,
+    @required this.completionRate,
   }) : super(key: key);
 
   final double target;
@@ -90,8 +109,15 @@ class _CoreView extends StatelessWidget {
   final double current;
   final String typeName;
 
+  ///月度差额
+  final double difference;
+
+  ///月度达成率
+  final double completionRate;
+
   @override
   Widget build(BuildContext context) {
+    double w = 90;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -99,14 +125,15 @@ class _CoreView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PostProgressView(
-                count: target,
-                current: target,
-                color: color.withOpacity(0.4),
-                title: '本月目标',
-                textColor: color,
-                fontSize: 14.0,
-                width: 95,
-                height: 8,
+              count: target,
+              current: target,
+              color: color.withOpacity(0.4),
+              title: '本月目标',
+              textColor: color,
+              fontSize: 14.0,
+              width: w,
+              height: 8,
+                showWY: false
             ),
             PostProgressView(
                 count: target,
@@ -115,8 +142,9 @@ class _CoreView extends StatelessWidget {
                 title: '本月累计',
                 textColor: color,
                 fontSize: 14.0,
-                width: 95,
-                height: 8),
+                width: w,
+                height: 8,
+                showWY: false),
             PostProgressView(
                 count: target,
                 current: current,
@@ -124,25 +152,27 @@ class _CoreView extends StatelessWidget {
                 title: typeName,
                 textColor: color,
                 fontSize: 14.0,
-                width: 95,
-                height: 8),
+                width: w,
+                height: 8,
+                showWY: false),
             PostProgressView(
                 count: target,
-                current: target - cumulative,
+                current: difference,
                 color: color,
                 title: '月度差额',
                 textColor: color,
                 fontSize: 14.0,
                 width: 0,
-                height: 8),
+                height: 8,
+                showWY: false),
           ],
         ),
         Spacer(),
         Padding(
           padding: const EdgeInsets.only(right: 10.0),
           child: CustomPaint(
-            painter:
-                CircleBorderPinter(size: 95, color: color, ratio: cumulative / target),
+            painter: CircleBorderPinter(
+                size: 95, color: color, ratio: completionRate / 100),
             child: SizedBox(
               width: 95,
               height: 95,
@@ -157,7 +187,7 @@ class _CoreView extends StatelessWidget {
                           style: TextStyle(
                               color: color.withOpacity(0.8), fontSize: 10)),
                     ),
-                    Text((cumulative / target * 100).toStringAsFixed(0) + '%',
+                    Text(completionRate.toStringAsFixed(0) + '%',
                         style: TextStyle(color: color, fontSize: 24)),
                   ],
                 ),
@@ -169,4 +199,3 @@ class _CoreView extends StatelessWidget {
     );
   }
 }
-

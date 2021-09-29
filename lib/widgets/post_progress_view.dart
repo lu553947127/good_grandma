@@ -10,6 +10,7 @@ class PostProgressView extends StatelessWidget {
 
   ///标题
   final String title;
+
   ///标题颜色
   final Color titleColor;
 
@@ -27,6 +28,9 @@ class PostProgressView extends StatelessWidget {
   final double height;
   final double horizontal;
   final double vertical;
+
+  ///是否显示结尾的万元
+  final bool showWY;
   PostProgressView({
     Key key,
     @required this.count,
@@ -34,12 +38,13 @@ class PostProgressView extends StatelessWidget {
     @required this.color,
     @required this.title,
     @required this.textColor,
-    this.width = 200,
+    this.width = 180,
     this.titleColor = Colors.black,
     this.height = 6,
-    this.fontSize = 10.0,
+    this.fontSize = 12.0,
     this.horizontal = 10.0,
     this.vertical = 4.0,
+    this.showWY = true,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -49,7 +54,8 @@ class PostProgressView extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
       child: Row(
         children: [
-          Text((title ?? '') + '  ', style: TextStyle(color: titleColor,fontSize: 12.0)),
+          Text((title ?? '') + '  ',
+              style: TextStyle(color: titleColor, fontSize: 14.0)),
           Stack(
             children: [
               Container(height: height, width: width),
@@ -65,8 +71,9 @@ class PostProgressView extends StatelessWidget {
           ),
           Text(
               (width == 0 ? '' : '  ') +
-                  (fontSize == 10.0 ? '¥' : '') +
-                  '${_numTranfer(current)}',
+                  (fontSize == 12.0 ? '¥' : '') +
+                  '${_numTranfer(current)}' +
+                  (showWY ? '万元' : ''),
               style: TextStyle(color: textColor, fontSize: fontSize)),
         ],
       ),

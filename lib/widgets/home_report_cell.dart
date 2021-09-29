@@ -2,21 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/models/day_post_add_model.dart';
 import 'package:good_grandma/models/home_report_model.dart';
+import 'package:good_grandma/models/month_post_add_new_model.dart';
+import 'package:good_grandma/models/post_add_zn_model.dart';
+import 'package:good_grandma/models/week_post_add_new_model.dart';
+import 'package:good_grandma/pages/work/work_report/day_post_add_page.dart';
 import 'package:good_grandma/pages/work/work_report/day_post_detail_page.dart';
+import 'package:good_grandma/pages/work/work_report/month_post_add_page.dart';
 import 'package:good_grandma/pages/work/work_report/month_post_detail_page.dart';
-import 'package:good_grandma/pages/work/work_report/month_post_detail_zn_page.dart';
+import 'package:good_grandma/pages/work/work_report/post_add_zn_page.dart';
+import 'package:good_grandma/pages/work/work_report/week_post_add_page.dart';
 import 'package:good_grandma/pages/work/work_report/week_post_detail_page.dart';
-import 'package:good_grandma/pages/work/work_report/week_post_detail_zn_page.dart';
+import 'package:good_grandma/pages/work/work_report/post_detail_zn_page.dart';
 import 'package:good_grandma/widgets/home_report_cell_list.dart';
 import 'package:good_grandma/widgets/post_progress_view.dart';
+import 'package:provider/provider.dart';
 
 class HomeReportCell extends StatelessWidget {
   final HomeReportModel model;
-  ///是否是职能
-  final isZN;
 
-  HomeReportCell({Key key, @required this.model,this.isZN = false}) : super(key: key);
+  ///是否是草稿
+  final bool isCG;
+  final VoidCallback needRefreshAction;
+
+  HomeReportCell(
+      {Key key,
+      @required this.model,
+      this.isCG = false,
+      this.needRefreshAction})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,36 +39,7 @@ class HomeReportCell extends StatelessWidget {
     final Color color = map['color'];
     final String name = map['name'];
     return ListTile(
-      onTap: () {
-        if (model.postType == 1) {
-          //日报
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return DayPostDetailPage(model: model, themColor: color);
-          }));
-        } else if (model.postType == 2) {
-          //周报
-          if (isZN) {
-            Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return WeekPostDetailZNPage(model: model, themColor: color);
-            }));
-          } else {
-            Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return WeekPostDetailPage(model: model, themColor: color);
-            }));
-          }
-        } else if (model.postType == 3) {
-          //月报
-          if (isZN) {
-            Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return MonthPostDetailZNPage(model: model, themColor: color);
-            }));
-          } else {
-            Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return MonthPostDetailPage(model: model, themColor: color);
-            }));
-          }
-        }
-      },
+      onTap: () => _onTap(context, color),
       contentPadding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
       title: Container(
         decoration: BoxDecoration(
@@ -64,14 +50,14 @@ class HomeReportCell extends StatelessWidget {
                   offset: Offset(2, 1), //x,y轴
                   color: Colors.black.withOpacity(0.1), //投影颜色
                   blurRadius: 1 //投影距离
-              ),
+                  ),
             ]),
         child: Column(
           children: [
             //头像 名称 日期 类别
             Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               child: Row(
                 children: [
                   ClipOval(
@@ -79,7 +65,10 @@ class HomeReportCell extends StatelessWidget {
                       imageURL: model.avatar,
                       width: 30.0,
                       height: 30.0,
-                      errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 30.0, height: 30.0),
+                      errorWidgetChild: Image.asset(
+                          'assets/images/icon_empty_user.png',
+                          width: 30.0,
+                          height: 30.0),
                     ),
                   ),
                   Text('  ' + (model.userName ?? '') + '  ',
@@ -111,31 +100,47 @@ class HomeReportCell extends StatelessWidget {
             ),
             const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1.0),
             //目标
-            PostProgressView(
-                count: model.target,
-                current: model.target,
-                color: color.withOpacity(0.4),
-                title: '本月目标',
-                textColor: color),
+            Visibility(
+              visible: !model.isZN,
+              child: PostProgressView(
+                  count: model.target,
+                  current: model.target,
+                  color: color.withOpacity(0.4),
+                  title: model.postType == 1 ? '本月目标' : '本$name目标',
+                  textColor: color,
+                showWY: model.postType == 1 ?false:true,
+              ),
+            ),
             //累计
-            PostProgressView(
-                count: model.target,
-                current: model.cumulative,
-                color: color.withOpacity(0.6),
-                title: '本月累计',
-                textColor: color),
+            Visibility(
+              visible: !model.isZN,
+              child: PostProgressView(
+                  count: model.target,
+                  current: model.cumulative,
+                  color: color.withOpacity(0.6),
+                  title: '本月累计',
+                  textColor: color,
+                showWY: model.postType == 1 ?false:true,),
+            ),
             //实际
-            PostProgressView(
-                count: model.target,
-                current: model.actual,
-                color: color,
-                title: '本$name实际',
-                textColor: color),
-            const Divider(
-                color: AppColors.FFEFEFF4,
-                thickness: 1,
-                indent: 10.0,
-                endIndent: 10.0),
+            Visibility(
+              visible: !model.isZN,
+              child: PostProgressView(
+                  count: model.target,
+                  current: model.actual,
+                  color: color,
+                  title: '本$name实际',
+                  textColor: color,
+                showWY: model.postType == 1 ?false:true,),
+            ),
+            Visibility(
+              visible: !model.isZN,
+              child: const Divider(
+                  color: AppColors.FFEFEFF4,
+                  thickness: 1,
+                  indent: 10.0,
+                  endIndent: 10.0),
+            ),
             HomeReportCellList(
                 list: model.summary ?? [], title: '本$name区域重点工作总结'),
             HomeReportCellList(
@@ -146,6 +151,112 @@ class HomeReportCell extends StatelessWidget {
       ),
     );
   }
+
+  void _onTap(BuildContext context, Color color) async {
+    if (isCG) {
+      //草稿
+      bool result;
+      if (model.postType == 1) {
+        //日报
+        DayPostAddModel addModel = DayPostAddModel();
+        addModel.id = model.id;
+        addModel.setTarget(model.target.toString());
+        addModel.setActual(model.actual.toString());
+        addModel.setCumulative(model.cumulative.toString());
+        addModel.setAchievementRate();
+        addModel.setSummaries(model.summary);
+        addModel.setPlans(model.plans);
+        result = await Navigator.push(context, MaterialPageRoute(builder: (_) {
+          return ChangeNotifierProvider<DayPostAddModel>.value(
+              value: addModel, child: DayPostAddPage(id: model.id));
+        }));
+      } else if (model.postType == 2) {
+        //周报
+        if (model.isZN) {
+          //职能**
+          PostAddZNModel addModel = PostAddZNModel();
+          addModel.id = model.id;
+          result =
+              await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return ChangeNotifierProvider<PostAddZNModel>.value(
+                value: addModel, child: PostAddZNPage(id: model.id));
+          }));
+        } else {
+          WeekPostAddNewModel addModel = WeekPostAddNewModel();
+          addModel.id = model.id;
+          result =
+              await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return ChangeNotifierProvider<WeekPostAddNewModel>.value(
+                value: addModel, child: WeekPostAddPage(id: model.id));
+          }));
+        }
+      } else if (model.postType == 3) {
+        //月报
+        if (model.isZN) {
+          //职能**
+          PostAddZNModel addModel = PostAddZNModel();
+          addModel.id = model.id;
+          result =
+              await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return ChangeNotifierProvider<PostAddZNModel>.value(
+                value: addModel,
+                child: PostAddZNPage(isWeek: false, id: model.id));
+          }));
+        } else {
+          MonthPostAddNewModel addModel = MonthPostAddNewModel();
+          addModel.id = model.id;
+          result =
+              await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return ChangeNotifierProvider<MonthPostAddNewModel>.value(
+                value: addModel, child: MonthPostAddPage(id: model.id));
+          }));
+        }
+      }
+      if (result != null && result && needRefreshAction != null)
+        needRefreshAction();
+    } else {
+      //详细
+      if (model.postType == 1) {
+        Navigator.push(context, MaterialPageRoute(builder: (_) {
+          return DayPostDetailPage(model: model, themColor: color);
+        }));
+      } else if (model.postType == 2) {
+        //周报
+        if (model.isZN) {
+          //职能
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return PostDetailZNPage(
+              model: model,
+              themColor: color,
+            );
+          }));
+        } else {
+          //详情
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return WeekPostDetailPage(model: model, themColor: color);
+          }));
+        }
+      } else if (model.postType == 3) {
+        //月报
+        if (model.isZN) {
+          //职能
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return PostDetailZNPage(
+              model: model,
+              themColor: color,
+              forWeek: false,
+            );
+          }));
+        } else {
+          //详情
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return MonthPostDetailPage(model: model, themColor: color);
+          }));
+        }
+      }
+    }
+  }
+
   ///工作报告类型转颜色和中文名
   static Map transInfoFromPostType(int postType) {
     if (postType == 1) {

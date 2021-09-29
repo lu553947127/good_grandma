@@ -7,7 +7,8 @@ class HomeReportCellList extends StatelessWidget {
   final List<String> list;
   final String title;
   final int type;
-  HomeReportCellList({Key key, @required this.list, @required this.title, this.type = 0})
+  HomeReportCellList(
+      {Key key, @required this.list, @required this.title, this.type = 0})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -15,8 +16,7 @@ class HomeReportCellList extends StatelessWidget {
       return Container();
     }
     final titleWidget = Text(title ?? '',
-        style:
-        const TextStyle(color: AppColors.FF959EB1, fontSize: 12.0));
+        style: const TextStyle(color: AppColors.FF959EB1, fontSize: 15.0));
     final Map map = HomeReportCell.transInfoFromPostType(type);
     final Color color = map['color'];
     final String name = map['name'];
@@ -27,37 +27,37 @@ class HomeReportCellList extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
-            child: type ==0
-                ?titleWidget
-                :Row(
-              children: [
-                Expanded(child: titleWidget),
-                Container(
-                  width: 37,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(2.5),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(2, 1),
-                          color: color.withOpacity(0.4),
-                          blurRadius: 1.5,
-                        ),
-                      ]),
-                  child: Center(
-                      child: Text('$name报',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 11.0))),
-                ),
-              ],
-            ),
+            child: type == 0
+                ? titleWidget
+                : Row(
+                    children: [
+                      Expanded(child: titleWidget),
+                      Container(
+                        width: 37,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(2.5),
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(2, 1),
+                                  color: color.withOpacity(0.4),
+                                  blurRadius: 1.5),
+                            ]),
+                        child: Center(
+                            child: Text('$name报',
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 11.0))),
+                      ),
+                    ],
+                  ),
           ),
           Container(
             padding: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
                 color: AppColors.FFF4F5F8,
                 borderRadius: BorderRadius.circular(4)),
+            width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(list.length, (index) {
@@ -68,7 +68,7 @@ class HomeReportCellList extends StatelessWidget {
                     Text.rich(TextSpan(
                       text: '${index + 1}.',
                       style: const TextStyle(
-                          color: AppColors.FF959EB1, fontSize: 12.0),
+                          color: AppColors.FF959EB1, fontSize: 14.0),
                       children: [
                         TextSpan(
                             text: title1 ?? '',

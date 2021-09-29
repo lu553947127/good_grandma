@@ -26,9 +26,7 @@ class PostAddDeletePlanCell extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(color: AppColors.FFEFEFF4, width: 1)),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10.0,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Row(
           children: [
             Expanded(
@@ -36,8 +34,8 @@ class PostAddDeletePlanCell extends StatelessWidget {
                 onTap: textOnTap,
                 child: value.isEmpty
                     ? Text(hintText,
-                    style: const TextStyle(
-                        color: AppColors.FFC1C8D7, fontSize: 12.0))
+                        style: const TextStyle(
+                            color: AppColors.FFC1C8D7, fontSize: 14.0))
                     : Text(value),
               ),
             ),

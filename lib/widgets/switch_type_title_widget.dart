@@ -40,7 +40,7 @@ class _SwitchTypeTitleWidgetState extends State<SwitchTypeTitleWidget> {
           children: List.generate(widget.list.length, (index) {
             return Container(
               width: w,
-              height: 35,
+              height: 40,
               decoration: BoxDecoration(
                 color: _selIndex == index ? Color(0xFFC68D3E) : Colors.white,
                 borderRadius: BorderRadius.only(
@@ -55,7 +55,7 @@ class _SwitchTypeTitleWidgetState extends State<SwitchTypeTitleWidget> {
               child: TextButton(
                 child: Text(widget.list[index]['name'],
                     style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         color: _selIndex == index
                             ? Colors.white
                             : Color(0xFFC68D3E))),

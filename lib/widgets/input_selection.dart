@@ -13,7 +13,6 @@ class _TextFormFieldPageState extends State<TextFormFieldPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _controller.text = "男";
   }

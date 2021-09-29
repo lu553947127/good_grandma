@@ -1,10 +1,32 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/utils.dart';
 
 class PostAddZNModel extends ChangeNotifier {
+  fromJson(Map<String, dynamic> map){
+    id = map['id'] ?? '';
+    //工作内容
+    _currentWorks = [];
+    String currentWorksS = map['currentWorks'] ?? '';
+    _currentWorks = AppUtil.getListFromString(currentWorksS);
+    //工作中存在的问题及需改进的方面
+    _problems = [];
+    String problemsS = map['problems'] ?? '';
+    _problems = AppUtil.getListFromString(problemsS);
+    //工作计划
+    _plans = [];
+    String plansS = map['plans'] ?? '';
+    _plans = AppUtil.getListFromString(plansS);
+    //建议
+    _suggests = [];
+    String suggestsS = map['suggests'] ?? '';
+    _suggests = AppUtil.getListFromString(suggestsS);
+    notifyListeners();
+  }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = id ?? '';
     //工作内容
     data['currentWorks'] = jsonEncode(_currentWorks.map((e) => e.toString()).toList());
     //工作中存在的问题及需改进的方面
@@ -17,11 +39,13 @@ class PostAddZNModel extends ChangeNotifier {
   }
 
   PostAddZNModel() {
+    id = '';
     _currentWorks = [];
     _problems = [];
     _plans = [];
     _suggests = [];
   }
+  String id;
 
   ///工作内容
   List<String> _currentWorks;

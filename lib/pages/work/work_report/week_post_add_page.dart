@@ -23,8 +23,9 @@ import 'package:provider/provider.dart';
 ///新增周报
 class WeekPostAddPage extends StatefulWidget {
   WeekPostAddPage({
-    Key key,
+    Key key, this.id = '',
   }) : super(key: key);
+  final String id;
   @override
   State<StatefulWidget> createState() => _Body();
 }
@@ -46,6 +47,19 @@ class _Body extends State<WeekPostAddPage> {
   void initState() {
     super.initState();
     _getRegionList();
+    if(widget.id.isNotEmpty)
+      _requestDetail();
+  }
+  ///标记草稿请求详情
+  _requestDetail() async{
+    requestPost(Api.reportDayDetail,
+        json: jsonEncode({'id': widget.id, 'type': 2})).then((value) {
+      Map map = jsonDecode(value.toString())['data'];
+      final WeekPostAddNewModel model = Provider.of<WeekPostAddNewModel>(this.context,listen: false);
+      model.fromJson(map);
+      model.id = widget.id;
+      // print('object');
+    });
   }
 
   @override
@@ -66,7 +80,7 @@ class _Body extends State<WeekPostAddPage> {
       },
       {
         'title': '月度达成率',
-        'value': (model.completionRate * 100).toStringAsFixed(2),
+        'value': model.completionRate.toStringAsFixed(2),
         'end': '%'
       },
       {
@@ -80,7 +94,7 @@ class _Body extends State<WeekPostAddPage> {
       onWillPop: () async => await AppUtil.onWillPop(context),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('新增周报'),
+          title: Text(widget.id.isNotEmpty?'编辑周报':'新增周报'),
           actions: [
             TextButton(
                 onPressed: () => _submitAction(context, model, 2),
@@ -172,7 +186,7 @@ class _Body extends State<WeekPostAddPage> {
               return Container(
                 color: Colors.white,
                 child: PostAddInputCellCore(
-                  onTap: null,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 6),
                   title: title,
                   value: value,
                   hintText: hintText,
@@ -443,7 +457,7 @@ class _Body extends State<WeekPostAddPage> {
     param['userName'] = Store.readNickName();
     param['postName'] = Store.readPostName();
     param['status'] = status;
-    LogUtil.d('param = ${jsonEncode(param)}');
+    // LogUtil.d('param = ${jsonEncode(param)}');
     requestPost(Api.reportWeekAdd, json: param).then((value) {
       var data = jsonDecode(value.toString());
       // print('data = $data');

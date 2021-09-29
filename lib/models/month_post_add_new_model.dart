@@ -1,11 +1,62 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/week_post_add_new_model.dart';
 
 class MonthPostAddNewModel extends ChangeNotifier {
+  void fromJson(Map<String, dynamic> map) {
+    id = map['id'] ?? '';
+    area = map['postName'] ?? '';
+    position = area;
+    _time = map['time'] ?? '';
+    //销量进度追踪（万元）
+    _salesTrackingList = [];
+    String salesTrackingListS = map['salesTrackingList'] ?? '';
+    if (salesTrackingListS.isNotEmpty) {
+      List list = jsonDecode(salesTrackingListS);
+      // print('list = $list');
+      list.forEach((map) {
+        SalesTrackingModel model = SalesTrackingModel.fromJson(map);
+        _salesTrackingList.add(model);
+      });
+    }
+
+    //本周区域重点工作总结
+    _summaries = [];
+    String summaries1 = map['summaries'] ?? '';
+    _summaries = AppUtil.getListFromString(summaries1);
+
+    //本周行程及工作内容
+    _initItineraryList();
+    List<dynamic> itinerariesS = map['itineraries'] ?? '';
+    if (itinerariesS.isNotEmpty) {
+      _itineraries.clear();
+      itinerariesS.forEach((element) {
+        String title = element['title'] ?? '';
+        List<String> works = [];
+        String summaries1 = map['works'] ?? '';
+        works = AppUtil.getListFromString(summaries1);
+        ItineraryModel model = ItineraryModel(title: title);
+        model.works = works;
+        _itineraries.add(model);
+      });
+    }
+
+    //重点工作内容
+    _plans = [];
+    String worksS = map['plans'] ?? '';
+    _plans = AppUtil.getListFromString(worksS);
+
+    //问题反馈以及解决方案
+    _reports = [];
+    String reportsS = map['reports'] ?? '';
+    _reports = AppUtil.getListFromString(reportsS);
+    notifyListeners();
+  }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = id ?? '';
     //时间
     data['time'] = _time ?? '';
     //销量进度追踪
@@ -21,6 +72,9 @@ class MonthPostAddNewModel extends ChangeNotifier {
     return data;
   }
   MonthPostAddNewModel() {
+    position = '';
+    area = '';
+    id = '';
     _time = '';
     _salesTrackingList = [];
     _initItineraryList();
@@ -29,6 +83,9 @@ class MonthPostAddNewModel extends ChangeNotifier {
     _plans = [];
     _reports = [];
   }
+  String position;
+  String area;
+  String id;
   ///时间-
   String _time;
   ///销量进度追踪
@@ -222,7 +279,6 @@ class ItineraryModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
-    // data['works'] = jsonEncode(this.works);
     data['works'] = this.works.map((e) => e.toString()).toList();
     return data;
   }

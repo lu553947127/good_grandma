@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/utils.dart';
 
 class DayPostAddModel extends ChangeNotifier {
+
+  fromJson(Map<String, dynamic> json) {
+    area = json['postName'] ?? '';
+    position = area;
+    id = json['id'] ?? '';
+  }
   DayPostAddModel() {
     _target = '';
     _cumulative = '';
@@ -11,7 +16,11 @@ class DayPostAddModel extends ChangeNotifier {
     _plans = [];
     type = 1;
     id = '';
+    area = '';
+    position = '';
   }
+  String position;
+  String area;
   String id;
 
   ///类别 1：日报 2：周报 3：月报
@@ -139,18 +148,5 @@ class DayPostAddModel extends ChangeNotifier {
     if(index >= _plans.length) return;
     _plans.removeAt(index);
     notifyListeners();
-  }
-
-  DayPostAddModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '';
-    _target = json['target'] ?? '';
-    _cumulative = json['cumulative'] ?? '';
-    _actual = json['actual'] ?? '';
-
-    String thisContent = json['thisContent'];
-
-    setSummaries(AppUtil.getListFromString(thisContent));
-    String nextContent = json['nextContent'];
-    setPlans(AppUtil.getListFromString(nextContent));
   }
 }

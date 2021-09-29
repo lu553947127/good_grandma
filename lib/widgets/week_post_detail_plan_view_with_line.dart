@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 
-///左边显示竖线的计划视图
-class PostDetailPlanViewWithLine extends StatelessWidget {
-  const PostDetailPlanViewWithLine({
+///周报详情左边显示竖线的计划视图
+class WeekPostDetailPlanViewWithLine extends StatelessWidget {
+  const WeekPostDetailPlanViewWithLine({
     Key key,
-    @required List<Map> plans,
+    @required List<Map> itineraries,
     @required this.themColor,
-  })  : _plans = plans,
+  })  : _itineraries = itineraries,
         super(key: key);
 
-  final List<Map> _plans;
+  final List<Map> _itineraries;
   final Color themColor;
 
   @override
@@ -19,9 +19,12 @@ class PostDetailPlanViewWithLine extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          Map map = _plans[index];
-          String title = map['title'];
-          List<String> plans = map['works'];
+          Map map = _itineraries[index];
+          String title = map['title'] ?? '';
+          String work = map['work'] ?? '';
+          String lastCityName = map['lastCityId'] ?? '';
+          String actualCityName = map['actualCityId'] ?? '';
+          // List<String> plans = map['works'];
 
           double top = 0;
           double bottom = 0;
@@ -38,11 +41,13 @@ class PostDetailPlanViewWithLine extends StatelessWidget {
               themColor: themColor,
               title: title,
               firstHide: index == 0,
-              lastHide: index == _plans.length - 1,
-              plans: plans,
+              lastHide: index == _itineraries.length - 1,
+              work: work,
+              lastCityName: lastCityName,
+              actualCityName: actualCityName,
             ),
           );
-        }, childCount: _plans.length),
+        }, childCount: _itineraries.length),
       ),
     );
   }
@@ -55,7 +60,9 @@ class _PlanViewCell extends StatelessWidget {
     @required this.title,
     this.firstHide = false,
     this.lastHide = false,
-    @required this.plans,
+    @required this.work,
+    @required this.lastCityName,
+    @required this.actualCityName,
   }) : super(key: key);
 
   final Color themColor;
@@ -66,26 +73,36 @@ class _PlanViewCell extends StatelessWidget {
 
   ///是否隐藏圆点下面的竖线，最后一个视图里需要隐藏
   final bool lastHide;
-  final List<String> plans;
+  final String work;
+  final String lastCityName;
+  final String actualCityName;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _views = [];
-    int i = 1;
-    for (String title1 in plans) {
-      _views.add(Text.rich(TextSpan(
-        text: '$i.',
-        style: const TextStyle(color: AppColors.FF959EB1, fontSize: 14.0),
-        children: [
-          TextSpan(
-              text: title1 ?? '',
-              style: const TextStyle(color: AppColors.FF2F4058))
-        ],
-      )));
-      if (i < plans.length)
-        _views.add(const Divider(color: AppColors.FFEFEFF4, thickness: 1));
-      i++;
-    }
+    List<Widget> _views = [
+      DefaultTextStyle(
+        style: const TextStyle(color: AppColors.FF959EB1),
+        child: Wrap(
+          spacing: 30,
+          children: [
+            Text.rich(TextSpan(text: '上周计划城市 ', children: [
+              TextSpan(
+                  text: lastCityName,
+                  style: const TextStyle(color: AppColors.FF2F4058))
+            ])),
+            // SizedBox(width: 30),
+            Text.rich(TextSpan(text: '实际工作城市 ', children: [
+              TextSpan(
+                  text: actualCityName,
+                  style: const TextStyle(color: AppColors.FF2F4058))
+            ])),
+          ],
+        ),
+      ),
+      const Divider(),
+      Text(work),
+    ];
+
     return Stack(
       children: [
         Column(
@@ -107,15 +124,21 @@ class _PlanViewCell extends StatelessWidget {
                       left: BorderSide(
                           color: lastHide ? Colors.white : themColor,
                           width: 1))),
-              width: double.infinity,
               child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                    color: AppColors.FFF4F5F8,
-                    borderRadius: BorderRadius.circular(4)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _views,
+                // padding: const EdgeInsets.all(10.0),
+                // decoration: BoxDecoration(
+                //     color: AppColors.FFF4F5F8,
+                //     borderRadius: BorderRadius.circular(4)),
+                // width: double.infinity,
+                child: Card(
+                  color: AppColors.FFF4F5F8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _views,
+                    ),
+                  ),
                 ),
               ),
             ),

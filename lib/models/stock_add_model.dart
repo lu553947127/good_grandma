@@ -60,7 +60,7 @@ class StockModel {
   ///生产时间
   String time;
   StockModel({
-    //todo:key必须传，否则修改数目会出错
+    ///key必须传，否则修改数目会出错
     @required Key key,
     this.time = '',
   }) {

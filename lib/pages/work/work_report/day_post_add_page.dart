@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/day_post_add_model.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
@@ -15,7 +16,9 @@ import 'package:provider/provider.dart';
 class DayPostAddPage extends StatefulWidget {
   DayPostAddPage({
     Key key,
+    this.id = '',
   }) : super(key: key);
+  final String id;
   @override
   State<StatefulWidget> createState() => _Body();
 }
@@ -37,6 +40,26 @@ class _Body extends State<DayPostAddPage> {
   String _plan = '';
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.id.isNotEmpty) _requestDetail();
+  }
+
+  ///标记草稿请求详情
+  _requestDetail() async {
+    requestPost(Api.reportDayDetail,
+        json: jsonEncode({'id': widget.id, 'type': 1})).then((value) {
+      //LogUtil.d('reportDayDetail value = $value');
+      Map map = jsonDecode(value.toString())['data'];
+      final DayPostAddModel model =
+          Provider.of<DayPostAddModel>(this.context, listen: false);
+      model.fromJson(map);
+      model.id = widget.id;
+      // print('object');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final DayPostAddModel model = Provider.of<DayPostAddModel>(context);
     final List values = [
@@ -52,7 +75,7 @@ class _Body extends State<DayPostAddPage> {
           title: const Text('新增日报'),
           actions: [
             TextButton(
-                onPressed: () => _submitAction(context,model,1),
+                onPressed: () => _submitAction(context, model, 1),
                 child:
                     const Text('保存草稿', style: TextStyle(color: Colors.black))),
           ],
@@ -190,7 +213,7 @@ class _Body extends State<DayPostAddPage> {
                 sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
                     title: '提  交',
-                    onPressed: () => _submitAction(context,model,2),
+                    onPressed: () => _submitAction(context, model, 2),
                   ),
                 ),
               ),
@@ -202,47 +225,51 @@ class _Body extends State<DayPostAddPage> {
   }
 
   ///提  交
-  void _submitAction(BuildContext context,DayPostAddModel model,int status) async {
-    String param = _dealModelToJson(context, model,2);
-    if(param.isEmpty) return;
-    // print('param = $param');
-    requestPost(Api.reportDayAdd,json: param).then((value) {
+  void _submitAction(
+      BuildContext context, DayPostAddModel model, int status) async {
+    String param = _dealModelToJson(context, model, status);
+    if (param.isEmpty) return;
+    print('param = $param');
+    requestPost(Api.reportDayAdd, json: param).then((value) {
       var data = jsonDecode(value.toString());
-      // print('data = $data');
+      //print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
     });
   }
+
   ///status 1:草稿 2：提交
-  String _dealModelToJson(BuildContext context,DayPostAddModel model,int status){
-    if(model.target.isEmpty) {
+  String _dealModelToJson(
+      BuildContext context, DayPostAddModel model, int status) {
+    if (model.target.isEmpty) {
       AppUtil.showToastCenter('请填写本月目标');
       return '';
     }
-    if(model.actual.isEmpty) {
+    if (model.actual.isEmpty) {
       AppUtil.showToastCenter('请填写今日销售');
       return '';
     }
-    if(model.cumulative.isEmpty) {
+    if (model.cumulative.isEmpty) {
       AppUtil.showToastCenter('请填写本月累计');
       return '';
     }
-    if(model.summaries.isEmpty) {
+    if (model.summaries.isEmpty) {
       AppUtil.showToastCenter('请填写工作总结');
       return '';
     }
-    if(model.plans.isEmpty) {
+    if (model.plans.isEmpty) {
       AppUtil.showToastCenter('请填写工作计划');
       return '';
     }
     Map param = {
-      'targetmonth':model.target,
-      'saleday':model.actual,
-      'salemonth':model.cumulative,
-      'daywork':jsonEncode(model.summaries),
-      'tomwork':jsonEncode(model.plans),
-      'status':status,
+      'targetmonth': model.target,
+      'saleday': model.actual,
+      'salemonth': model.cumulative,
+      'daywork': jsonEncode(model.summaries),
+      'tomwork': jsonEncode(model.plans),
+      'status': status,
+      'id':widget.id,
     };
-   return jsonEncode(param);
+    return jsonEncode(param);
   }
 
   @override

@@ -39,7 +39,7 @@ class PostDetailGroupTitle extends StatelessWidget {
             Expanded(
                 child: Text(
               name,
-              style: const TextStyle(color: AppColors.FF959EB1, fontSize: 12),
+              style: const TextStyle(color: AppColors.FF959EB1, fontSize: 16),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ))

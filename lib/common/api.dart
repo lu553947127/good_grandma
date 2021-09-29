@@ -238,6 +238,10 @@ class Api {
   static const reportMonthAdd =
       "/api/hap-apptony/app/report/reportMonthAdd";
 
+  ///报告详情 参数 id  type：1日报2周报3月报
+  static const reportDayDetail =
+      "/api/hap-apptony/app/report/reportDayDetail";
+
   ///区域选择
   static const regionList =
       "/api/hap-apptony/app/report/regionList";

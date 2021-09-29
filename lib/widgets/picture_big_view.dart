@@ -27,7 +27,6 @@ class _PhotoViewGalleryScreenState extends State<PhotoViewGalleryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     currentIndex=widget.index;
   }

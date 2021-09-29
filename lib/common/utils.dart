@@ -263,9 +263,6 @@ String listToString(List<String> list) {
 
 class AppUtil {
   static const aMapAndroidKey = '9826f8c8e4d7b4b3eaafd13c6213bfcc';
-  //todo:aMapiOSKey是暂时，不要更新到git
-  // static const aMapiOSKey = '275249e60a6b2da6b74615bce89e23e9';
-  ///正式的
   static const aMapiOSKey = '330ac281e8e9fdcee0cb9e2011a0323c';
 
   /// 保存图片到相册
@@ -418,7 +415,7 @@ class AppUtil {
                                       borderSide: BorderSide.none,
                                     ),
                                     hintStyle: const TextStyle(
-                                        color: AppColors.FF959EB1, fontSize: 12),
+                                        color: AppColors.FF959EB1, fontSize: 14),
                                   ),
                                 ),
                               )),
@@ -514,9 +511,9 @@ class AppUtil {
   }
   ///字符串转list，主要是在工作报告的接口中使用
   static List<String> getListFromString(String str){
-    if(str == null && str.isEmpty) return [];
+    if(str == null || str.isEmpty) return [];
     List list = jsonDecode(str);
-    if(list == null && list.isEmpty) return [];
+    if(list == null || list.isEmpty) return [];
     List<String> targetList = [];
     list.forEach((element) {
       targetList.add(element);

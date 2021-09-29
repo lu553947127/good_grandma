@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_picker/flutter_picker.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/pages/work/work_report/select_employee_page.dart';
 
 class WorkSelectType extends StatefulWidget {
-  const WorkSelectType({Key key, @required this.selEmpBtnOnTap})
+  const WorkSelectType({Key key, @required this.selectAction})
       : super(key: key);
-  final Function(List<EmployeeModel> selEmployees) selEmpBtnOnTap;
+  final Function(List<EmployeeModel> selEmployees,String typeName,String startTime,String endTime,) selectAction;
   @override
   State<StatefulWidget> createState() => _Body();
 }
@@ -17,6 +18,8 @@ class _Body extends State<WorkSelectType> {
   String _btnName1 = '所有人';
   String _btnName2 = '所有类型';
   String _btnName3 = '所有日期';
+  String _startTime = '';
+  String _endTime = '';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,6 @@ class _Body extends State<WorkSelectType> {
         i++;
       });
     }
-
 
     return Container(
       color: Colors.white,
@@ -86,11 +88,11 @@ class _Body extends State<WorkSelectType> {
                 if (list != null && list.isNotEmpty) {
                   _employees.clear();
                   _employees.addAll(list);
-                  if (widget.selEmpBtnOnTap != null) {
+                  if (widget.selectAction != null) {
                     List<EmployeeModel> _selEmployees = _employees
                         .where((employee) => employee.isSelected)
                         .toList();
-                    widget.selEmpBtnOnTap(_selEmployees);
+                    widget.selectAction(_selEmployees,_btnName2,_startTime,_endTime);
                   }
                   if (mounted) setState(() {});
                 }
@@ -124,9 +126,13 @@ class _Body extends State<WorkSelectType> {
                 String result =
                     await showPicker(['所有类型', '日报', '周报', '月报'], context);
                 if (result != null && result.isNotEmpty) {
-                  setState(() {
-                    _btnName2 = result;
-                  });
+                  setState(() => _btnName2 = result);
+                  if (widget.selectAction != null) {
+                    List<EmployeeModel> _selEmployees = _employees
+                        .where((employee) => employee.isSelected)
+                        .toList();
+                    widget.selectAction(_selEmployees,_btnName2,_startTime,_endTime);
+                  }
                 }
               },
             ),
@@ -138,7 +144,7 @@ class _Body extends State<WorkSelectType> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_btnName3,
+                  Text(_startTime.isEmpty||_endTime.isEmpty?_btnName3:_startTime + '\n' + _endTime,//_btnName3,
                       style:
                           TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
                   Padding(
@@ -149,13 +155,25 @@ class _Body extends State<WorkSelectType> {
                 ],
               ),
               onPressed: () async {
-                String result =
-                    await showPicker(['所有日期', '上周', '上月'], context);
-                if (result != null && result.isNotEmpty) {
-                  setState(() {
-                    _btnName3 = result;
-                  });
-                }
+                showPickerDateRange(
+                    context: context,
+                    type: PickerDateTimeType.kYMD,
+                    callBack: (Map param) {
+                      setState(() {
+                        _startTime = param['startTime'];
+                        final List<String> dates = _startTime.split(' ');
+                        _startTime = dates.first;
+                        _endTime = param['endTime'];
+                        final List<String> times = _endTime.split(' ');
+                        _endTime = times.first;
+                      });
+                      if (widget.selectAction != null) {
+                        List<EmployeeModel> _selEmployees = _employees
+                            .where((employee) => employee.isSelected)
+                            .toList();
+                        widget.selectAction(_selEmployees,_btnName2,_startTime,_endTime);
+                      }
+                    });
               },
             ),
           ),
