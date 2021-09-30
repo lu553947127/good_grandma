@@ -38,7 +38,7 @@ class PostProgressView extends StatelessWidget {
     @required this.color,
     @required this.title,
     @required this.textColor,
-    this.width = 180,
+    this.width = 150,
     this.titleColor = Colors.black,
     this.height = 6,
     this.fontSize = 12.0,
@@ -50,25 +50,29 @@ class PostProgressView extends StatelessWidget {
   Widget build(BuildContext context) {
     double r = count == 0 ? current : current / count;
     if (r > 1) r = 1;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
       child: Row(
         children: [
           Text((title ?? '') + '  ',
               style: TextStyle(color: titleColor, fontSize: 14.0)),
-          Stack(
-            children: [
-              Container(height: height, width: width),
-              Container(
-                height: height,
-                width: width * r,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
-            ],
-          ),
+          Expanded(child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+            return
+              Stack(
+                children: [
+                  Container(height: height, width: constraints.maxWidth),
+                  Container(
+                    height: height,
+                    width: constraints.maxWidth * r,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                ],
+              );
+          },)),
           Text(
               (width == 0 ? '' : '  ') +
                   (fontSize == 12.0 ? '¥' : '') +
