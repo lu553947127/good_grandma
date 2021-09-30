@@ -31,7 +31,10 @@ class NumberCounter extends StatelessWidget {
             child: Container(
               width: 30,
               height: 30,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+              ),
               child: Center(
                   child: Text(
                 '-',
@@ -54,7 +57,10 @@ class NumberCounter extends StatelessWidget {
             child: Container(
               width: 30,
               height: 30,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.horizontal(right: Radius.circular(4)),
+              ),
               child: Center(child: Text('+')),
             ),
           ),

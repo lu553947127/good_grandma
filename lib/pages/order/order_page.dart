@@ -16,10 +16,10 @@ import 'package:provider/provider.dart';
 
 ///订单list
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key key, this.middleman = false}) : super(key: key);
+  const OrderPage({Key key, this.orderType = 1}) : super(key: key);
 
-  ///是否是二级订单
-  final bool middleman;
+  ///订单级别 1：一级订单 2：二级订单 3：我的报单
+  final int orderType;
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -31,7 +31,10 @@ class _OrderPageState extends State<OrderPage> {
   List<Map> _listTitle = [
     {'name': '全部'},
     {'name': '待确认'},
+    {'name': '待发货'},
+    {'name': '待收货'},
     {'name': '已完成'},
+    {'name': '驳回'},
   ];
   List<DeclarationFormModel> _dataArray = [];
   int _current = 1;
@@ -41,6 +44,8 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
     super.initState();
+    if(widget.orderType == 2)
+      _listTitle.removeAt(1);
     _controller.callRefresh();
   }
 
@@ -71,17 +76,12 @@ class _OrderPageState extends State<OrderPage> {
                     DeclarationFormModel model = _dataArray[index];
                     return MyDeclarationFormCell(
                       model: model,
-                      firstOrder: !widget.middleman,
+                      firstOrder: widget.orderType == 1,
                       onTap: () async {
-                        ///根据账户信息判断是否能够审核报单
-                        bool canDecision = true;
                         bool stateChanged = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => OrderDetailPage(
-                                      model: model,
-                                      canDecision: canDecision,
-                                    )));
+                                builder: (_) => OrderDetailPage(model: model)));
                         if (stateChanged != null && stateChanged) {
                           _controller.callRefresh();
                         }
@@ -93,23 +93,24 @@ class _OrderPageState extends State<OrderPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: AppColors.FFC68D3E,
-        onPressed: () async {
-          DeclarationFormModel model = DeclarationFormModel();
-          bool needRefresh = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) =>
-                      ChangeNotifierProvider<DeclarationFormModel>.value(
-                        value: model,
-                        child: AddOrderPage(middleman: widget.middleman),
-                      )));
-          if (needRefresh != null && needRefresh) {
-            _refresh();
-          }
-        },
+      floatingActionButton: Visibility(
+        visible: widget.orderType != 3,
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          backgroundColor: AppColors.FFC68D3E,
+          onPressed: () async {
+            DeclarationFormModel model = DeclarationFormModel();
+            bool needRefresh = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        ChangeNotifierProvider<DeclarationFormModel>.value(
+                          value: model,
+                          child: AddOrderPage(middleman: widget.orderType == 2),
+                        )));
+            if (needRefresh != null && needRefresh) _refresh();
+          },
+        ),
       ),
     );
   }
@@ -129,11 +130,15 @@ class _OrderPageState extends State<OrderPage> {
       Map<String, dynamic> map = {
         'current': _current,
         'size': _pageSize,
-        'middleman': !widget.middleman ? 1 : 2,
+        'middleman': widget.orderType,
         'status': _selIndex
       };
-      final val = await requestPost(Api.orderList, json: jsonEncode(map));
-      // LogUtil.d('orderCusList value = $val');
+      print('param = ${jsonEncode(map)}');
+      String url = Api.orderList;
+      if(widget.orderType == 3)
+        url = Api.myOrderList;
+      final val = await requestPost(url, json: jsonEncode(map));
+      LogUtil.d('$url value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];

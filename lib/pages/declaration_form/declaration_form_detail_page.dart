@@ -200,9 +200,9 @@ class _Header extends StatelessWidget {
                   children: [
                     Expanded(child: Text(_model.storeModel.name)),
                     Text(
-                      _model.completed ? '已完成' : '待确认',
+                      _model.statusName,
                       style: TextStyle(
-                          color: _model.completed
+                          color: _model.status == 4
                               ? Colors.grey
                               : AppColors.FFC08A3F,
                           fontSize: 12.0),

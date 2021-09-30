@@ -7,17 +7,13 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
-import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
-import 'package:good_grandma/pages/declaration_form/add_declaration_form_page.dart';
-import 'package:good_grandma/pages/declaration_form/my_declaration_form_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/pages/order/order_page.dart';
 import 'package:good_grandma/pages/performance/my_performance_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
-import 'package:provider/provider.dart';
 
 ///我的
 class MinePage extends StatefulWidget {
@@ -29,8 +25,8 @@ class _MinePageState extends State<MinePage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
   final List<Map> _list = [
-    {'image': 'assets/images/mine_form_add.png', 'name': '我要报单'},
-    {'image': 'assets/images/mine_form.png', 'name': '我的报单'},
+    // {'image': 'assets/images/mine_form_add.png', 'name': '我要报单'},
+    // {'image': 'assets/images/mine_form.png', 'name': '我的报单'},
     {'image': 'assets/images/mine_order.png', 'name': '我的订单'},
     {'image': 'assets/images/mine_contract.png', 'name': '我的合同'},
     {'image': 'assets/images/mine_feedback.png', 'name': '意见反馈'},
@@ -187,64 +183,35 @@ class _MinePageState extends State<MinePage> {
 
   void _cellOnTap(BuildContext context, int index) {
     switch (index) {
-      case -3:
-        {
-          //设置按钮
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => SetUpPage()));
-        }
+      case -3://设置按钮
+        Navigator.push(context, MaterialPageRoute(builder: (_) => SetUpPage()));
         break;
-      case -2:
-        {
-          //开通账号功能
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
-        }
+      case -2://开通账号功能
+        Navigator.push(context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
         break;
-      case -1:
-        {
-          //我的业绩
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => MyPerformancePage()));
-        }
+      case -1://我的业绩
+        Navigator.push(context, MaterialPageRoute(builder: (_) => MyPerformancePage()));
         break;
-      case 0:
-        {
-          //我要报单
-          DeclarationFormModel model = DeclarationFormModel();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) =>
-                      ChangeNotifierProvider<DeclarationFormModel>.value(
-                          value: model, child: AddDeclarationFormPage())));
-        }
+      // case 0://我要报单
+      //   DeclarationFormModel model = DeclarationFormModel();
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (_) =>
+      //           ChangeNotifierProvider<DeclarationFormModel>.value(
+      //               value: model, child: AddDeclarationFormPage())));
+      //   break;
+      // case 0://我的报单
+      //   Navigator.push(context, MaterialPageRoute(builder: (_) => MyDeclarationFormPage()));
+      //   break;
+      case 0://我的订单
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 3)));
         break;
-      case 1:
-        {
-          //我的报单
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => MyDeclarationFormPage()));
-        }
+      case 1://我的合同
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
         break;
-      case 2:
-        {
-          //我的订单
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage()));
-        }
-        break;
-      case 3:
-        {
-          //我的合同
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
-        }
-        break;
-      case 4:
-        {
-          //意见反馈
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => FeedbackPage()));
-        }
+      case 2://意见反馈
+        Navigator.push(context, MaterialPageRoute(builder: (_) => FeedbackPage()));
         break;
     }
   }

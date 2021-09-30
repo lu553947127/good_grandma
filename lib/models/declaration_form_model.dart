@@ -12,26 +12,31 @@ class DeclarationFormModel extends ChangeNotifier {
   String _address;
   String _remark;
   String time;
+  String reject;
+  String _createUserId;
 
-  ///标记订单是否审核完成
-  bool _completed;
+  ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
+  int _status;
   String id;
 
-  DeclarationFormModel({this.time = '', this.id = ''}) {
+  DeclarationFormModel({this.time = '', this.id = '',this.reject = '',}) {
     _storeModel = StoreModel();
     _goodsList = [];
     _rewardGoodsList = [];
     _phone = '';
     _address = '';
     _remark = '';
-    _completed = false;
+    _status = 1;
+    _createUserId = '';
   }
 
   DeclarationFormModel.fromJson(Map<String, dynamic> json) {
     String name = json['cusName'] ?? '';
-    String customerId = json['customerId'] ?? '';
+    String customerId = json['customerId'].toString() ?? '';
     String phone = json['phone'] ?? '';
     String address = json['address'] ?? '';
+    reject = json['reject'] ?? '';
+    _createUserId = json['createUser'].toString() ?? '';
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
     _goodsList = [];
     if (json['goodsList'] != null) {
@@ -51,10 +56,21 @@ class DeclarationFormModel extends ChangeNotifier {
     _phone = json['phone'] ?? '';
     _address = json['address'] ?? '';
 
-    _completed = false;
-    int status = json['status'] ?? 1;
-    if(status == 2)
-      _completed = true;
+    _status = json['status'] ?? 1;
+  }
+
+  setModelWithModel(DeclarationFormModel model) {
+    _status = model.status;
+    _storeModel = model.storeModel;
+    _phone = model.phone;
+    _address = model.address;
+    _remark = model.remark;
+    _goodsList = model.goodsList;
+    _rewardGoodsList = model.rewardGoodsList;
+    id = model.id;
+    time = model.time;
+    reject = model.reject;
+    _createUserId = model.createUserId;
   }
 
   ///店铺
@@ -75,8 +91,31 @@ class DeclarationFormModel extends ChangeNotifier {
   ///备注
   String get remark => _remark;
 
-  ///标记订单是否审核完成
-  bool get completed => _completed;
+  ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
+  int get status => _status;
+  String get createUserId => _createUserId;
+  ///订单状态名字
+  String get statusName {
+    switch(_status){
+      case 1:
+        return '待确认';
+      case 2:
+        return '待发货';
+      case 3:
+        return '待收货';
+      case 4:
+        return '已完成';
+      case 5:
+        return '驳回';
+      default:
+        return '未知状态';
+    }
+  }
+
+  setCreateUserId(String createUserId){
+    _createUserId = createUserId;
+    notifyListeners();
+  }
 
   ///商品总数
   int get goodsCount {
@@ -122,8 +161,8 @@ class DeclarationFormModel extends ChangeNotifier {
     return jsonEncode(_rewardGoodsList.map((goodsModel) => goodsModel.toMap()).toList());
   }
 
-  setCompleted(bool completed) {
-    _completed = completed;
+  setStatus(int status) {
+    _status = status;
     notifyListeners();
   }
 
@@ -177,15 +216,4 @@ class DeclarationFormModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setModelWithModel(DeclarationFormModel model) {
-    _completed = model.completed;
-    _storeModel = model.storeModel;
-    _phone = model.phone;
-    _address = model.address;
-    _remark = model.remark;
-    _goodsList = model.goodsList;
-    _rewardGoodsList = model.rewardGoodsList;
-    id = model.id;
-    time = model.time;
-  }
 }

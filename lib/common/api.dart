@@ -274,6 +274,14 @@ class Api {
   static const orderConfirm =
       "/api/hap-apptony/app/order/orderConfirm";
 
+  ///订单审核驳回接口 参数id :订单id status：0；审核 5：驳回   reject：驳回意见
+  static const orderSh =
+      "/api/hap-apptony/app/order/orderSh";
+
+  ///我的报单
+  static const myOrderList =
+      "/api/hap-apptony/app/order/myOrderList";
+
   ///feedbackType
   static const feedbackType =
       "/api/hap-system3/dict/dictionary?code=feedback_type";

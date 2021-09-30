@@ -111,7 +111,7 @@ class _MyDeclarationFormPageState extends State<MyDeclarationFormPage> {
     _dataArray.clear();
     _dataArray.addAll(List.generate(4, (index) {
       DeclarationFormModel model = DeclarationFormModel();
-      model.setCompleted(index % 2 == 0);
+      model.setStatus(1);
       model.time = '2021-08-30 00:00:00';
       model.setStoreModel(StoreModel(name: '客户名称$index'));
       model.setArrays(

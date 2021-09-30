@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
@@ -58,27 +59,13 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage()));
           break;
         case '二级订单':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(middleman: true)));
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 2)));
           break;
-        case '审批申请':{
-          if(shenpiOnTap != null)
-            shenpiOnTap();
-        }
+        case '审批申请':
+          if(shenpiOnTap != null) shenpiOnTap();
           break;
-        // case '营销费用申请':
-        //   break;
-        // case '营销费用核销':
-        //   break;
-        // case '客户对账':
-        //   break;
         case '商品销量统计':
-          {
-            //todo:登录用户类型需要从登录信息中获取
-            //分三种登录用户类型,不同类型显示状态不同 1：业务经理，2：管理层，3：客户登录
-            int userType = 2;
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SalesStatisticsPage(userType: userType,)));
-          }
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SalesStatisticsPage()));
           break;
         case '企业文件柜':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> FilesPage()));
@@ -137,6 +124,8 @@ class AppPage extends StatelessWidget{
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
                         itemCount: list.length,
                         itemBuilder: (context, index) {
+                          String title = list[index]['name'];
+                          if(Store.readUserType() == 'ejkh' && title == '二级订单') return Container();
                           return TextButton(
                               onPressed: () {
                                 _btnOnPressed(context, list, index);

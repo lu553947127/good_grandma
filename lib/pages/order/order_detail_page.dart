@@ -7,6 +7,8 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/store.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/widgets/my_declaration_form_cell.dart';
 import 'package:good_grandma/widgets/order_goods_count_view.dart';
@@ -16,10 +18,7 @@ import 'package:provider/provider.dart';
 
 ///订单详情
 class OrderDetailPage extends StatefulWidget {
-  const OrderDetailPage(
-      {Key key, @required this.model, this.canDecision = false})
-      : super(key: key);
-  final bool canDecision;
+  const OrderDetailPage({Key key, @required this.model}) : super(key: key);
   final DeclarationFormModel model;
 
   @override
@@ -47,7 +46,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         title: const Text('订单详情'),
         actions: [
           Visibility(
-            visible: !_model.completed,
+            visible: (_model.status == 1 || _model.status == 5) &&
+                _model.createUserId == Store.readUserId(),
             child: TextButton(
                 onPressed: () async {
                   bool needRefresh = await Navigator.push(
@@ -56,13 +56,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           builder: (_) => ChangeNotifierProvider<
                                   DeclarationFormModel>.value(
                                 value: _model,
-                                child: AddOrderPage(
-                                  editing: true,
-                                ),
+                                child: AddOrderPage(editing: true),
                               )));
-                  if (needRefresh != null && needRefresh) {
+                  if (needRefresh != null && needRefresh)
                     _controller.callRefresh();
-                  }
                 },
                 child: const Text('编辑',
                     style: const TextStyle(
@@ -78,6 +75,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           onLoad: null,
           slivers: [
             _Header(model: _model),
+            //驳回理由
+            SliverVisibility(
+              visible: _model.status == 5 &&
+                  _model.reject != null &&
+                  _model.reject.isNotEmpty,
+              sliver: _TextCell(value: _model.reject, title: '驳回理由'),
+            ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               sliver: SliverToBoxAdapter(
@@ -88,20 +92,20 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     child: Column(
                       children: [
                         ..._model.goodsList.map((goodsModel) => Column(
-                          children: [
-                            DeclarationGoodsCell(goodsModel: goodsModel),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '总额：¥ ' +
-                                    goodsModel.countPrice
-                                        .toStringAsFixed(2),
-                                style: const TextStyle(fontSize: 12.0),
-                              ),
-                            ),
-                            const Divider(),
-                          ],
-                        )),
+                              children: [
+                                DeclarationGoodsCell(goodsModel: goodsModel),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '总额：¥ ' +
+                                        goodsModel.countPrice
+                                            .toStringAsFixed(2),
+                                    style: const TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                const Divider(),
+                              ],
+                            )),
                         OrderGoodsCountView(
                           count: _model.goodsCount,
                           countWeight: countWeight,
@@ -114,9 +118,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 ),
               ),
             ),
+            //奖励商品
             SliverPadding(
               padding:
-              const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+                  const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
               sliver: SliverToBoxAdapter(
                 child: Card(
                   child: Container(
@@ -136,124 +141,110 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 ),
               ),
             ),
+            //备注信息
             SliverVisibility(
               visible: _model.remark != null && _model.remark.isNotEmpty,
-              sliver: SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                sliver: SliverToBoxAdapter(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('备注信息',
-                              style: TextStyle(
-                                  color: AppColors.FF959EB1, fontSize: 12.0)),
-                          SizedBox(height: 12.0),
-                          Text(_model.remark  ?? '',
-                              style: TextStyle(
-                                  color: AppColors.FF2F4058, fontSize: 12.0)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              sliver: _TextCell(value: _model.remark, title: '备注信息'),
             ),
+            //确认收货
             SliverVisibility(
-              visible: !_model.completed,
+              visible: _model.status == 3 &&
+                  _model.createUserId == Store.readUserId(),
               sliver: SliverToBoxAdapter(
-                child: SubmitBtn(
-                    title: '确认收货',
-                    onPressed: () async {
-                      bool result = await showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) {
-                            return Container(
-                              height:
-                              116 + MediaQuery.of(context).padding.bottom,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20.0)),
-                              ),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(22.0),
-                                    child: const Text('是否确认收货？',
-                                        style: TextStyle(fontSize: 15.0)),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      SizedBox(
-                                        width: 137,
-                                        height: 40,
-                                        child: TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, false),
-                                            style: TextButton.styleFrom(
-                                              backgroundColor:
-                                              AppColors.FFEFEFF4,
-                                              shape: StadiumBorder(),
-                                            ),
-                                            child: const Text('取消',
-                                                style: TextStyle(
-                                                    color: AppColors.FF959EB1,
-                                                    fontSize: 15.0))),
-                                      ),
-                                      SizedBox(
-                                        width: 137,
-                                        height: 40,
-                                        child: TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, true),
-                                            style: TextButton.styleFrom(
-                                              backgroundColor:
-                                              AppColors.FFC08A3F,
-                                              shape: StadiumBorder(),
-                                            ),
-                                            child: const Text('确定',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 15.0))),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                      if (result != null && result) {
-                        ///确认收货请求
-                        _submitAction();
-                      }
-                    }),
-              ),
+                  child: SubmitBtn(
+                      title: '确认收货', onPressed: () => _submitAction(context))),
             ),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ]),
+      //审核 驳回
+      bottomNavigationBar: Visibility(
+        visible: _model.status == 1 && Store.readUserType() == 'yjkh',
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              top: 15.0,
+              bottom: 15.0 + MediaQuery.of(context).padding.bottom),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: 150,
+                height: 44,
+                child: TextButton(
+                    onPressed: () => _rejectAction(context),
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColors.FF959EB1,
+                      shape: StadiumBorder(),
+                    ),
+                    child: const Text('驳回',
+                        style: TextStyle(color: Colors.white, fontSize: 15.0))),
+              ),
+              SizedBox(
+                width: 150,
+                height: 44,
+                child: TextButton(
+                    onPressed: () => _examineAction(context),
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColors.FFC08A3F,
+                      shape: StadiumBorder(),
+                    ),
+                    child: const Text('确认审核',
+                        style: TextStyle(color: Colors.white, fontSize: 15.0))),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
-  
-  void _submitAction()async{
-    print('_model.id = ${_model.id}');
-    requestPost(Api.orderConfirm,json: jsonEncode({'id':_model.id})).then((value) {
+
+  //驳回
+  void _rejectAction(BuildContext context) {
+    AppUtil.showInputDialog(
+      context: context,
+      editingController: TextEditingController(),
+      focusNode: FocusNode(),
+      text: '',
+      hintText: '请输入驳回理由',
+      callBack: (text) =>  _examineRequest(
+          context, {'id': _model.id, 'status': 5, 'reject': text}),
+    );
+  }
+
+  //确认审核
+  void _examineAction(BuildContext context) async {
+    bool result = await AppUtil.bottomConformSheet(context, '是否确认审核？');
+    if (result != null && result)
+      _examineRequest(context, {'id': _model.id, 'status': 0});
+  }
+
+  //审核驳回网络请求
+  void _examineRequest(BuildContext context, Map param) async {
+    requestPost(Api.orderSh, json: jsonEncode(param)).then((value) {
       var data = jsonDecode(value.toString());
       // print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
     });
   }
 
+  //确认收货
+  void _submitAction(BuildContext context) async {
+    // print('_model.id = ${_model.id}');
+    bool result = await AppUtil.bottomConformSheet(context, '是否确认收货？');
+    if (result != null && result)
+      requestPost(Api.orderConfirm, json: jsonEncode({'id': _model.id}))
+          .then((value) {
+        var data = jsonDecode(value.toString());
+        // print('data = $data');
+        if (data['code'] == 200) Navigator.pop(context, true);
+      });
+  }
+
   Future<void> _refresh() async {
     try {
-      Map<String, dynamic> param = {'id':widget.model.id};
+      Map<String, dynamic> param = {'id': widget.model.id};
       final val = await requestPost(Api.orderDetail, json: jsonEncode(param));
       LogUtil.d('orderDetail value = $val');
       var data = jsonDecode(val.toString());
@@ -265,6 +256,44 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     } catch (error) {
       _controller.finishRefresh(success: false);
     }
+  }
+}
+
+class _TextCell extends StatelessWidget {
+  const _TextCell({
+    Key key,
+    @required String title,
+    @required String value,
+  })  : _value = value,
+        _title = title,
+        super(key: key);
+
+  final String _title;
+  final String _value;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+      sliver: SliverToBoxAdapter(
+        child: Card(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_title,
+                    style: const TextStyle(
+                        color: AppColors.FF959EB1, fontSize: 14.0)),
+                SizedBox(height: 12.0),
+                Text(_value ?? '', style: const TextStyle(fontSize: 14.0)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -294,12 +323,12 @@ class _Header extends StatelessWidget {
                     Expanded(
                         child: Text(_model.storeModel.name,
                             style: TextStyle(
-                                color: _model.completed
+                                color: _model.status == 4
                                     ? Colors.black
                                     : AppColors.FFE45C26,
                                 fontSize: 14.0))),
                     Card(
-                      color: _model.completed
+                      color: _model.status == 4
                           ? AppColors.FFEFEFF4
                           : AppColors.FFE45C26.withOpacity(0.1),
                       shadowColor: Colors.transparent,
@@ -307,12 +336,12 @@ class _Header extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 4.5),
                         child: Text(
-                          _model.completed ? '已完成' : '待确认',
+                          _model.statusName,
                           style: TextStyle(
-                              color: _model.completed
+                              color: _model.status == 4
                                   ? AppColors.FF959EB1
                                   : AppColors.FFE45C26,
-                              fontSize: 12.0),
+                              fontSize: 14.0),
                         ),
                       ),
                     ),
@@ -325,7 +354,7 @@ class _Header extends StatelessWidget {
                     Expanded(
                       child: Text('  ' + _model.time,
                           style: const TextStyle(
-                              color: AppColors.FF959EB1, fontSize: 12.0)),
+                              color: AppColors.FF959EB1, fontSize: 14.0)),
                     ),
                   ],
                 ),
@@ -334,10 +363,11 @@ class _Header extends StatelessWidget {
                   children: [
                     Image.asset('assets/images/sign_in_local2.png',
                         width: 12, height: 12),
+                    SizedBox(width:10),
                     Expanded(
-                      child: Text('  收货地址：${_model.address}',
+                      child: Text('收货地址：${_model.address}',
                           style: const TextStyle(
-                              color: AppColors.FF959EB1, fontSize: 12.0)),
+                              color: AppColors.FF959EB1, fontSize: 14.0)),
                     ),
                   ],
                 ),
@@ -345,10 +375,11 @@ class _Header extends StatelessWidget {
                   children: [
                     Image.asset('assets/images/ic_login_phone_dark_grey.png',
                         width: 12, height: 12),
+                    SizedBox(width:10),
                     Expanded(
-                      child: Text('  联系电话：${_model.phone}',
+                      child: Text('联系电话：${_model.phone}',
                           style: const TextStyle(
-                              color: AppColors.FF959EB1, fontSize: 12.0)),
+                              color: AppColors.FF959EB1, fontSize: 14.0)),
                     ),
                   ],
                 ),

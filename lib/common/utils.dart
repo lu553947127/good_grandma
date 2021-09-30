@@ -568,4 +568,68 @@ class AppUtil {
   static double stringToDouble(String str){
     return  double.parse((str != null && str.isNotEmpty) ? str : '0');
   }
+  ///从底部弹出的确认弹框
+  static Future<bool> bottomConformSheet(BuildContext context,String title) async {
+    return await showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (_) {
+          return Container(
+            height:
+            116 + MediaQuery.of(context).padding.bottom,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20.0)),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(22.0),
+                  child: Text(title,
+                      style: const TextStyle(fontSize: 15.0)),
+                ),
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: 137,
+                      height: 40,
+                      child: TextButton(
+                          onPressed: () =>
+                              Navigator.pop(context, false),
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                            AppColors.FFEFEFF4,
+                            shape: StadiumBorder(),
+                          ),
+                          child: const Text('取消',
+                              style: TextStyle(
+                                  color: AppColors.FF959EB1,
+                                  fontSize: 15.0))),
+                    ),
+                    SizedBox(
+                      width: 137,
+                      height: 40,
+                      child: TextButton(
+                          onPressed: () =>
+                              Navigator.pop(context, true),
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                            AppColors.FFC08A3F,
+                            shape: StadiumBorder(),
+                          ),
+                          child: const Text('确定',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0))),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
 }

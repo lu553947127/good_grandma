@@ -10,10 +10,6 @@ import 'package:good_grandma/widgets/select_tree.dart';
 
 ///商品销量统计
 class SalesStatisticsPage extends StatefulWidget {
-  const SalesStatisticsPage({Key key, this.userType = 1}) : super(key: key);
-
-  ///分三种登录用户类型,不同类型显示状态不同 1：业务经理，2：管理层，3：客户登录
-  final int userType;
 
   @override
   _SalesStatisticsPageState createState() => _SalesStatisticsPageState();

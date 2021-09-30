@@ -54,93 +54,79 @@ class AddPageGoodsCell extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 260),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              model.name,
-                              style: const TextStyle(
-                                  color: AppColors.FF2F4058, fontSize: 14.0),
-                            ),
-                          ),
-                          //删除按钮
-                          GestureDetector(
-                              onTap: deleteAction,
-                              child: Icon(Icons.delete_forever_outlined)),
-                        ],
+                    Text(
+                    model.name,
+                    style: const TextStyle(
+                        color: AppColors.FF2F4058, fontSize: 14.0),
+                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Visibility(
+                        visible: model.specs.isNotEmpty,
+                        child: Text(
+                          '规格：1x' + model.specs.first.spec,
+                          style: const TextStyle(
+                              color: AppColors.FF959EB1, fontSize: 12.0),
+                        ),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      constraints: BoxConstraints(maxWidth: 260),
-                      child: Row(
+                    Text.rich(TextSpan(
+                        text: '¥',
+                        style: const TextStyle(
+                            color: AppColors.FFE45C26, fontSize: 12.0),
                         children: [
-                          Visibility(
-                            visible: model.specs.isNotEmpty,
-                            child: Text(
-                              '规格：1x' + model.specs.first.spec,
-                              style: const TextStyle(
-                                  color: AppColors.FF959EB1, fontSize: 12.0),
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            '¥' + price.toStringAsFixed(2),
-                            style: const TextStyle(
-                                color: AppColors.FF959EB1, fontSize: 12.0),
-                          ),
-                        ],
+                          TextSpan(
+                            text: countPrice.toStringAsFixed(2),
+                            style: const TextStyle(fontSize: 18.0),
+                          )
+                        ])),
+                  ],
+                ),
+                Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    //删除按钮
+                    GestureDetector(
+                        onTap: deleteAction,
+                        child: Icon(Icons.delete_forever_outlined)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        '¥' + price.toStringAsFixed(2),
+                        style: const TextStyle(
+                            color: AppColors.FF959EB1, fontSize: 12.0),
                       ),
                     ),
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 260),
-                      child: Row(
-                        children: [
-                          Text.rich(TextSpan(
-                              text: '¥',
-                              style: const TextStyle(
-                                  color: AppColors.FFE45C26, fontSize: 12.0),
-                              children: [
-                                TextSpan(
-                                  text: countPrice.toStringAsFixed(2),
-                                  style: const TextStyle(fontSize: 18.0),
-                                )
-                              ])),
-                          Spacer(),
-                          //修改数量
-                          NumberCounter(
-                            num: model.count,
-                            subBtnOnTap: () {
-                              if (model.count == 0) return;
-                              model.count--;
-                              if (numberChangeAction != null)
-                                numberChangeAction();
-                            },
-                            addBtnOnTap: () {
-                              model.count++;
-                              if (numberChangeAction != null)
-                                numberChangeAction();
-                            },
-                            numOnTap: () => AppUtil.showInputDialog(
-                                context: context,
-                                editingController: _editingController,
-                                focusNode: _focusNode,
-                                text: model.count.toString(),
-                                hintText: '请输入数字',
-                                keyboardType: TextInputType.number,
-                                callBack: (num) {
-                                  if (num.isEmpty)
-                                    model.count = 0;
-                                  else
-                                    model.count = int.parse(num);
-                                  if (numberChangeAction != null)
-                                    numberChangeAction();
-                                }),
-                          ),
-                        ],
-                      ),
+                    //修改数量
+                    NumberCounter(
+                      num: model.count,
+                      subBtnOnTap: () {
+                        if (model.count == 0) return;
+                        model.count--;
+                        if (numberChangeAction != null)
+                          numberChangeAction();
+                      },
+                      addBtnOnTap: () {
+                        model.count++;
+                        if (numberChangeAction != null)
+                          numberChangeAction();
+                      },
+                      numOnTap: () => AppUtil.showInputDialog(
+                          context: context,
+                          editingController: _editingController,
+                          focusNode: _focusNode,
+                          text: model.count.toString(),
+                          hintText: '请输入数字',
+                          keyboardType: TextInputType.number,
+                          callBack: (num) {
+                            if (num.isEmpty)
+                              model.count = 0;
+                            else
+                              model.count = int.parse(num);
+                            if (numberChangeAction != null)
+                              numberChangeAction();
+                          }),
                     ),
                   ],
                 ),

@@ -34,12 +34,12 @@ class MyDeclarationFormCell extends StatelessWidget {
                   Expanded(
                       child: Text(model.storeModel.name ?? '',
                           style: TextStyle(
-                              color: model.completed
+                              color: model.status == 4
                                   ? Colors.black
                                   : AppColors.FFE45C26,
                               fontSize: 14.0))),
                   Card(
-                    color: model.completed
+                    color: model.status == 4
                         ? AppColors.FFEFEFF4
                         : AppColors.FFE45C26.withOpacity(0.1),
                     shadowColor: Colors.transparent,
@@ -47,12 +47,12 @@ class MyDeclarationFormCell extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 4.5),
                       child: Text(
-                        model.completed ? '已完成' : '待确认',
+                        model.statusName,
                         style: TextStyle(
-                            color: model.completed
+                            color: model.status == 4
                                 ? AppColors.FF959EB1
                                 : AppColors.FFE45C26,
-                            fontSize: 12.0),
+                            fontSize: 14.0),
                       ),
                     ),
                   ),
@@ -60,7 +60,7 @@ class MyDeclarationFormCell extends StatelessWidget {
               ),
               Text(model.time ?? '',
                   style: const TextStyle(
-                      color: AppColors.FF959EB1, fontSize: 12.0)),
+                      color: AppColors.FF959EB1, fontSize: 14.0)),
               const Divider(),
               ...model.goodsList.map(
                   (goodsModel) => DeclarationGoodsCell(goodsModel: goodsModel)),
@@ -68,7 +68,7 @@ class MyDeclarationFormCell extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: Text.rich(TextSpan(
                     text: '总额：',
-                    style: const TextStyle(color: Colors.black, fontSize: 12.0),
+                    style: const TextStyle(color: Colors.black, fontSize: 14.0),
                     children: [
                       TextSpan(
                         text: '¥ ',
@@ -119,12 +119,12 @@ class DeclarationGoodsCell extends StatelessWidget {
             children: [
               Text(goodsModel.name,
                   style: const TextStyle(
-                      color: AppColors.FF2F4058, fontSize: 12.0)),
+                      color: AppColors.FF2F4058, fontSize: 14.0)),
               Visibility(
                 visible: goodsModel.specs.isNotEmpty,
                 child: Text('规格：1x' + goodsModel.specs.first.spec,
                     style: const TextStyle(
-                        color: AppColors.FF959EB1, fontSize: 12.0)),
+                        color: AppColors.FF959EB1, fontSize: 14.0)),
               )
             ],
           ),
@@ -134,10 +134,10 @@ class DeclarationGoodsCell extends StatelessWidget {
             children: [
               Text('¥' + goodsModel.invoice.toStringAsFixed(2),
                   style: const TextStyle(
-                      color: AppColors.FF959EB1, fontSize: 12.0)),
+                      color: AppColors.FF959EB1, fontSize: 14.0)),
               Text('x' + goodsModel.count.toStringAsFixed(0),
                   style: const TextStyle(
-                      color: AppColors.FF959EB1, fontSize: 12.0)),
+                      color: AppColors.FF959EB1, fontSize: 14.0)),
             ],
           ),
         ],
