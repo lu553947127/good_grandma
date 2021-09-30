@@ -46,6 +46,8 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       'longitude': longitude,
       'address': address};
 
+    LogUtil.d('请求结果---customerVisitAdd----$map');
+
     requestPost(Api.customerVisitAdd, json: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---customerVisitAdd----$data');
