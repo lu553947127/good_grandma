@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/widgets/mine_bar_chart_widget.dart';
 import 'package:good_grandma/widgets/mine_line_chart_widget.dart';
 
-///我的业绩
+///我的业绩 我的页面跳转进来的 现在没有用处
 class MinePerformancePage extends StatefulWidget {
   const MinePerformancePage({Key key}) : super(key: key);
 

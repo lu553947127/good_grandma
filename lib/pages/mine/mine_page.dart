@@ -12,10 +12,10 @@ import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/declaration_form/add_declaration_form_page.dart';
 import 'package:good_grandma/pages/declaration_form/my_declaration_form_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
-import 'package:good_grandma/pages/mine/mine_performance_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/pages/order/order_page.dart';
+import 'package:good_grandma/pages/performance/my_performance_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
 import 'package:provider/provider.dart';
 
@@ -205,7 +205,7 @@ class _MinePageState extends State<MinePage> {
         {
           //我的业绩
           Navigator.push(context,
-              MaterialPageRoute(builder: (_) => MinePerformancePage()));
+              MaterialPageRoute(builder: (_) => MyPerformancePage()));
         }
         break;
       case 0:

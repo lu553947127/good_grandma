@@ -31,9 +31,11 @@ class HomePage extends StatefulWidget {
 class _Body extends State<HomePage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
-  String _msgTime = '2021-07-09';
+  String _msgTime = '';
   String _msgCount = '0';
   List<HomeReportModel> _reportList = [];
+  int _current = 1;
+  int _pageSize = 7;
 
   @override
   void initState() {
@@ -49,8 +51,8 @@ class _Body extends State<HomePage> {
           controller: _controller,
           scrollController: _scrollController,
           dataCount: _reportList.length + 1,
-          onRefresh: _getBaoGaoList,
-          onLoad: null,
+          onRefresh: _refresh,
+          onLoad: _onLoad,
           slivers: [
             //顶部按钮
             HomeTableHeader(
@@ -73,14 +75,22 @@ class _Body extends State<HomePage> {
             )),
             //拜访计划
             SliverToBoxAdapter(
-                child: HomeGroupTitle(title: '拜访计划', showMoreBtnOnTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitPlan()));
-                })),
+                child: HomeGroupTitle(
+                    title: '拜访计划',
+                    showMoreBtnOnTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => VisitPlan()));
+                    })),
             //日历和计划
             SliverToBoxAdapter(child: HomePlanCell()),
             //工作报告
             SliverToBoxAdapter(
-                child: HomeGroupTitle(title: '工作报告', showMoreBtnOnTap: () {})),
+                child: HomeGroupTitle(
+                    title: '工作报告',
+                    showMoreBtnOnTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WorkReport())))),
             //报告列表
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
@@ -88,7 +98,7 @@ class _Body extends State<HomePage> {
               return HomeReportCell(model: model);
             }, childCount: _reportList.length)),
           ]),
-      // body: buildScrollbar(context),
+      // body: buildScrollbar(context),'
     );
   }
 
@@ -130,41 +140,40 @@ class _Body extends State<HomePage> {
     }
   }
 
-  Future<void> _getBaoGaoList() async {
+  Future<void> _refresh() async {
     _getMsgCountRequest();
+    _current = 1;
+    _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    _downloadData();
+  }
+
+  Future<void> _downloadData() async {
     try {
-      await Future.delayed(Duration(seconds: 1));
-      _reportList.clear();
-      for (int i = 0; i < 3; i++) {
-        _reportList.add(HomeReportModel(
-          avatar:
-              'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg',
-          userName: '猫和老鼠',
-          time: '2012-05-29 16:31:50',
-          postType: i + 1,
-          target: 45667.0,
-          cumulative: 34567.0,
-          actual: 12345441.0,
-          summary: [
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          ],
-          plans: [
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-            '和冯经理拜访经销商和冯经理拜访经销商和冯经理',
-          ],
-        ));
-      }
+      Map<String, dynamic> map = {
+        'current': _current,
+        'size': _pageSize,
+        'status': 2,
+        'type': '',
+        'userids': '',
+        'startTime': '',
+        'endTime': '',
+      };
+      // print('param = ${jsonEncode(map)}');
+      final val = await requestPost(Api.reportList, json: jsonEncode(map));
+      // LogUtil.d('reportList value = $val');
+      final data = jsonDecode(val.toString());
+      if (_current == 1) _reportList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        HomeReportModel model = HomeReportModel.fromJson(map);
+        _reportList.add(model);
+      });
       bool noMore = false;
-      if (_reportList == null || _reportList.isEmpty) noMore = true;
+      if (list == null || list.isEmpty) noMore = true;
       _controller.finishRefresh(success: true);
       _controller.finishLoad(success: true, noMore: noMore);
       if (mounted) setState(() {});
@@ -174,15 +183,14 @@ class _Body extends State<HomePage> {
     }
   }
 
-
-  Future<void> _getMsgCountRequest() async{
+  Future<void> _getMsgCountRequest() async {
     requestGet(Api.getCategoryCount).then((value) {
       var data = jsonDecode(value.toString());
       final List<dynamic> list = data['data'];
-      if(list.isNotEmpty){
+      if (list.isNotEmpty) {
         int count = 0;
         list.forEach((map) {
-          String read = map['read']??'0';
+          String read = map['read'] ?? '0';
           count += int.parse(read);
         });
         if (mounted) setState(() => _msgCount = count.toString());
