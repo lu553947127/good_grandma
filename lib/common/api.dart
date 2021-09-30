@@ -301,4 +301,11 @@ class Api {
   ///客户统计每个月业绩
   static const selectMonthStatistics =
       "/api/hap-app1/app/contract/selectMonthStatistics";
+
+  ///报告统计
+  static const reportTj =
+      "/api/hap-apptony/app/report/reportTj";
+  ///报告统计详情列表
+  static const reportTjDetail =
+      "/api/hap-apptony/app/report/reportTjDetail";
 }
