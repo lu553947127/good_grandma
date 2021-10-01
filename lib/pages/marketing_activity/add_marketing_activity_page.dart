@@ -307,6 +307,41 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
   ///添加市场活动
   void _submitAction(BuildContext context, MarketingActivityModel activityModel) async {
 
+    if (activityModel.name == ''){
+      showToast('活动名称不能为空');
+      return;
+    }
+
+    if (activityModel.startTime == ''){
+      showToast('开始时间不能为空');
+      return;
+    }
+
+    if (activityModel.endTime == ''){
+      showToast('结束时间不能为空');
+      return;
+    }
+
+    if (activityModel.customerName == ''){
+      showToast('上级通路客户不能为空');
+      return;
+    }
+
+    if (activityModel.sketch == ''){
+      showToast('活动简述不能为空');
+      return;
+    }
+
+    if (activityModel.sampleList.length == 0){
+      showToast('试吃品不能为空');
+      return;
+    }
+
+    if (activityModel.purchaseMoney == ''){
+      showToast('预计进货额不能为空');
+      return;
+    }
+
     List<String> materIdList = [];
     activityModel.sampleList.forEach((element) {
       materIdList.add(element['id']);

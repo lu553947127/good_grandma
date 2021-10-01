@@ -184,15 +184,15 @@ class _VisitPlanState extends State<VisitPlan> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            FloatingActionButton(
-              child: Text('今', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700)),
-              backgroundColor: AppColors.FF959EB1,
-              heroTag: 'other',
-              onPressed: (){
-
-              }
-            ),
-            SizedBox(width: 10),
+            // FloatingActionButton(
+            //   child: Text('今', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w700)),
+            //   backgroundColor: AppColors.FF959EB1,
+            //   heroTag: 'other',
+            //   onPressed: (){
+            //
+            //   }
+            // ),
+            // SizedBox(width: 10),
             FloatingActionButton(
               child: Icon(Icons.add),
               backgroundColor: AppColors.FFC68D3E,
