@@ -37,6 +37,17 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
   ///新增
   _customerVisitAdd(){
+
+    if (customerName == ''){
+      showToast('客户不能为空');
+      return;
+    }
+
+    if (visitContent == ''){
+      showToast('内容不能为空');
+      return;
+    }
+
     Map<String, dynamic> map = {
       'customerId': customerId,
       'customerName': customerName,

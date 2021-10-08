@@ -277,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 20),
               _accountView(),
               _codeView(),
-              _accountOrPassword(),
+              // _accountOrPassword(),
               SizedBox(height: 10),
               LoginBtn(
                 title: '登录',
