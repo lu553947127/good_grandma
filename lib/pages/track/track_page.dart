@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/models/track_model.dart';
 import 'package:good_grandma/pages/track/select_user_page.dart';
+import 'package:good_grandma/widgets/map_util.dart';
 
 ///行动轨迹
 class TrackPage extends StatefulWidget {
@@ -177,7 +179,7 @@ class _TrackPageState extends State<TrackPage> {
       // print('param = ${jsonEncode(param)}');
       final val =
           await requestPost(Api.trajectoryList, json: jsonEncode(param));
-      // LogUtil.d('trajectoryList value = $val');
+      LogUtil.d('trajectoryList value = $val');
       _dataArray.clear();
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
@@ -288,8 +290,11 @@ class _TrackPageState extends State<TrackPage> {
                             style: const TextStyle(fontSize: 14.0)),
                       )),
                       TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('关闭',
+                          onPressed: () {
+                            Navigator.pop(context);
+                            MapUtil.gotoAMap(model.latLng.longitude, model.latLng.latitude);
+                          },
+                          child: const Text('导航到这里',
                               style: const TextStyle(
                                   fontSize: 14.0, color: AppColors.FF959EB1))),
                     ],

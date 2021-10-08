@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
@@ -46,7 +50,17 @@ class _Body extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: Text("好阿婆")),
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text("好阿婆"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  getQrcodeState();
+                },
+                child: Image.asset('assets/images/home_scan.png', width: 20.0, height: 20.0)),
+          ]
+      ),
       body: MyEasyRefreshSliverWidget(
           controller: _controller,
           scrollController: _scrollController,
@@ -196,6 +210,27 @@ class _Body extends State<HomePage> {
         if (mounted) setState(() => _msgCount = count.toString());
       }
     });
+  }
+
+  ///启动相机开始扫码
+  Future<void> getQrcodeState() async {
+    String qrcode;
+    try {
+      var result = await BarcodeScanner.scan();
+      qrcode = result.rawContent;
+    } on PlatformException {
+      qrcode = 'Failed to get platform version.';
+    }
+    print('qrcode==========$qrcode');
+
+    Fluttertoast.showToast(msg: qrcode,gravity: ToastGravity.CENTER);
+
+    // ///扫码上传
+    // requestPost(Api.scanCode,formData:{'id':qrcode}).then((val){
+    //   var data = json.decode(val.toString());
+    //   print('请求结果---scanCode----$data');
+    //   showToast('扫码成功');
+    // });
   }
 
   @override
