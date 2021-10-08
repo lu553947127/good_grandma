@@ -70,7 +70,7 @@ class PostDetailProgressView extends StatelessWidget {
               title: '下周规划进货金额',
               textColor: color,
               fontSize: 14.0,
-              width: 0,
+              showProgressLine: false,
               height: 8,
               showWY: false),
         ],
@@ -78,14 +78,13 @@ class PostDetailProgressView extends StatelessWidget {
     }
 
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(4)),
-          child: view,
-        ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        margin: const EdgeInsets.symmetric(horizontal: 15.0),
+        width: double.infinity,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(4)),
+        child: view,
       ),
     );
   }
@@ -117,57 +116,53 @@ class PostDetailProgressCoreView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double w = 90;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PostProgressView(
-              count: target,
-              current: target,
-              color: color.withOpacity(0.4),
-              title: '本月目标',
-              textColor: color,
-              fontSize: 14.0,
-              width: w,
-              height: 8,
-                showWY: false
-            ),
-            PostProgressView(
-                count: target,
-                current: cumulative,
-                color: color.withOpacity(0.6),
-                title: '本月累计',
-                textColor: color,
-                fontSize: 14.0,
-                width: w,
-                height: 8,
-                showWY: false),
-            PostProgressView(
-                count: target,
-                current: current,
-                color: color,
-                title: typeName,
-                textColor: color,
-                fontSize: 14.0,
-                width: w,
-                height: 8,
-                showWY: false),
-            PostProgressView(
-                count: target,
-                current: difference,
-                color: color,
-                title: '月度差额',
-                textColor: color,
-                fontSize: 14.0,
-                width: 0,
-                height: 8,
-                showWY: false),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PostProgressView(
+                  count: target,
+                  current: target,
+                  color: color.withOpacity(0.4),
+                  title: '本月目标',
+                  textColor: color,
+                  fontSize: 14.0,
+                  height: 8,
+                  showWY: false),
+                PostProgressView(
+                    count: target,
+                    current: cumulative,
+                    color: color.withOpacity(0.6),
+                    title: '本月累计',
+                    textColor: color,
+                    fontSize: 14.0,
+                    height: 8,
+                    showWY: false),
+                PostProgressView(
+                    count: target,
+                    current: current,
+                    color: color,
+                    title: typeName,
+                    textColor: color,
+                    fontSize: 14.0,
+                    height: 8,
+                    showWY: false),
+                PostProgressView(
+                    count: target,
+                    current: difference,
+                    color: color,
+                    title: '月度差额',
+                    textColor: color,
+                    fontSize: 14.0,
+                    showProgressLine: false,
+                    height: 8,
+                    showWY: false),
+            ],
+          ),
         ),
-        Spacer(),
         Padding(
           padding: const EdgeInsets.only(right: 10.0),
           child: CustomPaint(

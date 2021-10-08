@@ -53,7 +53,7 @@ class PostDetailSalesTrackingCell extends StatelessWidget {
                     title: '下周规划进货金额',
                     textColor: color,
                     fontSize: 14.0,
-                    width: 0,
+                    showProgressLine: false,
                     height: 8,
                     showWY: false),
               ],

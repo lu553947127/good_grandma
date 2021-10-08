@@ -20,9 +20,8 @@ class PostProgressView extends StatelessWidget {
   ///金额文字颜色
   final Color textColor;
   final double fontSize;
-
-  ///进度条最大宽度
-  final double width;
+  ///是否显示进度条
+  final bool showProgressLine;
 
   ///进度条高度
   final double height;
@@ -38,7 +37,7 @@ class PostProgressView extends StatelessWidget {
     @required this.color,
     @required this.title,
     @required this.textColor,
-    this.width = 150,
+    this.showProgressLine = true,
     this.titleColor = Colors.black,
     this.height = 6,
     this.fontSize = 12.0,
@@ -50,14 +49,13 @@ class PostProgressView extends StatelessWidget {
   Widget build(BuildContext context) {
     double r = count == 0 ? current : current / count;
     if (r > 1) r = 1;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
-      child: Row(
-        children: [
-          Text((title ?? '') + '  ',
-              style: TextStyle(color: titleColor, fontSize: 14.0)),
-          Expanded(child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+    Widget row = Row(
+      children: [
+        Text((title ?? '') + '  ',
+            style: TextStyle(color: titleColor, fontSize: 14.0)),
+        Visibility(
+          visible: showProgressLine,
+          child: Expanded(child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
             return
               Stack(
                 children: [
@@ -73,14 +71,19 @@ class PostProgressView extends StatelessWidget {
                 ],
               );
           },)),
-          Text(
-              (width == 0 ? '' : '  ') +
-                  (fontSize == 12.0 ? '¥' : '') +
-                  '${_numTranfer(current)}' +
-                  (showWY ? '万元' : ''),
-              style: TextStyle(color: textColor, fontSize: fontSize)),
-        ],
-      ),
+        ),
+        Text(
+            (!showProgressLine ? '' : '  ') +
+                (fontSize == 12.0 ? '¥' : '') +
+                '${_numTranfer(current)}' +
+                (showWY ? '万元' : ''),
+            style: TextStyle(color: textColor, fontSize: fontSize)),
+      ],
+    );
+    if(horizontal == 0 && vertical == 0) return row;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+      child: row,
     );
   }
 

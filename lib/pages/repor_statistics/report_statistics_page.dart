@@ -74,6 +74,7 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
                         builder: (_) => ReportStatisticsDetailPage(
                               id: id,
                               name: name,
+                              avatar: avatar,
                             ))),
               );
             }, childCount: _dataArray.length)),
