@@ -40,7 +40,7 @@ class _VisitPlanState extends State<VisitPlan> {
   @override
   void initState() {
     super.initState();
-    _visitPlanList('${_focusedDay.year}-${_twoDigits(_focusedDay.month)}-${_focusedDay.day}');
+    _visitPlanList('${_focusedDay.year}-${_twoDigits(_focusedDay.month)}-${_twoDigits(_focusedDay.day)}');
     _selectedDay = _focusedDay;
   }
 
@@ -59,7 +59,7 @@ class _VisitPlanState extends State<VisitPlan> {
       });
     }
 
-    _visitPlanList('${selectedDay.year}-${_twoDigits(selectedDay.month)}-${selectedDay.day}');
+    _visitPlanList('${selectedDay.year}-${_twoDigits(selectedDay.month)}-${_twoDigits(selectedDay.day)}');
   }
 
   @override
