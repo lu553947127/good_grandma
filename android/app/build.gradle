@@ -27,7 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     signingConfigs {
         debug {
-            storeFile file('/Users/luhongxiang/AndroidStudioProjects/flutterProjects/good_grandma/android/app/good_grandma')
+            storeFile file('./good_grandma')
             keyAlias 'good_grandma'
             storePassword '123456'
             keyPassword '123456'
