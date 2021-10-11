@@ -512,7 +512,8 @@ class AppUtil {
   ///字符串转list，主要是在工作报告的接口中使用
   static List<String> getListFromString(String str){
     if(str == null || str.isEmpty) return [];
-    List list = jsonDecode(str);
+    String resultStr = str.replaceAll('\n', '');
+    List list = jsonDecode(resultStr);
     if(list == null || list.isEmpty) return [];
     List<String> targetList = [];
     list.forEach((element) {
