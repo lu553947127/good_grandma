@@ -6,8 +6,10 @@ import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/pages/work/work_report/select_employee_page.dart';
 
 class WorkSelectType extends StatefulWidget {
-  const WorkSelectType({Key key, @required this.selectAction})
+  const WorkSelectType({Key key, @required this.selectAction, this.reset = false})
       : super(key: key);
+  ///重设数据为默认样式
+  final bool reset;
   final Function(List<EmployeeModel> selEmployees,String typeName,String startTime,String endTime,) selectAction;
   @override
   State<StatefulWidget> createState() => _Body();
@@ -20,6 +22,22 @@ class _Body extends State<WorkSelectType> {
   String _btnName3 = '所有日期';
   String _startTime = '';
   String _endTime = '';
+
+  @override
+  void didUpdateWidget(covariant WorkSelectType oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('didUpdateWidget123412412431243 widget.reset = ${widget.reset}');
+    if(widget.reset){
+      setState(() {
+        _btnName1 = '所有人';
+        _btnName2 = '所有类型';
+        _btnName3 = '所有日期';
+        _startTime = '';
+        _endTime = '';
+        _employees.clear();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,21 +96,21 @@ class _Body extends State<WorkSelectType> {
               onPressed: () async {
                 List<EmployeeModel> list = await Navigator.push(context,
                     MaterialPageRoute(builder: (_) {
-                  List<EmployeeModel> _selEmployees = _employees
-                      .where((employee) => employee.isSelected)
-                      .toList();
+                  // List<EmployeeModel> _selEmployees = _employees
+                  //     .where((employee) => employee.isSelected)
+                  //     .toList();
                   return SelectEmployeePage(
-                    selEmployees: _selEmployees,
+                    selEmployees: _employees//_selEmployees
                   );
                 }));
                 if (list != null && list.isNotEmpty) {
                   _employees.clear();
                   _employees.addAll(list);
                   if (widget.selectAction != null) {
-                    List<EmployeeModel> _selEmployees = _employees
-                        .where((employee) => employee.isSelected)
-                        .toList();
-                    widget.selectAction(_selEmployees,_btnName2,_startTime,_endTime);
+                    // List<EmployeeModel> _selEmployees = _employees
+                    //     .where((employee) => employee.isSelected)
+                    //     .toList();
+                    widget.selectAction(_employees,_btnName2,_startTime,_endTime);
                   }
                   if (mounted) setState(() {});
                 }
@@ -128,10 +146,10 @@ class _Body extends State<WorkSelectType> {
                 if (result != null && result.isNotEmpty) {
                   setState(() => _btnName2 = result);
                   if (widget.selectAction != null) {
-                    List<EmployeeModel> _selEmployees = _employees
-                        .where((employee) => employee.isSelected)
-                        .toList();
-                    widget.selectAction(_selEmployees,_btnName2,_startTime,_endTime);
+                    // List<EmployeeModel> _selEmployees = _employees
+                    //     .where((employee) => employee.isSelected)
+                    //     .toList();
+                    widget.selectAction(_employees,_btnName2,_startTime,_endTime);
                   }
                 }
               },
@@ -168,10 +186,10 @@ class _Body extends State<WorkSelectType> {
                         _endTime = times.first;
                       });
                       if (widget.selectAction != null) {
-                        List<EmployeeModel> _selEmployees = _employees
-                            .where((employee) => employee.isSelected)
-                            .toList();
-                        widget.selectAction(_selEmployees,_btnName2,_startTime,_endTime);
+                        // List<EmployeeModel> _selEmployees = _employees
+                        //     .where((employee) => employee.isSelected)
+                        //     .toList();
+                        widget.selectAction(_employees,_btnName2,_startTime,_endTime);
                       }
                     });
               },

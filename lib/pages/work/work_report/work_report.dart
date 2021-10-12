@@ -50,6 +50,7 @@ class _WorkReportState extends State<WorkReport> {
     {'name': '我提交的'},
     {'name': '我的草稿'},
   ];
+  bool _resetWorkSelectType = false;
 
   @override
   void initState() {
@@ -68,11 +69,18 @@ class _WorkReportState extends State<WorkReport> {
                 selIndex: _selIndex,
                 list: _listTitle,
                 onTap: (index) {
-                  _selIndex = index;
+                  setState(() {
+                    _selIndex = index;
+                    _resetWorkSelectType = true;
+                    _type = '';
+                    _userIds = '';
+                    _startTime = '';
+                    _endTime = '';
+                  });
                   _controller.callRefresh();
                 }),
             //筛选
-            WorkSelectType(selectAction: _workSelectTypeAction),
+            WorkSelectType(selectAction: _workSelectTypeAction,reset: _resetWorkSelectType),
             Expanded(
               child: MyEasyRefreshSliverWidget(
                   controller: _controller,
@@ -109,7 +117,7 @@ class _WorkReportState extends State<WorkReport> {
   }
 
   Future<void> _downloadData() async {
-    //status 1:草稿 2：提交
+    //status 1:草稿 2：提交 0收到的
     int status = 1;
     if (_selIndex == 0)
       status = 0;
@@ -126,9 +134,9 @@ class _WorkReportState extends State<WorkReport> {
         'startTime': _startTime,
         'endTime': _endTime,
       };
-      print('param = ${jsonEncode(map)}');
+      // print('param = ${jsonEncode(map)}');
       final val = await requestPost(Api.reportList, json: jsonEncode(map));
-      LogUtil.d('${Api.reportList} value = $val');
+      // LogUtil.d('${Api.reportList} value = $val');
       final data = jsonDecode(val.toString());
       if (_current == 1) _reportList.clear();
       final List<dynamic> list = data['data'];
@@ -145,6 +153,7 @@ class _WorkReportState extends State<WorkReport> {
       _controller.finishRefresh(success: false);
       _controller.finishLoad(success: false, noMore: false);
     }
+    _resetWorkSelectType = false;
   }
 
   void _workSelectTypeAction(List<EmployeeModel> selEmployees, String typeName,
@@ -175,6 +184,7 @@ class _WorkReportState extends State<WorkReport> {
     }
     _startTime = startTime;
     _endTime = endTime;
+    _resetWorkSelectType = false;
     _controller.callRefresh();
   }
 
