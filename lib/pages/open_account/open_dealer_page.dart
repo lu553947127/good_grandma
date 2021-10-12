@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/add_dealer_model.dart';
-import 'package:good_grandma/models/employee_model.dart';
-import 'package:good_grandma/pages/open_account/select_city_manager_page.dart';
-import 'package:good_grandma/widgets/type_btn.dart';
+import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
@@ -12,10 +15,7 @@ import 'package:provider/provider.dart';
 
 ///开通经销商
 class OpenDealerPage extends StatefulWidget {
-  const OpenDealerPage({Key key, this.isSpecial = false}) : super(key: key);
-
-  ///是否是特约经销商
-  final bool isSpecial;
+  const OpenDealerPage({Key key}) : super(key: key);
   @override
   _OpenDealerPageState createState() => _OpenDealerPageState();
 }
@@ -32,17 +32,10 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
     return WillPopScope(
       onWillPop: () => AppUtil.onWillPop(context),
       child: Scaffold(
-        appBar: AppBar(title: const Text('开通经销商')),
+        appBar: AppBar(title: Text('开通${_model.postName}')),
         body: Scrollbar(
           child: CustomScrollView(
             slivers: [
-              //类型
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                sliver: SliverToBoxAdapter(
-                  child: _ChoseType(model: _model),
-                ),
-              ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                 Map map = list1[index];
@@ -51,14 +44,7 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
                 String hintText = map['hintText'];
                 String end = map['end'];
                 TextInputType keyBoardType = map['keyBoardType'];
-                if (index == 7) {
-                  //辖区级别
-                  return _SelectAreaLevel(
-                    title: title,
-                    areaLevel: _model.areaLevel,
-                    onTap: (areaLevel) => _model.setAreaLevel(areaLevel),
-                  );
-                }
+
                 return PostAddInputCell(
                   title: title,
                   value: value,
@@ -107,7 +93,7 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
               SliverToBoxAdapter(
                 child: SubmitBtn(
                   title: '提  交',
-                  onPressed: () {},
+                  onPressed: () => _openCustomer(context, _model),
                 ),
               ),
             ],
@@ -124,18 +110,27 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       String hintText,
       TextInputType keyBoardType,
       String value}) async {
-    if (index == 8) {
-      //选择区域
-      List<String> options = ['大区一', '大区2'];
-      String result = await showPicker(options, context);
-      if (result != null && result.isNotEmpty) model.setArea(result);
-    } else if (index == 9) {
-      //选择城市经理
-      EmployeeModel result = await Navigator.push(
-          context, MaterialPageRoute(builder: (_) => SelectCityManagerPage()));
-      if (result != null) {
-        model.setCityManager(result);
+    if (index == 0) {
+      //选择经销商性质
+      Map select = await showSelectList(context, Api.natureType, '请选择经销商性质', 'dictValue');
+      model.setNature(select['dictKey']);
+      model.setNatureName(select['dictValue']);
+    } else if (index == 10) {
+      //选择角色
+      Map select = await showSelectList(context, Api.roleCustomer, '请选择所属角色', 'roleName');
+      model.setRole(select['id']);
+      model.setRoleName(select['roleName']);
+    } else if (index == 11) {
+      //选择性别
+      String result = await showPicker(['男', '女'], context);
+      if (result != null){
+        model.setSex(result == '男' ? '1' : '2');
+        model.setSexName(result);
       }
+    } else if (index == 16) {
+      //选择出生日期
+      String time = await showPickerDate(context);
+      model.setBirthday(time);
     } else {
       AppUtil.showInputDialog(
           context: context,
@@ -146,38 +141,44 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
           keyboardType: keyBoardType,
           callBack: (text) {
             switch (index) {
-              case 0: //公司名称
+              case 1: //公司名称
                 model.setCorporateName(text);
                 break;
-              case 1: //营业执照号
-                model.setLicenseNo(text);
-                break;
-              case 2: //法人姓名
-                model.setLegalPerson(text);
-                break;
-              case 3: //法人身份证
-                model.setCorporateIDCard(text);
-                break;
-              case 4: //开户银行
-                model.setBankName(text);
-                break;
-              case 5: //银行账号
-                model.setBankNo(text);
-                break;
-              case 6: //联系手机
-                model.setPhone(text);
-                break;
-              case 10: //公司地址
+              case 2: //公司地址
                 model.setAddress(text);
                 break;
-              case 11: //仓库地址
-                model.setWarehouseAddress(text);
+              case 3: //营业执照号
+                model.setLicenseNo(text);
                 break;
-              case 12: //收货人
-                model.setConsignee(text);
+              case 4: //邮箱
+                model.setEmail(text);
                 break;
-              case 13: //收货人手机
-                model.setConsigneePhone(text);
+              case 5: //联系手机
+                model.setPhone(text);
+                break;
+              case 6: //法人姓名
+                model.setJuridical(text);
+                break;
+              case 7: //法人身份证
+                model.setJuridicalId(text);
+                break;
+              case 8: //法人电话
+                model.setJuridicalPhone(text);
+                break;
+              case 9: //姓名
+                model.setRealName(text);
+                break;
+              case 12: //开户银行
+                model.setBank(text);
+                break;
+              case 13: //银行账号
+                model.setBankAccount(text);
+                break;
+              case 14: //开户人
+                model.setBankUser(text);
+                break;
+              case 15: //开户人身份证号
+                model.setBankCard(text);
                 break;
             }
           });
@@ -187,6 +188,13 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
   List<Map> _getList1(AddDealerModel _model) {
     List<Map> list1 = [
       {
+        'title': '经销商性质',
+        'value': _model.natureName,
+        'hintText': '请选择经销商性质',
+        'keyBoardType': null,
+        'end': '>'
+      },
+      {
         'title': '公司名称',
         'value': _model.corporateName,
         'hintText': '请填写公司名称',
@@ -194,37 +202,23 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
         'end': ''
       },
       {
+        'title': '公司地址',
+        'value': _model.address,
+        'hintText': '请填写公司地址',
+        'keyBoardType': TextInputType.text,
+        'end': ''
+      },
+      {
         'title': '营业执照号',
         'value': _model.licenseNo,
         'hintText': '请填写营业执照号',
-        'keyBoardType': TextInputType.emailAddress,
-        'end': ''
-      },
-      {
-        'title': '法人姓名',
-        'value': _model.legalPerson,
-        'hintText': '请填写法人姓名',
         'keyBoardType': TextInputType.text,
         'end': ''
       },
       {
-        'title': '法人身份证',
-        'value': _model.corporateIDCard,
-        'hintText': '请填写法人身份证',
-        'keyBoardType': TextInputType.text,
-        'end': ''
-      },
-      {
-        'title': '开户银行',
-        'value': _model.bankName,
-        'hintText': '请填写开户银行',
-        'keyBoardType': TextInputType.text,
-        'end': ''
-      },
-      {
-        'title': '银行账号',
-        'value': _model.bankNo,
-        'hintText': '请填写银行账号',
+        'title': '公司邮箱',
+        'value': _model.email,
+        'hintText': '请填写公司邮箱',
         'keyBoardType': TextInputType.emailAddress,
         'end': ''
       },
@@ -236,69 +230,230 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
         'end': ''
       },
       {
-        'title': '辖区级别',
-        'value': _model.areaLevel.toString(),
-        'hintText': '',
-        'keyBoardType': null,
-        'end': ''
-      },
-      {
-        'title': '所在区域',
-        'value': _model.area,
-        'hintText': '请选择所在区域',
-        'keyBoardType': null,
-        'end': '>'
-      },
-      {
-        'title': '城市经理',
-        'value': _model.cityManager.name,
-        'hintText': '请选择城市经理',
-        'keyBoardType': null,
-        'end': '>'
-      },
-      {
-        'title': '公司地址',
-        'value': _model.address,
-        'hintText': '请填写公司地址',
+        'title': '法人姓名',
+        'value': _model.juridical,
+        'hintText': '请填写法人姓名',
         'keyBoardType': TextInputType.text,
         'end': ''
       },
       {
-        'title': '仓库地址',
-        'value': _model.warehouseAddress,
-        'hintText': '请填写仓库地址',
+        'title': '法人身份证',
+        'value': _model.juridicalId,
+        'hintText': '请填写法人身份证',
         'keyBoardType': TextInputType.text,
         'end': ''
       },
       {
-        'title': '收货人',
-        'value': _model.consignee,
-        'hintText': '请填写收货人姓名',
-        'keyBoardType': TextInputType.text,
-        'end': ''
-      },
-      {
-        'title': '收货人手机',
-        'value': _model.consigneePhone,
-        'hintText': '请填写收货人手机号码',
+        'title': '法人电话',
+        'value': _model.juridicalPhone,
+        'hintText': '请填写法人电话',
         'keyBoardType': TextInputType.phone,
         'end': ''
       },
+      {
+        'title': '姓名',
+        'value': _model.realName,
+        'hintText': '请填写姓名',
+        'keyBoardType': TextInputType.text,
+        'end': ''
+      },
+      {
+        'title': '所属角色',
+        'value': _model.roleName,
+        'hintText': '请选择所属角色',
+        'keyBoardType': null,
+        'end': '>'
+      },
+      {
+        'title': '性别',
+        'value': _model.sexName,
+        'hintText': '请选择性别',
+        'keyBoardType': null,
+        'end': '>'
+      },
+      {
+        'title': '开户银行',
+        'value': _model.bank,
+        'hintText': '请填写开户银行',
+        'keyBoardType': TextInputType.text,
+        'end': ''
+      },
+      {
+        'title': '银行账号',
+        'value': _model.bankAccount,
+        'hintText': '请填写银行账号',
+        'keyBoardType': TextInputType.phone,
+        'end': ''
+      },
+      {
+        'title': '开户人',
+        'value': _model.bankUser,
+        'hintText': '请填写开户人',
+        'keyBoardType': TextInputType.text,
+        'end': ''
+      },
+      {
+        'title': '开户人身份证号',
+        'value': _model.bankCard,
+        'hintText': '请填写开户人身份证号',
+        'keyBoardType': TextInputType.text,
+        'end': ''
+      },
+      {
+        'title': '出生日期',
+        'value': _model.birthday,
+        'hintText': '请选择出生日期',
+        'keyBoardType': null,
+        'end': '>'
+      }
     ];
     return list1;
   }
 
   List<Map> _getList2(AddDealerModel _model) {
     List<Map> list1 = [
-      {
-        'title': '登录账号',
-        'value': _model.account,
-        'hintText': '请填写登录账号',
-        'end': ''
-      },
+      {'title': '登录账号', 'value': _model.account, 'hintText': '请填写登录账号', 'end': ''},
       {'title': '登录密码', 'value': _model.pwd, 'hintText': '请填写登录密码', 'end': ''},
     ];
     return list1;
+  }
+
+  ///开通账户
+  void _openCustomer(BuildContext context, AddDealerModel model) async {
+
+    if (model.post.isEmpty){
+      AppUtil.showToastCenter('经销商类型不能为空');
+      return;
+    }
+
+    if (model.nature.isEmpty){
+      AppUtil.showToastCenter('经销商性质不能为空');
+      return;
+    }
+
+    if (model.corporateName == ''){
+      showToast("公司名称不能为空");
+      return;
+    }
+
+    if (model.address == ''){
+      showToast("公司地址不能为空");
+      return;
+    }
+
+    if (model.licenseNo == ''){
+      showToast("营业执照号不能为空");
+      return;
+    }
+
+    if (model.email == ''){
+      showToast("邮箱不能为空");
+      return;
+    }
+
+    if (model.phone == ''){
+      showToast("联系手机不能为空");
+      return;
+    }
+
+    if (model.juridical == ''){
+      showToast("法人姓名不能为空");
+      return;
+    }
+
+    if (model.juridicalId == ''){
+      showToast("法人身份证不能为空");
+      return;
+    }
+
+    if (model.juridicalPhone == ''){
+      showToast("法人电话不能为空");
+      return;
+    }
+
+    if (model.realName == ''){
+      showToast("姓名不能为空");
+      return;
+    }
+
+    if (model.role == ''){
+      showToast("所属角色不能为空");
+      return;
+    }
+
+    if (model.sex == ''){
+      showToast("性别不能为空");
+      return;
+    }
+
+    if (model.bank == ''){
+      showToast("开户银行不能为空");
+      return;
+    }
+
+    if (model.bankAccount == ''){
+      showToast("银行账号不能为空");
+      return;
+    }
+
+    if (model.bankUser == ''){
+      showToast("开户人不能为空");
+      return;
+    }
+
+    if (model.bankCard == ''){
+      showToast("开户人身份证号不能为空");
+      return;
+    }
+
+    if (model.birthday == ''){
+      showToast("出生日期不能为空");
+      return;
+    }
+
+    if (model.account == ''){
+      showToast("登录账户不能为空");
+      return;
+    }
+
+    if (model.pwd == ''){
+      showToast("登录密码不能为空");
+      return;
+    }
+
+    Map<String, dynamic> map = {
+      'postId': model.post,
+      'nature': model.nature,
+      'corporate': model.corporateName,
+      'address': model.address,
+      'license': model.licenseNo,
+      'email': model.email,
+      'phone': model.phone,
+      'juridical': model.juridical,
+      'juridicalId': model.juridicalId,
+      'juridicalPhone': model.juridicalPhone,
+      'realName': model.realName,
+      'roleId': model.role,
+      'sex': model.sex,
+      'bank': model.bank,
+      'bankAccount': model.bankAccount,
+      'bankUser': model.bankUser,
+      'bankCard': model.bankCard,
+      'birthday': model.birthday,
+      'account': model.account,
+      'password': model.pwd,
+    };
+
+    requestPost(Api.openCustomer, json: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---openCustomer----$data');
+      if (data['code'] == 200){
+        showToast("添加成功");
+        Navigator.of(Application.appContext).pop();
+      }else {
+        showToast(data['msg']);
+      }
+    });
   }
 
   @override
@@ -306,100 +461,5 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
     super.dispose();
     _editingController?.dispose();
     _focusNode?.dispose();
-  }
-}
-
-///辖区级别cell
-class _SelectAreaLevel extends StatelessWidget {
-  const _SelectAreaLevel({
-    Key key,
-    @required this.title,
-    @required this.areaLevel,
-    @required this.onTap,
-  }) : super(key: key);
-
-  final String title;
-  final int areaLevel;
-  final Function(int areaLevel) onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
-      child: Column(
-        children: [
-          ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14.0),
-              title: Row(
-                children: [
-                  Text(title,
-                      style: const TextStyle(
-                          color: AppColors.FF2F4058,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.normal)),
-                  Spacer(),
-                  TypeBtn(
-                      isSelected: areaLevel == 1,
-                      title: '市级',
-                      onPressed: () {
-                        if (areaLevel != 1 && onTap != null) onTap(1);
-                      }),
-                  TypeBtn(
-                      isSelected: areaLevel == 2,
-                      title: '区级',
-                      onPressed: () {
-                        if (areaLevel != 2 && onTap != null) onTap(2);
-                      }),
-                ],
-              )),
-          const Divider(
-              color: AppColors.FFF4F5F8,
-              thickness: 1,
-              height: 1,
-              indent: 15.0,
-              endIndent: 15.0)
-        ],
-      ),
-    );
-  }
-}
-
-///顶部选择类别
-class _ChoseType extends StatelessWidget {
-  const _ChoseType({
-    Key key,
-    @required AddDealerModel model,
-  })  : _model = model,
-        super(key: key);
-
-  final AddDealerModel _model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Text('类型',
-            style: TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
-        Spacer(),
-        TypeBtn(
-            isSelected: _model.type == 1,
-            title: '企业',
-            onPressed: () {
-              if (_model.type != 1) _model.setType(1);
-            }),
-        TypeBtn(
-            isSelected: _model.type == 2,
-            title: '个体',
-            onPressed: () {
-              if (_model.type != 2) _model.setType(2);
-            }),
-        TypeBtn(
-            isSelected: _model.type == 3,
-            title: '自然人',
-            onPressed: () {
-              if (_model.type != 3) _model.setType(3);
-            }),
-      ],
-    );
   }
 }
