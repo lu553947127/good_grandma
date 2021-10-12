@@ -32,9 +32,7 @@ class PostDetailSalesTrackingCell extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6),
                   child: Text(
-                      model.area.city.isNotEmpty
-                          ? model.area.city
-                          : '未知区域',
+                      model.area.city.isNotEmpty ? model.area.city : '未知区域',
                       style: TextStyle(color: color, fontSize: 15)),
                 ),
                 PostDetailProgressCoreView(
@@ -50,7 +48,7 @@ class PostDetailSalesTrackingCell extends StatelessWidget {
                     count: model.nextTarget,
                     current: model.nextTarget,
                     color: color,
-                    title: '下周规划进货金额',
+                    title: '下${forWeek ? '周' : '月'}规划进货金额',
                     textColor: color,
                     fontSize: 14.0,
                     showProgressLine: false,

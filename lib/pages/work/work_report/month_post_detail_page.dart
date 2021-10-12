@@ -98,7 +98,7 @@ class _MonthPostDetailPageState extends State<MonthPostDetailPage> {
                   'end': '%'
                 },
                 {
-                  'title': '下周规划进货金额',
+                  'title': '下月规划进货金额',
                   'value': nextTarget.toStringAsFixed(2),
                   'end': '万元'
                 }
