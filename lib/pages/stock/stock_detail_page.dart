@@ -12,14 +12,16 @@ import 'package:good_grandma/widgets/stock_detail_cell.dart';
 
 ///库存详细
 class StockDetailPage extends StatefulWidget {
-  const StockDetailPage({Key key,
-    @required this.id,
-    @required this.avatar,
-    @required this.shopName,
-    @required this.name,
-    @required this.phone,
-    @required this.address,
-    @required this.boxNum}) : super(key: key);
+  const StockDetailPage(
+      {Key key,
+      @required this.id,
+      @required this.avatar,
+      @required this.shopName,
+      @required this.name,
+      @required this.phone,
+      @required this.address,
+      @required this.boxNum})
+      : super(key: key);
   final String id;
   final String avatar;
   final String shopName;
@@ -48,51 +50,39 @@ class _StockDetailPageState extends State<StockDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _dataArray.length,
-          onRefresh: _refresh,
-          onLoad: _onLoad,
-          slivers: [
-            SliverAppBar(
-              title: const Text('库存详细'),
-              backgroundColor: Colors.white,
-              elevation: 0,
-              floating: true,
-              pinned: true,
-              expandedHeight: 175.0 + MediaQuery.of(context).padding.top + kToolbarHeight,
-              flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.none,
-                background: Container(
-                  color: AppColors.FFF4F5F8,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).padding.top + kToolbarHeight,
-                        color: Colors.white,
-                      ),
-                      //顶部显示信息的视图
-                      _StockDetailHeader(
-                          avatar: widget.avatar,
-                          shopName: widget.shopName,
-                          name: widget.name,
-                          phone: widget.phone,
-                          address: widget.address),
-                      _GroupTitle(boxNum: widget.boxNum),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            //列表
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
+      appBar: AppBar(title: const Text('库存详细')),
+      body: Column(
+        children: [
+          //顶部显示信息的视图
+          _StockDetailHeader(
+            avatar: widget.avatar,
+            shopName: widget.shopName,
+            name: widget.name,
+            phone: widget.phone,
+            address: widget.address,
+            id: widget.id,
+          ),
+          _GroupTitle(boxNum: widget.boxNum),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+              controller: _controller,
+              scrollController: _scrollController,
+              dataCount: _dataArray.length,
+              onRefresh: _refresh,
+              onLoad: _onLoad,
+              slivers: [
+                //列表
+                SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
                   Map map = _dataArray[index];
                   return StockDetailCell(map: map);
                 }, childCount: _dataArray.length)),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ],),
+                SliverSafeArea(sliver: SliverToBoxAdapter()),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -107,15 +97,19 @@ class _StockDetailPageState extends State<StockDetailPage> {
   }
 
   Future<void> _downloadData() async {
-    if(widget.id == null || widget.id.isEmpty) return;
+    if (widget.id == null || widget.id.isEmpty) return;
     try {
-      Map<String, dynamic> map = {'customerId': widget.id,'current': _current, 'size': _pageSize};
+      Map<String, dynamic> map = {
+        'customerId': widget.id,
+        'current': _current,
+        'size': _pageSize
+      };
       // await Future.delayed(Duration(seconds: 1));
       // List<Map> list = List.generate(5, (index) => jsonDecode(_str));
       // if (_current == 1) _dataArray.clear();
       // _dataArray.addAll(list);
       final val = await requestGet(Api.customerStockDetail, param: map);
-      LogUtil.d('customerStockDetail value = ${jsonEncode(val)}');
+      // LogUtil.d('customerStockDetail value = ${jsonEncode(val)}');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       print(list.toString());
@@ -140,7 +134,6 @@ class _StockDetailPageState extends State<StockDetailPage> {
     _controller?.dispose();
   }
 }
-
 
 class _GroupTitle extends StatelessWidget {
   const _GroupTitle({
@@ -187,8 +180,7 @@ class _GroupTitle extends StatelessWidget {
               color: AppColors.FFEFEFF4,
               padding: const EdgeInsets.all(10.0),
               child: const Text('时间    商品/存量',
-                  style:
-                      TextStyle(color: AppColors.FF2F4058, fontSize: 12.0)),
+                  style: TextStyle(color: AppColors.FF2F4058, fontSize: 12.0)),
             ),
           ),
         ],
@@ -206,6 +198,7 @@ class _StockDetailHeader extends StatelessWidget {
     @required String name,
     @required String phone,
     @required String address,
+    @required this.id,
   })  : _avatar = avatar,
         _shopName = shopName,
         _name = name,
@@ -218,23 +211,24 @@ class _StockDetailHeader extends StatelessWidget {
   final String _name;
   final String _phone;
   final String _address;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
     List<Map> values = [
       {
         'image': 'assets/images/ic_login_name.png',
-        'title': '店主姓名：',
+        'title': '  店主姓名：',
         'value': _name
       },
       {
         'image': 'assets/images/ic_login_phone.png',
-        'title': '联系电话：',
+        'title': '  联系电话：',
         'value': _phone
       },
       {
         'image': 'assets/images/sign_in_local2.png',
-        'title': '所在地址：',
+        'title': '  所在地址：',
         'value': _address
       },
     ];
@@ -256,20 +250,20 @@ class _StockDetailHeader extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Hero(
-          tag: _avatar,
+          tag: id,
           child: ClipOval(
-              child:
-                  MyCacheImageView(imageURL: _avatar, width: 50, height: 50,
-                    errorWidgetChild: Image.asset(
-                        'assets/images/icon_empty_user.png',
-                        width: 50,
-                        height: 50),)),
+              child: MyCacheImageView(
+            imageURL: _avatar,
+            width: 50,
+            height: 50,
+            errorWidgetChild: Image.asset('assets/images/icon_empty_user.png',
+                width: 50, height: 50),
+          )),
         ),
         title: Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 10),
           child: Text(_shopName,
-              style:
-                  const TextStyle(color: AppColors.FF2F4058, fontSize: 14)),
+              style: const TextStyle(color: AppColors.FF2F4058, fontSize: 14)),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(bottom: 15.0),

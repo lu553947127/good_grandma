@@ -62,12 +62,12 @@ class GoodsModel {
 
   GoodsModel.fromJson(Map<String, dynamic> json) {
     name = json['name'] ?? '';
-    middleman = json['middleman'] ?? '';
+    middleman = json['middleman'] ?? 0.0;
     count = json['count'] ?? 0;
-    weight = json['weight'] ?? 0;
-    invoice = json['invoice'] ?? 0;
+    weight = json['weight'] ?? 0.0;
+    invoice = json['invoice'] ?? 0.0;
     id = json['id'] ?? '';
-
+    print('json = $json');
 
     image = json['path'] ?? '';
     specs = [];

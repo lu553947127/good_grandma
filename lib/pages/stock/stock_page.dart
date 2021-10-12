@@ -86,6 +86,7 @@ class _StockPageState extends State<StockPage> {
                 avatar: avatar,
                 name: shopName,
                 number: number.toString(),
+                id:id,
                 onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (_) => StockDetailPage(
                       id: id,
@@ -128,7 +129,7 @@ class _StockPageState extends State<StockPage> {
     try {
       Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
       final val = await requestGet(Api.customerStockList, param: map);
-      LogUtil.d('customerStockList value = $val');
+      // LogUtil.d('customerStockList value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
@@ -163,12 +164,14 @@ class _StockCell extends StatelessWidget {
     @required this.avatar,
     @required this.name,
     @required this.number,
+    @required this.id,
     @required this.onTap,
   }) : super(key: key);
 
   final String avatar;
   final String name;
   final String number;
+  final String id;
   final VoidCallback onTap;
 
   @override
@@ -183,7 +186,7 @@ class _StockCell extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Hero(
-                  tag: avatar,
+                  tag: id,
                   child: ClipOval(
                       child: MyCacheImageView(
                     imageURL: avatar,

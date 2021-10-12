@@ -26,7 +26,6 @@ class _Body extends State<WorkSelectType> {
   @override
   void didUpdateWidget(covariant WorkSelectType oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print('didUpdateWidget123412412431243 widget.reset = ${widget.reset}');
     if(widget.reset){
       setState(() {
         _btnName1 = '所有人';
