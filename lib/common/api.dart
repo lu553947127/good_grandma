@@ -32,8 +32,7 @@ class Api {
   static const startProcess = "/api/hap-workflow/process/startProcess";
 
   ///获取流程表单
-  static const getFormByProcessId =
-      "/api/hap-workflow/process/getFormByProcessId";
+  static const getFormByProcessId = "/api/hap-workflow/process/getFormByProcessId";
 
   ///获取流程详情
   static const processDetail = "/api/hap-workflow/process/detail";
@@ -72,12 +71,10 @@ class Api {
   static const getDeptName = "/api/hap-app/app/system/getDeptName";
 
   ///客户拜访列表
-  static const customerVisitList =
-      "/api/hap-app/app/visitplan/customerVisitList";
+  static const customerVisitList = "/api/hap-app/app/visitplan/customerVisitList";
 
   ///客户拜访新增
-  static const customerVisitAdd =
-      "/api/hap-app/app/visitplan/customerVisitSave";
+  static const customerVisitAdd = "/api/hap-app/app/visitplan/customerVisitSave";
 
   ///客户列表
   static const customerList = "/api/hap-app/app/user/areaUser";
@@ -125,8 +122,7 @@ class Api {
   static const commoditySalesList = "/api/hap-app/app/goods/getCommoditySales";
 
   ///报修列表
-  static const getFreezerRepairList =
-      "/api/hap-app/app/freezerRepair/getFreezerRepairList";
+  static const getFreezerRepairList = "/api/hap-app/app/freezerRepair/getFreezerRepairList";
 
   ///签到
   static const signAdd = "/api/hap-app/app/sign/signAdd";
@@ -141,8 +137,7 @@ class Api {
   static const getCategoryCount = "/api/hap-app/app/notice/getCategoryCount";
 
   ///公告list
-  static const getNoticeCategoryList =
-      "/api/hap-app/app/notice/getNoticeCategoryList";
+  static const getNoticeCategoryList = "/api/hap-app/app/notice/getNoticeCategoryList";
 
   ///消息已读
   static const settingRead = "/api/hap-app/app/notice/settingRead";
@@ -219,29 +214,39 @@ class Api {
   ///我的报单
   static const myOrderList = "/api/hap-app/app/order/myOrderList";
 
-  ///feedbackType
-  static const feedbackType =
-      "/api/hap-system3/dict/dictionary?code=feedback_type";
+  ///反馈类别词典
+  static const feedbackType = "/api/hap-system/dict/dictionary?code=feedback_type";
 
   ///业绩统计
-  static const selectContractStatistics =
-      "/api/hap-app/app/contract/selectContractStatistics";
+  static const selectContractStatistics = "/api/hap-app/app/contract/selectContractStatistics";
 
   ///查询下级所有业绩总和
-  static const selectSaleSubordinate =
-      "/api/hap-app/app/contract/selectSaleSubordinate";
+  static const selectSaleSubordinate = "/api/hap-app/app/contract/selectSaleSubordinate";
 
   ///业务人员统计每个月业绩
-  static const selectSaleMonthStatistics =
-      "/api/hap-app/app/contract/selectSaleMonthStatistics";
+  static const selectSaleMonthStatistics = "/api/hap-app/app/contract/selectSaleMonthStatistics";
 
   ///客户统计每个月业绩
-  static const selectMonthStatistics =
-      "/api/hap-app/app/contract/selectMonthStatistics";
+  static const selectMonthStatistics = "/api/hap-app/app/contract/selectMonthStatistics";
 
   ///报告统计
   static const reportTj = "/api/hap-app/app/report/reportTj";
 
   ///报告统计详情列表
   static const reportTjDetail = "/api/hap-app/app/report/reportTjDetail";
+
+  ///获取登录人可以开通的账户类型
+  static const customerType = "/api/hap-app/app/user/customerType";
+
+  ///经销商性质字典
+  static const natureType = "/api/hap-app/app/dict/dictionary?code=nature_type";
+
+  ///所属角色列表
+  static const roleCustomer = "/api/hap-app/app/user/roleCustomer";
+
+  ///开通账户
+  static const openCustomer = "/api/hap-app/app/user/openCustomer";
+
+  ///首页扫码解析数据
+  static const analysisCode = "/api/hap-app/app/freezer/analysisCode";
 }

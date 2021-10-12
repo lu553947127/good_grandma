@@ -8,7 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
@@ -223,14 +222,16 @@ class _Body extends State<HomePage> {
     }
     print('qrcode==========$qrcode');
 
-    Fluttertoast.showToast(msg: qrcode,gravity: ToastGravity.CENTER);
+    Map<String, dynamic> map = {
+      'code': qrcode
+    };
 
-    // ///扫码上传
-    // requestPost(Api.scanCode,formData:{'id':qrcode}).then((val){
-    //   var data = json.decode(val.toString());
-    //   print('请求结果---scanCode----$data');
-    //   showToast('扫码成功');
-    // });
+    ///扫码上传
+    requestGet(Api.analysisCode, param: map).then((val){
+      var data = json.decode(val.toString());
+      print('请求结果---analysisCode----$data');
+      Fluttertoast.showToast(msg: '扫描成功: $qrcode',gravity: ToastGravity.CENTER);
+    });
   }
 
   @override

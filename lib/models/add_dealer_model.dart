@@ -1,51 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/models/employee_model.dart';
 
 class AddDealerModel extends ChangeNotifier {
-  ///类型 1:企业 2:个体 3:自然人
-  int _type;
+
+  ///经销商类型
+  String _post;
+
+  ///经销商类型名称
+  String _postName;
+
+  ///经销商性质
+  String _nature;
+
+  ///经销商性质名称
+  String _natureName;
 
   ///公司名称
   String _corporateName;
 
-  ///营业执照号
-  String _licenseNo;
-
-  ///法人姓名
-  String _legalPerson;
-
-  ///法人身份证
-  String _corporateIDCard;
-
-  ///开户银行
-  String _bankName;
-
-  ///银行账号
-  String _bankNo;
-
-  ///联系手机
-  String _phone;
-
-  ///辖区级别 1:市级 2:区级
-  int _areaLevel;
-
-  ///所在区域
-  String _area;
-
-  ///城市经理
-  EmployeeModel _cityManager;
-
   ///公司地址
   String _address;
 
-  ///仓库地址
-  String _warehouseAddress;
+  ///营业执照号
+  String _licenseNo;
 
-  ///收货人
-  String _consignee;
+  ///公司邮箱
+  String _email;
 
-  ///收货人手机
-  String _consigneePhone;
+  ///公司手机
+  String _phone;
+
+  ///法人姓名
+  String _juridical;
+
+  ///法人身份证
+  String _juridicalId;
+
+  ///法人电话
+  String _juridicalPhone;
+
+  ///姓名
+  String _realName;
+
+  ///所属角色
+  String _role;
+
+  ///所属角色名称
+  String _roleName;
+
+  ///性别
+  String _sex;
+
+  ///性别名称
+  String _sexName;
+
+  ///开户银行
+  String _bank;
+
+  ///银行账号
+  String _bankAccount;
+
+  ///开户人
+  String _bankUser;
+
+  ///开户人身份证号
+  String _bankCard;
+
+  ///开户人出生日期
+  String _birthday;
 
   ///登录账号
   String _account;
@@ -54,69 +75,97 @@ class AddDealerModel extends ChangeNotifier {
   String _pwd;
 
   AddDealerModel() {
-    _type = 1;
+    _post = '';
+    _postName = '';
+    _nature = '';
+    _natureName = '';
     _corporateName = '';
-    _licenseNo = '';
-    _legalPerson = '';
-    _corporateIDCard = '';
-    _bankName = '';
-    _bankNo = '';
-    _phone = '';
-    _areaLevel = 1;
-    _area = '';
-    _cityManager = EmployeeModel();
     _address = '';
-    _warehouseAddress = '';
-    _consignee = '';
-    _consigneePhone = '';
+    _licenseNo = '';
+    _email = '';
+    _phone = '';
+    _juridical = '';
+    _juridicalId = '';
+    _juridicalPhone = '';
+    _realName = '';
+    _role = '';
+    _roleName = '';
+    _sex = '';
+    _sexName = '';
+    _bank = '';
+    _bankAccount = '';
+    _bankUser = '';
+    _bankCard = '';
+    _birthday = '';
     _account = '';
     _pwd = '';
   }
 
-  ///类型 1:企业 2:个体 3:自然人
-  int get type => _type;
+  ///经销商类型
+  String get post => _post;
+
+  ///经销商类型名称
+  String get postName => _postName;
+
+  ///经销商性质
+  String get nature => _nature;
+
+  ///经销商性质名称
+  String get natureName => _natureName;
 
   ///公司名称
   String get corporateName => _corporateName;
 
+  ///公司地址
+  String get address => _address;
+
   ///营业执照号
   String get licenseNo => _licenseNo;
 
-  ///法人姓名
-  String get legalPerson => _legalPerson;
-
-  ///法人身份证
-  String get corporateIDCard => _corporateIDCard;
-
-  ///开户银行
-  String get bankName => _bankName;
-
-  ///银行账号
-  String get bankNo => _bankNo;
+  ///公司邮箱
+  String get email => _email;
 
   ///联系手机
   String get phone => _phone;
 
-  ///辖区级别 1:市级 2:区级
-  int get areaLevel => _areaLevel;
+  ///法人姓名
+  String get juridical => _juridical;
 
-  ///所在区域
-  String get area => _area;
+  ///法人身份证
+  String get juridicalId => _juridicalId;
 
-  ///城市经理
-  EmployeeModel get cityManager => _cityManager;
+  ///法人电话
+  String get juridicalPhone => _juridicalPhone;
 
-  ///公司地址
-  String get address => _address;
+  ///姓名
+  String get realName => _realName;
 
-  ///仓库地址
-  String get warehouseAddress => _warehouseAddress;
+  ///所属角色
+  String get role => _role;
 
-  ///收货人
-  String get consignee => _consignee;
+  ///所属角色名称
+  String get roleName => _roleName;
 
-  ///收货人手机
-  String get consigneePhone => _consigneePhone;
+  ///性别
+  String get sex => _sex;
+
+  ///性别名称
+  String get sexName => _sexName;
+
+  ///开户行
+  String get bank => _bank;
+
+  ///银行账号
+  String get bankAccount => _bankAccount;
+
+  ///开户人
+  String get bankUser => _bankUser;
+
+  ///开户人身份证号
+  String get bankCard => _bankCard;
+
+  ///出生日期
+  String get birthday => _birthday;
 
   ///登录账号
   String get account => _account;
@@ -124,8 +173,23 @@ class AddDealerModel extends ChangeNotifier {
   ///登录密码
   String get pwd => _pwd;
 
-  setType(int type) {
-    _type = type;
+  setPost(String post) {
+    _post = post;
+    notifyListeners();
+  }
+
+  setPostName(String postName) {
+    _postName = postName;
+    notifyListeners();
+  }
+
+  setNature(String nature) {
+    _nature = nature;
+    notifyListeners();
+  }
+
+  setNatureName(String natureName) {
+    _natureName = natureName;
     notifyListeners();
   }
 
@@ -134,28 +198,18 @@ class AddDealerModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  setAddress(String address) {
+    _address = address;
+    notifyListeners();
+  }
+
   setLicenseNo(String licenseNo) {
     _licenseNo = licenseNo;
     notifyListeners();
   }
 
-  setLegalPerson(String legalPerson) {
-    _legalPerson = legalPerson;
-    notifyListeners();
-  }
-
-  setCorporateIDCard(String corporateIDCard) {
-    _corporateIDCard = corporateIDCard;
-    notifyListeners();
-  }
-
-  setBankName(String bankName) {
-    _bankName = bankName;
-    notifyListeners();
-  }
-
-  setBankNo(String bankNo) {
-    _bankNo = bankNo;
+  setEmail(String email) {
+    _email = email;
     notifyListeners();
   }
 
@@ -164,38 +218,68 @@ class AddDealerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setAreaLevel(int areaLevel) {
-    _areaLevel = areaLevel;
+  setJuridical(String juridical) {
+    _juridical = juridical;
     notifyListeners();
   }
 
-  setArea(String area) {
-    _area = area;
+  setJuridicalId(String juridicalId) {
+    _juridicalId = juridicalId;
     notifyListeners();
   }
 
-  setCityManager(EmployeeModel cityManager) {
-    _cityManager = cityManager;
+  setJuridicalPhone(String juridicalPhone) {
+    _juridicalPhone = juridicalPhone;
     notifyListeners();
   }
 
-  setAddress(String address) {
-    _address = address;
+  setRealName(String realName) {
+    _realName = realName;
     notifyListeners();
   }
 
-  setWarehouseAddress(String warehouseAddress) {
-    _warehouseAddress = warehouseAddress;
+  setRole(String role) {
+    _role = role;
     notifyListeners();
   }
 
-  setConsignee(String consignee) {
-    _consignee = consignee;
+  setRoleName(String roleName) {
+    _roleName = roleName;
     notifyListeners();
   }
 
-  setConsigneePhone(String consigneePhone) {
-    _consigneePhone = consigneePhone;
+  setSex(String sex) {
+    _sex = sex;
+    notifyListeners();
+  }
+
+  setSexName(String sexName) {
+    _sexName = sexName;
+    notifyListeners();
+  }
+
+  setBank(String bank) {
+    _bank = bank;
+    notifyListeners();
+  }
+
+  setBankAccount(String bankAccount) {
+    _bankAccount = bankAccount;
+    notifyListeners();
+  }
+
+  setBankUser(String bankUser) {
+    _bankUser = bankUser;
+    notifyListeners();
+  }
+
+  setBankCard(String bankCard) {
+    _bankCard = bankCard;
+    notifyListeners();
+  }
+
+  setBirthday(String birthday) {
+    _birthday = birthday;
     notifyListeners();
   }
 
