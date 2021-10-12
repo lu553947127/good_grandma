@@ -126,9 +126,9 @@ class _WorkReportState extends State<WorkReport> {
         'startTime': _startTime,
         'endTime': _endTime,
       };
-      // print('param = ${jsonEncode(map)}');
+      print('param = ${jsonEncode(map)}');
       final val = await requestPost(Api.reportList, json: jsonEncode(map));
-      // LogUtil.d('${Api.reportList} value = $val');
+      LogUtil.d('${Api.reportList} value = $val');
       final data = jsonDecode(val.toString());
       if (_current == 1) _reportList.clear();
       final List<dynamic> list = data['data'];

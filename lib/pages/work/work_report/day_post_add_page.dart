@@ -33,12 +33,6 @@ class _Body extends State<DayPostAddPage> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
 
-  ///今日工作总结暂存
-  String _todaySummary = '';
-
-  ///明日工作计划暂存
-  String _plan = '';
-
   @override
   void initState() {
     super.initState();
@@ -142,24 +136,21 @@ class _Body extends State<DayPostAddPage> {
               }, childCount: model.summaries.length)),
               SliverToBoxAdapter(
                 child: PostAddDeletePlanCell(
-                    value: _todaySummary,
+                    value: '',
                     hintText: '请填写今日工作总结',
                     isAdd: true,
                     textOnTap: () => AppUtil.showInputDialog(
                         context: context,
-                        text: _todaySummary,
+                        text: '',
                         hintText: '请填写今日工作总结',
                         focusNode: _focusNode,
                         editingController: _editingController,
                         keyboardType: TextInputType.text,
                         callBack: (text) {
-                          if (mounted) setState(() => _todaySummary = text);
+                          if (text.isNotEmpty)
+                            model.addSummary(text);
                         }),
-                    rightBtnOnTap: () {
-                      if (_todaySummary.isNotEmpty)
-                        model.addSummary(_todaySummary);
-                      if (mounted) setState(() => _todaySummary = '');
-                    }),
+                    rightBtnOnTap: () {}),
               ),
               SliverToBoxAdapter(
                   child: Container(color: Colors.white, height: 10.0)),
@@ -189,23 +180,20 @@ class _Body extends State<DayPostAddPage> {
               }, childCount: model.plans.length)),
               SliverToBoxAdapter(
                 child: PostAddDeletePlanCell(
-                    value: _plan,
+                    value: '',
                     hintText: '请填写明日工作计划',
                     isAdd: true,
                     textOnTap: () => AppUtil.showInputDialog(
                         context: context,
-                        text: _plan,
+                        text: '',
                         hintText: '请填写明日工作计划',
                         focusNode: _focusNode,
                         editingController: _editingController,
                         keyboardType: TextInputType.text,
                         callBack: (text) {
-                          if (mounted) setState(() => _plan = text);
+                          if (text.isNotEmpty) model.addPlan(text);
                         }),
-                    rightBtnOnTap: () {
-                      if (_plan.isNotEmpty) model.addPlan(_plan);
-                      if (mounted) setState(() => _plan = '');
-                    }),
+                    rightBtnOnTap: () { }),
               ),
               SliverToBoxAdapter(
                   child: Container(color: Colors.white, height: 10.0)),

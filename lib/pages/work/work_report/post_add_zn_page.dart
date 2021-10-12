@@ -31,18 +31,6 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
 
-  ///工作内容暂存
-  String _currentWork = '';
-
-  ///工作中存在的问题及需改进的方面暂存
-  String _problem = '';
-
-  ///工作计划暂存
-  String _plan = '';
-
-  ///建议暂存
-  String _suggest = '';
-
   @override
   void initState() {
     super.initState();
@@ -109,24 +97,21 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
               }, childCount: model.currentWorks.length)),
               SliverToBoxAdapter(
                 child: PostAddDeletePlanCell(
-                    value: _currentWork,
+                    value: '',
                     hintText: '请填写工作内容',
                     isAdd: true,
                     textOnTap: () => AppUtil.showInputDialog(
                         context: context,
-                        text: _currentWork,
+                        text: '',
                         hintText: '请填写工作内容',
                         focusNode: _focusNode,
                         editingController: _editingController,
                         keyboardType: TextInputType.text,
                         callBack: (text) {
-                          if (mounted) setState(() => _currentWork = text);
+                          if (text.isNotEmpty)
+                            model.addToArray(model.currentWorks, text);
                         }),
-                    rightBtnOnTap: () {
-                      if (_currentWork.isNotEmpty)
-                        model.addToArray(model.currentWorks, _currentWork);
-                      if (mounted) setState(() => _currentWork = '');
-                    }),
+                    rightBtnOnTap: () {}),
               ),
               SliverToBoxAdapter(
                   child: Container(color: Colors.white, height: 10.0)),
@@ -157,24 +142,21 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
               }, childCount: model.problems.length)),
               SliverToBoxAdapter(
                 child: PostAddDeletePlanCell(
-                    value: _problem,
+                    value: '',
                     hintText: '请填写工作中存在的问题及需改进的方面',
                     isAdd: true,
                     textOnTap: () => AppUtil.showInputDialog(
                         context: context,
-                        text: _problem,
+                        text: '',
                         hintText: '请填写工作中存在的问题及需改进的方面',
                         focusNode: _focusNode,
                         editingController: _editingController,
                         keyboardType: TextInputType.text,
                         callBack: (text) {
-                          if (mounted) setState(() => _problem = text);
+                          if (text.isNotEmpty)
+                            model.addToArray(model.problems, text);
                         }),
-                    rightBtnOnTap: () {
-                      if (_problem.isNotEmpty)
-                        model.addToArray(model.problems, _problem);
-                      if (mounted) setState(() => _problem = '');
-                    }),
+                    rightBtnOnTap: () {}),
               ),
               SliverToBoxAdapter(
                   child: Container(color: Colors.white, height: 10.0)),
@@ -204,24 +186,21 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
               }, childCount: model.plans.length)),
               SliverToBoxAdapter(
                 child: PostAddDeletePlanCell(
-                    value: _plan,
+                    value: '',
                     hintText: '请填写工作计划',
                     isAdd: true,
                     textOnTap: () => AppUtil.showInputDialog(
                         context: context,
-                        text: _plan,
+                        text: '',
                         hintText: '请填写工作计划',
                         focusNode: _focusNode,
                         editingController: _editingController,
                         keyboardType: TextInputType.text,
                         callBack: (text) {
-                          if (mounted) setState(() => _plan = text);
+                          if (text.isNotEmpty)
+                            model.addToArray(model.plans, text);
                         }),
-                    rightBtnOnTap: () {
-                      if (_plan.isNotEmpty)
-                        model.addToArray(model.plans, _plan);
-                      if (mounted) setState(() => _plan = '');
-                    }),
+                    rightBtnOnTap: () {}),
               ),
               SliverToBoxAdapter(
                   child: Container(color: Colors.white, height: 10.0)),
@@ -251,24 +230,21 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
               }, childCount: model.suggests.length)),
               SliverToBoxAdapter(
                 child: PostAddDeletePlanCell(
-                    value: _suggest,
+                    value: '',
                     hintText: '请填写建议',
                     isAdd: true,
                     textOnTap: () => AppUtil.showInputDialog(
                         context: context,
-                        text: _suggest,
+                        text: '',
                         hintText: '请填写建议',
                         focusNode: _focusNode,
                         editingController: _editingController,
                         keyboardType: TextInputType.text,
                         callBack: (text) {
-                          if (mounted) setState(() => _suggest = text);
+                          if (text.isNotEmpty)
+                            model.addToArray(model.suggests, text);
                         }),
-                    rightBtnOnTap: () {
-                      if (_suggest.isNotEmpty)
-                        model.addToArray(model.suggests, _suggest);
-                      if (mounted) setState(() => _suggest = '');
-                    }),
+                    rightBtnOnTap: () {}),
               ),
               SliverToBoxAdapter(
                   child: Container(color: Colors.white, height: 10.0)),

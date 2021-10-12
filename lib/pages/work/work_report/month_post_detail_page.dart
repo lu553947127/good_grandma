@@ -109,13 +109,15 @@ class _MonthPostDetailPageState extends State<MonthPostDetailPage> {
               String summaries = map['summaries'];
               _summaries = AppUtil.getListFromString(summaries);
 
+              // print('itineraries = ${map['itineraries']}');
               ///下月行程及工作内容
               List<Map> itineraries = [];
               List<dynamic> itinerariesS = map['itineraries'] ?? [];
               if (itinerariesS.isNotEmpty) {
                 itinerariesS.forEach((element) {
                   String title = element['title'];
-                  String worksS = element['work'];
+                  String worksS = element['work'].toString();
+                  // print('works = $worksS');
                   List<String> works = AppUtil.getListFromString(worksS);
                   itineraries.add({'title': title, 'works': works});
                 });

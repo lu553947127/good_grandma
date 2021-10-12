@@ -173,7 +173,7 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                               alignment: Alignment.centerLeft,
                               child: Text('合计',
                                   style:
-                                  const TextStyle(color: Colors.red, fontSize: 12.0)),
+                                  const TextStyle(color: Colors.red, fontSize: 15.0)),
                             ),
                           ),
                         ),
@@ -196,7 +196,7 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                                   hintText: hintText,
                                   endWidget: null,
                                   end: end,
-                                  fontSize: 12.0,
+                                  fontSize: 14.0,
                                   titleColor: AppColors.FF959EB1,
                                 ),
                               );
@@ -214,15 +214,15 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                             ),
                             child: ListTile(
                               contentPadding: const EdgeInsets.only(bottom: 10,left: 14.0,right: 14.0),
-                              title: const Text('目标达成说明\n',style: TextStyle(color: AppColors.FF959EB1,fontSize: 12)),
-                              subtitle: Text(targetDesc,style: const TextStyle(color: AppColors.FF2F4058,fontSize: 12)),
+                              title: const Text('目标达成说明\n',style: TextStyle(color: AppColors.FF959EB1,fontSize: 15)),
+                              subtitle: Text(targetDesc,style: const TextStyle(color: AppColors.FF2F4058,fontSize: 14)),
                             ),
                           ),
                         ),
                       ),
-                      //下月行程及工作内容
+                      //本周行程及工作内容
                       PostDetailGroupTitle(
-                          color: widget.themColor, name: '本月行程及工作内容'),
+                          color: widget.themColor, name: '本周行程及工作内容'),
                       WeekPostDetailPlanViewWithLine(
                           itineraries: itineraries, themColor: widget.themColor),
                       SliverToBoxAdapter(

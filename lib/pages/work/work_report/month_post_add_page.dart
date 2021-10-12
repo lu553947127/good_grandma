@@ -32,15 +32,6 @@ class _Body extends State<MonthPostAddPage> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
 
-  ///今日工作总结暂存
-  String _todaySummary = '';
-
-  ///明日工作计划暂存
-  String _plan = '';
-
-  ///问题反馈以及解决方案暂存
-  String _report = '';
-
   @override
   void initState() {
     super.initState();
@@ -207,24 +198,21 @@ class _Body extends State<MonthPostAddPage> {
       //添加按钮
       SliverToBoxAdapter(
         child: PostAddDeletePlanCell(
-            value: _todaySummary,
+            value: '',
             hintText: '请填写本月重点工作总结',
             isAdd: true,
             textOnTap: () => AppUtil.showInputDialog(
                 context: context,
-                text: _todaySummary,
+                text: '',
                 hintText: '请填写本月重点工作总结',
                 focusNode: _focusNode,
                 editingController: _editingController,
                 keyboardType: TextInputType.text,
                 callBack: (text) {
-                  if (mounted) setState(() => _todaySummary = text);
+                  if (text.isNotEmpty)
+                    model.addToStringArray(model.summaries, text);
                 }),
-            rightBtnOnTap: () {
-              if (_todaySummary.isNotEmpty)
-                model.addToStringArray(model.summaries, _todaySummary);
-              if (mounted) setState(() => _todaySummary = '');
-            }),
+            rightBtnOnTap: () {}),
       ),
       //白底
       SliverToBoxAdapter(child: Container(color: Colors.white, height: 10.0)),
@@ -267,23 +255,20 @@ class _Body extends State<MonthPostAddPage> {
     //添加按钮
     slivers.add(SliverToBoxAdapter(
       child: PostAddDeletePlanCell(
-          value: _plan,
+          value: '',
           hintText: '请填写重点工作内容',
           isAdd: true,
           textOnTap: () => AppUtil.showInputDialog(
               context: context,
-              text: _plan,
+              text: '',
               hintText: '请填写重点工作内容',
               focusNode: _focusNode,
               editingController: _editingController,
               keyboardType: TextInputType.text,
               callBack: (text) {
-                if (mounted) setState(() => _plan = text);
+                if (text.isNotEmpty) model.addToStringArray(model.plans, text);
               }),
-          rightBtnOnTap: () {
-            if (_plan.isNotEmpty) model.addToStringArray(model.plans, _plan);
-            if (mounted) setState(() => _plan = '');
-          }),
+          rightBtnOnTap: () {}),
     ));
     //白底
     slivers.add(SliverToBoxAdapter(
@@ -314,24 +299,21 @@ class _Body extends State<MonthPostAddPage> {
     //添加按钮
     slivers.add(SliverToBoxAdapter(
       child: PostAddDeletePlanCell(
-          value: _report,
+          value: '',
           hintText: '请填写问题反馈以及解决方案',
           isAdd: true,
           textOnTap: () => AppUtil.showInputDialog(
               context: context,
-              text: _report,
+              text: '',
               hintText: '请填写问题反馈以及解决方案',
               focusNode: _focusNode,
               editingController: _editingController,
               keyboardType: TextInputType.text,
               callBack: (text) {
-                if (mounted) setState(() => _report = text);
+                if (text.isNotEmpty)
+                  model.addToStringArray(model.reports, text);
               }),
-          rightBtnOnTap: () {
-            if (_report.isNotEmpty)
-              model.addToStringArray(model.reports, _report);
-            if (mounted) setState(() => _report = '');
-          }),
+          rightBtnOnTap: () {}),
     ));
     //白底
     slivers.add(SliverToBoxAdapter(
@@ -413,14 +395,11 @@ class _Body extends State<MonthPostAddPage> {
               editingController: _editingController,
               keyboardType: TextInputType.text,
               callBack: (text) {
-                if (mounted) setState(() => itineraryModel.tempWork = text);
+                if (text.isNotEmpty)
+                  model.addItineraryWorks(
+                      model: itineraryModel, text: text);
               }),
-          rightBtnOnTap: () {
-            if (itineraryModel.tempWork.isNotEmpty)
-              model.addItineraryWorks(
-                  model: itineraryModel, text: itineraryModel.tempWork);
-            if (mounted) setState(() => itineraryModel.tempWork = '');
-          }),
+          rightBtnOnTap: () {}),
     );
   }
 

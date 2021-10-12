@@ -33,12 +33,6 @@ class WeekPostAddPage extends StatefulWidget {
 class _Body extends State<WeekPostAddPage> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
-
-  ///今日工作总结暂存
-  String _todaySummary = '';
-
-  ///明日工作计划暂存
-  String _plan = '';
   final List<PickerItem> _pickerItems = [];
   final List<ProvinceModel> _provinces = [];
   final List<String> _provinceNames = [];
@@ -219,7 +213,7 @@ class _Body extends State<WeekPostAddPage> {
                         border:
                             Border.all(color: AppColors.FFEFEFF4, width: 1)),
                     width: double.infinity,
-                    margin: const EdgeInsets.only(left: 15.0),
+                    margin: const EdgeInsets.only(left: 15.0,right: 15.0),
                     padding: const EdgeInsets.all(10.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
@@ -277,24 +271,21 @@ class _Body extends State<WeekPostAddPage> {
             //添加按钮
             SliverToBoxAdapter(
               child: PostAddDeletePlanCell(
-                  value: _todaySummary,
+                  value: '',
                   hintText: '请填写本周区域重点工作总结',
                   isAdd: true,
                   textOnTap: () => AppUtil.showInputDialog(
                       context: context,
-                      text: _todaySummary,
+                      text: '',
                       hintText: '请填写本周区域重点工作总结',
                       focusNode: _focusNode,
                       editingController: _editingController,
                       keyboardType: TextInputType.text,
                       callBack: (text) {
-                        if (mounted) setState(() => _todaySummary = text);
+                        if (text.isNotEmpty)
+                          model.addToStringArray(model.summaries, text);
                       }),
-                  rightBtnOnTap: () {
-                    if (_todaySummary.isNotEmpty)
-                      model.addToStringArray(model.summaries, _todaySummary);
-                    if (mounted) setState(() => _todaySummary = '');
-                  }),
+                  rightBtnOnTap: () {}),
             ),
             //白底
             SliverToBoxAdapter(
@@ -365,24 +356,21 @@ class _Body extends State<WeekPostAddPage> {
             //添加按钮
             SliverToBoxAdapter(
               child: PostAddDeletePlanCell(
-                  value: _plan,
+                  value: '',
                   hintText: '请填写下周工作内容',
                   isAdd: true,
                   textOnTap: () => AppUtil.showInputDialog(
                       context: context,
-                      text: _plan,
+                      text: '',
                       hintText: '请填写下周工作内容',
                       focusNode: _focusNode,
                       editingController: _editingController,
                       keyboardType: TextInputType.text,
                       callBack: (text) {
-                        if (mounted) setState(() => _plan = text);
+                        if (text.isNotEmpty)
+                          model.addToStringArray(model.plans, text);
                       }),
-                  rightBtnOnTap: () {
-                    if (_plan.isNotEmpty)
-                      model.addToStringArray(model.plans, _plan);
-                    if (mounted) setState(() => _plan = '');
-                  }),
+                  rightBtnOnTap: () {}),
             ),
             //白底
             SliverToBoxAdapter(

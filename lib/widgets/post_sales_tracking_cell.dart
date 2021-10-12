@@ -101,7 +101,7 @@ class PostSalesTrackingCell extends StatelessWidget {
                         } else {
                           AppUtil.showInputDialog(
                               context: context,
-                              text: value,
+                              text: value == '0.00' ? '':value,
                               hintText: hintText,
                               focusNode: _focusNode,
                               editingController: _editingController,

@@ -142,7 +142,7 @@ class HomeReportCell extends StatelessWidget {
                   endIndent: 10.0),
             ),
             HomeReportCellList(
-                list: model.summary ?? [], title: '本$name区域重点工作总结'),
+                list: model.summary ?? [], title: '本$name' + (model.isZN?'工作内容':'区域重点工作总结')),
             HomeReportCellList(
                 list: model.plans ?? [],
                 title: (name == '日' ? '明' : '下') + '$name工作计划'),

@@ -370,8 +370,8 @@ class ItineraryNewModel {
     // data['lastCityId'] = this.lastCity.cityId;
     data['lastCityId'] = this.lastCity.city;
     data['lastCityName'] = this.lastCity.city;
-    data['actualCityId'] = this.actualCity.cityId;
-    // data['actualCityId'] = this.actualCity.city;
+    // data['actualCityId'] = this.actualCity.cityId;
+    data['actualCityId'] = this.actualCity.city;
     data['actualCityName'] = this.actualCity.city;
     data['work'] = this.work ?? '';
     return data;
