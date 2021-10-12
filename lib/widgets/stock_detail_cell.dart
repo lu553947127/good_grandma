@@ -144,7 +144,7 @@ class _RedCountText extends StatelessWidget {
         style: TextStyle(color: titleColor),
         children: [
           TextSpan(
-              text: value,
+              text: value.isEmpty?'0':value,
               style: const TextStyle(color: AppColors.FFE45C26)
           )
         ]
