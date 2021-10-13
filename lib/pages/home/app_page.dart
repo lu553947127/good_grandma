@@ -111,6 +111,8 @@ class AppPage extends StatelessWidget{
             itemCount: WorkText.listWork.length,
             itemBuilder: (context, index){
               List<Map> list = (WorkText.listWork[index]['list'] as List).cast();
+              if(Store.readUserType() == 'ejkh' && WorkText.listWork[index]['title'] == '订货订单')
+                list.removeWhere((map) => map['name'] == '一级订单');
               return Container(
                   padding: EdgeInsets.all(10),
                   child: Column(
@@ -124,8 +126,6 @@ class AppPage extends StatelessWidget{
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
                         itemCount: list.length,
                         itemBuilder: (context, index) {
-                          String title = list[index]['name'];
-                          if(Store.readUserType() == 'ejkh' && title == '二级订单') return Container();
                           return TextButton(
                               onPressed: () {
                                 _btnOnPressed(context, list, index);
