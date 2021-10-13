@@ -151,6 +151,9 @@ class Api {
   ///商品list
   static const goodsList = "/api/hap-app/app/goods/goodsList";
 
+  ///订单专用商品list
+  static const cusList = "/api/hap-app/app/order/cusList";
+
   ///新增库存
   static const customerStockAdd = "/api/hap-app/app/customerStock/addStock";
 

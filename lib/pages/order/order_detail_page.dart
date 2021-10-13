@@ -39,8 +39,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    double countWeight = _model.goodsWeight;
-    countWeight /= 1000;
+    double countWeight = _model.goodsWeightForDetail;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('订单详情'),
@@ -246,7 +246,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     try {
       Map<String, dynamic> param = {'id': widget.model.id};
       final val = await requestPost(Api.orderDetail, json: jsonEncode(param));
-      LogUtil.d('orderDetail value = $val');
+      // LogUtil.d('orderDetail value = $val');
       var data = jsonDecode(val.toString());
       Map<String, dynamic> map = data['data'];
       DeclarationFormModel model = DeclarationFormModel.fromJson(map);

@@ -12,9 +12,10 @@ import 'package:good_grandma/widgets/search_text_widget.dart';
 
 ///选择商户
 class SelectStorePage extends StatefulWidget {
-  const SelectStorePage({
-    Key key,
-  }) : super(key: key);
+  const SelectStorePage({Key key, this.forOrder = false}) : super(key: key);
+
+  ///是否是新建订单专用
+  final bool forOrder;
 
   @override
   _SelectStorePageState createState() => _SelectStorePageState();
@@ -59,53 +60,53 @@ class _SelectStorePageState extends State<SelectStorePage> {
             //列表
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  StoreModel model = _stores[index];
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(model.name ?? ''),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Visibility(
-                                visible: model.phone.isNotEmpty,
-                                child: Row(
-                                  children: [
-                                    Image.asset('assets/images/ic_login_phone.png',
-                                        width: 12, height: 12),
-                                    Expanded(
-                                        child: Text(' ' + model.phone,
-                                            style: const TextStyle(
-                                                color: AppColors.FF959EB1,
-                                                fontSize: 12)))
-                                  ],
-                                ),
-                              ),
+              StoreModel model = _stores[index];
+              return Column(
+                children: [
+                  ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(model.name ?? ''),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Visibility(
+                            visible: model.phone.isNotEmpty,
+                            child: Row(
+                              children: [
+                                Image.asset('assets/images/ic_login_phone.png',
+                                    width: 12, height: 12),
+                                Expanded(
+                                    child: Text(' ' + model.phone,
+                                        style: const TextStyle(
+                                            color: AppColors.FF959EB1,
+                                            fontSize: 12)))
+                              ],
                             ),
-                            Visibility(
-                              visible: model.address.isNotEmpty,
-                              child: Row(
-                                children: [
-                                  Image.asset('assets/images/sign_in_local2.png',
-                                      width: 12, height: 12),
-                                  Expanded(
-                                      child: Text(' ' + model.address,
-                                          style: const TextStyle(
-                                              color: AppColors.FF959EB1,
-                                              fontSize: 12)))
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                        onTap: () => Navigator.pop(context, model),
-                      ),
-                      divider
-                    ],
-                  );
-                }, childCount: _stores.length)),
+                        Visibility(
+                          visible: model.address.isNotEmpty,
+                          child: Row(
+                            children: [
+                              Image.asset('assets/images/sign_in_local2.png',
+                                  width: 12, height: 12),
+                              Expanded(
+                                  child: Text(' ' + model.address,
+                                      style: const TextStyle(
+                                          color: AppColors.FF959EB1,
+                                          fontSize: 12)))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () => Navigator.pop(context, model),
+                  ),
+                  divider
+                ],
+              );
+            }, childCount: _stores.length)),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ]),
     );
@@ -125,16 +126,17 @@ class _SelectStorePageState extends State<SelectStorePage> {
 
   Future<void> _refresh() async {
     try {
-      final val = await requestGet(Api.customerList);
-      // LogUtil.d('customerList value = $val');
+      final val = widget.forOrder
+          ? await requestPost(Api.cusList)
+          : await requestGet(Api.customerList);
+      // LogUtil.d('${widget.forOrder?Api.cusList:Api.customerList} value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       _stores.clear();
       list.forEach((map) {
-        StoreModel model =
-        StoreModel(
-            name: map['name'] ?? '',
-            id: map['id'] ?? '',
+        StoreModel model = StoreModel(
+          name: map['name'] ?? '',
+          id: map['id'] ?? '',
           phone: map['phone'] ?? '',
           address: map['address'] ?? '',
         );
@@ -145,16 +147,6 @@ class _SelectStorePageState extends State<SelectStorePage> {
     } catch (error) {
       _controller.finishRefresh(success: false);
     }
-    // await Future.delayed(Duration(seconds: 1));
-    // _stores.clear();
-    // _stores.addAll(List.generate(
-    //     15,
-    //     (index) => StoreModel(
-    //         name: '商户商户商户商户商户${index + 1}',
-    //         id: '${index + 1}',
-    //         phone: '12344445555',
-    //         address: 'sadkfhaksjhfklas')));
-    // setState(() {});
   }
 
   @override

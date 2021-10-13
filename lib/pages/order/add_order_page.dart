@@ -42,7 +42,6 @@ class _AddOrderPageState extends State<AddOrderPage> {
         Provider.of<DeclarationFormModel>(context);
 
     double countWeight = addModel.goodsWeight;
-    countWeight /= 1000;
 
     List<Map> list = [
       {'title': '备注', 'hintText': '请输入备注', 'value': addModel.remark},
@@ -65,7 +64,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                         color: AppColors.FF959EB1, fontSize: 14.0),
                     child: Row(
                       children: [
-                        Text('下单人员'),
+                        const Text('下单人员'),
                         Spacer(),
                         Text(userName ?? ''),
                       ],
@@ -82,7 +81,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                   endWidget: Icon(Icons.chevron_right),
                   onTap: () async {
                     StoreModel result = await Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => SelectStorePage()));
+                        MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true)));
                     if (result != null) addModel.setStoreModel(result);
                   },
                 ),
@@ -114,7 +113,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                           }
                         },
                         icon:
-                            Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+                            const Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
                   ),
                 ),
               ),
