@@ -131,7 +131,7 @@ class _OrderPageState extends State<OrderPage> {
         'current': _current,
         'size': _pageSize,
         'middleman': widget.orderType,
-        'status': _selIndex
+        'status': widget.orderType == 2?(_selIndex>0?_selIndex + 1:_selIndex):_selIndex
       };
       // print('param = ${jsonEncode(map)}');
       String url = Api.orderList;

@@ -211,7 +211,7 @@ class Api {
   ///订单Confirm
   static const orderConfirm = "/api/hap-app/app/order/orderConfirm";
 
-  ///订单审核驳回接口 参数id :订单id status：0；审核 5：驳回   reject：驳回意见
+  ///订单审核驳回接口 参数id :订单id status：0；审核 5：驳回 6:二级客户取消订单  reject：驳回意见
   static const orderSh = "/api/hap-app/app/order/orderSh";
 
   ///我的报单

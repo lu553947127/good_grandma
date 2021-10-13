@@ -570,7 +570,7 @@ class AppUtil {
     return  double.parse((str != null && str.isNotEmpty) ? str : '0');
   }
   ///从底部弹出的确认弹框
-  static Future<bool> bottomConformSheet(BuildContext context,String title) async {
+  static Future<bool> bottomConformSheet(BuildContext context,String title,{String cancelText = '取消',String doneText = '确定'}) async {
     return await showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -605,8 +605,8 @@ class AppUtil {
                             AppColors.FFEFEFF4,
                             shape: StadiumBorder(),
                           ),
-                          child: const Text('取消',
-                              style: TextStyle(
+                          child: Text(cancelText,
+                              style: const TextStyle(
                                   color: AppColors.FF959EB1,
                                   fontSize: 15.0))),
                     ),
@@ -621,8 +621,8 @@ class AppUtil {
                             AppColors.FFC08A3F,
                             shape: StadiumBorder(),
                           ),
-                          child: const Text('确定',
-                              style: TextStyle(
+                          child: Text(doneText,
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0))),
                     ),
