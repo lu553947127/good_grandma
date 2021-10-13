@@ -63,7 +63,7 @@ class OpenAccountPage extends StatelessWidget {
               );
             }else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: AppColors.FFC68D3E)
               );
             }
           }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/colors.dart';
 
 ///对CachedNetworkImage进一步封装
 class MyCacheImageView extends StatelessWidget {
@@ -43,7 +44,7 @@ class MyCacheImageView extends StatelessWidget {
       height: height,
       fit: BoxFit.cover,
       color: color,
-      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+      placeholder: (context, url) => Center(child: CircularProgressIndicator(color: AppColors.FFC68D3E)),
       errorWidget: (context, url, error) => Container(
         color: this.errorWidgetChild != null
             ? Colors.transparent

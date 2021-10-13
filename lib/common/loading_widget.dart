@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/colors.dart';
 
 ///加载中样式
 class LoadingWidget extends StatelessWidget {
@@ -6,7 +7,7 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: CircularProgressIndicator());
+    return Center(child: CircularProgressIndicator(color: AppColors.FFC68D3E));
   }
 }
 

@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/pages/login/switch_account.dart';
+import 'package:good_grandma/widgets/select_form.dart';
 
 ///我的页面顶部用户信息视图
 class MineHeaderView extends StatelessWidget {
@@ -49,24 +52,39 @@ class MineHeaderView extends StatelessWidget {
                       Row(
                         children: [
                           //头像
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.FFD9B887, width: 4),
-                                  shape: BoxShape.circle),
-                              child: ClipOval(
-                                child: Container(
-                                  child: MyCacheImageView(
-                                    imageURL: avatar,
-                                    width: 65,
-                                    height: 65,
-                                    errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
-                                  ),
-                                ),
+                          Stack(
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: AppColors.FFD9B887, width: 4),
+                                          shape: BoxShape.circle),
+                                      child: ClipOval(
+                                          child: Container(
+                                              child: MyCacheImageView(
+                                                imageURL: avatar,
+                                                width: 65,
+                                                height: 65,
+                                                errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
+                                              )
+                                          )
+                                      )
+                                  )
                               ),
-                            ),
+                              Positioned(
+                                right: 10,
+                                bottom: 5,
+                                child: InkWell(
+                                    child: Image.asset('assets/images/icon_switch_account.png', width: 20, height: 20),
+                                    onTap: () async {
+                                      Map select = await showSelectList(context, Api.allPost, '请切换身份', 'postName');
+                                      _switchAccount(context, select);
+                                    }
+                                )
+                              )
+                            ]
                           ),
                           //信息
                           Column(
@@ -171,7 +189,7 @@ class MineHeaderView extends StatelessWidget {
                         )
                       )
                     ]
-                  ),
+                  )
                 ),
                 //开通账号功能
                 Container(
@@ -194,15 +212,38 @@ class MineHeaderView extends StatelessWidget {
                         )),
                         Icon(Icons.chevron_right,
                             size: 24, color: AppColors.FFC1C8D7),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+                      ]
+                    )
+                  )
+                )
+              ]
+            )
+          )
+        )
+      ]
     ));
+  }
+
+  ///切换身份
+  void _switchAccount(BuildContext context, Map model) async{
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            title: Text('温馨提示'),
+            content: Text('确认要切换身份吗？'),
+            actions: <Widget>[
+              TextButton(child: Text('取消',style: TextStyle(color: Color(0xFF999999))),onPressed: (){
+                Navigator.of(context).pop('cancel');
+              }),
+              TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: () async {
+                Navigator.of(context).pop('ok');
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => SwitchAccountPage(postId: model['postId'])));
+              })
+            ]
+          );
+        });
   }
 }
