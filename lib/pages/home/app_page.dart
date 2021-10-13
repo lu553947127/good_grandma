@@ -20,6 +20,7 @@ import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
+
 ///应用
 class AppPage extends StatelessWidget{
   final VoidCallback shenpiOnTap;
@@ -94,7 +95,6 @@ class AppPage extends StatelessWidget{
         case '行动轨迹':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> TrackPage()));
           break;
-
       }
     }
 
@@ -140,14 +140,14 @@ class AppPage extends StatelessWidget{
                               ));
                         }
                       )
-                    ],
+                    ]
                   ),
                   decoration: BoxDecoration(//分割线
                     border: Border(bottom: BorderSide(width: 12, color: Color(0xFFF8F9FC))),
                   )
               );
             }
-        ),
+        )
       )
     );
   }

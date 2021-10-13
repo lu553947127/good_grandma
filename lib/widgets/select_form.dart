@@ -50,17 +50,17 @@ class SelectFormPage extends StatelessWidget {
                   onTap: () {
                     String value = list[index][props['label']];
                     Navigator.of(context).pop(value);
-                  },
+                  }
                 );
-              },
+              }
             );
           }else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: AppColors.FFC68D3E),
             );
           }
-        },
-      ),
+        }
+      )
     );
   }
 }
@@ -120,13 +120,13 @@ class SelectListFormPage extends StatelessWidget {
                   ),
                   onTap: () {
                     Navigator.of(context).pop(list[index]);
-                  },
+                  }
                 );
-              },
+              }
             );
           }else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: AppColors.FFC68D3E),
             );
           }
         },
@@ -145,8 +145,8 @@ Future<Map> showSelectList(BuildContext context, url, title, props) async {
         url: url,
         title: title,
         props: props,
-      ),
-    ),
+      )
+    )
   );
   return result ?? "";
 }
@@ -265,11 +265,11 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
                                 Icon(Icons.radio_button_unchecked))),
                       )),
                 );
-              },
+              }
             );
           }else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: AppColors.FFC68D3E),
             );
           }
         }

@@ -249,4 +249,7 @@ class Api {
 
   ///首页扫码解析数据
   static const analysisCode = "/api/hap-app/app/freezer/analysisCode";
+
+  ///登录人所有岗位信息
+  static const allPost = "/api/hap-app/app/user/allPost";
 }
