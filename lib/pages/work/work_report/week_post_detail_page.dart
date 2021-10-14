@@ -30,7 +30,6 @@ class WeekPostDetailPage extends StatefulWidget {
 }
 
 class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +58,7 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                 double completionRate = 0;
                 double nextTarget = 0;
                 String salesTrackingListS = map['salesTrackingList'] ?? '';
-                if(salesTrackingListS.isNotEmpty){
+                if (salesTrackingListS.isNotEmpty) {
                   List list = jsonDecode(salesTrackingListS);
                   // print('list = $list');
                   list.forEach((map) {
@@ -74,8 +73,16 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                   });
                 }
                 List<Map> list1 = [
-                  {'title': '本周目标', 'value': target.toStringAsFixed(2), 'end': '万元'},
-                  {'title': '本周实际', 'value': actual.toStringAsFixed(2), 'end': '万元'},
+                  {
+                    'title': '本周目标',
+                    'value': target.toStringAsFixed(2),
+                    'end': '万元'
+                  },
+                  {
+                    'title': '本周实际',
+                    'value': actual.toStringAsFixed(2),
+                    'end': '万元'
+                  },
                   {
                     'title': '本月累计',
                     'value': cumulative.toStringAsFixed(2),
@@ -97,27 +104,31 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                     'end': '万元'
                   }
                 ];
+
                 ///目标达成说明
                 String targetDesc = map['summaries'] ?? '';
+
                 ///本周行程及工作内容
                 List<Map> itineraries = [];
-                List<dynamic> itinerariesS = map['itineraries'] ?? '';
-                if(itinerariesS.isNotEmpty){
+                List<dynamic> itinerariesS = map['itineraries'] ?? [];
+                if (itinerariesS.isNotEmpty) {
                   itinerariesS.forEach((element) {
                     itineraries.add(element);
                   });
                 }
+
                 ///本周区域重点工作总结
                 List<String> summaries = [];
                 String summaries1 = map['targetDesc'];
                 summaries = AppUtil.getListFromString(summaries1);
+
                 ///下月行程及工作内容
                 Map _nextWeek = {};
                 List<Map> cities = [];
                 List<String> works = [];
 
                 List<dynamic> citiesS = map['cities'] ?? '';
-                if(citiesS.isNotEmpty){
+                if (citiesS.isNotEmpty) {
                   citiesS.forEach((element) {
                     cities.add(element);
                   });
@@ -130,13 +141,15 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
 
                 final lineCore = Container(
                   color: Colors.white,
-                  child: const Divider(color: AppColors.FFF4F5F8,thickness: 5,indent: 10,endIndent: 10),
+                  child: const Divider(
+                      color: AppColors.FFF4F5F8,
+                      thickness: 5,
+                      indent: 10,
+                      endIndent: 10),
                 );
                 final line = SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  sliver: SliverToBoxAdapter(
-                    child: lineCore,
-                  ),
+                  sliver: SliverToBoxAdapter(child: lineCore),
                 );
 
                 return Scrollbar(
@@ -157,10 +170,14 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate((context, index) {
-                              SalesTrackingModel model = salesTrackingList[index];
-                              return PostDetailSalesTrackingCell(model: model,color: widget.themColor,forWeek:true);
-                            }, childCount: salesTrackingList.length)),
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                          SalesTrackingModel model = salesTrackingList[index];
+                          return PostDetailSalesTrackingCell(
+                              model: model,
+                              color: widget.themColor,
+                              forWeek: true);
+                        }, childCount: salesTrackingList.length)),
                       ),
                       //合计
                       SliverPadding(
@@ -172,8 +189,8 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text('合计',
-                                  style:
-                                  const TextStyle(color: Colors.red, fontSize: 15.0)),
+                                  style: const TextStyle(
+                                      color: Colors.red, fontSize: 15.0)),
                             ),
                           ),
                         ),
@@ -181,41 +198,54 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate((context, index) {
-                              Map map = list1[index];
-                              String title = map['title'];
-                              String value = map['value'];
-                              String hintText = map['hintText'];
-                              String end = map['end'];
-                              return Container(
-                                color: Colors.white,
-                                child: PostAddInputCellCore(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 6),
-                                  title: title,
-                                  value: value,
-                                  hintText: hintText,
-                                  endWidget: null,
-                                  end: end,
-                                  fontSize: 14.0,
-                                  titleColor: AppColors.FF959EB1,
-                                ),
-                              );
-                            }, childCount: list1.length)),
-                      ),
-                      line,
-                      //目标达成说明
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        sliver: SliverToBoxAdapter(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                          Map map = list1[index];
+                          String title = map['title'];
+                          String value = map['value'];
+                          String hintText = map['hintText'];
+                          String end = map['end'];
+                          return Container(
+                            color: Colors.white,
+                            child: PostAddInputCellCore(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 6),
+                              title: title,
+                              value: value,
+                              hintText: hintText,
+                              endWidget: null,
+                              end: end,
+                              fontSize: 14.0,
+                              titleColor: AppColors.FF959EB1,
                             ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.only(bottom: 10,left: 14.0,right: 14.0),
-                              title: const Text('目标达成说明\n',style: TextStyle(color: AppColors.FF959EB1,fontSize: 15)),
-                              subtitle: Text(targetDesc,style: const TextStyle(color: AppColors.FF2F4058,fontSize: 14)),
+                          );
+                        }, childCount: list1.length)),
+                      ),
+                      SliverVisibility(
+                          visible: targetDesc.isNotEmpty, sliver: line),
+                      //目标达成说明
+                      SliverVisibility(
+                        visible: targetDesc.isNotEmpty,
+                        sliver: SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          sliver: SliverToBoxAdapter(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(4))),
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.only(
+                                    bottom: 10, left: 14.0, right: 14.0),
+                                title: const Text('目标达成说明\n',
+                                    style: TextStyle(
+                                        color: AppColors.FF959EB1,
+                                        fontSize: 15)),
+                                subtitle: Text(targetDesc,
+                                    style: const TextStyle(
+                                        color: AppColors.FF2F4058,
+                                        fontSize: 14)),
+                              ),
                             ),
                           ),
                         ),
@@ -224,7 +254,8 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
                       PostDetailGroupTitle(
                           color: widget.themColor, name: '本周行程及工作内容'),
                       WeekPostDetailPlanViewWithLine(
-                          itineraries: itineraries, themColor: widget.themColor),
+                          itineraries: itineraries,
+                          themColor: widget.themColor),
                       SliverToBoxAdapter(
                           child: PostDetailKeyWorkView(
                               title: '本周区域重点工作总结', works: summaries)),
@@ -246,4 +277,3 @@ class _WeekPostDetailPageState extends State<WeekPostDetailPage> {
     );
   }
 }
-

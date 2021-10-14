@@ -18,8 +18,10 @@ class DeclarationFormModel extends ChangeNotifier {
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
   String id;
+  ///标记订单是一级订单1还是二级订单2
+  int orderType;
 
-  DeclarationFormModel({this.time = '', this.id = '',this.reject = '',}) {
+  DeclarationFormModel({this.time = '', this.id = '',this.reject = '',this.orderType = 1}) {
     _storeModel = StoreModel();
     _goodsList = [];
     _rewardGoodsList = [];
@@ -36,6 +38,7 @@ class DeclarationFormModel extends ChangeNotifier {
     String phone = json['phone'] ?? '';
     String address = json['address'] ?? '';
     reject = json['reject'] ?? '';
+    orderType = json['middleman'] ?? 1;
     _createUserId = json['createUser'].toString() ?? '';
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
     _goodsList = [];

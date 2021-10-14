@@ -67,7 +67,7 @@ class GoodsModel {
     weight = json['weight'] ?? 0.0;
     invoice = json['invoice'] ?? 0.0;
     id = json['id'] ?? '';
-    print('json = $json');
+    // print('json = $json');
 
     image = json['path'] ?? '';
     specs = [];
