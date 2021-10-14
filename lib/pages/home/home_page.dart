@@ -105,11 +105,18 @@ class _Body extends State<HomePage> {
                         MaterialPageRoute(
                             builder: (context) => WorkReport())))),
             //报告列表
+            _reportList.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
               HomeReportModel model = _reportList[index];
               return HomeReportCell(model: model);
-            }, childCount: _reportList.length)),
+            }, childCount: _reportList.length)) :
+            SliverToBoxAdapter(
+                child: Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
+            )
           ]),
       // body: buildScrollbar(context),'
     );

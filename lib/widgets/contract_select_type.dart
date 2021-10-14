@@ -146,7 +146,7 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result =
-                    await showPicker(['所有类型', '类型一', '类型二'], context);
+                    await showPicker(['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议', '冷冻设备借用协议（第三方）', '配送协议'], context);
                 if (result != null && result.isNotEmpty) {
                   setState(() => _btnName3 = result);
                   if (widget.onSelect != null)
@@ -175,7 +175,7 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result =
-                    await showPicker(['所有状态', '未签署', '已签署'], context);
+                    await showPicker(['所有状态', '未签署', '签署完成', '已发送', '过期', '撤销'], context);
                 if (result != null && result.isNotEmpty) {
                   setState(() => _btnName4 = result);
                   if (widget.onSelect != null)

@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/pages/contract/contract_detail_page.dart';
 import 'package:good_grandma/pages/contract/select_customer_page.dart';
@@ -17,7 +22,7 @@ class ContractPage extends StatefulWidget {
 class _ContractPageState extends State<ContractPage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
-  List<Map> _dataArray = [];
+  List<Map> contractList = [];
   int _current = 1;
   int _pageSize = 15;
   String _selArea = '';
@@ -51,34 +56,33 @@ class _ContractPageState extends State<ContractPage> {
       body: MyEasyRefreshSliverWidget(
           controller: _controller,
           scrollController: _scrollController,
-          dataCount: _dataArray.length,
+          dataCount: contractList.length,
           onRefresh: _refresh,
           onLoad: _onLoad,
           slivers: [
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  Map map = _dataArray[index];
+                  Map map = contractList[index];
                   String title = map['title'];
-                  bool signed = map['signed'];
-                  String type = map['type'];
-                  String signUser = map['signUser'];
+                  int status = map['status'];
+                  String signType = map['signType'];
+                  String signUser = map['customerId'];
                   String signTime = map['signTime'];
-                  String endSignTime = map['endSignTime'];
                   String id = map['id'];
                   return ContractCell(
                     title: title,
-                    signed: signed,
-                    type: type,
+                    status: status,
+                    signType: signType,
                     signUser: signUser,
                     signTime: signTime,
-                    endSignTime: endSignTime,
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ContractDetailPage(id: id))),
                   );
-                }, childCount: _dataArray.length)),
+                }, childCount: contractList.length)),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ]),
     );
   }
+
   Future<void> _refresh() async {
     _current = 1;
     _downloadData();
@@ -88,26 +92,19 @@ class _ContractPageState extends State<ContractPage> {
     _downloadData();
   }
   Future<void> _downloadData() async{
-    try{
-      await Future.delayed(Duration(seconds: 1));
-      if(_current == 0)
-        _dataArray.clear();
-      List list = [];
-      for (int i = 0; i < 13; i++) {
-        bool signed = false;
-        if (i % 2 == 0) signed = true;
-        Map model = {
-          'title': '合同名称合同名称合同名称合',
-          'signed': signed,
-          'type': '销售合同',
-          'signUser': '张三',
-          'signTime': '2021-07-01',
-          'endSignTime': '2021-07-01',
-          'id': '1'
-        };
-        list.add(model);
-        _dataArray.add(model);
-      }
+    try {
+      Map<String, dynamic> map = {
+        'current': _current,
+        'size': _pageSize
+      };
+      final val = await requestPost(Api.contractList, json: map);
+      var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---contractList----$data');
+      if (_current == 1) contractList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        contractList.add(map);
+      });
       bool noMore = false;
       if (list == null || list.isEmpty) noMore = true;
       _controller.finishRefresh(success: true);

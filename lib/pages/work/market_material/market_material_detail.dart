@@ -89,6 +89,9 @@ class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
                     SizedBox(height: 5),
                     Text(widget.data['materialName']
                         ,style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7))),
+                    SizedBox(height: 5),
+                    Text(widget.data['address']
+                        ,style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7))),
                   ]
                 )
               ),

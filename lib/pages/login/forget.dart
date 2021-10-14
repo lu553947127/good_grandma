@@ -1,6 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginEditText.dart';
 import 'loginBackground.dart';
 import 'loginBtn.dart';
@@ -25,6 +31,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   String _autoCodeText = '获取验证码';
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timer.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     ///开始倒计时
@@ -40,6 +53,58 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             _autoCodeText = '等待$_countdownTime秒';
           }
         })
+      });
+    }
+
+    ///获取手机验证码 type 1修改密码  2登录  3更换手机 4签合同
+    void _getCode(){
+      Map<String, dynamic> map = {'phone': _phone.text, 'type': '1'};
+      requestGet(Api.getCode, param: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---getCode----$data');
+        if (data['code'] == 200){
+          startCountdownTimer();
+        }else {
+          AppUtil.showToastCenter(data['msg']);
+        }
+      });
+    }
+
+    ///重置密码
+    void _restPassword(){
+
+      if(_phone.text.isEmpty){
+        Fluttertoast.showToast(msg: '手机号不能为空',gravity: ToastGravity.CENTER);
+        return;
+      }
+      if(_code.text.isEmpty){
+        Fluttertoast.showToast(msg: '验证码不能为空',gravity: ToastGravity.CENTER);
+        return;
+      }
+      if(_password.text.isEmpty){
+        Fluttertoast.showToast(msg: '新密码不能为空',gravity: ToastGravity.CENTER);
+        return;
+      }
+      if(_password.text != _password2.text){
+        Fluttertoast.showToast(msg: '两次输入的新密码不一致',gravity: ToastGravity.CENTER);
+        return;
+      }
+
+      Map<String, dynamic> map = {
+        'phone': _phone.text,
+        'code': _code.text,
+        'newPassword': _password.text,
+        'newPasswordAgain': _password2.text
+      };
+      requestGet(Api.forgetPassword, param: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---forgetPassword----$data');
+        if (data['code'] == 200){
+          Navigator.pop(context);
+          showToast('重置密码成功');
+        }else {
+          AppUtil.showToastCenter(data['msg']);
+        }
       });
     }
 
@@ -73,21 +138,23 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     bottom: 0,
                     child: Container(
                       height: 40,
-                      decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(0xFFC68D3E),Color(0xFFC68D3E)]), borderRadius: BorderRadius.circular(40)),
+                      decoration: BoxDecoration(gradient: LinearGradient(
+                          colors: [Color(0xFFC68D3E),Color(0xFFC68D3E)]),
+                          borderRadius: BorderRadius.circular(40)),
                       child: TextButton(
                         child: Text(_autoCodeText, style: TextStyle(fontSize: 12, color: Colors.white)),
                         onPressed: (){
                           final account = _phone.text;
                           if (account.isEmpty) {
-                            print("验证码不能为空");
+                            showToast("手机号不能为空");
                             return;
                           }
-                          startCountdownTimer();
-                        },
-                      ),
-                    ),
+                          _getCode();
+                        }
+                      )
+                    )
                   )
-                ],
+                ]
               ),
               SizedBox(height: 10),
               LoginEditText(
@@ -108,14 +175,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               SizedBox(height: 10),
               LoginBtn(
                 title: '重置',
-                onPressed: (){
-
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+                onPressed: _restPassword
+              )
+            ]
+          )
+        )
+      )
     );
   }
 }

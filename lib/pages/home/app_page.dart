@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
@@ -22,9 +28,62 @@ import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/pages/work/work_text.dart';
 
 ///应用
-class AppPage extends StatelessWidget{
+class AppPage extends StatefulWidget {
   final VoidCallback shenpiOnTap;
   const AppPage({Key key,@required this.shenpiOnTap}) : super(key: key);
+
+  @override
+  _AppPageState createState() => _AppPageState();
+}
+
+class _AppPageState extends State<AppPage> {
+
+  ///判断是否注册eqb
+  isEqbContract(){
+    requestPost(Api.isEqbContract).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---isEqbContract----$data');
+      if (data['msg'] == 'success'){
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
+      }else if (data['msg'] == 'fail_contract'){
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  title: Text('温馨提示'),
+                  content: Text('您还未开通电子合同账号，是否开通？'),
+                  actions: <Widget>[
+                    TextButton(child: Text('取消',style: TextStyle(color: Color(0xFF999999))),onPressed: (){
+                      Navigator.of(context).pop('cancel');
+                      Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
+                    }),
+                    TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: () async {
+                      Navigator.of(context).pop('ok');
+                      registerContract();
+                    })
+                  ]
+              );
+            });
+      }else if (data['msg'] == 'fail_customer'){
+        AppUtil.showToastCenter('客户不存在');
+      }
+    });
+  }
+
+  ///注册电子合同账号
+  registerContract(){
+    requestPost(Api.registerContract).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---registerContract----$data');
+      if (data['code'] == 200){
+        AppUtil.showToastCenter('开通账号成功');
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
+      }else {
+        AppUtil.showToastCenter(data['msg']);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +122,7 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 2)));
           break;
         case '审批申请':
-          if(shenpiOnTap != null) shenpiOnTap();
+          if(widget.shenpiOnTap != null) widget.shenpiOnTap();
           break;
         case '商品销量统计':
           Navigator.push(context, MaterialPageRoute(builder: (context) => SalesStatisticsPage()));
@@ -84,7 +143,7 @@ class AppPage extends StatelessWidget{
           Navigator.push(context, MaterialPageRoute(builder:(context)=> StockPage()));
           break;
         case '电子合同':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
+          isEqbContract();
           break;
         case '业绩统计':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
@@ -99,56 +158,56 @@ class AppPage extends StatelessWidget{
     }
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        brightness: Brightness.light,
-        title: Text('应用'),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: ListView.builder(
-            itemCount: WorkText.listWork.length,
-            itemBuilder: (context, index){
-              List<Map> list = (WorkText.listWork[index]['list'] as List).cast();
-              if(Store.readUserType() == 'ejkh' && WorkText.listWork[index]['title'] == '订货订单')
-                list.removeWhere((map) => map['name'] == '一级订单');
-              return Container(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(WorkText.listWork[index]['title'], style: TextStyle(fontSize: 18, color: Color(0XFF333333))),
-                      GridView.builder(
-                        shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
-                        physics:NeverScrollableScrollPhysics(),//禁用滑动事件
-                        padding: EdgeInsets.zero,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          return TextButton(
-                              onPressed: () {
-                                _btnOnPressed(context, list, index);
-                              },
-                              style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Image.asset(list[index]['image'], width: 55.0, height: 55.0),
-                                  Text(list[index]['name'], style: TextStyle(fontSize: 14, color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
-                                ],
-                              ));
-                        }
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          brightness: Brightness.light,
+          title: Text('应用'),
+        ),
+        body: Container(
+            color: Colors.white,
+            child: ListView.builder(
+                itemCount: WorkText.listWork.length,
+                itemBuilder: (context, index){
+                  List<Map> list = (WorkText.listWork[index]['list'] as List).cast();
+                  if(Store.readUserType() == 'ejkh' && WorkText.listWork[index]['title'] == '订货订单')
+                    list.removeWhere((map) => map['name'] == '一级订单');
+                  return Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(WorkText.listWork[index]['title'], style: TextStyle(fontSize: 18, color: Color(0XFF333333))),
+                            GridView.builder(
+                                shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
+                                physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                                padding: EdgeInsets.zero,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
+                                itemCount: list.length,
+                                itemBuilder: (context, index) {
+                                  return TextButton(
+                                      onPressed: () {
+                                        _btnOnPressed(context, list, index);
+                                      },
+                                      style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Image.asset(list[index]['image'], width: 55.0, height: 55.0),
+                                          Text(list[index]['name'], style: TextStyle(fontSize: 14, color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
+                                        ],
+                                      ));
+                                }
+                            )
+                          ]
+                      ),
+                      decoration: BoxDecoration(//分割线
+                        border: Border(bottom: BorderSide(width: 12, color: Color(0xFFF8F9FC))),
                       )
-                    ]
-                  ),
-                  decoration: BoxDecoration(//分割线
-                    border: Border(bottom: BorderSide(width: 12, color: Color(0xFFF8F9FC))),
-                  )
-              );
-            }
+                  );
+                }
+            )
         )
-      )
     );
   }
 }

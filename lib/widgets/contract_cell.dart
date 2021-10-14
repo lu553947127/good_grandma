@@ -6,25 +6,86 @@ class ContractCell extends StatelessWidget {
   const ContractCell({
     Key key,
     @required this.title,
-    @required this.signed,
-    @required this.type,
+    @required this.status,
+    @required this.signType,
     @required this.signUser,
     @required this.signTime,
-    @required this.endSignTime,
     @required this.onTap,
   }) : super(key: key);
 
   final String title;
-  final bool signed;
-  final String type;
+  final int status;
+  final String signType;
   final String signUser;
   final String signTime;
-  final String endSignTime;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final Color cardColor = !signed ? AppColors.FFE45C26 : AppColors.FF959EB1;
+
+    ///签署状态颜色
+    _setStatusColor(status){
+      switch(status){
+        case 0://未签署
+          return AppColors.FFE45C26;
+          break;
+        case 1://已发送
+          return AppColors.FF12BD95;
+          break;
+        case 2://签署完成
+          return AppColors.FF959EB1;
+          break;
+        case 3://过期
+          return AppColors.FF959EB1;
+          break;
+        case 4://撤销
+          return AppColors.FF959EB1;
+          break;
+      }
+    }
+
+    _setStatusText(status){
+      switch(status){
+        case 0:
+          return '未签署';
+          break;
+        case 1:
+          return '已发送';
+          break;
+        case 2:
+          return '签署完成';
+          break;
+        case 3:
+          return '过期';
+          break;
+        case 4:
+          return '撤销';
+          break;
+      }
+    }
+
+    final Color cardColor = _setStatusColor(status);
+
+    _setTypeText(type){
+      switch(type){
+        case '0':
+          return '经销商合同';
+          break;
+        case '1':
+          return '分销商合同';
+          break;
+        case '2':
+          return '冷冻设备借用协议';
+          break;
+        case '3':
+          return '冷冻设备借用协议（第三方）';
+          break;
+        case '4':
+          return '配送协议';
+          break;
+      }
+    }
+    
     return ListTile(
       onTap: onTap,
       title: Card(
@@ -49,13 +110,9 @@ class ContractCell extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 7.5, vertical: 5),
-                      child: !signed
-                          ? Text('未签署',
-                              style: TextStyle(
-                                  color: cardColor, fontSize: 11.0))
-                          : Text('已签署',
-                              style: TextStyle(
-                                  color: cardColor, fontSize: 11.0)),
+                      child: Text(_setStatusText(status),
+                          style: TextStyle(
+                              color: cardColor, fontSize: 11.0)),
                     ),
                   )
                 ],
@@ -68,7 +125,7 @@ class ContractCell extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    '合同类型：' + type,
+                    '合同类型：' + _setTypeText(signType),
                     style: const TextStyle(
                         color: AppColors.FF959EB1, fontSize: 11.0),
                   ),
@@ -78,45 +135,25 @@ class ContractCell extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: signed
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '签署人：' + signUser,
-                          style: const TextStyle(
-                              color: AppColors.FF959EB1, fontSize: 12.0),
-                        ),
-                        Text(
-                          '签署时间：' + signTime,
-                          style: const TextStyle(
-                              color: AppColors.FF959EB1, fontSize: 12.0),
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        Image.asset('assets/images/contract_wait.png',
-                            width: 10, height: 12),
-                        Expanded(
-                            child: Text(
-                          ' 等待' + signUser + '审批',
-                          style: const TextStyle(
-                              color: AppColors.FFE45C26, fontSize: 12),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                        Text(
-                          '签署截止时间：' + endSignTime,
-                          style: const TextStyle(
-                              color: AppColors.FFDD0000, fontSize: 12),
-                        ),
-                      ],
-                    ),
-            ),
-          ],
-        ),
-      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '签署人：' + signUser,
+                    style: const TextStyle(
+                        color: AppColors.FF959EB1, fontSize: 12.0),
+                  ),
+                  Text(
+                    '签署时间：' + signTime,
+                    style: const TextStyle(
+                        color: AppColors.FF959EB1, fontSize: 12.0),
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      )
     );
   }
 }
