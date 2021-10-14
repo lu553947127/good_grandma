@@ -134,6 +134,14 @@ class DeclarationFormModel extends ChangeNotifier {
     });
     return count;
   }
+  ///订单详情页商品总重
+  double get goodsWeightForDetail {
+    double count = 0;
+    _goodsList.forEach((goodsModel) {
+      count += goodsModel.weight;
+    });
+    return count;
+  }
 
   ///商品总额
   double get goodsPrice {

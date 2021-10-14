@@ -91,7 +91,7 @@ class _Body extends State<WeekPostAddPage> {
           title: Text(widget.id.isNotEmpty?'编辑周报':'新增周报'),
           actions: [
             TextButton(
-                onPressed: () => _submitAction(context, model, 2),
+                onPressed: () => _submitAction(context, model, 1),
                 child:
                     const Text('保存草稿', style: TextStyle(color: Colors.black))),
           ],

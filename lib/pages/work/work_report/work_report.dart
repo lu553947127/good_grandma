@@ -80,7 +80,7 @@ class _WorkReportState extends State<WorkReport> {
                   _controller.callRefresh();
                 }),
             //筛选
-            WorkSelectType(selectAction: _workSelectTypeAction,reset: _resetWorkSelectType),
+            WorkSelectType(selectAction: _workSelectTypeAction,reset: _resetWorkSelectType,showPeopleBtn: _selIndex == 0,),
             Expanded(
               child: MyEasyRefreshSliverWidget(
                   controller: _controller,
@@ -136,7 +136,7 @@ class _WorkReportState extends State<WorkReport> {
       };
       // print('param = ${jsonEncode(map)}');
       final val = await requestPost(Api.reportList, json: jsonEncode(map));
-      // LogUtil.d('${Api.reportList} value = $val');
+      LogUtil.d('${Api.reportList} value = $val');
       final data = jsonDecode(val.toString());
       if (_current == 1) _reportList.clear();
       final List<dynamic> list = data['data'];

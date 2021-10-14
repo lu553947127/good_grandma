@@ -39,8 +39,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    double countWeight = _model.goodsWeight;
-    countWeight /= 1000;
+    double countWeight = _model.goodsWeightForDetail;
     return Scaffold(
       appBar: AppBar(
         title: const Text('订单详情'),
@@ -119,23 +118,26 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ),
             ),
             //奖励商品
-            SliverPadding(
-              padding:
-                  const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-              sliver: SliverToBoxAdapter(
-                child: Card(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('奖励商品',
-                            style: const TextStyle(
-                                color: AppColors.FF959EB1, fontSize: 14.0)),
-                        ..._model.rewardGoodsList.map((goodsModel) =>
-                            DeclarationGoodsCell(goodsModel: goodsModel)),
-                      ],
+            SliverVisibility(
+              visible: _model.rewardGoodsList.isNotEmpty,
+              sliver: SliverPadding(
+                padding:
+                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+                sliver: SliverToBoxAdapter(
+                  child: Card(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('奖励商品',
+                              style: const TextStyle(
+                                  color: AppColors.FF959EB1, fontSize: 14.0)),
+                          ..._model.rewardGoodsList.map((goodsModel) =>
+                              DeclarationGoodsCell(goodsModel: goodsModel)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -157,47 +159,76 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ]),
       //审核 驳回
-      bottomNavigationBar: Visibility(
-        visible: _model.status == 1 && Store.readUserType() == 'yjkh',
-        child: Container(
-          color: Colors.white,
-          padding: EdgeInsets.only(
-              left: 15.0,
-              right: 15.0,
-              top: 15.0,
-              bottom: 15.0 + MediaQuery.of(context).padding.bottom),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
+      bottomNavigationBar: Store.readUserType() == 'ejkh' &&
+              (_model.status == 2 || _model.status == 5)
+          ? Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                  left: 15.0,
+                  right: 15.0,
+                  top: 15.0,
+                  bottom: 15.0 + MediaQuery.of(context).padding.bottom),
+              child: SizedBox(
                 width: 150,
                 height: 44,
                 child: TextButton(
-                    onPressed: () => _rejectAction(context),
+                    onPressed: () => _cancelAction(context),
                     style: TextButton.styleFrom(
-                      backgroundColor: AppColors.FF959EB1,
-                      shape: StadiumBorder(),
-                    ),
-                    child: const Text('驳回',
+                        backgroundColor: AppColors.FFC08A3F,
+                        shape: StadiumBorder()),
+                    child: const Text('取消订单',
                         style: TextStyle(color: Colors.white, fontSize: 15.0))),
               ),
-              SizedBox(
-                width: 150,
-                height: 44,
-                child: TextButton(
-                    onPressed: () => _examineAction(context),
-                    style: TextButton.styleFrom(
-                      backgroundColor: AppColors.FFC08A3F,
-                      shape: StadiumBorder(),
+            )
+          : Visibility(
+              visible: _model.status == 1 && Store.readUserType() == 'yjkh',
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(
+                    left: 15.0,
+                    right: 15.0,
+                    top: 15.0,
+                    bottom: 15.0 + MediaQuery.of(context).padding.bottom),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      height: 44,
+                      child: TextButton(
+                          onPressed: () => _rejectAction(context),
+                          style: TextButton.styleFrom(
+                              backgroundColor: AppColors.FF959EB1,
+                              shape: StadiumBorder()),
+                          child: const Text('驳回',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 15.0))),
                     ),
-                    child: const Text('确认审核',
-                        style: TextStyle(color: Colors.white, fontSize: 15.0))),
+                    SizedBox(
+                      width: 150,
+                      height: 44,
+                      child: TextButton(
+                          onPressed: () => _examineAction(context),
+                          style: TextButton.styleFrom(
+                              backgroundColor: AppColors.FFC08A3F,
+                              shape: StadiumBorder()),
+                          child: const Text('确认审核',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 15.0))),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
+  }
+
+  //取消订单
+  void _cancelAction(BuildContext context) async {
+    bool result = await AppUtil.bottomConformSheet(context, '是否要取消订单？',
+        cancelText: '不取消', doneText: '取消');
+    if (result != null && result)
+      _examineRequest(context, {'id': _model.id, 'status': 6});
   }
 
   //驳回
@@ -208,7 +239,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       focusNode: FocusNode(),
       text: '',
       hintText: '请输入驳回理由',
-      callBack: (text) =>  _examineRequest(
+      callBack: (text) => _examineRequest(
           context, {'id': _model.id, 'status': 5, 'reject': text}),
     );
   }
@@ -222,6 +253,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   //审核驳回网络请求
   void _examineRequest(BuildContext context, Map param) async {
+    // print('param = ${jsonEncode(param)}');
     requestPost(Api.orderSh, json: jsonEncode(param)).then((value) {
       var data = jsonDecode(value.toString());
       // print('data = $data');
@@ -246,7 +278,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     try {
       Map<String, dynamic> param = {'id': widget.model.id};
       final val = await requestPost(Api.orderDetail, json: jsonEncode(param));
-      LogUtil.d('orderDetail value = $val');
+      // LogUtil.d('orderDetail value = $val');
       var data = jsonDecode(val.toString());
       Map<String, dynamic> map = data['data'];
       DeclarationFormModel model = DeclarationFormModel.fromJson(map);
@@ -363,7 +395,7 @@ class _Header extends StatelessWidget {
                   children: [
                     Image.asset('assets/images/sign_in_local2.png',
                         width: 12, height: 12),
-                    SizedBox(width:10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Text('收货地址：${_model.address}',
                           style: const TextStyle(
@@ -375,7 +407,7 @@ class _Header extends StatelessWidget {
                   children: [
                     Image.asset('assets/images/ic_login_phone_dark_grey.png',
                         width: 12, height: 12),
-                    SizedBox(width:10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Text('联系电话：${_model.phone}',
                           style: const TextStyle(

@@ -144,8 +144,12 @@ class _StockAddPageState extends State<StockAddPage> {
           .map((stockModel) => {
                 'makeTime': stockModel.time,
                 'goodsName': stockModel.goodsModel.name,
-                'spec20': _getSpecModelWith(stockModel, '20').number ?? '',
-                'spec40': _getSpecModelWith(stockModel, '40').number ?? '',
+                'spec20': _getSpecModelWith(stockModel, '20') != null
+                    ? _getSpecModelWith(stockModel, '20').number
+                    : '0',
+                'spec40': _getSpecModelWith(stockModel, '40') != null
+                    ? _getSpecModelWith(stockModel, '40').number
+                    : '0',
               })
           .toList(),
     };

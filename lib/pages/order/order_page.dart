@@ -131,14 +131,14 @@ class _OrderPageState extends State<OrderPage> {
         'current': _current,
         'size': _pageSize,
         'middleman': widget.orderType,
-        'status': _selIndex
+        'status': widget.orderType == 2?(_selIndex>0?_selIndex + 1:_selIndex):_selIndex
       };
-      print('param = ${jsonEncode(map)}');
+      // print('param = ${jsonEncode(map)}');
       String url = Api.orderList;
       if(widget.orderType == 3)
         url = Api.myOrderList;
       final val = await requestPost(url, json: jsonEncode(map));
-      LogUtil.d('$url value = $val');
+      // LogUtil.d('$url value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
