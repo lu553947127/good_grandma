@@ -97,5 +97,6 @@ class Store {
     _box.remove(_postName);
     _box.remove(_nickName);
     _box.remove(_userAvatar);
+    _box.remove(_userType);
   }
 }
