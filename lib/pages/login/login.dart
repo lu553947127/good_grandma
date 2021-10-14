@@ -35,6 +35,13 @@ class _LoginPageState extends State<LoginPage> {
   int _countdownTime = 60;
   String _autoCodeText = '获取验证码';
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timer.cancel();
+  }
+
   ///获取部门名称
   _getDeptName(dept_id){
     Map<String, dynamic> map = {'id': dept_id};
@@ -107,6 +114,42 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) {
+            return NetLoadingDialog(
+              requestCallBack: null,
+              outsideDismiss: false,
+            );
+          });
+
+      requestPostLogin(Api.loginPassword, formData: {
+        'tenantId': '000000',
+        'phone': account,
+        'code': code,
+        'grant_type': 'phone',
+        'scope': 'all',
+        'type': 'account',
+      }).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---loginPassword----$data');
+        if (data['error_description'] != null){
+          Navigator.pop(context);
+          showToast(data['error_description']);
+        }else {
+          Store.saveToken(data['access_token']);
+          Store.saveUserId(data['user_id']);
+          Store.saveUserName(data['user_name']);
+          Store.saveDeptId(data['dept_id']);
+          Store.savePostName(data['post_name']);
+          Store.saveNickName(data['nick_name']);
+          Store.saveUserAvatar(data['avatar']);
+          Store.saveUserType(data['user_type']);
+          Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
+          _getDeptName(data['dept_id']);
+        }
+      });
     }
 
     ///开始倒计时
@@ -122,6 +165,20 @@ class _LoginPageState extends State<LoginPage> {
             _autoCodeText = '等待$_countdownTime秒';
           }
         })
+      });
+    }
+
+    ///获取手机验证码 type 1修改密码  2登录  3更换手机 4签合同
+    void _getCode(){
+      Map<String, dynamic> map = {'phone': _account.text, 'type': '2'};
+      requestGet(Api.getCode, param: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---getCode----$data');
+        if (data['code'] == 200){
+          startCountdownTimer();
+        }else {
+          AppUtil.showToastCenter(data['msg']);
+        }
       });
     }
 
@@ -146,8 +203,8 @@ class _LoginPageState extends State<LoginPage> {
               type: TextInputType.visiblePassword,
               passwordVisible: true
             )
-          ],
-        ),
+          ]
+        )
       );
     }
 
@@ -185,18 +242,18 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: (){
                         final account = _account.text;
                         if (account.isEmpty) {
-                          showToast("验证码不能为空");
+                          showToast("手机号不能为空");
                           return;
                         }
-                        startCountdownTimer();
-                      },
-                    ),
-                  ),
+                        _getCode();
+                      }
+                    )
+                  )
                 )
-              ],
+              ]
             )
-          ],
-        ),
+          ]
+        )
       );
     }
 
@@ -214,10 +271,10 @@ class _LoginPageState extends State<LoginPage> {
                   setState(() {
                     _isAccount = value;
                   });
-                },
+                }
               ),
               Text('记住账号',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
-            ],
+            ]
           ),
           Offstage(
             offstage: visible ? false : true,
@@ -230,13 +287,13 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() {
                       _isPassword = value;
                     });
-                  },
+                  }
                 ),
                 Text('记住密码',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
-              ],
-            ),
+              ]
+            )
           )
-        ],
+        ]
       );
     }
 
@@ -251,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: (){
               visible = !visible;
               setState(() {});
-            },
+            }
           ),
           Offstage(
             offstage: visible ? false : true,
@@ -260,10 +317,10 @@ class _LoginPageState extends State<LoginPage> {
               //忘记密码按钮，点击执行事件
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder:(context)=> ForgetPassword()));
-              },
-            ),
+              }
+            )
           )
-        ],
+        ]
       );
     }
 
@@ -285,10 +342,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 10),
               _codeOrForget()
-            ],
-          ),
-        ),
-      ),
+            ]
+          )
+        )
+      )
     );
   }
 }

@@ -11,16 +11,13 @@ class FreezerStatisticsList extends StatelessWidget {
 
     _setTextColor(status){
       switch(status){
-        case '正常':
+        case 0://正常
           return Color(0xFF12BD95);
           break;
-        case '损坏':
-          return Color(0xFFDD0000);
-          break;
-        case '维修中':
+        case 1://维修中
           return Color(0xFFC08A3F);
           break;
-        case '报废':
+        case 2://报废
           return Color(0xFF999999);
           break;
       }
@@ -28,17 +25,28 @@ class FreezerStatisticsList extends StatelessWidget {
 
     _setBgColor(status){
       switch(status){
-        case '正常':
+        case 0://正常
           return Color(0xFFE4F2F1);
           break;
-        case '损坏':
-          return Color(0xFFF1E1E2);
-          break;
-        case '维修中':
+        case 1://维修中
           return Color(0xFFF1EEEA);
           break;
-        case '报废':
+        case 2://报废
           return Color(0xFFEEEFF2);
+          break;
+      }
+    }
+
+    _setStatus(status){
+      switch(status){
+        case 0:
+          return '正常';
+          break;
+        case 1:
+          return '维修中';
+          break;
+        case 2:
+          return '报废';
           break;
       }
     }
@@ -101,17 +109,17 @@ class FreezerStatisticsList extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: data['status'] == 0 ? Color(0xFFF1EEEA) : Color(0xFFE4F2F1), borderRadius: BorderRadius.circular(3),
+                              color: _setBgColor(data['status']), borderRadius: BorderRadius.circular(3),
                             ),
-                            child: Text(data['status'] == 0 ? '维修中' : '正常', style: TextStyle(fontSize: 10, color: data['status'] == 0 ? Color(0xFFC08A3F) : Color(0xFF12BD95))),
+                            child: Text(_setStatus(data['status']), style: TextStyle(fontSize: 10, color: _setTextColor(data['status']))),
                           ),
                           SizedBox(height: 3),
                           Container(//openFreezer 0未开柜 1已开柜
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: data['openFreezer'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
+                              color: data['useing'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
                             ),
-                            child: Text(data['openFreezer'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: data['openFreezer'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
+                            child: Text(data['useing'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: data['useing'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
                           )
                         ]
                     )
@@ -124,8 +132,8 @@ class FreezerStatisticsList extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatisticsDetail(
             data: data,
           )));
-        },
-      ),
+        }
+      )
     );
   }
 }

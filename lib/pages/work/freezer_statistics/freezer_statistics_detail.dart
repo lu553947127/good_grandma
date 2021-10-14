@@ -13,16 +13,13 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
 
   _setTextColor(status){
     switch(status){
-      case '正常':
+      case 0://正常
         return Color(0xFF12BD95);
         break;
-      case '损坏':
-        return Color(0xFFDD0000);
-        break;
-      case '维修中':
+      case 1://维修中
         return Color(0xFFC08A3F);
         break;
-      case '报废':
+      case 2://报废
         return Color(0xFF999999);
         break;
     }
@@ -30,17 +27,28 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
 
   _setBgColor(status){
     switch(status){
-      case '正常':
+      case 0://正常
         return Color(0xFFE4F2F1);
         break;
-      case '损坏':
-        return Color(0xFFF1E1E2);
-        break;
-      case '维修中':
+      case 1://维修中
         return Color(0xFFF1EEEA);
         break;
-      case '报废':
+      case 2://报废
         return Color(0xFFEEEFF2);
+        break;
+    }
+  }
+
+  _setStatus(status){
+    switch(status){
+      case 0:
+        return '正常';
+        break;
+      case 1:
+        return '维修中';
+        break;
+      case 2:
+        return '报废';
         break;
     }
   }
@@ -125,17 +133,17 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                      color: widget.data['status'] == 0 ? Color(0xFFF1EEEA) : Color(0xFFE4F2F1), borderRadius: BorderRadius.circular(3),
+                                      color: _setBgColor(widget.data['status']), borderRadius: BorderRadius.circular(3),
                                     ),
-                                    child: Text(widget.data['status'] == 0 ? '维修中' : '正常', style: TextStyle(fontSize: 10, color: widget.data['status'] == 0 ? Color(0xFFC08A3F) : Color(0xFF12BD95))),
+                                    child: Text(_setStatus(widget.data['status']), style: TextStyle(fontSize: 10, color: _setTextColor(widget.data['status']))),
                                   ),
                                   SizedBox(height: 3),
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                      color: widget.data['openFreezer'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
+                                      color: widget.data['useing'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
                                     ),
-                                    child: Text(widget.data['openFreezer'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: widget.data['openFreezer'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
+                                    child: Text(widget.data['useing'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: widget.data['useing'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
                                   )
                                 ]
                             )
@@ -154,42 +162,42 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('大区',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('${widget.data['region']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('区域',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                            Text('${widget.data['deptName']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
-                        SizedBox(height: 15),
-                        SizedBox(
-                            width: double.infinity,
-                            height: 1,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                            )
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('城市',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('${widget.data['province']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
-                          ],
-                        ),
-                        SizedBox(height: 15),
-                        SizedBox(
-                            width: double.infinity,
-                            height: 1,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                            )
-                        ),
-                        SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('区县',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('${widget.data['city']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
-                          ],
-                        ),
+                        // SizedBox(height: 15),
+                        // SizedBox(
+                        //     width: double.infinity,
+                        //     height: 1,
+                        //     child: DecoratedBox(
+                        //       decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+                        //     )
+                        // ),
+                        // SizedBox(height: 15),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Text('城市',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                        //     Text('${widget.data['province']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                        //   ],
+                        // ),
+                        // SizedBox(height: 15),
+                        // SizedBox(
+                        //     width: double.infinity,
+                        //     height: 1,
+                        //     child: DecoratedBox(
+                        //       decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+                        //     )
+                        // ),
+                        // SizedBox(height: 15),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Text('区县',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                        //     Text('${widget.data['city']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                        //   ],
+                        // ),
                         SizedBox(height: 15),
                         SizedBox(
                             width: double.infinity,
@@ -220,7 +228,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           children: [
                             Text('经理电话',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
                             Text('${widget.data['cityPhone']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
-                          ],
+                          ]
                         )
                       ]
                   )
@@ -291,15 +299,15 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                 width: 200,
                                 child: Text('${widget.data['address']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)), maxLines: 2)
                             )
-                          ],
+                          ]
                         )
                       ]
                   )
               )
-            ],
-          ),
-        ),
-      ),
+            ]
+          )
+        )
+      )
     );
   }
 }

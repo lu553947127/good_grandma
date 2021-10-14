@@ -34,6 +34,11 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
       return;
     }
 
+    if (address == ''){
+      showToast("物料地址不能为空");
+      return;
+    }
+
     if (quantity == ''){
       showToast("物料总量不能为空");
       return;
@@ -53,6 +58,7 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
       'id': widget.id,
       'deptId': deptId,
       'materialName': name,
+      'address': address,
       'quantity': quantity,
       'inuse': inuse,
       'loss': loss,
@@ -63,7 +69,7 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---materialAdd----$data');
       if (data['code'] == 200){
-        showToast("添加成功");
+        showToast("成功");
         Navigator.of(Application.appContext).pop();
       }else {
         showToast(data['msg']);
@@ -75,6 +81,7 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
   String areaName = '';
   String deptId = '';
   String name = '';
+  String address = '';
   String quantity = '';
   String inuse = '';
   String loss = '';
@@ -89,11 +96,13 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
         deptId = data['data']['deptId'];
         areaName = data['data']['deptName'];
         name = data['data']['materialName'].isEmpty ? '请输入物料名称' : data['data']['materialName'];
+        address = data['data']['address'].isEmpty ? '请输入物料地址' : data['data']['address'];
         quantity = data['data']['quantity'].isEmpty ? '请输入物料总量' : data['data']['quantity'];
         inuse = data['data']['inuse'].isEmpty ? '请输入物料使用' : data['data']['inuse'];
         loss = data['data']['loss'].isEmpty ? '请输入物料耗损' : data['data']['loss'];
 
         controller_name.text = name;
+        controller_address.text = address;
         controller_quantity.text = quantity;
         controller_inuse.text = inuse;
         controller_loss.text = loss;
@@ -111,6 +120,7 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
   }
 
   TextEditingController controller_name = new TextEditingController();
+  TextEditingController controller_address = new TextEditingController();
   TextEditingController controller_quantity = new TextEditingController();
   TextEditingController controller_inuse = new TextEditingController();
   TextEditingController controller_loss = new TextEditingController();
@@ -149,6 +159,15 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
                   rightPlaceholder: '请输入物料名称',
                   onChanged: (tex){
                     name = tex;
+                  }
+              ),
+              TextInputView(
+                  rightLength: 120,
+                  leftTitle: '物料地址',
+                  controller: controller_address,
+                  rightPlaceholder: '请输入物料地址',
+                  onChanged: (tex){
+                    address = tex;
                   }
               ),
               TextInputView(

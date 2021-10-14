@@ -252,4 +252,10 @@ class Api {
 
   ///登录人所有岗位信息
   static const allPost = "/api/hap-app/app/user/allPost";
+
+  ///通过手机号获取验证码
+  static const getCode = "/api/hap-app/app/phone/verify";
+
+  ///重置密码
+  static const forgetPassword = "/api/hap-app/app/phone/restPassword";
 }
