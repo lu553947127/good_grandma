@@ -73,6 +73,7 @@ class DeclarationFormModel extends ChangeNotifier {
     id = model.id;
     time = model.time;
     reject = model.reject;
+    orderType = model.orderType;
     _createUserId = model.createUserId;
   }
 
