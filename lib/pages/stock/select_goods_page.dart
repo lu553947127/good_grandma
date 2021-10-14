@@ -155,7 +155,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
         } else {
           double invoice = double.parse(map['invoice']) ?? 0;
           double middleman = double.parse(map['middleman']) ?? 0;
-          double weight = map['weight'] == null
+          double weight = map['weight'] != null
               ? double.parse(map['weight'].toString())
               : 0;
           model = GoodsModel(
