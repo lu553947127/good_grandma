@@ -261,4 +261,13 @@ class Api {
 
   ///重置密码
   static const forgetPassword = "/api/hap-app/app/phone/restPassword";
+
+  ///注册电子合同账号
+  static const registerContract = "/api/hap-apptony/app/contract/register";
+
+  ///判断是否注册eqb
+  static const isEqbContract = "/api/hap-apptony/app/contract/isEqb";
+
+  ///电子合同列表
+  static const contractList = "/api/hap-apptony/app/contract/contractList";
 }
