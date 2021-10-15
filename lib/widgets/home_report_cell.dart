@@ -134,7 +134,7 @@ class HomeReportCell extends StatelessWidget {
                 showWY: model.postType == 1 ?false:true,),
             ),
             Visibility(
-              visible: !model.isZN,
+              visible: model.summary.isNotEmpty && model.plans.isNotEmpty,
               child: const Divider(
                   color: AppColors.FFEFEFF4,
                   thickness: 1,

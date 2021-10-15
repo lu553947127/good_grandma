@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:good_grandma/common/colors.dart';
@@ -14,37 +15,37 @@ void main() async {
   setupStatusBar();
 }
 
-class MyApp extends StatelessWidget  {
+class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    LogUtil.init(title: "好阿婆", isDebug: true, limitLength:800);
+    LogUtil.init(title: "好阿婆", isDebug: true, limitLength: 800);
 
     return MaterialApp(
       title: '好阿婆',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
       theme: ThemeData(
-        scaffoldBackgroundColor: AppColors.FFF4F5F8,
-        brightness: Brightness.light,
-        appBarTheme: AppBarTheme(
+          scaffoldBackgroundColor: AppColors.FFF4F5F8,
           brightness: Brightness.light,
-          color: Colors.white,
-          centerTitle: true,
-          shadowColor: Colors.black26,
-          iconTheme: IconThemeData(color: Colors.black87),
-          actionsIconTheme: IconThemeData(color: Colors.black87),
-          textTheme: TextTheme(
-            headline6: TextStyle(color: Colors.black87, fontSize: 18),
+          appBarTheme: AppBarTheme(
+            brightness: Brightness.light,
+            color: Colors.white,
+            centerTitle: true,
+            shadowColor: Colors.black26,
+            iconTheme: IconThemeData(color: Colors.black87),
+            actionsIconTheme: IconThemeData(color: Colors.black87),
+            textTheme: TextTheme(
+                headline6: TextStyle(color: Colors.black87, fontSize: 18)),
           ),
-        ),
-        cardTheme: CardTheme(
-          shadowColor: Colors.black26,
-          elevation: 3,
-        ),
-      ),
-      home: (Store.readToken() == null || Store.readToken().isEmpty) ? LoginPage() : IndexPage(),
+          cardTheme: CardTheme(shadowColor: Colors.black26, elevation: 3),
+          textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                  overlayColor:
+                      MaterialStateProperty.all(AppColors.FFFAF4EC)))),
+      home: (Store.readToken() == null || Store.readToken().isEmpty)
+          ? LoginPage()
+          : IndexPage(),
     );
   }
 }
