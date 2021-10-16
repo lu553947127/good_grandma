@@ -88,6 +88,8 @@ dependencies:
   path_provider: ^2.0.4
   #二维码/条形码扫描插件
   barcode_scan: ^3.0.1
+  #webview
+  webview_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

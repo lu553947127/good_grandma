@@ -8,16 +8,14 @@ class ContractCell extends StatelessWidget {
     @required this.title,
     @required this.status,
     @required this.signType,
-    @required this.signUser,
-    @required this.signTime,
+    @required this.signersList,
     @required this.onTap,
   }) : super(key: key);
 
   final String title;
   final int status;
   final String signType;
-  final String signUser;
-  final String signTime;
+  final List<Map> signersList;
   final VoidCallback onTap;
 
   @override
@@ -113,10 +111,10 @@ class ContractCell extends StatelessWidget {
                       child: Text(_setStatusText(status),
                           style: TextStyle(
                               color: cardColor, fontSize: 11.0)),
-                    ),
+                    )
                   )
-                ],
-              ),
+                ]
+              )
             ),
             const Divider(color: AppColors.FFEFEFF4, thickness: 1, height: 1),
             Container(
@@ -129,26 +127,36 @@ class ContractCell extends StatelessWidget {
                     style: const TextStyle(
                         color: AppColors.FF959EB1, fontSize: 11.0),
                   ),
-                  Spacer(),
-                ],
-              ),
+                  Spacer()
+                ]
+              )
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '签署人：' + signUser,
-                    style: const TextStyle(
-                        color: AppColors.FF959EB1, fontSize: 12.0),
-                  ),
-                  Text(
-                    '签署时间：' + signTime,
-                    style: const TextStyle(
-                        color: AppColors.FF959EB1, fontSize: 12.0),
-                  )
-                ]
+              child: ListView.builder(
+                shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                physics:NeverScrollableScrollPhysics(),//禁止滚动
+                itemCount: signersList.length,
+                itemBuilder: (content, index){
+                  return Container(
+                      margin: EdgeInsets.only(top: 2),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '签署人：' + signersList[index]['name'],
+                              style: const TextStyle(
+                                  color: AppColors.FF959EB1, fontSize: 12.0),
+                            ),
+                            Text(
+                              '签署时间：' + signersList[index]['signTime'],
+                              style: const TextStyle(
+                                  color: AppColors.FF959EB1, fontSize: 12.0),
+                            )
+                          ]
+                      )
+                  );
+                }
               )
             )
           ]
