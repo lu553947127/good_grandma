@@ -1,44 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/pages/contract/select_customer_page.dart';
-import 'package:good_grandma/pages/work/work_text.dart';
+import 'package:good_grandma/widgets/select_form.dart';
+import 'package:good_grandma/widgets/select_tree.dart';
 
 ///合同顶部筛选
 class ContractSelectType extends StatefulWidget {
   const ContractSelectType({Key key, @required this.onSelect})
       : super(key: key);
-  final Function(String selArea, List<CustomerModel> selCustomers,
-      String selType, String selState) onSelect;
+  final Function(String areaId, String customerId,
+      String signType, String status) onSelect;
 
   @override
   _ContractSelectTypeState createState() => _ContractSelectTypeState();
 }
 
 class _ContractSelectTypeState extends State<ContractSelectType> {
-  List<CustomerModel> _customers = [];
+
   String _btnName1 = '所有区域';
   String _btnName2 = '所有客户';
   String _btnName3 = '所有类型';
   String _btnName4 = '所有状态';
-  String _selArea = '';
+  String areaId = '';
+  String customerId = '';
+  String signType = '';
+  String status = '';
+
   @override
   Widget build(BuildContext context) {
     final double w = MediaQuery.of(context).size.width / 4 - 1;
     final Widget div =
         Container(width: 1.0, height: 12.0, color: AppColors.FFC1C8D7);
-
-    int selCount = 0;
-    if (_customers.isNotEmpty) {
-      selCount = _customers.length;
-      int i = 0;
-      _btnName2 = '';
-      _customers.forEach((employee) {
-        _btnName2 += employee.name;
-        if (i < _customers.length - 1) _btnName2 += ',';
-        i++;
-      });
-    }
 
     return Container(
       color: Colors.white,
@@ -63,22 +56,17 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                     child: Image.asset('assets/images/ic_work_down.png',
                         width: 10, height: 10),
                   )
-                ],
+                ]
               ),
               onPressed: () async {
-                String result = await showPickerModal(context, PickerData);
-                if(result != null) {
-                  _selArea = result;
-                  String re = result.replaceFirst('[', '');
-                  re = re.replaceFirst(']', '');
-                  List<String> areas = re.split(',');
-                  _btnName1 = areas[areas.length - 2] + ',' + areas.last;
-                  if (mounted) setState(() {});
-                  if (widget.onSelect != null)
-                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
-                }
-              },
-            ),
+                Map area = await showSelectTreeList(context, '全国');
+                areaId = area['deptId'];
+                _btnName1 = area['areaName'];
+                if (mounted) setState(() {});
+                if (widget.onSelect != null)
+                  widget.onSelect(areaId, customerId, signType, status);
+              }
+            )
           ),
           div,
           //所有客户
@@ -94,37 +82,24 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                       style: TextStyle(fontSize: 14, color: AppColors.FF2F4058),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Visibility(
-                    visible: selCount > 0,
-                    child: Text(
-                      '($selCount)',
-                      style: const TextStyle(
-                          fontSize: 14, color: AppColors.FF2F4058),
-                    ),
+                    )
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 4.5),
                     child: Image.asset('assets/images/ic_work_down.png',
                         width: 10, height: 10),
                   )
-                ],
+                ]
               ),
               onPressed: () async {
-                List<CustomerModel> list = await Navigator.push(context,
-                    MaterialPageRoute(builder: (_) {
-                  return SelectCustomerPage(selCustomers: _customers);
-                }));
-                if (list != null && list.isNotEmpty) {
-                  _customers.clear();
-                  _customers.addAll(list);
-                  if (mounted) setState(() {});
-                  if (widget.onSelect != null)
-                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
-                }
-              },
-            ),
+                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                customerId = select['id'];
+                _btnName2 = select['realName'];
+                if (mounted) setState(() {});
+                if (widget.onSelect != null)
+                  widget.onSelect(areaId, customerId, signType, status);
+              }
+            )
           ),
           div,
           //所有类型
@@ -134,9 +109,14 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_btnName3,
-                      style:
-                          TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
+                  Expanded(
+                      child: Text(
+                        _btnName3,
+                        style: TextStyle(fontSize: 14, color: AppColors.FF2F4058),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 4.5),
                     child: Image.asset('assets/images/ic_work_down.png',
@@ -145,15 +125,36 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                 ],
               ),
               onPressed: () async {
-                String result =
-                    await showPicker(['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议', '冷冻设备借用协议（第三方）', '配送协议'], context);
+                String result = await showPicker(
+                    ['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议', '冷冻设备借用协议（第三方）', '配送协议'], context);
                 if (result != null && result.isNotEmpty) {
-                  setState(() => _btnName3 = result);
+                  switch(result){
+                    case '所有类型':
+                      signType = '';
+                      break;
+                    case '经销商合同':
+                      signType = '0';
+                      break;
+                    case '分销商合同':
+                      signType = '1';
+                      break;
+                    case '冷冻设备借用协议':
+                      signType = '2';
+                      break;
+                    case '冷冻设备借用协议（第三方）':
+                      signType = '3';
+                      break;
+                    case '配送协议':
+                      signType = '4';
+                      break;
+                  }
+                  _btnName3 = result;
+                  if (mounted) setState(() {});
                   if (widget.onSelect != null)
-                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
+                    widget.onSelect(areaId, customerId, signType, status);
                 }
-              },
-            ),
+              }
+            )
           ),
           div,
           //所有状态
@@ -163,29 +164,55 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_btnName4,
-                      style:
-                          TextStyle(fontSize: 14, color: AppColors.FF2F4058)),
+                  Expanded(
+                      child: Text(
+                        _btnName4,
+                        style: TextStyle(fontSize: 14, color: AppColors.FF2F4058),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 4.5),
                     child: Image.asset('assets/images/ic_work_down.png',
                         width: 10, height: 10),
                   )
-                ],
+                ]
               ),
               onPressed: () async {
                 String result =
                     await showPicker(['所有状态', '未签署', '签署完成', '已发送', '过期', '撤销'], context);
                 if (result != null && result.isNotEmpty) {
-                  setState(() => _btnName4 = result);
+                  switch(result){
+                    case '所有状态':
+                      status = '';
+                      break;
+                    case '未签署':
+                      status = '0';
+                      break;
+                    case '签署完成':
+                      status = '1';
+                      break;
+                    case '已发送':
+                      status = '2';
+                      break;
+                    case '过期':
+                      status = '3';
+                      break;
+                    case '撤销':
+                      status = '4';
+                      break;
+                  }
+                  _btnName4 = result;
+                  if (mounted) setState(() {});
                   if (widget.onSelect != null)
-                    widget.onSelect(_selArea, _customers, _btnName3, _btnName4);
+                    widget.onSelect(areaId, customerId, signType, status);
                 }
-              },
-            ),
-          ),
-        ],
-      ),
+              }
+            )
+          )
+        ]
+      )
     );
   }
 }

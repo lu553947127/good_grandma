@@ -270,4 +270,7 @@ class Api {
 
   ///电子合同列表
   static const contractList = "/api/hap-apptony/app/contract/contractList";
+
+  ///电子合同签署h5链接
+  static const contractSignUrl = "/api/hap-apptony/app/contract/getSignUrl";
 }
