@@ -56,7 +56,6 @@ class _AppPageState extends State<AppPage> {
                   actions: <Widget>[
                     TextButton(child: Text('取消',style: TextStyle(color: Color(0xFF999999))),onPressed: (){
                       Navigator.of(context).pop('cancel');
-                      Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
                     }),
                     TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: () async {
                       Navigator.of(context).pop('ok');
