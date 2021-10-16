@@ -263,14 +263,14 @@ class Api {
   static const forgetPassword = "/api/hap-app/app/phone/restPassword";
 
   ///注册电子合同账号
-  static const registerContract = "/api/hap-apptony/app/contract/register";
+  static const registerContract = "/api/hap-app/app/contract/register";
 
   ///判断是否注册eqb
-  static const isEqbContract = "/api/hap-apptony/app/contract/isEqb";
+  static const isEqbContract = "/api/hap-app/app/contract/isEqb";
 
   ///电子合同列表
-  static const contractList = "/api/hap-apptony/app/contract/contractList";
+  static const contractList = "/api/hap-app/app/contract/contractList";
 
   ///电子合同签署h5链接
-  static const contractSignUrl = "/api/hap-apptony/app/contract/getSignUrl";
+  static const contractSignUrl = "/api/hap-app/app/contract/getSignUrl";
 }
