@@ -18,8 +18,7 @@ import 'package:provider/provider.dart';
 
 ///订单详情
 class OrderDetailPage extends StatefulWidget {
-  const OrderDetailPage({Key key, @required this.model})
-      : super(key: key);
+  const OrderDetailPage({Key key, @required this.model}) : super(key: key);
   final DeclarationFormModel model;
 
   @override
@@ -162,7 +161,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       //审核 驳回
       bottomNavigationBar: Store.readUserType() == 'ejkh' &&
               (_model.status == 2 || _model.status == 5)
-          ? Container(//二级订单这两个状态下有取消订单的功能
+          ? Container(
+              //二级订单这两个状态下有取消订单的功能
               color: Colors.white,
               padding: EdgeInsets.only(
                   left: 15.0,
@@ -182,10 +182,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ),
             )
           : Visibility(
-              visible: (_model.orderType == 1//是否是一级订单
-                      ? _model.status == 1//待确认时可以审核
-                      : _model.status == 2) &&//待收货时可以审核
-                  Store.readUserType() == 'yjkh',
+              visible: _model.orderType == 1 //是否是一级订单
+                  ? (_model.status == 1 &&
+                          (Store.readUserType() == 'yjkh' ||
+                              Store.readUserType() == 'xsb')) &&
+                      Store.readUserId() != _model.createUserId //一级订单待确认时可以审核
+                  : (_model.status == 2 &&
+                      Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
               child: Container(
                 color: Colors.white,
                 padding: EdgeInsets.only(
