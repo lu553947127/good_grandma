@@ -24,10 +24,10 @@ class ContractCell extends StatelessWidget {
     ///签署状态颜色
     _setStatusColor(status){
       switch(status){
-        case 0://未签署
+        case 0://未签署完成
           return AppColors.FFE45C26;
           break;
-        case 1://已发送
+        case 1://待签署
           return AppColors.FF12BD95;
           break;
         case 2://签署完成
@@ -36,7 +36,7 @@ class ContractCell extends StatelessWidget {
         case 3://过期
           return AppColors.FF959EB1;
           break;
-        case 4://撤销
+        case 4://已撤销
           return AppColors.FF959EB1;
           break;
       }
@@ -45,10 +45,10 @@ class ContractCell extends StatelessWidget {
     _setStatusText(status){
       switch(status){
         case 0:
-          return '未签署';
+          return '未签署完成';
           break;
         case 1:
-          return '已发送';
+          return '待签署';
           break;
         case 2:
           return '签署完成';
@@ -57,7 +57,7 @@ class ContractCell extends StatelessWidget {
           return '过期';
           break;
         case 4:
-          return '撤销';
+          return '已撤销';
           break;
       }
     }
@@ -80,6 +80,9 @@ class ContractCell extends StatelessWidget {
           break;
         case '4':
           return '配送协议';
+          break;
+        case '5':
+          return '小型经销商合同';
           break;
       }
     }

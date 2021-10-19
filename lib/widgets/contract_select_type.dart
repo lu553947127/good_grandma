@@ -126,7 +126,7 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result = await showPicker(
-                    ['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议', '冷冻设备借用协议（第三方）', '配送协议'], context);
+                    ['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议', '冷冻设备借用协议（第三方）', '配送协议', '小型经销商合同'], context);
                 if (result != null && result.isNotEmpty) {
                   switch(result){
                     case '所有类型':
@@ -146,6 +146,9 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                       break;
                     case '配送协议':
                       signType = '4';
+                      break;
+                    case '小型经销商合同':
+                      signType = '5';
                       break;
                   }
                   _btnName3 = result;
@@ -181,25 +184,25 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result =
-                    await showPicker(['所有状态', '未签署', '签署完成', '已发送', '过期', '撤销'], context);
+                    await showPicker(['所有状态', '未签署完成', '待签署', '签署完成', '过期', '已撤销'], context);
                 if (result != null && result.isNotEmpty) {
                   switch(result){
                     case '所有状态':
                       status = '';
                       break;
-                    case '未签署':
+                    case '未签署完成':
                       status = '0';
                       break;
-                    case '签署完成':
+                    case '待签署':
                       status = '1';
                       break;
-                    case '已发送':
+                    case '签署完成':
                       status = '2';
                       break;
                     case '过期':
                       status = '3';
                       break;
-                    case '撤销':
+                    case '已撤销':
                       status = '4';
                       break;
                   }
