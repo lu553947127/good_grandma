@@ -24,7 +24,7 @@ class ContractCell extends StatelessWidget {
     ///签署状态颜色
     _setStatusColor(status){
       switch(status){
-        case 0://未签署完成
+        case 0://未签署
           return AppColors.FFE45C26;
           break;
         case 1://待签署
@@ -45,7 +45,7 @@ class ContractCell extends StatelessWidget {
     _setStatusText(status){
       switch(status){
         case 0:
-          return '未签署完成';
+          return '未签署';
           break;
         case 1:
           return '待签署';

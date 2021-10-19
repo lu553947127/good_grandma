@@ -184,13 +184,13 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result =
-                    await showPicker(['所有状态', '未签署完成', '待签署', '签署完成', '过期', '已撤销'], context);
+                    await showPicker(['所有状态', '未签署', '待签署', '签署完成', '过期', '已撤销'], context);
                 if (result != null && result.isNotEmpty) {
                   switch(result){
                     case '所有状态':
                       status = '';
                       break;
-                    case '未签署完成':
+                    case '未签署':
                       status = '0';
                       break;
                     case '待签署':

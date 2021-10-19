@@ -40,7 +40,7 @@ class _ContractPageState extends State<ContractPage> {
       LogUtil.d('请求结果---contractSignUrl----$data');
       if(data['code'] == 200){
         // Navigator.push(context, MaterialPageRoute(builder: (_) => ContractUrlPage(url: data['msg'])));
-        _launchURL(data['msg']);
+        _launchURL(data['data']);
       }else{
         AppUtil.showToastCenter(data['msg']);
       }
@@ -100,6 +100,10 @@ class _ContractPageState extends State<ContractPage> {
                     signType: signType,
                     signersList: signersList,
                     onTap: () {
+                      if (status == 4){
+                        AppUtil.showToastCenter('合同已撤销，不能签署哦');
+                        return;
+                      }
                       _contractSignUrl(id);
                     }
                   );
