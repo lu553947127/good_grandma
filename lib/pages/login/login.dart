@@ -110,6 +110,11 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           showToast(data['error_description']);
         }else {
+          if (_isPhone){
+            Store.savePhone(_account.text);
+          }else {
+            Store.removePhone();
+          }
           Store.saveToken(data['access_token']);
           Store.saveUserId(data['user_id']);
           Store.saveUserName(data['user_name']);
@@ -158,6 +163,16 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           showToast(data['error_description']);
         }else {
+          if (_isAccount){
+            Store.saveAccount(_username.text);
+          }else {
+            Store.removeAccount();
+          }
+          if (_isPassword){
+            Store.savePassword(_password.text);
+          }else {
+            Store.removePassword();
+          }
           Store.saveToken(data['access_token']);
           Store.saveUserId(data['user_id']);
           Store.saveUserName(data['user_name']);
@@ -290,11 +305,6 @@ class _LoginPageState extends State<LoginPage> {
                           value: _isAccount,
                           activeColor: Color(0xFFC68D3E),
                           onChanged: (value){
-                            if (value){
-                              Store.saveAccount(_username.text);
-                            }else {
-                              Store.removeAccount();
-                            }
                             setState(() {
                               _isAccount = value;
                             });
@@ -309,11 +319,6 @@ class _LoginPageState extends State<LoginPage> {
                           value: _isPassword,
                           activeColor: Color(0xFFC68D3E),
                           onChanged: (value){
-                            if (value){
-                              Store.savePassword(_password.text);
-                            }else {
-                              Store.removePassword();
-                            }
                             setState(() {
                               _isPassword = value;
                             });
@@ -337,11 +342,6 @@ class _LoginPageState extends State<LoginPage> {
                     value: _isPhone,
                     activeColor: Color(0xFFC68D3E),
                     onChanged: (value){
-                      if (value){
-                        Store.savePhone(_account.text);
-                      }else {
-                        Store.removePhone();
-                      }
                       setState(() {
                         _isPhone = value;
                       });
