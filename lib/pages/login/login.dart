@@ -27,13 +27,34 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _password = TextEditingController();
   TextEditingController _account = TextEditingController();
   TextEditingController _code = TextEditingController();
-  bool _isAccount= false;//是否记住账号
-  bool _isPassword= false;//是否记住密码
+  bool _isAccount = false;//是否记住账号
+  bool _isPassword = false;//是否记住密码
+  bool _isPhone = false;//是否记住手机号
   bool visible = true;//控件显示与隐藏
 
   Timer _timer;
   int _countdownTime = 60;
   String _autoCodeText = '获取验证码';
+
+  @override
+  void initState() {
+    super.initState();
+    _username.text = Store.readAccount();
+    _password.text = Store.readPassword();
+    _account.text = Store.readPhone();
+
+    if (Store.readAccount() != null && Store.readAccount().isNotEmpty){
+      _isAccount = true;
+    }
+
+    if (Store.readPassword() != null && Store.readPassword().isNotEmpty){
+      _isPassword = true;
+    }
+
+    if (Store.readPhone() != null && Store.readPhone().isNotEmpty){
+      _isPhone = true;
+    }
+  }
 
   @override
   void dispose() {
@@ -259,41 +280,77 @@ class _LoginPageState extends State<LoginPage> {
 
     ///记住账号 记住密码选择框
     Widget _accountOrPassword(){
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Checkbox(
-                value: _isAccount,
-                activeColor: Color(0xFFC68D3E),
-                onChanged: (value){
-                  setState(() {
-                    _isAccount = value;
-                  });
-                }
-              ),
-              Text('记住账号',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
-            ]
-          ),
-          Offstage(
-            offstage: visible ? false : true,
-            child: Row(
+      return Visibility(
+          visible: visible ? true : false,
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                    children: <Widget>[
+                      Checkbox(
+                          value: _isAccount,
+                          activeColor: Color(0xFFC68D3E),
+                          onChanged: (value){
+                            if (value){
+                              Store.saveAccount(_username.text);
+                            }else {
+                              Store.removeAccount();
+                            }
+                            setState(() {
+                              _isAccount = value;
+                            });
+                          }
+                      ),
+                      Text('记住账号',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
+                    ]
+                ),
+                Row(
+                    children: <Widget>[
+                      Checkbox(
+                          value: _isPassword,
+                          activeColor: Color(0xFFC68D3E),
+                          onChanged: (value){
+                            if (value){
+                              Store.savePassword(_password.text);
+                            }else {
+                              Store.removePassword();
+                            }
+                            setState(() {
+                              _isPassword = value;
+                            });
+                          }
+                      ),
+                      Text('记住密码',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
+                    ]
+                )
+              ]
+          )
+      );
+    }
+
+    ///记住手机号
+    Widget _phone(){
+      return Visibility(
+          visible: visible ? false : true,
+          child: Row(
               children: <Widget>[
                 Checkbox(
-                  value: _isPassword,
-                  activeColor: Color(0xFFC68D3E),
-                  onChanged: (value){
-                    setState(() {
-                      _isPassword = value;
-                    });
-                  }
+                    value: _isPhone,
+                    activeColor: Color(0xFFC68D3E),
+                    onChanged: (value){
+                      if (value){
+                        Store.savePhone(_account.text);
+                      }else {
+                        Store.removePhone();
+                      }
+                      setState(() {
+                        _isPhone = value;
+                      });
+                    }
                 ),
-                Text('记住密码',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
+                Text('记住手机号',style: TextStyle(fontSize: 14,color: Color(0XFF333333)))
               ]
-            )
           )
-        ]
       );
     }
 
@@ -334,7 +391,8 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 20),
               _accountView(),
               _codeView(),
-              // _accountOrPassword(),
+              _accountOrPassword(),
+              _phone(),
               SizedBox(height: 10),
               LoginBtn(
                 title: '登录',

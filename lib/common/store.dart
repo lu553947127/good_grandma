@@ -7,6 +7,9 @@ class Store {
 
   static final _box = GetStorage();
 
+  static const _account = "account";
+  static const _password = "password";
+  static const _phone= "phone";
   static const _kToken = "keyToken";
   static const _userId = "userid";
   static const _userName = "user_name";
@@ -24,6 +27,30 @@ class Store {
 
   static String readUserType() {
     return _box.read(_userType);
+  }
+
+  static saveAccount(String account) {
+    _box.write(_account, account);
+  }
+
+  static String readAccount() {
+    return _box.read(_account);
+  }
+
+  static savePassword(String password) {
+    _box.write(_password, password);
+  }
+
+  static String readPassword() {
+    return _box.read(_password);
+  }
+
+  static savePhone(String phone) {
+    _box.write(_phone, phone);
+  }
+
+  static String readPhone() {
+    return _box.read(_phone);
   }
 
   static saveToken(String token) {
@@ -98,5 +125,17 @@ class Store {
     _box.remove(_nickName);
     _box.remove(_userAvatar);
     _box.remove(_userType);
+  }
+
+  static removeAccount() {
+    _box.remove(_account);
+  }
+
+  static removePassword() {
+    _box.remove(_password);
+  }
+
+  static removePhone() {
+    _box.remove(_phone);
   }
 }
