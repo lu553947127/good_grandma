@@ -212,6 +212,11 @@ class _Body extends State<HomePage> {
         list.forEach((map) {
           String read = map['read'] ?? '0';
           count += int.parse(read);
+          if(_msgTime.isEmpty){
+            String time = map['createTime']??'';
+            if(time.isNotEmpty)
+              _msgTime = time;
+          }
         });
         if (mounted) setState(() => _msgCount = count.toString());
       }

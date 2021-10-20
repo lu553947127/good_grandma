@@ -97,7 +97,7 @@ class _OrderPageState extends State<OrderPage> {
               ],
             ),
       floatingActionButton: Visibility(
-        visible: widget.orderType != 3,
+        visible: widget.orderType != 3 && Store.readUserType() != 'zn',
         child: FloatingActionButton(
           child: Icon(Icons.add),
           backgroundColor: AppColors.FFC68D3E,

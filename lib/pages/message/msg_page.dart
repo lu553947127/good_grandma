@@ -135,7 +135,6 @@ class _MsgPageState extends State<MsgPage> {
         break;
       case 3:
         {
-          //todo:电子合同通知页面待定
           //电子合同
           Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
         }

@@ -59,6 +59,7 @@ class _SwitchTypeTitleWidgetState extends State<SwitchTypeTitleWidget> {
                         color: _selIndex == index
                             ? Colors.white
                             : Color(0xFFC68D3E))),
+                style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
                 onPressed: () {
                   setState(() => _selIndex = index);
                   if (widget.onTap != null) widget.onTap(_selIndex);
