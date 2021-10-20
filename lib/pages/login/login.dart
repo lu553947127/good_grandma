@@ -37,9 +37,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    _timer.cancel();
+    _timer?.cancel();
   }
 
   ///获取部门名称

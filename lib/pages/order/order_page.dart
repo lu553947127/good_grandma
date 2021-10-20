@@ -7,6 +7,7 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/pages/order/add_order_page.dart';
 import 'package:good_grandma/pages/order/order_detail_page.dart';
@@ -50,48 +51,51 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget listViews = MyEasyRefreshSliverWidget(
+        controller: _controller,
+        scrollController: _scrollController,
+        dataCount: _dataArray.length,
+        onRefresh: _refresh,
+        onLoad: _onLoad,
+        slivers: [
+          SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+            DeclarationFormModel model = _dataArray[index];
+            return MyDeclarationFormCell(
+              model: model,
+              firstOrder: widget.orderType == 1,
+              onTap: () async {
+                bool stateChanged = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => OrderDetailPage(model: model)));
+                if (stateChanged != null && stateChanged) {
+                  _controller.callRefresh();
+                }
+              },
+            );
+          }, childCount: _dataArray.length)),
+          SliverSafeArea(sliver: SliverToBoxAdapter()),
+        ]);
     return Scaffold(
       appBar: AppBar(title: const Text('订货订单')),
-      body: Column(
-        children: [
-          SwitchTypeTitleWidget(
-              backgroundColor: Colors.white,
-              selIndex: _selIndex,
-              list: _listTitle,
-              onTap: (index) {
-                _selIndex = index;
-                _controller.callRefresh();
-              }),
-          Expanded(
-            child: MyEasyRefreshSliverWidget(
-                controller: _controller,
-                scrollController: _scrollController,
-                dataCount: _dataArray.length,
-                onRefresh: _refresh,
-                onLoad: _onLoad,
-                slivers: [
-                  SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                    DeclarationFormModel model = _dataArray[index];
-                    return MyDeclarationFormCell(
-                      model: model,
-                      firstOrder: widget.orderType == 1,
-                      onTap: () async {
-                        bool stateChanged = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => OrderDetailPage(model: model)));
-                        if (stateChanged != null && stateChanged) {
-                          _controller.callRefresh();
-                        }
-                      },
-                    );
-                  }, childCount: _dataArray.length)),
-                  SliverSafeArea(sliver: SliverToBoxAdapter()),
-                ]),
-          ),
-        ],
-      ),
+      body: Store.readUserType() == 'zn' //工厂用户
+          ? listViews
+          : Column(
+              children: [
+                SwitchTypeTitleWidget(
+                    backgroundColor: Colors.white,
+                    selIndex: _selIndex,
+                    list: _listTitle,
+                    onTap: (index) {
+                      _selIndex = index;
+                      _controller.callRefresh();
+                    }),
+                Expanded(
+                  child: listViews,
+                ),
+              ],
+            ),
       floatingActionButton: Visibility(
         visible: widget.orderType != 3,
         child: FloatingActionButton(
@@ -130,9 +134,11 @@ class _OrderPageState extends State<OrderPage> {
         'current': _current,
         'size': _pageSize,
         'middleman': widget.orderType,
-        'status': widget.orderType == 2
-            ? (_selIndex > 0 ? _selIndex + 1 : _selIndex)
-            : _selIndex
+        'status': Store.readUserType() == 'zn'//工厂用户只能看到待发货状态的订单
+            ? 2
+            : widget.orderType == 2
+                ? (_selIndex > 0 ? _selIndex + 1 : _selIndex)
+                : _selIndex
       };
       // print('param = ${jsonEncode(map)}');
       String url = Api.orderList;

@@ -40,6 +40,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   Widget build(BuildContext context) {
     double countWeight = _model.goodsWeightForDetail;
+    // print('Store.readUserType() = ${Store.readUserType()}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('订单详情'),
@@ -184,11 +185,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             )
           : Visibility(
               visible: _model.orderType == 1 //是否是一级订单
-                  ? (_model.status == 1 &&
-                          (Store.readUserType() == 'yjkh' ||
-                              Store.readUserType() == 'xsb' ||
-                              Store.readUserType() == 'zn')) &&
-                      Store.readUserId() != _model.createUserId //一级订单待确认时可以审核
+                  ? ((_model.status == 1 &&
+                              (Store.readUserType() == 'yjkh' ||
+                                  Store.readUserType() == 'xsb')) ||//一级订单待确认时一级客户和城市经理可以审核
+                          (_model.status == 2 &&
+                              Store.readUserType() == 'zn')) &&//一级订单待发货时工厂可以审核
+                      Store.readUserId() != _model.createUserId
                   : (_model.status == 2 &&
                       Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
               child: Container(
