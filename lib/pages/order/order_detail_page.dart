@@ -45,8 +45,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         title: const Text('订单详情'),
         actions: [
           Visibility(
-            visible: (_model.status == 1 || _model.status == 5) &&
-                _model.createUserId == Store.readUserId(),
+            visible: (_model.status == 1 &&
+                    _model.createUserId == Store.readUserId()) ||
+                (_model.status == 5 && Store.readUserType() == 'xsb'),
             child: TextButton(
                 onPressed: () async {
                   bool needRefresh = await Navigator.push(
@@ -185,7 +186,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               visible: _model.orderType == 1 //是否是一级订单
                   ? (_model.status == 1 &&
                           (Store.readUserType() == 'yjkh' ||
-                              Store.readUserType() == 'xsb')) &&
+                              Store.readUserType() == 'xsb' ||
+                              Store.readUserType() == 'zn')) &&
                       Store.readUserId() != _model.createUserId //一级订单待确认时可以审核
                   : (_model.status == 2 &&
                       Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
@@ -240,6 +242,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   //驳回
   void _rejectAction(BuildContext context) {
+    if (_model.orderType == 1 &&
+        (Store.readUserType() == 'xsb' || Store.readUserType() == 'yjkh')) {
+      //一级订单：工厂可以审核,可以驳回，城市经理、一级客户只能确认,不能驳回。如果订单被驳回，就一定是驳回到城市经理那，城市经理可以编辑重新提交，也可以取消订单
+      AppUtil.showToastCenter('您没有驳回权限');
+      return;
+    }
     AppUtil.showInputDialog(
       context: context,
       editingController: TextEditingController(),
