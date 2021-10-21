@@ -157,7 +157,6 @@ class _TrackPageState extends State<TrackPage> {
       LogUtil.d('${Api.reportUserList} value = $val');
       _userList.clear();
       var data = jsonDecode(val.toString());
-      if(!data['date'].runtimeType.toString().contains('List')) return;
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         Map re = map as Map;
@@ -169,6 +168,7 @@ class _TrackPageState extends State<TrackPage> {
         _selUserModel = _userList.first;
         _getTrackWithUser(_selUserModel);
       }
+      else AppUtil.showToastCenter('人员列表为空');
       if (mounted) setState(() {});
     } catch (error) {}
   }
@@ -187,7 +187,6 @@ class _TrackPageState extends State<TrackPage> {
       LogUtil.d('${Api.trajectoryList} value = $val');
       _dataArray.clear();
       var data = jsonDecode(val.toString());
-      if(!data['date'].runtimeType.toString().contains('List')) return;
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         Map re = map as Map;
@@ -200,7 +199,10 @@ class _TrackPageState extends State<TrackPage> {
                 double.parse(re['longitude']) ?? 0));
         _dataArray.add(model);
       });
-      _addLine();
+      if(_dataArray.isNotEmpty)
+        _addLine();
+      else
+        AppUtil.showToastCenter('没有轨迹');
       if (mounted) setState(() {});
     } catch (error) {}
   }
