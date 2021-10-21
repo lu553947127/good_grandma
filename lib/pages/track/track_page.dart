@@ -71,76 +71,80 @@ class _TrackPageState extends State<TrackPage> {
             markers: Set<Marker>.of(_markers.values),
             onMapCreated: (controller) => _mapController = controller,
           ),
-          Positioned(
-              top: 15,
-              left: 15,
-              child: _selUserModel != null
-                  ? Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
-                          border:
-                              Border.all(color: AppColors.FFC1C8D7, width: 1)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 9.0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          EmployeeModel result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      SelectUserPage(userList: _userList)));
-                          if (result != null) {
-                            setState(() => _selUserModel = result);
-                            _getTrackWithUser(result);
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            Text(_selUserModel.name),
-                            Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Container()),
-          Positioned(
-              top: 15,
-              right: 15,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: AppColors.FFE45C26, width: 1)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
-                child: GestureDetector(
-                  onTap: () {
-                    showPickerDateRange(
-                        context: context,
-                        callBack: (Map param) {
-                          setState(() {
-                            _startTime = param['startTime'];
-                            _endTime = param['endTime'];
-                          });
-                          _getTrackWithUser(_selUserModel);
-                        });
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                          _startTime.isEmpty
-                              ? '选择时间段'
-                              : _startTime + '\n' + _endTime,
-                          style: const TextStyle(color: AppColors.FFE45C26)),
-                      Icon(
-                        Icons.arrow_drop_down,
-                        color: AppColors.FFE45C26,
-                      ),
-                    ],
+          Visibility(
+            visible: _selUserModel != null,
+            child: Positioned(
+                top: 15,
+                left: 15,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                      border:
+                      Border.all(color: AppColors.FFC1C8D7, width: 1)),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 9.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      EmployeeModel result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  SelectUserPage(userList: _userList)));
+                      if (result != null) {
+                        setState(() => _selUserModel = result);
+                        _getTrackWithUser(result);
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Text(_selUserModel!=null?_selUserModel.name:''),
+                        Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
                   ),
-                ),
-              )),
+                )),
+          ),
+          Visibility(
+            visible: _userList.isNotEmpty,
+            child: Positioned(
+                top: 15,
+                right: 15,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppColors.FFE45C26, width: 1)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 9.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      showPickerDateRange(
+                          context: context,
+                          callBack: (Map param) {
+                            setState(() {
+                              _startTime = param['startTime'];
+                              _endTime = param['endTime'];
+                            });
+                            _getTrackWithUser(_selUserModel);
+                          });
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                            _startTime.isEmpty
+                                ? '选择时间段'
+                                : _startTime + '\n' + _endTime,
+                            style: const TextStyle(color: AppColors.FFE45C26)),
+                        Icon(
+                          Icons.arrow_drop_down,
+                          color: AppColors.FFE45C26,
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+          ),
         ],
       ),
     );
@@ -150,9 +154,10 @@ class _TrackPageState extends State<TrackPage> {
   void _getUserList() async {
     try {
       final val = await requestPost(Api.reportUserList);
-      // LogUtil.d('reportList value = $val');
+      LogUtil.d('${Api.reportUserList} value = $val');
       _userList.clear();
       var data = jsonDecode(val.toString());
+      if(!data['date'].runtimeType.toString().contains('List')) return;
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         Map re = map as Map;
@@ -179,9 +184,10 @@ class _TrackPageState extends State<TrackPage> {
       // print('param = ${jsonEncode(param)}');
       final val =
           await requestPost(Api.trajectoryList, json: jsonEncode(param));
-      LogUtil.d('trajectoryList value = $val');
+      LogUtil.d('${Api.trajectoryList} value = $val');
       _dataArray.clear();
       var data = jsonDecode(val.toString());
+      if(!data['date'].runtimeType.toString().contains('List')) return;
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         Map re = map as Map;
