@@ -41,6 +41,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget build(BuildContext context) {
     double countWeight = _model.goodsWeightForDetail;
     // print('Store.readUserType() = ${Store.readUserType()}');
+    // print('_model.status = ${_model.status}');
+    // print('_model.createUserId = ${_model.createUserId}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('订单详情'),
@@ -54,7 +56,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             'xsb') //一级订单 审核阶段发布者可以编辑，驳回阶段只有城市经理可以编辑
                 : (_model.status == 5 &&
                     _model.createUserId == Store.readUserId() &&
-                    Store.readUserId() ==
+                    Store.readUserType() ==
                         'ejkh'), //二级订单 二级客户自己下的订单可以被驳回，驳回后可以自己编辑
             child: TextButton(
                 onPressed: () async {

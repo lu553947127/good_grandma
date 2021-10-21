@@ -12,6 +12,10 @@ PODS:
     - AMapFoundation (~> 1.6.4)
   - "app_settings (3.0.0+1)":
     - Flutter
+  - barcode_scan (0.0.1):
+    - Flutter
+    - MTBBarcodeScanner
+    - SwiftProtobuf
   - Flutter (1.0.0)
   - flutter_filereader (0.0.1):
     - Flutter
@@ -25,17 +29,17 @@ PODS:
     - Flutter
   - image_picker (0.0.1):
     - Flutter
+  - MTBBarcodeScanner (5.0.11)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
     - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
-  - shared_preferences (0.0.1):
-    - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - SwiftProtobuf (1.17.0)
   - Toast (4.0.0)
   - url_launcher (0.0.1):
     - Flutter
@@ -50,6 +54,7 @@ DEPENDENCIES:
   - amap_flutter_location (from `.symlinks/plugins/amap_flutter_location/ios`)
   - amap_flutter_map (from `.symlinks/plugins/amap_flutter_map/ios`)
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
+  - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
   - Flutter (from `Flutter`)
   - flutter_filereader (from `.symlinks/plugins/flutter_filereader/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -58,7 +63,6 @@ DEPENDENCIES:
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -71,6 +75,8 @@ SPEC REPOS:
     - AMapFoundation
     - AMapLocation
     - FMDB
+    - MTBBarcodeScanner
+    - SwiftProtobuf
     - Toast
 
 EXTERNAL SOURCES:
@@ -80,6 +86,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/amap_flutter_map/ios"
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
+  barcode_scan:
+    :path: ".symlinks/plugins/barcode_scan/ios"
   Flutter:
     :path: Flutter
   flutter_filereader:
@@ -96,8 +104,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   url_launcher:
@@ -116,17 +122,19 @@ SPEC CHECKSUMS:
   AMapFoundation: c7da72b42a713f1429c88af1858d623dde88934b
   AMapLocation: dad27669c4ca68e395ce7532ff614b7d4d45f7b7
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
+  barcode_scan: a5c27959edfafaa0c771905bad0b29d6d39e4479
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_filereader: 0caefb23b8c96deca7c3679d3e61bfd8111a7d11
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
+  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  SwiftProtobuf: 9c85136c6ba74b0a1b84279dbf0f6db8efb714e0
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
