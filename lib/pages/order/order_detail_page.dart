@@ -153,7 +153,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             //确认收货
             SliverVisibility(
               visible: _model.status == 3 &&
-                  _model.createUserId == Store.readUserId(),
+                  (_model.orderType == 1
+                      ? _model.createUserId == Store.readUserId() //一级订单 订单创建人签收
+                      : Store.readUserType() == 'ejkh'), //二级订单 二级客户签收
               sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
                       title: '确认收货', onPressed: () => _submitAction(context))),
@@ -167,8 +169,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   Widget _btmView(BuildContext context) {
     return (Store.readUserType() == 'ejkh' &&
-            (_model.status == 2 || _model.status == 5))||//二级客户取消订单
-        (Store.readUserType() == 'xsb' && _model.status == 5 && _model.orderType == 1)//一级订单城市经理可以在订单驳回后取消订单
+                (_model.status == 2 || _model.status == 5)) || //二级客户取消订单
+            (Store.readUserType() == 'xsb' &&
+                _model.status == 5 &&
+                _model.orderType == 1) //一级订单城市经理可以在订单驳回后取消订单
         ? Container(
             //二级订单这两个状态下有取消订单的功能
             color: Colors.white,
@@ -378,12 +382,12 @@ class _Header extends StatelessWidget {
                     Expanded(
                         child: Text(_model.storeModel.name,
                             style: TextStyle(
-                                color: _model.status == 4
+                                color: _model.showGray()
                                     ? Colors.black
                                     : AppColors.FFE45C26,
                                 fontSize: 14.0))),
                     Card(
-                      color: _model.status == 4
+                      color: _model.showGray()
                           ? AppColors.FFEFEFF4
                           : AppColors.FFE45C26.withOpacity(0.1),
                       shadowColor: Colors.transparent,
@@ -393,7 +397,7 @@ class _Header extends StatelessWidget {
                         child: Text(
                           _model.statusName,
                           style: TextStyle(
-                              color: _model.status == 4
+                              color: _model.showGray()
                                   ? AppColors.FF959EB1
                                   : AppColors.FFE45C26,
                               fontSize: 14.0),

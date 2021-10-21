@@ -34,12 +34,12 @@ class MyDeclarationFormCell extends StatelessWidget {
                   Expanded(
                       child: Text(model.storeModel.name ?? '',
                           style: TextStyle(
-                              color: model.status == 4
+                              color: model.showGray()
                                   ? Colors.black
                                   : AppColors.FFE45C26,
                               fontSize: 14.0))),
                   Card(
-                    color: model.status == 4
+                    color: model.showGray()
                         ? AppColors.FFEFEFF4
                         : AppColors.FFE45C26.withOpacity(0.1),
                     shadowColor: Colors.transparent,
@@ -49,7 +49,7 @@ class MyDeclarationFormCell extends StatelessWidget {
                       child: Text(
                         model.statusName,
                         style: TextStyle(
-                            color: model.status == 4
+                            color: model.showGray()
                                 ? AppColors.FF959EB1
                                 : AppColors.FFE45C26,
                             fontSize: 14.0),

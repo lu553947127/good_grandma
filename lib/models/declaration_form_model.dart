@@ -111,10 +111,14 @@ class DeclarationFormModel extends ChangeNotifier {
         return '已完成';
       case 5:
         return '驳回';
+      case 6:
+        return '已取消';
       default:
         return '未知状态';
     }
   }
+  ///状态文字颜色是否显示灰色
+  bool showGray() => (status == 4 || status == 6);
 
   setCreateUserId(String createUserId){
     _createUserId = createUserId;
