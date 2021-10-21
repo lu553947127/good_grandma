@@ -41,7 +41,7 @@ class _FilesPageState extends State<FilesPage> {
     };
     requestGet(Api.fileCabinetList, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---fileCabinetList----$data');
+      // LogUtil.d('请求结果---fileCabinetList----$data');
       fileCabinetList.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
@@ -202,7 +202,7 @@ class _FilesPageState extends State<FilesPage> {
         context,
         MaterialPageRoute(
             builder: (_) =>
-                FileMoveCopyPage(model: model, id: parentId, parentId: parentId)));
+                FileMoveCopyPage(model: model,folderModel: FileModel(id: parentId,name: '文件柜'), id: parentId, parentId: parentId)));
     if (needRefresh != null && needRefresh) {
       _fileCabinetList();
     }

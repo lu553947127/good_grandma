@@ -35,7 +35,7 @@ class _InFolderPageState extends State<InFolderPage> {
     };
     requestGet(Api.fileCabinetList, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---fileCabinetList----$data');
+      // LogUtil.d('请求结果---fileCabinetList----$data');
       fileCabinetList.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
@@ -59,7 +59,7 @@ class _InFolderPageState extends State<InFolderPage> {
     Map<String, dynamic> map = {'ids': model.id};
     requestGet(Api.fileDelete, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---fileDelete----$data');
+      // LogUtil.d('请求结果---fileDelete----$data');
       if (data['code'] == 200){
         showToast("成功");
         Navigator.pop(context, true);
@@ -80,7 +80,7 @@ class _InFolderPageState extends State<InFolderPage> {
 
     requestGet(Api.fileAddFile, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---fileAddFile----$data');
+      // LogUtil.d('请求结果---fileAddFile----$data');
       if (data['code'] == 200){
         showToast("成功");
         _fileCabinetList();
@@ -178,7 +178,7 @@ class _InFolderPageState extends State<InFolderPage> {
         context,
         MaterialPageRoute(
             builder: (_) =>
-                FileMoveCopyPage(model: model, id: model.id, parentId: widget.parentId)));
+                FileMoveCopyPage(model: model,folderModel: FileModel(id: '1',name: '文件柜'), id: model.id, parentId: widget.parentId)));
     if (needRefresh != null && needRefresh) {
       _fileCabinetList();
     }

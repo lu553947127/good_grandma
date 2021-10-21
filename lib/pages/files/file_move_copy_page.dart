@@ -37,12 +37,13 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
   ///文件柜列表
   _fileCabinetList(){
     Map<String, dynamic> map = {
-      'parentId': widget.id,
+      'parentId': widget.folderModel.id,
       'isDeleted': '0'
     };
+    // print('param = $map');
     requestGet(Api.fileCabinetList, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---fileCabinetList----$data');
+      // LogUtil.d('请求结果---fileCabinetList----$data');
       fileCabinetList.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
@@ -57,10 +58,9 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
   void _fileCopy(BuildContext context){
     Map<String, dynamic> map = {
       'id': widget.model.id,
-      'parentId': widget.parentId,
-      'superiorId': widget.id};
-
-    requestGet(Api.fileAddFile, param: map).then((val) async{
+      'parentId': widget.folderModel.id??'1',
+      'superiorId': widget.folderModel.id??'1'};
+    requestGet(Api.fileCopy, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---fileCopy----$data');
       if (data['code'] == 200){
@@ -80,8 +80,8 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.folderModel != null)
-      print('widget.folderModel.name = ${widget.folderModel.name}');
+    // if (widget.folderModel != null)
+    //   print('widget.folderModel.name = ${widget.folderModel.name}');
     double btnW = (MediaQuery.of(context).size.width - 10.0) / 2 - 50;
     return Scaffold(
       appBar: AppBar(
@@ -127,7 +127,7 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
             OutlinedButton(
                 onPressed: () async{
                   String needRefresh = await Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => AddFolderPage(parentId: widget.model.id)));
+                      MaterialPageRoute(builder: (_) => AddFolderPage(parentId: widget.folderModel.id)));
                   if(needRefresh != null){
                     _fileCabinetList();
                   }
@@ -152,7 +152,7 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
                     height: 40.0,
                     child: Center(
                         child: const Text(
-                      '移动到这里',
+                      '复制到这里',
                       style:
                           TextStyle(color: Colors.white, fontSize: 14.0),
                     )))),
