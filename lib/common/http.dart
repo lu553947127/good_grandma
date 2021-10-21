@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_log/dio_log.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
@@ -28,6 +29,7 @@ Future requestPostLogin(url, {formData}) async{
     );
 
     Dio dio = new Dio(options);
+    dio.interceptors.add(DioLogInterceptor());
     dio.options.headers.addAll(headers);
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
@@ -63,6 +65,7 @@ Future requestPostSwitch(url, {formData}) async{
     );
 
     Dio dio = new Dio(options);
+    dio.interceptors.add(DioLogInterceptor());
     dio.options.headers.addAll(headers);
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
@@ -99,6 +102,7 @@ Future requestPost(url, {formData, json}) async{
     );
 
     Dio dio = new Dio(options);
+    dio.interceptors.add(DioLogInterceptor());
     dio.options.headers.addAll(headers);
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
@@ -143,6 +147,7 @@ Future requestGet(url, {param})async{
       responseType: ResponseType.plain,
     );
     Dio dio = new Dio(options);
+    dio.interceptors.add(DioLogInterceptor());
     dio.options.headers.addAll(headers);
     dio.options.contentType = 'application/x-www-form-urlencoded';
 

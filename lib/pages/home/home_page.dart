@@ -57,9 +57,9 @@ class _Body extends State<HomePage> {
                 onPressed: () {
                   getQrcodeState();
                 },
-                child: Image.asset('assets/images/home_scan.png', width: 20.0, height: 20.0)),
-          ]
-      ),
+                child: Image.asset('assets/images/home_scan.png',
+                    width: 20.0, height: 20.0)),
+          ]),
       body: MyEasyRefreshSliverWidget(
           controller: _controller,
           scrollController: _scrollController,
@@ -68,9 +68,7 @@ class _Body extends State<HomePage> {
           onLoad: _onLoad,
           slivers: [
             //顶部按钮
-            HomeTableHeader(
-              onTap: (name) => _titleBtnOnTap(context, name),
-            ),
+            HomeTableHeader(onTap: (name) => _titleBtnOnTap(context, name)),
             //消息通知
             SliverToBoxAdapter(
                 child: Visibility(
@@ -105,18 +103,19 @@ class _Body extends State<HomePage> {
                         MaterialPageRoute(
                             builder: (context) => WorkReport())))),
             //报告列表
-            _reportList.length > 0 ?
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              HomeReportModel model = _reportList[index];
-              return HomeReportCell(model: model);
-            }, childCount: _reportList.length)) :
-            SliverToBoxAdapter(
-                child: Container(
-                    margin: EdgeInsets.all(40),
-                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
-                )
-            )
+            _reportList.length > 0
+                ? SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                    HomeReportModel model = _reportList[index];
+                    return HomeReportCell(model: model);
+                  }, childCount: _reportList.length))
+                : SliverToBoxAdapter(
+                    child: Container(
+                        margin: EdgeInsets.all(40),
+                        child: Image.asset(
+                            'assets/images/icon_empty_images.png',
+                            width: 150,
+                            height: 150)))
           ]),
       // body: buildScrollbar(context),'
     );
@@ -212,10 +211,9 @@ class _Body extends State<HomePage> {
         list.forEach((map) {
           String read = map['read'] ?? '0';
           count += int.parse(read);
-          if(_msgTime.isEmpty){
-            String time = map['createTime']??'';
-            if(time.isNotEmpty)
-              _msgTime = time;
+          if (_msgTime.isEmpty) {
+            String time = map['createTime'] ?? '';
+            if (time.isNotEmpty) _msgTime = time;
           }
         });
         if (mounted) setState(() => _msgCount = count.toString());
@@ -234,15 +232,14 @@ class _Body extends State<HomePage> {
     }
     print('qrcode==========$qrcode');
 
-    Map<String, dynamic> map = {
-      'code': qrcode
-    };
+    Map<String, dynamic> map = {'code': qrcode};
 
     ///扫码上传
-    requestGet(Api.analysisCode, param: map).then((val){
+    requestGet(Api.analysisCode, param: map).then((val) {
       var data = json.decode(val.toString());
       print('请求结果---analysisCode----$data');
-      Fluttertoast.showToast(msg: '扫描成功: $qrcode',gravity: ToastGravity.CENTER);
+      Fluttertoast.showToast(
+          msg: '扫描成功: $qrcode', gravity: ToastGravity.CENTER);
     });
   }
 

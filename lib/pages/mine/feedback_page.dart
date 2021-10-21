@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:dio_log/dio_log.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -133,6 +134,17 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   void _feedbackRequest(BuildContext context){
+    if(_editingController.text == '6655887799'){
+      LogUtil.d('监测到6655887799,出现日志弹框');
+      if (debugBtnIsShow()) {
+        //关闭日志显示
+        dismissDebugBtn();
+      } else {
+        //打开日志显示
+        showDebugBtn(context);
+      }
+      return;
+    }
     if(_type.isEmpty){
       AppUtil.showToastCenter('请选择反馈类别');
       return;
