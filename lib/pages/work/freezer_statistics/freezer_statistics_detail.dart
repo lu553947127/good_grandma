@@ -13,11 +13,11 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
 
   _setTextColor(status){
     switch(status){
-      case 0://正常
-        return Color(0xFF12BD95);
-        break;
-      case 1://维修中
+      case 0://维修中
         return Color(0xFFC08A3F);
+        break;
+      case 1://正常
+        return Color(0xFF12BD95);
         break;
       case 2://报废
         return Color(0xFF999999);
@@ -27,11 +27,11 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
 
   _setBgColor(status){
     switch(status){
-      case 0://正常
-        return Color(0xFFE4F2F1);
-        break;
-      case 1://维修中
+      case 0://维修中
         return Color(0xFFF1EEEA);
+        break;
+      case 1://正常
+        return Color(0xFFE4F2F1);
         break;
       case 2://报废
         return Color(0xFFEEEFF2);
@@ -42,10 +42,10 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
   _setStatus(status){
     switch(status){
       case 0:
-        return '正常';
+        return '维修中';
         break;
       case 1:
-        return '维修中';
+        return '正常';
         break;
       case 2:
         return '报废';
@@ -141,9 +141,9 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                                   Container(
                                     padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
-                                      color: widget.data['useing'] == 0 ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
+                                      color: widget.data['useing'] == '0' ? Color(0xFFEEEFF2) : Color(0XFFFAEEEA), borderRadius: BorderRadius.circular(3),
                                     ),
-                                    child: Text(widget.data['useing'] == 0 ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: widget.data['useing'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
+                                    child: Text(widget.data['useing'] == '0' ? '未开柜' : '已开柜', style: TextStyle(fontSize: 10, color: widget.data['useing'] == 0 ? Color(0xFF999999) : Color(0XFFE45C26))),
                                   )
                                 ]
                             )
