@@ -48,7 +48,7 @@ void showImageRange({@required BuildContext context, @required Function(Map map)
   ///获取图片路径并上传转化成url
   Future<bool> _getImage(ImageSource source) async {
     try {
-      final pickedFile = await _picker.getImage(source: source);
+      final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
 
         var byte = await pickedFile.readAsBytes();

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
-import 'package:good_grandma/pages/message/msg_enclosure_page.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
-import 'package:good_grandma/widgets/smscode_dialog.dart';
 import 'package:provider/provider.dart';
 
 ///对账单详细
@@ -111,26 +109,26 @@ class _Body extends State<MsgDuiZhangDanDetailPage> {
     );
   }
 
-  void _showDialog(BuildContext context) async {
-    bool result = await showDialog(
-        context: context,
-        builder: (context) {
-          return SMSCodeDialog(
-            focusNode: _focusNode,
-            editingController: _textEditingController,
-            focusNode2: _focusNode2,
-            editingController2: _textEditingController2,
-            submitBtnOnTap: () {
-              //没有请求验证码的接口
-              //网络请求后
-              Navigator.pop(context, true);
-            },
-          );
-        });
-    if (result != null && result) {
-      //没有签署对账单的接口
-    }
-  }
+  // void _showDialog(BuildContext context) async {
+  //   bool result = await showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return SMSCodeDialog(
+  //           focusNode: _focusNode,
+  //           editingController: _textEditingController,
+  //           focusNode2: _focusNode2,
+  //           editingController2: _textEditingController2,
+  //           submitBtnOnTap: () {
+  //             //没有请求验证码的接口
+  //             //网络请求后
+  //             Navigator.pop(context, true);
+  //           },
+  //         );
+  //       });
+  //   if (result != null && result) {
+  //     //没有签署对账单的接口
+  //   }
+  // }
 
   @override
   void dispose() {
