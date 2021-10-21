@@ -124,7 +124,8 @@ Future requestPost(url, {formData, json}) async{
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
-      Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
+      Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
+      // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }
     throw e;
@@ -163,7 +164,8 @@ Future requestGet(url, {param})async{
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
-      Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
+      Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
+      // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
@@ -210,7 +212,8 @@ Future getPutFile(url, file) async{
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
       showToast('登录token过期，请重新登录');
       Store.removeToken();
-      Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
+      Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
+      // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }
     throw e;

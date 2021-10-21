@@ -118,8 +118,9 @@ class _SetUpPageState extends State<SetUpPage> {
                               TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: (){
                                 Navigator.of(context).pop('ok');
                                 Store.removeToken();
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (_) => LoginPage()));
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
+                                // Navigator.pushReplacement(context,
+                                //     MaterialPageRoute(builder: (_) => LoginPage()));
                               }),
                             ],
                           );
