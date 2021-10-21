@@ -46,9 +46,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         title: const Text('订单详情'),
         actions: [
           Visibility(
-            visible: (_model.status == 1 &&
-                    _model.createUserId == Store.readUserId()) ||
-                (_model.status == 5 && Store.readUserType() == 'xsb'),
+            visible: _model.orderType == 1
+                ? (_model.status == 1 &&
+                        _model.createUserId == Store.readUserId()) ||
+                    (_model.status == 5 &&
+                        Store.readUserType() ==
+                            'xsb') //一级订单 审核阶段发布者可以编辑，驳回阶段只有城市经理可以编辑
+                : (_model.status == 5 &&
+                    _model.createUserId == Store.readUserId() &&
+                    Store.readUserId() ==
+                        'ejkh'), //二级订单 二级客户自己下的订单可以被驳回，驳回后可以自己编辑
             child: TextButton(
                 onPressed: () async {
                   bool needRefresh = await Navigator.push(
@@ -173,6 +180,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             (Store.readUserType() == 'xsb' &&
                 _model.status == 5 &&
                 _model.orderType == 1) //一级订单城市经理可以在订单驳回后取消订单
+    //取消订单按钮
         ? Container(
             //二级订单这两个状态下有取消订单的功能
             color: Colors.white,
@@ -193,6 +201,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       style: TextStyle(color: Colors.white, fontSize: 15.0))),
             ),
           )
+    //审核订单按钮
         : Visibility(
             visible: _model.orderType == 1 //是否是一级订单
                 ? ((_model.status == 1 &&
