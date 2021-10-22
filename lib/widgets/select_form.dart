@@ -153,7 +153,8 @@ Future<Map> showSelectList(BuildContext context, url, title, props) async {
 
 ///跳转公共选择文件柜页
 class SelectListFilePage extends StatefulWidget {
-  const SelectListFilePage({Key key}) : super(key: key);
+  final String parentId;
+  const SelectListFilePage({Key key, this.parentId}) : super(key: key);
 
   @override
   _SelectListFilePageState createState() => _SelectListFilePageState();
@@ -171,7 +172,7 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
   Widget build(BuildContext context) {
 
     Map<String, dynamic> map = {
-      'parentId': '1',
+      'parentId': widget.parentId,
       'isDeleted': '0'
     };
 
@@ -223,7 +224,7 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
                       child: ListTile(
                         onTap: () {
                           if (model.isFolder) {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => InFolderPage(folderModel: model)));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => SelectListFilePage(parentId: model.id)));
                           } else {
                             if (model.type == 'png' || model.type == 'jpg' || model.type == 'jpeg'){
                               List<String> imagesList = [];
@@ -290,6 +291,6 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
 ///选择返回回调
 Future<Map> showSelectFileList(BuildContext context) async {
   Map result;
-  result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SelectListFilePage()));
+  result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SelectListFilePage(parentId: '1')));
   return result ?? "";
 }

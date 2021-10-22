@@ -8,7 +8,7 @@ class InputWidget extends StatefulWidget {
   const InputWidget({
     this.placeholder='请输入',
     this.onChanged,
-    this.maxLength = 100,
+    this.maxLength = 1000,
     this.maxLines = 10,
   });
 
@@ -39,7 +39,7 @@ class _InputWidgetState extends State<InputWidget> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(
-              Radius.circular(4.0),
+              Radius.circular(4.0)
             ),
             // border: Border.all(color: Color(0xFFDEDEDE)),
           ),
@@ -61,17 +61,17 @@ class _InputWidgetState extends State<InputWidget> {
                   widget.onChanged(str);
                 }
               });
-            },
-          ),
+            }
+          )
         ),
         Container(
           margin: EdgeInsets.only(bottom: 25, right: 20),
           child: Text(
             result.length.toString() + '/'+widget.maxLength.toString(),
             style: TextStyle(color: Colors.grey),
-          ),
+          )
         )
-      ],
+      ]
     );
   }
 }

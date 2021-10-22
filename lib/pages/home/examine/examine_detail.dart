@@ -87,52 +87,9 @@ class _ExamineDetailState extends State<ExamineDetail> {
               List<Map> flowList = (data['data']['flow'] as List).cast();
 
               ///删除无用数据
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['historyActivityType'] == 'candidate'){
-                  flowList.removeAt(i);
-                }
-              }
-
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['historyActivityType'] == 'candidate'){
-                  LogUtil.d('candidate----$i');
-                  flowList.removeAt(i);
-                }
-              }
-
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['historyActivityType'] == 'candidate'){
-                  LogUtil.d('candidate----$i');
-                  flowList.removeAt(i);
-                }
-              }
-
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
-                  flowList.removeAt(i);
-                }
-              }
-
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['historyActivityType'] == 'sequenceFlow'){
-                  LogUtil.d('sequenceFlow----$i');
-                  flowList.removeAt(i);
-                }
-              }
-
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['user']['id'] == null){
-                  flowList.removeAt(i);
-                }
-              }
-
-              for(int i=0; i < flowList.length; i++) {
-                if (flowList[i]['user']['id'] == null){
-                  LogUtil.d('user----$i');
-                  flowList.removeAt(i);
-                }
-              }
-
+              flowList.removeWhere((map) => map['historyActivityType'] == 'candidate');
+              flowList.removeWhere((map) => map['historyActivityType'] == 'sequenceFlow');
+              flowList.removeWhere((map) => map['user']['id'] == null);
               LogUtil.d('flowList----$flowList');
 
               return Stack(
