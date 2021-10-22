@@ -225,7 +225,15 @@ class _Body extends State<HomePage> {
   Future<void> getQrcodeState() async {
     String qrcode;
     try {
-      var result = await BarcodeScanner.scan();
+      var result = await BarcodeScanner.scan(
+        options: ScanOptions(
+          strings: const {
+            "cancel": "取消",
+            "flash_on": "打开闪光",
+            "flash_off": "关闭闪光",
+          }
+        )
+      );
       qrcode = result.rawContent;
     } on PlatformException {
       qrcode = 'Failed to get platform version.';

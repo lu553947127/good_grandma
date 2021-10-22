@@ -98,8 +98,6 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
         .listen((Map<String, Object> result) {
       _locationResultDeal(result);
     });
-
-    _startLocation();
   }
 
   @override
@@ -120,7 +118,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
     // 申请权限
     bool hasLocationPermission = await _requestLocationPermission();
     if (hasLocationPermission) {
-      print("定位权限申请通过");
+      _startLocation();
     } else {
       bool result = await showDialog(
           context: context,
@@ -337,7 +335,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                   SizedBox(width: 3),
                   Container(
                     width: 300,
-                    child: Text(address, style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                    child: Text(address.isEmpty ? '' : address, style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                   )
                 ]
               )
