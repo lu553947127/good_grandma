@@ -110,10 +110,15 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           showToast(data['error_description']);
         }else {
-          if (_isPhone){
-            Store.savePhone(_account.text);
+          if (_isAccount){
+            Store.saveAccount(_username.text);
           }else {
-            Store.removePhone();
+            Store.removeAccount();
+          }
+          if (_isPassword){
+            Store.savePassword(_password.text);
+          }else {
+            Store.removePassword();
           }
           Store.saveToken(data['access_token']);
           Store.saveUserId(data['user_id']);
@@ -164,15 +169,10 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           showToast(data['error_description']);
         }else {
-          if (_isAccount){
-            Store.saveAccount(_username.text);
+          if (_isPhone){
+            Store.savePhone(_account.text);
           }else {
-            Store.removeAccount();
-          }
-          if (_isPassword){
-            Store.savePassword(_password.text);
-          }else {
-            Store.removePassword();
+            Store.removePhone();
           }
           Store.saveToken(data['access_token']);
           Store.saveUserId(data['user_id']);
