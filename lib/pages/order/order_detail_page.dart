@@ -66,7 +66,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           builder: (_) => ChangeNotifierProvider<
                                   DeclarationFormModel>.value(
                                 value: _model,
-                                child: AddOrderPage(editing: true),
+                                child: AddOrderPage(editing: true,middleman: _model.orderType == 2),
                               )));
                   if (needRefresh != null && needRefresh)
                     _controller.callRefresh();
