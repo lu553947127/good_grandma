@@ -12,10 +12,12 @@ import 'package:good_grandma/widgets/search_text_widget.dart';
 
 ///选择商户
 class SelectStorePage extends StatefulWidget {
-  const SelectStorePage({Key key, this.forOrder = false}) : super(key: key);
+  const SelectStorePage({Key key, this.forOrder = false,this.middleman = false}) : super(key: key);
 
   ///是否是新建订单专用
   final bool forOrder;
+  ///是否是二级订单
+  final bool middleman;
 
   @override
   _SelectStorePageState createState() => _SelectStorePageState();
@@ -127,7 +129,7 @@ class _SelectStorePageState extends State<SelectStorePage> {
   Future<void> _refresh() async {
     try {
       final val = widget.forOrder
-          ? await requestPost(Api.cusList)
+          ? await requestPost(Api.cusList,json: jsonEncode({'middleman':widget.middleman?2:1}))
           : await requestGet(Api.customerList);
       // LogUtil.d('${widget.forOrder?Api.cusList:Api.customerList} value = $val');
       var data = jsonDecode(val.toString());

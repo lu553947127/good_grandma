@@ -39,7 +39,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    double countWeight = _model.goodsWeightForDetail;
+    double countWeight = _model.goodsWeight;
     // print('Store.readUserType() = ${Store.readUserType()}');
     // print('_model.status = ${_model.status}');
     // print('_model.createUserId = ${_model.createUserId}');

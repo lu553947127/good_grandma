@@ -81,7 +81,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                   endWidget: Icon(Icons.chevron_right),
                   onTap: () async {
                     StoreModel result = await Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true)));
+                        MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true,middleman: widget.middleman,)));
                     if (result != null) addModel.setStoreModel(result);
                   },
                 ),
@@ -181,6 +181,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                 GoodsModel model = addModel.rewardGoodsList[index];
                 return AddPageGoodsCell(
                   model: model,
+                  middleman: widget.middleman,
                   editingController: _editingController,
                   focusNode: _focusNode,
                   deleteAction: () =>
