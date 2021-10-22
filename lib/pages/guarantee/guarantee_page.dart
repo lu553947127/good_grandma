@@ -73,7 +73,7 @@ class _GuaranteePageState extends State<GuaranteePage> {
               String location = (map['freezerLogsVO'] as Map)['address'];
               String time = map['createTime'];
               int state = map['status'];
-              String stateName = _typeTitles[state]['name'];
+              String stateName = _typeTitles[state]['name'] == '全部' ? '驳回' : _typeTitles[state]['name'];
               Color stateColor = _typeTitles[state]['color'];
               List<String> values = [
                 id ?? '',
