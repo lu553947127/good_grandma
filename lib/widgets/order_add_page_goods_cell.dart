@@ -20,6 +20,7 @@ class AddPageGoodsCell extends StatelessWidget {
         super(key: key);
 
   final GoodsModel model;
+  ///是否是二级订单 二级订单使用二批价
   final bool middleman;
   final VoidCallback deleteAction;
   final TextEditingController _editingController;
