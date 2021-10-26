@@ -109,7 +109,7 @@ class _StockPageState extends State<StockPage> {
       return;
     }
     List<Map> tempList = [];
-    tempList.addAll(_dataArray.where((element) => (element['corporate'] as String).contains(text)));
+    tempList.addAll(_dataArray.where((element) => (element['realName'] as String).contains(text)));
     _dataArray.clear();
     _dataArray.addAll(tempList);
     setState(() {});
