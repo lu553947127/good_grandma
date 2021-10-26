@@ -217,7 +217,7 @@ class _Body extends State<DayPostAddPage> {
       BuildContext context, DayPostAddModel model, int status) async {
     String param = _dealModelToJson(context, model, status);
     if (param.isEmpty) return;
-    print('param = $param');
+    // print('param = $param');
     requestPost(Api.reportDayAdd, json: param).then((value) {
       var data = jsonDecode(value.toString());
       //print('data = $data');
@@ -228,32 +228,36 @@ class _Body extends State<DayPostAddPage> {
   ///status 1:草稿 2：提交
   String _dealModelToJson(
       BuildContext context, DayPostAddModel model, int status) {
-    if (model.target.isEmpty) {
+    if (model.target.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写本月目标');
       return '';
     }
-    if (model.actual.isEmpty) {
+    if (model.actual.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写今日销售');
       return '';
     }
-    if (model.cumulative.isEmpty) {
+    if (model.cumulative.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写本月累计');
       return '';
     }
-    if (model.summaries.isEmpty) {
+    if (model.summaries.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写工作总结');
       return '';
     }
-    if (model.plans.isEmpty) {
+    if (model.plans.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写工作计划');
+      return '';
+    }
+    if (model.plans.isEmpty && model.target.isEmpty && model.summaries.isEmpty && model.cumulative.isEmpty && model.actual.isEmpty) {
+      AppUtil.showToastCenter('请至少填写一项');
       return '';
     }
     Map param = {
       'targetmonth': model.target,
       'saleday': model.actual,
       'salemonth': model.cumulative,
-      'daywork': jsonEncode(model.summaries),
-      'tomwork': jsonEncode(model.plans),
+      'daywork': model.summaries.isNotEmpty?jsonEncode(model.summaries):'',
+      'tomwork': model.plans.isNotEmpty?jsonEncode(model.plans):'',
       'status': status,
       'id':widget.id,
     };
