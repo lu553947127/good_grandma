@@ -65,6 +65,7 @@ class CustomPhotoWidget extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext content, int index){
                         return SelectImagesView(
+                          title: title,
                           index: index,
                           imagesProvider: imagesProvider,
                           url: url

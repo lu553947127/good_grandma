@@ -10,8 +10,10 @@ import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 
 ///选择客户
+///customerList区域下所有客户 allUser全部客户
 class SelectCustomerPage extends StatefulWidget {
-  const SelectCustomerPage({Key key}) : super(key: key);
+  final String url;
+  const SelectCustomerPage({Key key, this.url}) : super(key: key);
 
   @override
   _SelectCustomerPageState createState() => _SelectCustomerPageState();
@@ -82,7 +84,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
 
   Future<void> _refresh() async {
     try {
-      final val = await requestGet(Api.customerList);
+      final val = await requestGet(widget.url);
       LogUtil.d('customerList value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];

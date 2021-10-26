@@ -112,7 +112,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     child: ChangeNotifierProvider<ImagesProvider>.value(
                         value: _imagesProvider,
                         child:  CustomPhotoWidget(
-                            title: '',
+                            title: '上传图片',
                             length: 3,
                             sizeHeight: 10,
                             // bgColor: Colors.transparent,

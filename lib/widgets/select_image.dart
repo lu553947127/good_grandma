@@ -82,11 +82,13 @@ void showImageRange({@required BuildContext context, @required Function(Map map)
 ///多图片上传
 class SelectImagesView extends StatefulWidget {
   SelectImagesView({Key key,
+    this.title,
     this.index,
     this.imagesProvider,
     this.url
   }) : super(key: key);
 
+  final String title;
   final int index;
   final ImagesProvider imagesProvider;
   final String url;
@@ -124,7 +126,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            height: 240.0,
+            height: widget.title == '上传图片' ? 240.0 : 120.0,
             child: Column(
               children: <Widget>[
                 ListTile(
@@ -133,21 +135,27 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                     Navigator.pop(context, ImageSource.camera);
                   }
                 ),
-                ListTile(
-                  title: Text('从相册选择', textAlign: TextAlign.center),
-                  onTap: () {
-                    Navigator.pop(context, ImageSource.gallery);
-                  }
+                Visibility(
+                  visible: widget.title == '上传图片' ? true : false,
+                  child: ListTile(
+                      title: Text('从相册选择', textAlign: TextAlign.center),
+                      onTap: () {
+                        Navigator.pop(context, ImageSource.gallery);
+                      }
+                  )
                 ),
-                ListTile(
-                    title: Text('从文件柜选择', textAlign: TextAlign.center),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      Map select = await showSelectFileList(context);
-                      print('请求结果---select----$select');
-                      widget.imagesProvider.fileList(select['path'], select['type'], select['iconName']);
-                      widget.imagesProvider.addImageData(select['path'], select['name']);
-                    }
+                Visibility(
+                    visible: widget.title == '上传图片' ? true : false,
+                    child: ListTile(
+                        title: Text('从文件柜选择', textAlign: TextAlign.center),
+                        onTap: () async {
+                          Navigator.pop(context);
+                          Map select = await showSelectFileList(context);
+                          print('请求结果---select----$select');
+                          widget.imagesProvider.fileList(select['path'], select['type'], select['iconName']);
+                          widget.imagesProvider.addImageData(select['path'], select['name']);
+                        }
+                    )
                 ),
                 ListTile(
                   title: Text('取消', textAlign: TextAlign.center),

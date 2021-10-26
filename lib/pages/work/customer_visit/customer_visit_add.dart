@@ -320,7 +320,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
             ChangeNotifierProvider<ImagesProvider>.value(
                 value: imagesProvider,
                 child:  CustomPhotoWidget(
-                  title: '上传照片',
+                  title: '拜访图片',
                   length: 3,
                   sizeHeight: 10,
                   url: Api.putFile

@@ -40,6 +40,12 @@ class Api {
   ///获取流程驳回/同意
   static const completeTask = "/api/hap-workflow/process/completeTask";
 
+  ///委托
+  static const delegateTask = "/api/hap-workflow/process/delegateTask";
+
+  ///转办
+  static const transferTask = "/api/hap-workflow/process/transferTask";
+
   ///上传附件
   static const putFile = "/api/hap-resource/oss/endpoint/put-file";
 
@@ -273,4 +279,7 @@ class Api {
 
   ///电子合同签署h5链接
   static const contractSignUrl = "/api/hap-app/app/contract/getSignUrl";
+
+  ///获取全部客户列表
+  static const allUser = "/api/hap-app/app/user/allUser";
 }

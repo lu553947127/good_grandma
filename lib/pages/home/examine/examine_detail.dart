@@ -35,6 +35,10 @@ class _ExamineDetailState extends State<ExamineDetail> {
 
     Map<String, dynamic> map = {'processInsId': widget.processInsId, 'taskId': widget.taskId};
 
+    bool wf_pass = false;//通过
+    bool wf_reject = false;//驳回
+    bool wf_transfer = false;//转办
+    bool wf_delegate = false;//委托
     bool wf_re_commit = false;//重新提交
     bool wf_cancel = false;//取消申请
 
@@ -51,12 +55,29 @@ class _ExamineDetailState extends State<ExamineDetail> {
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.hasData) {
               var data = jsonDecode(snapshot.data.toString());
-              LogUtil.d('请求结果---processDetail----$data');
+              // LogUtil.d('请求结果---processDetail----$data');
 
               ///获取审核按钮显示列表
               List<Map> buttonList = (data['data']['button'] as List).cast();
+              LogUtil.d('请求结果---buttonList----$buttonList');
 
               for(int i=0; i < buttonList.length; i++) {
+                if (buttonList[i]['buttonKey'] == 'wf_pass'){
+                  wf_pass = true;
+                }
+
+                if (buttonList[i]['buttonKey'] == 'wf_reject'){
+                  wf_reject = true;
+                }
+
+                if (buttonList[i]['buttonKey'] == 'wf_transfer'){
+                  wf_transfer = true;
+                }
+
+                if (buttonList[i]['buttonKey'] == 'wf_delegate'){
+                  wf_delegate = true;
+                }
+
                 if (buttonList[i]['buttonKey'] == 'wf_re_commit'){
                   wf_re_commit = true;
                 }
@@ -133,7 +154,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                         right: 0,
                         bottom: 0,
                         child: Offstage(
-                            offstage: widget.type == '知会我的' ? true : widget.processIsFinished == '已审核' ? true : false,
+                            offstage: process['status'] == 'todo'? false : true,
                             child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.white,
@@ -149,7 +170,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Offstage(
-                                        offstage: widget.type == '我审批的' ? false : true,
+                                        offstage: wf_reject == true ? false : true,
                                         child: TextButton(
                                           child: Column(
                                               children: [
@@ -160,7 +181,6 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                           ),
                                           onPressed: () async{
                                             String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
-                                              // title: widget.type == '我审批的' ? '驳回' : '取消申请',
                                               title: '驳回',
                                               process: process,
                                               type: widget.type,
@@ -173,32 +193,87 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                           },
                                         )
                                       ),
-                                      SizedBox(
-                                        width: 0.5,
-                                        height: 40,
-                                        child: DecoratedBox(
-                                          decoration: BoxDecoration(color: Color(0xFFC1C8D7)),
-                                        ),
-                                      ),
                                       Offstage(
-                                        offstage: widget.type == '我审批的' ? false : wf_re_commit == true ? false : true,
+                                        offstage: wf_pass == true ? false : true,
                                         child: TextButton(
                                             child: Column(
                                               children: [
                                                 Image.asset('assets/images/icon_examine_adopt.png', width: 15, height: 15),
                                                 SizedBox(height: 3),
-                                                Text(widget.type == '我审批的' ? '通过' : '重新申请', style: TextStyle(fontSize: 13, color: Color(0XFF12BD95)))
+                                                Text('通过', style: TextStyle(fontSize: 13, color: Color(0XFF12BD95)))
                                               ],
                                             ),
                                             onPressed: () async{
                                               String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
-                                                title: widget.type == '我审批的' ? '通过' : '重新申请',
+                                                title: '通过',
                                                 process: process,
                                                 type: widget.type,
                                                 processIsFinished: widget.processIsFinished,
                                                 processInsId: widget.processInsId,
                                                 taskId: widget.taskId,
                                                 wait: '等待${flowList[0]['user']['name']}审批',
+                                              )));
+                                              if(refresh2 != null) Navigator.pop(context,'refresh');
+                                            }
+                                        ),
+                                      ),
+                                      Offstage(
+                                        offstage: wf_re_commit == true ? false : true,
+                                        child: TextButton(
+                                            child: Column(
+                                              children: [
+                                                Image.asset('assets/images/icon_examine_adopt.png', width: 15, height: 15),
+                                                SizedBox(height: 3),
+                                                Text('重新申请', style: TextStyle(fontSize: 13, color: AppColors.FF142339))
+                                              ],
+                                            ),
+                                            onPressed: () async{
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
+                                                title: '重新申请',
+                                                process: process,
+                                                type: widget.type,
+                                                processIsFinished: widget.processIsFinished,
+                                                processInsId: widget.processInsId,
+                                                taskId: widget.taskId,
+                                                wait: '等待${flowList[0]['user']['name']}审批',
+                                              )));
+                                              if(refresh2 != null) Navigator.pop(context,'refresh');
+                                            }
+                                        ),
+                                      ),
+                                      Offstage(
+                                        offstage: wf_transfer == true ? false : true,
+                                        child: TextButton(
+                                            child: Column(
+                                              children: [
+                                                Image.asset('assets/images/icon_examine_adopt.png', width: 15, height: 15),
+                                                SizedBox(height: 3),
+                                                Text('转办', style: TextStyle(fontSize: 13, color: AppColors.FFC68D3E))
+                                              ],
+                                            ),
+                                            onPressed: () async{
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineOperation(
+                                                title: '转办',
+                                                taskId: widget.taskId
+                                              )));
+                                              if(refresh2 != null) Navigator.pop(context,'refresh');
+                                            }
+                                        ),
+                                      ),
+                                      Offstage(
+                                        offstage: wf_delegate == true ? false : true,
+                                        child: TextButton(
+                                            child: Column(
+                                              children: [
+                                                Image.asset('assets/images/icon_examine_adopt.png', width: 15, height: 15),
+                                                SizedBox(height: 3),
+                                                Text('委托', style: TextStyle(fontSize: 13, color: AppColors.FF05A8C6))
+                                              ],
+                                            ),
+                                            onPressed: () async{
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineOperation(
+                                                  title: '委托',
+                                                  taskId: widget.taskId
                                               )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }
