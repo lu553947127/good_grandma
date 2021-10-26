@@ -61,12 +61,12 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text((widget.id.isNotEmpty ? '修改' : '新增') + typeName + '报'),
-          actions: [
-            TextButton(
-                onPressed: () => _submitAction(context, model, 1),
-                child:
-                    const Text('保存草稿', style: TextStyle(color: Colors.black))),
-          ],
+          // actions: [
+          //   TextButton(
+          //       onPressed: () => _submitAction(context, model, 1),
+          //       child:
+          //           const Text('保存草稿', style: TextStyle(color: Colors.black))),
+          // ],
         ),
         body: Scrollbar(
           child: CustomScrollView(

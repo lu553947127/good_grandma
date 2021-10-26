@@ -48,7 +48,7 @@ class _WorkReportState extends State<WorkReport> {
   List<Map> _listTitle = [
     {'name': '我收到的'},
     {'name': '我提交的'},
-    {'name': '我的草稿'},
+    // {'name': '我的草稿'},
   ];
   bool _resetWorkSelectType = false;
 
