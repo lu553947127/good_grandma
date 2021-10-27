@@ -138,6 +138,11 @@ class _Body extends State<SignInCensusPage> {
       int days = data['days'];
       _missing = data['wdays'];
       _count = days - _missing;
+      List list = data['list'];
+      // list.forEach((element) {
+      //   _list.add(element);
+      //   _list.add(element);
+      // });
       _list = data['list'];
       if (mounted) setState(() {});
       _selectedMaps = ValueNotifier(_getMapsForDay(_focusedDay));
@@ -146,18 +151,46 @@ class _Body extends State<SignInCensusPage> {
 
   List<Map> _getMapsForDay(DateTime day) {
     if (_list.isEmpty) return [];
-    Map<DateTime, List<Map>> map1 = {};
+    List<String> dates = [];
     _list.forEach((map) {
-      String signTime = map['signTime'];
-      DateTime time = DateTime.parse(signTime);
-      map1[time] = [
-        {
+      String createTime = map['signTime'];
+      if (createTime != null && createTime.isNotEmpty) {
+        List tl = createTime.split(' ');
+        if (tl.isNotEmpty && !dates.contains(tl.first)) {
+          dates.add(tl.first);
+        }
+      }
+    });
+    if (dates.isEmpty) return [];
+    Map<DateTime, List<Map>> map1 = {};
+    dates.forEach((date) {
+      List events = _list
+              .where((element) => element['signTime'].toString().contains(date))
+              .toList() ??
+          [];
+      DateTime time = DateTime.parse(date);
+      map1[time] = List.generate(events.length, (index) {
+        Map map = events[index];
+        String signTime = map['signTime'];
+        DateTime time = DateTime.parse(signTime);
+        return {
           'time':
               '${AppUtil.dateForZero(time.hour)}:${AppUtil.dateForZero(time.minute)}:${AppUtil.dateForZero(time.second)}',
           'address': map['address']
-        }
-      ];
+        };
+      });
     });
+    // _list.forEach((map) {
+    //   String signTime = map['signTime'];
+    //   DateTime time = DateTime.parse(signTime);
+    //   map1[time] = [
+    //     {
+    //       'time':
+    //           '${AppUtil.dateForZero(time.hour)}:${AppUtil.dateForZero(time.minute)}:${AppUtil.dateForZero(time.second)}',
+    //       'address': map['address']
+    //     }
+    //   ];
+    // });
     final map2 = LinkedHashMap<DateTime, List<Map>>(
       equals: isSameDay,
       hashCode: getHashCode,
@@ -199,21 +232,19 @@ class _SignInMapCell extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0, top: 5),
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                    color: AppColors.FFC68D3E,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                          color: AppColors.FFC68D3E.withOpacity(0.4),
-                          offset: Offset(2, 1),
-                          blurRadius: 1.5)
-                    ]),
-              ),
+            Container(
+              width: 8,
+              height: 8,
+              margin: const EdgeInsets.only(right: 10.0, top: 5),
+              decoration: BoxDecoration(
+                  color: AppColors.FFC68D3E,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                        color: AppColors.FFC68D3E.withOpacity(0.4),
+                        offset: Offset(2, 1),
+                        blurRadius: 1.5)
+                  ]),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,19 +262,16 @@ class _SignInMapCell extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset('assets/images/sign_in_local2.png',
-                        width: 12, height: 12),
+                    Padding(
+                      padding: const EdgeInsets.only(top:5.0),
+                      child: Image.asset('assets/images/sign_in_local2.png',
+                          width: 12, height: 12),
+                    ),
                     Container(
-                      constraints: BoxConstraints(
-                        maxWidth: 300,
-                      ),
-                      child: Text(
-                        address ?? '',
-                        style: const TextStyle(
-                            color: AppColors.FF959EB1, fontSize: 12.0),
-                        // maxLines: 1,
-                        // overflow: TextOverflow.ellipsis,
-                      ),
+                      constraints: BoxConstraints(maxWidth: 300),
+                      child: Text(address ?? '',
+                          style: const TextStyle(
+                              color: AppColors.FF959EB1, fontSize: 12.0)),
                     ),
                   ],
                 ),

@@ -46,7 +46,7 @@ class _Body extends State<SignInPage> {
 
   _signInOnTap(BuildContext context, String address, String latitude,
       String longitude) async {
-    print('address = $address');
+    // print('address = $address');
     if (address.isEmpty || latitude.isEmpty || longitude.isEmpty) {
       Fluttertoast.showToast(
           msg: '未获取到定位信息，无法打卡', gravity: ToastGravity.CENTER);
@@ -60,7 +60,7 @@ class _Body extends State<SignInPage> {
           '${DateTime.now().year}-${AppUtil.dateForZero(DateTime.now().month)}-${AppUtil.dateForZero(DateTime.now().day)} ${AppUtil.dateForZero(DateTime.now().hour)}:${AppUtil.dateForZero(DateTime.now().minute)}:${AppUtil.dateForZero(DateTime.now().second)}'
     };
     requestPost(Api.signAdd, json: jsonEncode(param)).then((value) {
-      LogUtil.d('value = $value');
+      // LogUtil.d('value = $value');
       Map map = jsonDecode(value);
       final msg = map['msg']??'';
       Fluttertoast.showToast(msg: msg??'', gravity: ToastGravity.CENTER);
