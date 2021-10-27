@@ -34,68 +34,40 @@ class PostItineraryCell extends StatelessWidget {
             children: [
               PostAddInputCell(
                   title: '上周计划城市',
-                  value: itModel.lastCity.city,
-                  hintText: '选择城市',
-                  endWidget:
-                      Icon(Icons.chevron_right, color: AppColors.FF2F4058),
+                  value: itModel.lastCity,
+                  hintText: '填写城市',
+                  // endWidget:
+                  //     Icon(Icons.chevron_right, color: AppColors.FF2F4058),
                   contentPadding: const EdgeInsets.only(left: 15.0),
-                  onTap: () {
-                    Picker(
-                        adapter: PickerDataAdapter(data: pickerItems),
-                        selecteds: itModel.lastCity.selectedIndexes,
-                        changeToFirst: true,
-                        hideHeader: false,
-                        cancelText: '取消',
-                        confirmText: '确定',
-                        cancelTextStyle:
-                            TextStyle(fontSize: 14, color: Color(0xFF2F4058)),
-                        confirmTextStyle:
-                            TextStyle(fontSize: 14, color: Color(0xFFC68D3E)),
-                        columnPadding: const EdgeInsets.all(4.0),
-                        onConfirm: (picker, value) {
-                          final pro = provinces[value.first];
-                          final city = pro.cities[value.last].citiesName;
-                          final cityId = pro.cities[value.last].id;
-                          itModel.lastCity.city = city;
-                          itModel.lastCity.cityId = cityId;
-                          itModel.lastCity.selectedIndexes = value;
-                          if (selectAction != null) selectAction();
-                          // print(value.toString());
-                          // print(picker.adapter.text);
-                        }).showModal(context);
-                  }),
+                  onTap: () => AppUtil.showInputDialog(
+                      context: context,
+                      text: itModel.lastCity,
+                      hintText: '请填写上周计划城市',
+                      focusNode: focusNode,
+                      editingController: editingController,
+                      keyboardType: TextInputType.text,
+                      callBack: (text) {
+                        itModel.lastCity = text;
+                        if (selectAction != null) selectAction();
+                      })),
               PostAddInputCell(
                   title: '实际工作城市',
-                  value: itModel.actualCity.city,
-                  hintText: '选择城市',
-                  endWidget:
-                      Icon(Icons.chevron_right, color: AppColors.FF2F4058),
+                  value: itModel.actualCity,
+                  hintText: '填写城市',
+                  // endWidget:
+                  //     Icon(Icons.chevron_right, color: AppColors.FF2F4058),
                   contentPadding: const EdgeInsets.only(left: 15.0),
-                  onTap: () {
-                    Picker(
-                        adapter: PickerDataAdapter(data: pickerItems),
-                        selecteds: itModel.actualCity.selectedIndexes,
-                        changeToFirst: true,
-                        hideHeader: false,
-                        cancelText: '取消',
-                        confirmText: '确定',
-                        cancelTextStyle:
-                            TextStyle(fontSize: 14, color: Color(0xFF2F4058)),
-                        confirmTextStyle:
-                            TextStyle(fontSize: 14, color: Color(0xFFC68D3E)),
-                        columnPadding: const EdgeInsets.all(4.0),
-                        onConfirm: (picker, value) {
-                          final pro = provinces[value.first];
-                          final city = pro.cities[value.last].citiesName;
-                          final cityId = pro.cities[value.last].id;
-                          itModel.actualCity.city = city;
-                          itModel.actualCity.cityId = cityId;
-                          itModel.actualCity.selectedIndexes = value;
-                          if (selectAction != null) selectAction();
-                          // print(value.toString());
-                          // print(picker.adapter.text);
-                        }).showModal(context);
-                  }),
+                  onTap: () => AppUtil.showInputDialog(
+                      context: context,
+                      text: itModel.actualCity,
+                      hintText: '请填写实际工作城市',
+                      focusNode: focusNode,
+                      editingController: editingController,
+                      keyboardType: TextInputType.text,
+                      callBack: (text) {
+                        itModel.actualCity = text;
+                        if (selectAction != null) selectAction();
+                      })),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(

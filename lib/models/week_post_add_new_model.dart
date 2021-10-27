@@ -41,8 +41,8 @@ class WeekPostAddNewModel extends ChangeNotifier {
         String actualCityName = element['actualCityId'] ?? '';
         String work = element['work'] ?? '';
         ItineraryNewModel model = ItineraryNewModel(title: title, work: work);
-        model.actualCity = CityPlanModel(city: actualCityName);
-        model.lastCity = CityPlanModel(city: lastCityName);
+        model.actualCity = actualCityName ?? '';
+        model.lastCity = lastCityName ?? '';
         _itineraries.add(model);
       });
     }
@@ -50,12 +50,12 @@ class WeekPostAddNewModel extends ChangeNotifier {
     //下周行程
     _initCities();
     List<dynamic> citiesS = map['cities'] ?? '';
-    if(citiesS.isNotEmpty){
+    if (citiesS.isNotEmpty) {
       _cities.clear();
       citiesS.forEach((element) {
         String title = element['title'] ?? '';
         String cityName = element['id'] ?? '';
-        _cities.add(CityPlanModel(title: title,city: cityName));
+        _cities.add(CityPlanModel(title: title, city: cityName));
       });
     }
 
@@ -65,6 +65,7 @@ class WeekPostAddNewModel extends ChangeNotifier {
     _plans = AppUtil.getListFromString(worksS);
     notifyListeners();
   }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id ?? '';
@@ -314,19 +315,11 @@ class WeekPostAddNewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  editCityWith(
-      {int index,
-      String city,
-      String cityId,
-      List<int> selectedIndexes,
-      List<String> selectedNames}) {
+  editCityWith({int index, String city}) {
     _initCities();
     if (index >= _cities.length) return;
     CityPlanModel model = _cities[index];
     model.city = city;
-    model.cityId = cityId;
-    model.selectedIndexes = selectedIndexes;
-    model.selectedNames = selectedNames;
     notifyListeners();
   }
 
@@ -357,22 +350,19 @@ class WeekPostAddNewModel extends ChangeNotifier {
 ///行程
 class ItineraryNewModel {
   String title;
-  CityPlanModel lastCity;
-  CityPlanModel actualCity;
+  String lastCity;
+  String actualCity;
   String work;
-  ItineraryNewModel({this.title = '', this.work = ''}) {
-    lastCity = CityPlanModel();
-    actualCity = CityPlanModel();
-  }
+  ItineraryNewModel(
+      {this.title = '',
+      this.work = '',
+      this.lastCity = '',
+      this.actualCity = ''});
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title ?? '';
-    // data['lastCityId'] = this.lastCity.cityId;
-    data['lastCityId'] = this.lastCity.city;
-    data['lastCityName'] = this.lastCity.city;
-    // data['actualCityId'] = this.actualCity.cityId;
-    data['actualCityId'] = this.actualCity.city;
-    data['actualCityName'] = this.actualCity.city;
+    data['lastCityId'] = this.lastCity;
+    data['actualCityId'] = this.actualCity;
     data['work'] = this.work ?? '';
     return data;
   }
@@ -412,7 +402,7 @@ class SalesTrackingModel {
   SalesTrackingModel.fromJson(Map<String, dynamic> json) {
     String cityId = json['area'].toString() ?? '';
     String areaName = json['areaName'] ?? '';
-    area = CityPlanModel(cityId: cityId,city: areaName);
+    area = CityPlanModel(cityId: cityId, city: areaName);
     target = json['targe'] ?? 0;
     actual = json['actual'] ?? 0;
     cumulative = json['cumulative'] ?? 0;
@@ -450,7 +440,6 @@ class CityPlanModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title ?? '';
-    // data['id'] = this.cityId ?? '';
     data['id'] = this.city ?? '';
     data['name'] = this.city ?? '';
     return data;

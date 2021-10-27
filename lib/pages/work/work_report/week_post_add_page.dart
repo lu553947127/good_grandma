@@ -23,7 +23,8 @@ import 'package:provider/provider.dart';
 ///新增周报
 class WeekPostAddPage extends StatefulWidget {
   WeekPostAddPage({
-    Key key, this.id = '',
+    Key key,
+    this.id = '',
   }) : super(key: key);
   final String id;
   @override
@@ -41,15 +42,16 @@ class _Body extends State<WeekPostAddPage> {
   void initState() {
     super.initState();
     _getRegionList();
-    if(widget.id.isNotEmpty)
-      _requestDetail();
+    if (widget.id.isNotEmpty) _requestDetail();
   }
+
   ///标记草稿请求详情
-  _requestDetail() async{
+  _requestDetail() async {
     requestPost(Api.reportDayDetail,
         json: jsonEncode({'id': widget.id, 'type': 2})).then((value) {
       Map map = jsonDecode(value.toString())['data'];
-      final WeekPostAddNewModel model = Provider.of<WeekPostAddNewModel>(this.context,listen: false);
+      final WeekPostAddNewModel model =
+          Provider.of<WeekPostAddNewModel>(this.context, listen: false);
       model.fromJson(map);
       model.id = widget.id;
       // print('object');
@@ -59,36 +61,13 @@ class _Body extends State<WeekPostAddPage> {
   @override
   Widget build(BuildContext context) {
     final WeekPostAddNewModel model = Provider.of<WeekPostAddNewModel>(context);
-    List<Map> list1 = [
-      {'title': '本周目标', 'value': model.target.toStringAsFixed(2), 'end': '万元'},
-      {'title': '本周实际', 'value': model.actual.toStringAsFixed(2), 'end': '万元'},
-      {
-        'title': '本月累计',
-        'value': model.cumulative.toStringAsFixed(2),
-        'end': '万元'
-      },
-      {
-        'title': '月度差额',
-        'value': model.difference.toStringAsFixed(2),
-        'end': '万元'
-      },
-      {
-        'title': '月度达成率',
-        'value': model.completionRate.toStringAsFixed(2),
-        'end': '%'
-      },
-      {
-        'title': '下周规划进货金额',
-        'value': model.nextTarget.toStringAsFixed(2),
-        'end': '万元'
-      }
-    ];
+    List<Map> list1 = _getList1(model);
 
     return WillPopScope(
       onWillPop: () async => await AppUtil.onWillPop(context),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.id.isNotEmpty?'编辑周报':'新增周报'),
+          title: Text(widget.id.isNotEmpty ? '编辑周报' : '新增周报'),
           // actions: [
           //   TextButton(
           //       onPressed: () => _submitAction(context, model, 1),
@@ -180,7 +159,8 @@ class _Body extends State<WeekPostAddPage> {
               return Container(
                 color: Colors.white,
                 child: PostAddInputCellCore(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 6),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 6),
                   title: title,
                   value: value,
                   hintText: hintText,
@@ -213,7 +193,7 @@ class _Body extends State<WeekPostAddPage> {
                         border:
                             Border.all(color: AppColors.FFEFEFF4, width: 1)),
                     width: double.infinity,
-                    margin: const EdgeInsets.only(left: 15.0,right: 15.0),
+                    margin: const EdgeInsets.only(left: 15.0, right: 15.0),
                     padding: const EdgeInsets.all(10.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
@@ -292,42 +272,25 @@ class _Body extends State<WeekPostAddPage> {
                 child: Container(color: Colors.white, height: 10.0)),
             //下周行程及重点工作内容
             PostDetailGroupTitle(color: null, name: '下周行程及重点工作内容'),
-            //选择城市
+            //填写城市
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
               CityPlanModel cityModel = model.cities[index];
               return PostAddInputCell(
                 title: cityModel.title,
                 value: cityModel.city,
-                hintText: '请选择城市',
-                endWidget: Icon(Icons.chevron_right),
-                onTap: () {
-                  Picker(
-                      adapter: PickerDataAdapter(data: _pickerItems),
-                      selecteds: cityModel.selectedIndexes,
-                      changeToFirst: true,
-                      hideHeader: false,
-                      cancelText: '取消',
-                      confirmText: '确定',
-                      cancelTextStyle:
-                          TextStyle(fontSize: 14, color: Color(0xFF2F4058)),
-                      confirmTextStyle:
-                          TextStyle(fontSize: 14, color: Color(0xFFC68D3E)),
-                      columnPadding: const EdgeInsets.all(4.0),
-                      onConfirm: (picker, value) {
-                        final pro = _provinces[value.first];
-                        final city = pro.cities[value.last].citiesName;
-                        final cityId = pro.cities[value.last].id;
-                        model.editCityWith(
-                            index: index,
-                            selectedIndexes: value,
-                            city: city,
-                            cityId: cityId,
-                            selectedNames: [pro.provinceName, city]);
-                        // print(value.toString());
-                        // print(picker.adapter.text);
-                      }).showModal(this.context);
-                },
+                hintText: '请填写城市',
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    text: cityModel.city,
+                    hintText: '请填写城市',
+                    focusNode: _focusNode,
+                    editingController: _editingController,
+                    keyboardType: TextInputType.text,
+                    callBack: (text) {
+                      cityModel.city = text;
+                      model.editCityWith(index: index, city: cityModel.city);
+                    }),
               );
             }, childCount: model.cities.length)),
             //下周工作内容
@@ -387,6 +350,33 @@ class _Body extends State<WeekPostAddPage> {
         ),
       ),
     );
+  }
+
+  List<Map> _getList1(WeekPostAddNewModel model) {
+    return [
+      {'title': '本周目标', 'value': model.target.toStringAsFixed(2), 'end': '万元'},
+      {'title': '本周实际', 'value': model.actual.toStringAsFixed(2), 'end': '万元'},
+      {
+        'title': '本月累计',
+        'value': model.cumulative.toStringAsFixed(2),
+        'end': '万元'
+      },
+      {
+        'title': '月度差额',
+        'value': model.difference.toStringAsFixed(2),
+        'end': '万元'
+      },
+      {
+        'title': '月度达成率',
+        'value': model.completionRate.toStringAsFixed(2),
+        'end': '%'
+      },
+      {
+        'title': '下周规划进货金额',
+        'value': model.nextTarget.toStringAsFixed(2),
+        'end': '万元'
+      }
+    ];
   }
 
   ///提  交
@@ -486,4 +476,3 @@ class _Body extends State<WeekPostAddPage> {
     _focusNode?.dispose();
   }
 }
-
