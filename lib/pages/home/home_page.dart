@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ import 'package:good_grandma/widgets/home_msg_title.dart';
 import 'package:good_grandma/widgets/home_plan_cell.dart';
 import 'package:good_grandma/widgets/home_report_cell.dart';
 import 'package:good_grandma/widgets/home_table_header.dart';
+import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///首页
 class HomePage extends StatefulWidget {
@@ -44,6 +47,7 @@ class _Body extends State<HomePage> {
   void initState() {
     super.initState();
     _controller.callRefresh();
+    _getVersion();
   }
 
   @override
@@ -249,6 +253,64 @@ class _Body extends State<HomePage> {
       Fluttertoast.showToast(
           msg: '扫描成功: $qrcode', gravity: ToastGravity.CENTER);
     });
+  }
+
+  ///获取版本号，判断是否升级
+  _getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    ///版本号
+    String buildNumber = packageInfo.buildNumber;
+    print('版本号---buildNumber----$buildNumber');
+    if (Platform.isAndroid) {
+      // requestGet(Api.androidVersion).then((val) async{
+      //   var data = json.decode(val.toString());
+      //   print('请求结果---androidVersion----$data');
+      //   if (int.parse(data['version']) > int.parse(buildNumber)){
+      //     _versionDialog(data['update_url']);
+      //   }
+      // });
+      _versionDialog('update_url');
+    }else {
+
+    }
+  }
+
+  ///版本升级弹窗
+  _versionDialog(url) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () async {
+              return Future.value(false);//屏蔽返回键关闭弹窗
+            },
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+              title: Text('温馨提示'),
+              content: Text('检测到有新的版本，您是否要升级体验？'),
+              actions: <Widget>[
+                TextButton(child: Text('取消', style: TextStyle(color: Color(0xFF999999))), onPressed: (){
+                  Navigator.of(context).pop('cancel');
+                  Navigator.pop(context);
+                }),
+                TextButton(child: Text('确认', style: TextStyle(color: Color(0xFFC68D3E))), onPressed: (){
+                  Navigator.of(context).pop('ok');
+                  _launchURL(url);
+                })
+              ]
+            )
+          );
+        });
+  }
+
+  ///用内置浏览器打开网页
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
+    }
   }
 
   @override
