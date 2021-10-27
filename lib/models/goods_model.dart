@@ -21,7 +21,7 @@ class GoodsModel {
   ///二批价
   double middleman;
 
-  ///重量(g)
+  ///重量(kg)
   double weight;
   bool isSelected;
 

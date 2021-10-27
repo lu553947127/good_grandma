@@ -45,7 +45,7 @@ class OrderGoodsCountView extends StatelessWidget {
                 Text(count.toString()),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(countWeight.toStringAsFixed(2) + 'g'),
+                  child: Text(countWeight.toStringAsFixed(2) + 'kg'),
                 ),
                 Text.rich(TextSpan(
                     text: '¥',
