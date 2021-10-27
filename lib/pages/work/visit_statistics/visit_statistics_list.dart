@@ -103,8 +103,8 @@ class VisitStatisticsList extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatisticsDetail(
             data: data,
           )));
-        },
-      ),
+        }
+      )
     );
   }
 }

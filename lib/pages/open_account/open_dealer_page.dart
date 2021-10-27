@@ -195,16 +195,16 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
         'end': '>'
       },
       {
-        'title': '公司名称',
+        'title': '企业名称',
         'value': _model.corporateName,
-        'hintText': '请填写公司名称',
+        'hintText': '请填写企业名称',
         'keyBoardType': TextInputType.text,
         'end': ''
       },
       {
-        'title': '公司地址',
+        'title': '企业地址',
         'value': _model.address,
-        'hintText': '请填写公司地址',
+        'hintText': '请填写企业地址',
         'keyBoardType': TextInputType.text,
         'end': ''
       },

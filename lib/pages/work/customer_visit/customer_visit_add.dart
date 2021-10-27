@@ -40,6 +40,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
   double latitude = 0.0;
   double longitude = 0.0;
   String address = '定位获取失败，请检查定位权限是否开启';
+  String images = '';
 
   ///新增
   _customerVisitAdd(){
@@ -54,11 +55,15 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       return;
     }
 
+    if (imagesProvider.urlList.length != 0){
+      images = listToString(imagesProvider.urlList);
+    }
+
     Map<String, dynamic> map = {
       'customerId': customerId,
       'customerName': customerName,
       'visitContent': visitContent,
-      'ipicture': listToString(imagesProvider.urlList),
+      'ipicture': images,
       'latitude': latitude,
       'longitude': longitude,
       'address': address};

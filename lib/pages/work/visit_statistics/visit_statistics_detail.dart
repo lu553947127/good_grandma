@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/widgets/picture_big_view.dart';
 
 class VisitStatisticsDetail extends StatelessWidget {
   var data;
@@ -6,6 +9,10 @@ class VisitStatisticsDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    List<String> ipictures = (data['ipictures'] as List).cast();
+    LogUtil.d('请求结果---ipictures----$ipictures');
 
     _setTextColor(status){
       switch(status){
@@ -144,13 +151,50 @@ class VisitStatisticsDetail extends StatelessWidget {
             Container(
               margin: EdgeInsets.all(10),
               child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("备注", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
+                  Text("拜访内容", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
                   SizedBox(height: 10),
                   Text(data['visitContent'],
                       style: TextStyle(fontSize: 14, color: Color(0XFF2F4058)))
                 ]
               )
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text("拜访图片", style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),),
+            SizedBox(height: 10),
+            Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: GridView.builder(
+                    shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
+                    physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                    padding: const EdgeInsets.all(0),
+                    itemCount: ipictures.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8
+                    ),
+                    itemBuilder: (BuildContext content, int index){
+                      return InkWell(
+                        child: MyCacheImageView(
+                          imageURL: ipictures[index],
+                          width: 192,
+                          height: 108,
+                          errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
+                        ),
+                        onTap: (){
+                          Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+                            images: ipictures,//传入图片list
+                            index: index,//传入当前点击的图片的index
+                            heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+                          )));
+                        }
+                      );
+                    }
+                )
             )
           ]
         )

@@ -292,7 +292,7 @@ class _Body extends State<HomePage> {
               actions: <Widget>[
                 TextButton(child: Text('取消', style: TextStyle(color: Color(0xFF999999))), onPressed: (){
                   Navigator.of(context).pop('cancel');
-                  Navigator.pop(context);
+              
                 }),
                 TextButton(child: Text('确认', style: TextStyle(color: Color(0xFFC68D3E))), onPressed: (){
                   Navigator.of(context).pop('ok');
