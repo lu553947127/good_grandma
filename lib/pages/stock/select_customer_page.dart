@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
@@ -58,10 +57,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
                     title: Text(model.name),
                     onTap: () => Navigator.pop(context, model),
                   ),
-                  const Divider(
-                    thickness: 1,
-                    height: 1,
-                  ),
+                  const Divider(thickness: 1, height: 1),
                 ],
               );
             }, childCount: _dataArray.length)),
@@ -85,7 +81,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   Future<void> _refresh() async {
     try {
       final val = await requestGet(widget.url);
-      LogUtil.d('customerList value = $val');
+      // LogUtil.d('customerList value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       _dataArray.clear();

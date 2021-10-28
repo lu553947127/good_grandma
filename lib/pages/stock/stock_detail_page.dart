@@ -104,15 +104,10 @@ class _StockDetailPageState extends State<StockDetailPage> {
         'current': _current,
         'size': _pageSize
       };
-      // await Future.delayed(Duration(seconds: 1));
-      // List<Map> list = List.generate(5, (index) => jsonDecode(_str));
-      // if (_current == 1) _dataArray.clear();
-      // _dataArray.addAll(list);
       final val = await requestGet(Api.customerStockDetail, param: map);
       // LogUtil.d('customerStockDetail value = ${jsonEncode(val)}');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
-      print(list.toString());
       list.forEach((map) {
         _dataArray.add(map as Map);
       });

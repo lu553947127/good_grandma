@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class StockDetailModel extends ChangeNotifier{
+class StockDetailModel extends ChangeNotifier {
   String name;
   String count;
   bool _opened;
@@ -8,12 +8,15 @@ class StockDetailModel extends ChangeNotifier{
 
   bool get opened => _opened;
 
-  setOpened(bool opened){
+  setOpened(bool opened) {
     _opened = opened;
     notifyListeners();
   }
 
-  StockDetailModel({this.name = '', this.count = '', }) {
+  StockDetailModel({
+    this.name = '',
+    this.count = '',
+  }) {
     setOpened(false);
     this.goodsList = [];
   }
@@ -24,16 +27,21 @@ class StockDetailModel extends ChangeNotifier{
     setOpened(false);
     goodsList = [];
     if (json['appCustomerCheckData'] != null) {
-      List<String> keys = ['oneToThree','fourToSix','sevenToTwelve','thirteenToEighteen','eighteenToUp'];
+      List<String> keys = [
+        'oneToThree',
+        'fourToSix',
+        'sevenToTwelve',
+        'thirteenToEighteen',
+        'eighteenToUp'
+      ];
       keys.forEach((key) {
         StackGoodsListModel model = StackGoodsListModel();
         model.typeName = key;
         json['appCustomerCheckData'].forEach((v) {
           String spec = v['spec'];
-          if(spec == '20')
+          if (spec.contains('20'))
             model.spec20 = v[key].toString() ?? '';
-          else if(spec == '40')
-            model.spec40 = v[key].toString() ?? '';
+          else if (spec.contains('40')) model.spec40 = v[key].toString() ?? '';
         });
         goodsList.add(model);
       });
