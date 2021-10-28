@@ -136,7 +136,7 @@ class _CustomFormViewState extends State<CustomFormView> {
               rightPlaceholder: '请选择${data['label']}',
               sizeHeight: 1,
               value: (timeSelectProvider.startTime.isNotEmpty && timeSelectProvider.endTime.isNotEmpty)
-                  ? '${timeSelectProvider.startTime + ' - ' + timeSelectProvider.endTime}'
+                  ? '${timeSelectProvider.startTime + '\n' + timeSelectProvider.endTime}'
                   : '',
               dayNumber: timeSelectProvider.dayNumber,
               onPressed: (param) {
