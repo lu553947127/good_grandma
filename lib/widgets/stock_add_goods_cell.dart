@@ -69,11 +69,13 @@ class StockAddGoodsCell extends StatelessWidget {
                           hintText: '请输入数量',
                           keyboardType: TextInputType.number,
                           callBack: (text) {
+                            if(text.contains('.') || int.parse(text) == null){
+                              AppUtil.showToastCenter('请输入整数数量');
+                              return;
+                            }
                             specModel.number = text;
                             if(numberChangeAction != null)
                               numberChangeAction(specModel);
-                            // if(index > 0)
-                            //   setState(() {});
                           }),
                     ),
                   );
