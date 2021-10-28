@@ -224,7 +224,7 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
     int i = 0;
     widget.goodsModel.specs.forEach((spec) {
       if (i == 0) specStr += '规格：';
-      specStr += '1x${spec.spec}';
+      specStr += spec.spec;
       if (i < widget.goodsModel.specs.length - 1) specStr += ',';
       i++;
     });

@@ -65,7 +65,7 @@ class AddPageGoodsCell extends StatelessWidget {
                       child: Visibility(
                         visible: model.specs.isNotEmpty,
                         child: Text(
-                          '规格：1x' + model.specs.first.spec,
+                          '规格：' + model.specs.first.spec,
                           style: const TextStyle(
                               color: AppColors.FF959EB1, fontSize: 12.0),
                         ),

@@ -59,7 +59,7 @@ class StockAddGoodsCell extends StatelessWidget {
                   return Expanded(
                     child: _NumberCell(
                       key: UniqueKey(),
-                      title: '整箱(1*${specModel.spec})',
+                      title: '整箱(${specModel.spec})',
                       value: specModel.number,
                       onTap: () => AppUtil.showInputDialog(
                           context: context,

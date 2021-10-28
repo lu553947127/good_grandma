@@ -122,7 +122,7 @@ class DeclarationGoodsCell extends StatelessWidget {
                       color: AppColors.FF2F4058, fontSize: 14.0)),
               Visibility(
                 visible: goodsModel.specs.isNotEmpty,
-                child: Text('规格：1x' + goodsModel.specs.first.spec,
+                child: Text('规格：' + goodsModel.specs.first.spec,
                     style: const TextStyle(
                         color: AppColors.FF959EB1, fontSize: 14.0)),
               )
