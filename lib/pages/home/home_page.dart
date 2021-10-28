@@ -47,7 +47,7 @@ class _Body extends State<HomePage> {
   void initState() {
     super.initState();
     _controller.callRefresh();
-    // _getVersion();
+    _getVersion();
   }
 
   @override
@@ -266,17 +266,15 @@ class _Body extends State<HomePage> {
       requestGet(Api.upgrade, param: map).then((val) async{
         var data = json.decode(val.toString());
         print('请求结果---androidVersion----$data');
-        // if (int.parse(data['version']) > int.parse(buildNumber)){
-        //   _versionDialog(data['update_url']);
-        // }
+        if (int.parse(data['data']['edition']) > int.parse(buildNumber)){
+          _versionDialog(data['data']['path'], data['data']['content']);
+        }
       });
-    }else {
-
     }
   }
 
   ///版本升级弹窗
-  _versionDialog(url) async {
+  _versionDialog(url, content) async {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -287,12 +285,11 @@ class _Body extends State<HomePage> {
             },
             child: AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-              title: Text('温馨提示'),
-              content: Text('检测到有新的版本，您是否要升级体验？'),
+              title: Text('有新版本，是否升级？'),
+              content: Text(content),
               actions: <Widget>[
                 TextButton(child: Text('取消', style: TextStyle(color: Color(0xFF999999))), onPressed: (){
                   Navigator.of(context).pop('cancel');
-
                 }),
                 TextButton(child: Text('确认', style: TextStyle(color: Color(0xFFC68D3E))), onPressed: (){
                   Navigator.of(context).pop('ok');

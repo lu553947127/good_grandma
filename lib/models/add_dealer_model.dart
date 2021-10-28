@@ -6,6 +6,9 @@ class AddDealerModel extends ChangeNotifier {
   ///经销商id
   String _serviceCode;
 
+  ///经销商id名称
+  String _serviceCodeName;
+
   ///经销商类型
   String _post;
 
@@ -77,6 +80,7 @@ class AddDealerModel extends ChangeNotifier {
 
   AddDealerModel() {
     _serviceCode = '';
+    _serviceCodeName = '';
     _post = '';
     _postName = '';
     _nature = '';
@@ -104,6 +108,9 @@ class AddDealerModel extends ChangeNotifier {
 
   ///经销商id
   String get serviceCode => _serviceCode;
+
+  ///经销商id名称
+  String get serviceCodeName => _serviceCodeName;
 
   ///经销商类型
   String get post => _post;
@@ -176,6 +183,11 @@ class AddDealerModel extends ChangeNotifier {
 
   setServiceCode(String serviceCode) {
     _serviceCode = serviceCode;
+    notifyListeners();
+  }
+
+  setServiceCodeName(String serviceCodeName) {
+    _serviceCodeName = serviceCodeName;
     notifyListeners();
   }
 

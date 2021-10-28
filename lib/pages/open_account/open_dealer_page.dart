@@ -29,34 +29,10 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
   ImagesProvider _imagesProvider2 = new ImagesProvider();
 
   @override
-  void initState() {
-    super.initState();
-
-  }
-
-  ///注册电子合同账号
-  registerContract(){
-    requestPost(Api.registerContract).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---registerContract----$data');
-      if (data['code'] == 200){
-
-      }else {
-        AppUtil.showToastCenter(data['msg']);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final AddDealerModel _model = Provider.of<AddDealerModel>(context);
     List<Map> list1 = _getList1(_model);
     List<Map> list2 = _getList2(_model);
-
-    if (_model.postName == '业务代表'){
-      registerContract();
-    }
-
     return WillPopScope(
       onWillPop: () => AppUtil.onWillPop(context),
       child: Scaffold(
@@ -173,8 +149,8 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
     } else if (index == 9) {
       //选择经销商级别
       Map select = await showSelectList(context, Api.customer_type, '请选择经销商级别', 'dictValue');
-      model.setRole(select['dictKey']);
-      model.setRoleName(select['dictValue']);
+      model.setCustomerType(select['dictKey']);
+      model.setCustomerTypeName(select['dictValue']);
     } else {
       AppUtil.showInputDialog(
           context: context,
@@ -290,7 +266,7 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       },
       {
         'title': '经销商级别',
-        'value': _model.customerType,
+        'value': _model.customerTypeName,
         'hintText': '请选择经销商级别',
         'keyBoardType': null,
         'end': '>'
@@ -437,7 +413,6 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
     }
 
     Map<String, dynamic> map = {
-      'serviceCode': model.serviceCode,
       'postId': model.post,
       'nature': model.nature,
       'corporate': model.corporateName,

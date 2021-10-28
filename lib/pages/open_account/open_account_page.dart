@@ -5,6 +5,7 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/models/add_dealer_model.dart';
+import 'package:good_grandma/pages/open_account/open_business_representative.dart';
 import 'package:good_grandma/pages/open_account/open_dealer_page.dart';
 import 'package:provider/provider.dart';
 
@@ -46,11 +47,20 @@ class OpenAccountPage extends StatelessWidget {
                           AddDealerModel _model = AddDealerModel();
                           _model.setPost('${list[index]['id']}-${list[index]['postCode']}');
                           _model.setPostName(list[index]['postName']);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => ChangeNotifierProvider.value(
-                                      value: _model, child: OpenDealerPage())));
+
+                          if (_model.postName == '业务代表'){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => ChangeNotifierProvider.value(
+                                        value: _model, child: OpenBusinessRepresentative())));
+                          }else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => ChangeNotifierProvider.value(
+                                        value: _model, child: OpenDealerPage())));
+                          }
                         },
                         style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
