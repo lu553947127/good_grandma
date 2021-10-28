@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
 import 'package:good_grandma/widgets/select_form.dart';
@@ -125,8 +126,16 @@ class _SelectImagesViewState extends State<SelectImagesView> {
     return await showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
+          double w = 240.0;
+          if (widget.title == '上传图片'){
+            w = 240.0;
+          }else if (widget.title == '上传身份证照片' || widget.title == '上传营业执照'){
+            w = 170.0;
+          }else {
+            w = 120.0;
+          }
           return Container(
-            height: widget.title == '上传图片' ? 240.0 : 120.0,
+            height: w,
             child: Column(
               children: <Widget>[
                 ListTile(
@@ -136,7 +145,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                   }
                 ),
                 Visibility(
-                  visible: widget.title == '上传图片' ? true : false,
+                  visible: widget.title == '上传图片' || widget.title == '上传身份证照片' || widget.title == '上传营业执照' ? true : false,
                   child: ListTile(
                       title: Text('从相册选择', textAlign: TextAlign.center),
                       onTap: () {
@@ -194,7 +203,13 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                 widget.imagesProvider.filePath[widget.index]['type'] == 'png' ||
                     widget.imagesProvider.filePath[widget.index]['type'] == 'jpg' ||
                     widget.imagesProvider.filePath[widget.index]['type'] == 'jpeg' ?
-                Image.network(widget.imagesProvider.filePath[widget.index]['image'], width: 192, height: 108) :
+                MyCacheImageView(
+                  imageURL: widget.imagesProvider.filePath[widget.index]['image'],
+                  width: 192,
+                  height: 108,
+                  errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 192.0, height: 108.0),
+                ):
+                // Image.network(widget.imagesProvider.filePath[widget.index]['image'], width: 192, height: 108) :
                 Image.asset(widget.imagesProvider.filePath[widget.index]['iconName'], width: 192, height: 108),
                 Positioned(
                   right: 0,

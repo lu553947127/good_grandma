@@ -250,6 +250,9 @@ class Api {
   ///经销商性质字典
   static const natureType = "/api/hap-app/app/dict/dictionary?code=nature_type";
 
+  ///经销商级别字典
+  static const customer_type = "/api/hap-app/app/dict/dictionary?code=customer_type";
+
   ///所属角色列表
   static const roleCustomer = "/api/hap-app/app/user/roleCustomer";
 
@@ -282,4 +285,7 @@ class Api {
 
   ///获取全部客户列表
   static const allUser = "/api/hap-app/app/user/allUser";
+
+  ///版本升级
+  static const upgrade = "/api/hap-app/app/system/app";
 }

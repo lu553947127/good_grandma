@@ -130,24 +130,38 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
             ),
             SliverVisibility(
                 visible: statusName != '未进行' || statusChild == '我发布的' ? true : false,
-                sliver: SliverList(
+                sliver: activityList.length > 0 ?
+                SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return MarketingActivityCell(
-                        model: activityList[index],
-                        state: statusName
+                          model: activityList[index],
+                          state: statusName
                       );
                     }, childCount: activityList.length)
+                ):
+                SliverToBoxAdapter(
+                    child: Container(
+                        margin: EdgeInsets.all(40),
+                        child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                    )
                 )
             ),
             SliverVisibility(
-              visible: statusName == '未进行' ? statusChild == '行销规划' ? true : false : false,
-              sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return MarketingPlanActivityCell(
-                        model: activityPlanList[index]
-                    );
-                  }, childCount: activityPlanList.length)
-              )
+                visible: statusName == '未进行' ? statusChild == '行销规划' ? true : false : false,
+                sliver: activityPlanList.length > 0 ?
+                SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return MarketingPlanActivityCell(
+                          model: activityPlanList[index]
+                      );
+                    }, childCount: activityPlanList.length)
+                ):
+                SliverToBoxAdapter(
+                    child: Container(
+                        margin: EdgeInsets.all(40),
+                        child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                    )
+                )
             ),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
           ]

@@ -11,7 +11,7 @@ class VisitStatisticsDetail extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
-    List<String> ipictures = (data['ipictures'] as List).cast();
+    List<String> ipictures = (data['ipictures'] as List).  cast();
     LogUtil.d('请求结果---ipictures----$ipictures');
 
     _setTextColor(status){
@@ -183,7 +183,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                           imageURL: ipictures[index],
                           width: 192,
                           height: 108,
-                          errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 65.0, height: 65.0),
+                          errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 192.0, height: 108.0),
                         ),
                         onTap: (){
                           Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(

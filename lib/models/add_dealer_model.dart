@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/log.dart';
 
 class AddDealerModel extends ChangeNotifier {
+
+  ///经销商id
+  String _serviceCode;
 
   ///经销商类型
   String _post;
@@ -14,17 +18,14 @@ class AddDealerModel extends ChangeNotifier {
   ///经销商性质名称
   String _natureName;
 
-  ///公司名称
+  ///企业名称
   String _corporateName;
 
-  ///公司地址
+  ///企业地址
   String _address;
 
   ///营业执照号
   String _licenseNo;
-
-  ///公司邮箱
-  String _email;
 
   ///公司手机
   String _phone;
@@ -38,20 +39,17 @@ class AddDealerModel extends ChangeNotifier {
   ///法人电话
   String _juridicalPhone;
 
-  ///姓名
-  String _realName;
-
   ///所属角色
   String _role;
 
   ///所属角色名称
   String _roleName;
 
-  ///性别
-  String _sex;
+  ///经销商级别
+  String _customerType;
 
-  ///性别名称
-  String _sexName;
+  ///经销商级别名称
+  String _customerTypeName;
 
   ///开户银行
   String _bank;
@@ -65,16 +63,20 @@ class AddDealerModel extends ChangeNotifier {
   ///开户人身份证号
   String _bankCard;
 
-  ///开户人出生日期
-  String _birthday;
-
   ///登录账号
   String _account;
 
   ///登录密码
   String _pwd;
 
+  ///身份证照片
+  String _idCardImage;
+
+  ///营业执照
+  String _licenseImage;
+
   AddDealerModel() {
+    _serviceCode = '';
     _post = '';
     _postName = '';
     _nature = '';
@@ -82,24 +84,26 @@ class AddDealerModel extends ChangeNotifier {
     _corporateName = '';
     _address = '';
     _licenseNo = '';
-    _email = '';
     _phone = '';
     _juridical = '';
     _juridicalId = '';
     _juridicalPhone = '';
-    _realName = '';
     _role = '';
     _roleName = '';
-    _sex = '';
-    _sexName = '';
+    _customerType = '';
+    _customerTypeName = '';
     _bank = '';
     _bankAccount = '';
     _bankUser = '';
     _bankCard = '';
-    _birthday = '';
     _account = '';
     _pwd = '';
+    _idCardImage = '';
+    _licenseImage = '';
   }
+
+  ///经销商id
+  String get serviceCode => _serviceCode;
 
   ///经销商类型
   String get post => _post;
@@ -122,9 +126,6 @@ class AddDealerModel extends ChangeNotifier {
   ///营业执照号
   String get licenseNo => _licenseNo;
 
-  ///公司邮箱
-  String get email => _email;
-
   ///联系手机
   String get phone => _phone;
 
@@ -137,20 +138,17 @@ class AddDealerModel extends ChangeNotifier {
   ///法人电话
   String get juridicalPhone => _juridicalPhone;
 
-  ///姓名
-  String get realName => _realName;
-
   ///所属角色
   String get role => _role;
 
   ///所属角色名称
   String get roleName => _roleName;
 
-  ///性别
-  String get sex => _sex;
+  ///经销商级别
+  String get customerType => _customerType;
 
-  ///性别名称
-  String get sexName => _sexName;
+  ///经销商级别名称
+  String get customerTypeName => _customerTypeName;
 
   ///开户行
   String get bank => _bank;
@@ -164,14 +162,22 @@ class AddDealerModel extends ChangeNotifier {
   ///开户人身份证号
   String get bankCard => _bankCard;
 
-  ///出生日期
-  String get birthday => _birthday;
-
   ///登录账号
   String get account => _account;
 
   ///登录密码
   String get pwd => _pwd;
+
+  ///身份证照片
+  String get idCardImage => _idCardImage;
+
+  ///营业执照
+  String get licenseImage => _licenseImage;
+
+  setServiceCode(String serviceCode) {
+    _serviceCode = serviceCode;
+    notifyListeners();
+  }
 
   setPost(String post) {
     _post = post;
@@ -208,11 +214,6 @@ class AddDealerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setEmail(String email) {
-    _email = email;
-    notifyListeners();
-  }
-
   setPhone(String phone) {
     _phone = phone;
     notifyListeners();
@@ -233,11 +234,6 @@ class AddDealerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setRealName(String realName) {
-    _realName = realName;
-    notifyListeners();
-  }
-
   setRole(String role) {
     _role = role;
     notifyListeners();
@@ -248,13 +244,13 @@ class AddDealerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setSex(String sex) {
-    _sex = sex;
+  setCustomerType(String customerType) {
+    _customerType = customerType;
     notifyListeners();
   }
 
-  setSexName(String sexName) {
-    _sexName = sexName;
+  setCustomerTypeName(String customerTypeName) {
+    _customerTypeName = customerTypeName;
     notifyListeners();
   }
 
@@ -278,11 +274,6 @@ class AddDealerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setBirthday(String birthday) {
-    _birthday = birthday;
-    notifyListeners();
-  }
-
   setAccount(String account) {
     _account = account;
     notifyListeners();
@@ -290,6 +281,18 @@ class AddDealerModel extends ChangeNotifier {
 
   setPWD(String pwd) {
     _pwd = pwd;
+    notifyListeners();
+  }
+
+  setIdCardImage(String idCardImage) {
+    _idCardImage = idCardImage;
+    LogUtil.d('请求结果---idCardImage----$idCardImage');
+    notifyListeners();
+  }
+
+  setLicenseImage(String licenseImage) {
+    _licenseImage = licenseImage;
+    LogUtil.d('请求结果---licenseImage----$licenseImage');
     notifyListeners();
   }
 }

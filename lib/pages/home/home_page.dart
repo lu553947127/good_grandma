@@ -47,7 +47,7 @@ class _Body extends State<HomePage> {
   void initState() {
     super.initState();
     _controller.callRefresh();
-    _getVersion();
+    // _getVersion();
   }
 
   @override
@@ -262,14 +262,14 @@ class _Body extends State<HomePage> {
     String buildNumber = packageInfo.buildNumber;
     print('版本号---buildNumber----$buildNumber');
     if (Platform.isAndroid) {
-      // requestGet(Api.androidVersion).then((val) async{
-      //   var data = json.decode(val.toString());
-      //   print('请求结果---androidVersion----$data');
-      //   if (int.parse(data['version']) > int.parse(buildNumber)){
-      //     _versionDialog(data['update_url']);
-      //   }
-      // });
-      _versionDialog('update_url');
+      Map<String, dynamic> map = {'type': 'android'};
+      requestGet(Api.upgrade, param: map).then((val) async{
+        var data = json.decode(val.toString());
+        print('请求结果---androidVersion----$data');
+        // if (int.parse(data['version']) > int.parse(buildNumber)){
+        //   _versionDialog(data['update_url']);
+        // }
+      });
     }else {
 
     }
@@ -292,7 +292,7 @@ class _Body extends State<HomePage> {
               actions: <Widget>[
                 TextButton(child: Text('取消', style: TextStyle(color: Color(0xFF999999))), onPressed: (){
                   Navigator.of(context).pop('cancel');
-              
+
                 }),
                 TextButton(child: Text('确认', style: TextStyle(color: Color(0xFFC68D3E))), onPressed: (){
                   Navigator.of(context).pop('ok');
