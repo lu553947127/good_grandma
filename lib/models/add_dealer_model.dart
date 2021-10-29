@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/log.dart';
 
 class AddDealerModel extends ChangeNotifier {
 
-  ///经销商id
+  ///经销商(城市经理)id
   String _serviceCode;
 
-  ///经销商id名称
+  ///经销商(城市经理)id名称
   String _serviceCodeName;
+
+  ///岗位id
+  String _deptId;
+
+  ///岗位id名称
+  String _deptIdName;
 
   ///经销商类型
   String _post;
@@ -82,6 +87,8 @@ class AddDealerModel extends ChangeNotifier {
   String _licenseImage;
 
   AddDealerModel() {
+    _deptId = '';
+    _deptIdName = '';
     _serviceCode = '';
     _serviceCodeName = '';
     _post = '';
@@ -110,11 +117,17 @@ class AddDealerModel extends ChangeNotifier {
     _licenseImage = '';
   }
 
-  ///经销商id
+  ///经销商(城市经理)id
   String get serviceCode => _serviceCode;
 
-  ///经销商id名称
+  ///经销商(城市经理)id名称
   String get serviceCodeName => _serviceCodeName;
+
+  ///岗位id
+  String get deptId => _deptId;
+
+  ///岗位id名称
+  String get deptIdName => _deptIdName;
 
   ///经销商类型
   String get post => _post;
@@ -187,6 +200,16 @@ class AddDealerModel extends ChangeNotifier {
 
   ///营业执照
   String get licenseImage => _licenseImage;
+
+  setDeptId(String deptId) {
+    _deptId = deptId;
+    notifyListeners();
+  }
+
+  setDeptIdName(String deptIdName) {
+    _deptIdName = deptIdName;
+    notifyListeners();
+  }
 
   setServiceCode(String serviceCode) {
     _serviceCode = serviceCode;

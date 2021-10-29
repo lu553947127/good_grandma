@@ -141,16 +141,32 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       TextInputType keyBoardType,
       String value}) async {
     if (index == 0) {
+      //选择城市经理
+      Map select = await showSelectList(context, Api.allCsjlUser, '请选择城市经理', 'realName');
+      model.setServiceCode(select['id']);
+      model.setServiceCodeName(select['realName']);
+    } else if (index == 1) {
+      //选择岗位
+      if(model.serviceCode == ''){
+        showToast("请先选择城市经理后，再选择岗位");
+        return;
+      }
+
+      Map<String, dynamic> map = {'userId': model.serviceCode};
+      Map select = await showSelectListParameter(context, Api.allPostUserId, '请选择岗位', 'postName', map);
+      model.setDeptId(select['deptId']);
+      model.setDeptIdName(select['postName']);
+    } else if (index == 2) {
       //选择经销商性质
       Map select = await showSelectList(context, Api.natureType, '请选择经销商性质', 'dictValue');
       model.setNature(select['dictKey']);
       model.setNatureName(select['dictValue']);
-    } else if (index == 8) {
+    } else if (index == 10) {
       //选择角色
       Map select = await showSelectList(context, Api.roleCustomer, '请选择所属角色', 'roleName');
       model.setRole(select['id']);
       model.setRoleName(select['roleName']);
-    } else if (index == 9) {
+    } else if (index == 11) {
       //选择经销商级别
       Map select = await showSelectList(context, Api.customer_type, '请选择经销商级别', 'dictValue');
       model.setCustomerType(select['dictKey']);
@@ -165,37 +181,37 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
           keyboardType: keyBoardType,
           callBack: (text) {
             switch (index) {
-              case 1: //公司名称
+              case 3: //公司名称
                 model.setCorporateName(text);
                 break;
-              case 2: //公司地址
+              case 4: //公司地址
                 model.setAddress(text);
                 break;
-              case 3: //营业执照号
+              case 5: //营业执照号
                 model.setLicenseNo(text);
                 break;
-              case 4: //联系手机
+              case 6: //联系手机
                 model.setPhone(text);
                 break;
-              case 5: //法人姓名
+              case 7: //法人姓名
                 model.setJuridical(text);
                 break;
-              case 6: //法人身份证
+              case 8: //法人身份证
                 model.setJuridicalId(text);
                 break;
-              case 7: //法人电话
+              case 9: //法人电话
                 model.setJuridicalPhone(text);
                 break;
-              case 10: //开户银行
+              case 12: //开户银行
                 model.setBank(text);
                 break;
-              case 11: //银行账号
+              case 13: //银行账号
                 model.setBankAccount(text);
                 break;
-              case 12: //开户人
+              case 14: //开户人
                 model.setBankUser(text);
                 break;
-              case 13: //开户人身份证号
+              case 15: //开户人身份证号
                 model.setBankCard(text);
                 break;
             }
@@ -205,6 +221,20 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
 
   List<Map> _getList1(AddDealerModel _model) {
     List<Map> list1 = [
+      {
+        'title': '城市经理',
+        'value': _model.serviceCodeName,
+        'hintText': '请选择城市经理',
+        'keyBoardType': null,
+        'end': '>'
+      },
+      {
+        'title': '岗位',
+        'value': _model.deptIdName,
+        'hintText': '请选择岗位',
+        'keyBoardType': null,
+        'end': '>'
+      },
       {
         'title': '经销商性质',
         'value': _model.natureName,
@@ -318,11 +348,18 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
   ///开通账户
   void _openCustomer(BuildContext context, AddDealerModel model) async {
 
-    model.setIdCardImage(listToString(_imagesProvider.urlList));
-    model.setLicenseImage(listToString(_imagesProvider2.urlList));
-
     if (model.post.isEmpty){
       AppUtil.showToastCenter('经销商类型不能为空');
+      return;
+    }
+
+    if (model.serviceCode.isEmpty){
+      AppUtil.showToastCenter('城市经理不能为空');
+      return;
+    }
+
+    if (model.deptId.isEmpty){
+      AppUtil.showToastCenter('岗位不能为空');
       return;
     }
 
@@ -406,17 +443,23 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       return;
     }
 
-    if (model.idCardImage == ''){
+    if (_imagesProvider.urlList.length == 0){
       showToast("身份证照片不能为空");
       return;
     }
 
-    if (model.licenseImage == ''){
+    model.setIdCardImage(listToString(_imagesProvider.urlList));
+
+    if (_imagesProvider2.urlList.length == 0){
       showToast("营业执照不能为空");
       return;
     }
 
+    model.setLicenseImage(listToString(_imagesProvider2.urlList));
+
     Map<String, dynamic> map = {
+      'deptId': model.deptId,
+      'serviceCode': model.serviceCode,
       'postId': model.post,
       'nature': model.nature,
       'corporate': model.corporateName,

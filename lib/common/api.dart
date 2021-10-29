@@ -8,6 +8,8 @@ class Api {
     // return 'http://172.167.40.141:1888';
     ///宁哥服务器
     // return 'http://172.167.40.77:1888';
+    ///周芾服务器
+    // return 'http://172.167.40.110:1888';
   }
 
   ///密码登录
@@ -265,6 +267,9 @@ class Api {
   ///登录人所有岗位信息
   static const allPost = "/api/hap-app/app/user/allPost";
 
+  ///开通账号用户岗位信息
+  static const allPostUserId = "/api/hap-app/app/user/allPostUserId";
+
   ///通过手机号获取验证码
   static const getCode = "/api/hap-app/app/phone/verify";
 
@@ -285,6 +290,9 @@ class Api {
 
   ///获取全部客户列表
   static const allUser = "/api/hap-app/app/user/allUser";
+
+  ///获取城市经理列表
+  static const allCsjlUser = "/api/hap-app/app/user/allCsjlUser";
 
   ///版本升级
   static const upgrade = "/api/hap-app/app/system/app";

@@ -86,7 +86,7 @@ class FreezerStatisticsList extends StatelessWidget {
               padding: EdgeInsets.only(left: 10.0),
               height: 40,
               color: Color(0XFFEFEFF4),
-              child: Text('品牌/型号: ${data['brand']}/${data['model']}',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+              child: Text('品牌/型号: ${data['brandName']}/${data['modelName']}',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
             ),
             //标题头部
             Padding(

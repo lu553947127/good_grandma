@@ -86,12 +86,14 @@ class SelectListFormPage extends StatelessWidget {
   SelectListFormPage({Key key,
     this.url,
     this.title,
-    this.props
+    this.props,
+    this.param
   }) : super(key: key);
 
   final String url;
   final String title;
   final String props;
+  final Map param;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +106,7 @@ class SelectListFormPage extends StatelessWidget {
         title: Text(title,style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
       body: FutureBuilder(
-        future: requestGet(url),
+        future: requestGet(url, param: param),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             var data = jsonDecode(snapshot.data.toString());
@@ -129,8 +131,8 @@ class SelectListFormPage extends StatelessWidget {
               child: CircularProgressIndicator(color: AppColors.FFC68D3E),
             );
           }
-        },
-      ),
+        }
+      )
     );
   }
 }
@@ -144,9 +146,26 @@ Future<Map> showSelectList(BuildContext context, url, title, props) async {
       builder: (context) => SelectListFormPage(
         url: url,
         title: title,
-        props: props,
+        props: props
       )
     )
+  );
+  return result ?? "";
+}
+
+///选择返回回调（带参数）
+Future<Map> showSelectListParameter(BuildContext context, url, title, props, param) async {
+  Map result;
+  result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SelectListFormPage(
+            url: url,
+            title: title,
+            props: props,
+            param: param
+          )
+      )
   );
   return result ?? "";
 }
