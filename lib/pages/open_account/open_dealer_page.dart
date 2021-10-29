@@ -331,70 +331,70 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       return;
     }
 
-    if (model.corporateName == ''){
-      showToast("公司名称不能为空");
-      return;
-    }
+    // if (model.corporateName == ''){
+    //   showToast("公司名称不能为空");
+    //   return;
+    // }
 
     if (model.address == ''){
       showToast("公司地址不能为空");
       return;
     }
 
-    if (model.licenseNo == ''){
-      showToast("营业执照号不能为空");
-      return;
-    }
+    // if (model.licenseNo == ''){
+    //   showToast("营业执照号不能为空");
+    //   return;
+    // }
 
-    if (model.phone == ''){
-      showToast("联系手机不能为空");
-      return;
-    }
+    // if (model.phone == ''){
+    //   showToast("联系手机不能为空");
+    //   return;
+    // }
 
-    if (model.juridical == ''){
-      showToast("法人姓名不能为空");
-      return;
-    }
+    // if (model.juridical == ''){
+    //   showToast("法人姓名不能为空");
+    //   return;
+    // }
 
-    if (model.juridicalId == ''){
-      showToast("法人身份证不能为空");
-      return;
-    }
-
-    if (model.juridicalPhone == ''){
-      showToast("法人电话不能为空");
-      return;
-    }
+    // if (model.juridicalId == ''){
+    //   showToast("法人身份证不能为空");
+    //   return;
+    // }
+    //
+    // if (model.juridicalPhone == ''){
+    //   showToast("法人电话不能为空");
+    //   return;
+    // }
 
     if (model.role == ''){
       showToast("所属角色不能为空");
       return;
     }
 
-    if (model.customerType == ''){
-      showToast("经销商级别不能为空");
-      return;
-    }
+    // if (model.customerType == ''){
+    //   showToast("经销商级别不能为空");
+    //   return;
+    // }
 
-    if (model.bank == ''){
-      showToast("开户银行不能为空");
-      return;
-    }
+    // if (model.bank == ''){
+    //   showToast("开户银行不能为空");
+    //   return;
+    // }
 
-    if (model.bankAccount == ''){
-      showToast("银行账号不能为空");
-      return;
-    }
-
-    if (model.bankUser == ''){
-      showToast("开户人不能为空");
-      return;
-    }
-
-    if (model.bankCard == ''){
-      showToast("开户人身份证号不能为空");
-      return;
-    }
+    // if (model.bankAccount == ''){
+    //   showToast("银行账号不能为空");
+    //   return;
+    // }
+    //
+    // if (model.bankUser == ''){
+    //   showToast("开户人不能为空");
+    //   return;
+    // }
+    //
+    // if (model.bankCard == ''){
+    //   showToast("开户人身份证号不能为空");
+    //   return;
+    // }
 
     if (model.account == ''){
       showToast("登录账户不能为空");
@@ -435,7 +435,7 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       'account': model.account,
       'password': model.pwd,
       'idImg': model.idCardImage,
-      'customerTypelicenseImg': model.licenseImage,
+      'licenseImg': model.licenseImage
     };
 
     requestPost(Api.openCustomer, json: map).then((val) async{
