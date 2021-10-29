@@ -32,6 +32,10 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
   Widget build(BuildContext context) {
     final AddDealerModel _model = Provider.of<AddDealerModel>(context);
     List<Map> list1 = _getList1(_model);
+    if (_model.postCode == 'ejkh'){
+      list1.removeWhere((map) => map['title'] == '经销商级别');
+    }
+
     List<Map> list2 = _getList2(_model);
     return WillPopScope(
       onWillPop: () => AppUtil.onWillPop(context),

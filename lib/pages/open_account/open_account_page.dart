@@ -47,6 +47,7 @@ class OpenAccountPage extends StatelessWidget {
                           AddDealerModel _model = AddDealerModel();
                           _model.setPost('${list[index]['id']}-${list[index]['postCode']}');
                           _model.setPostName(list[index]['postName']);
+                          _model.setPostCode(list[index]['postCode']);
 
                           if (_model.postName == '业务代表'){
                             Navigator.push(

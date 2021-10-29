@@ -12,6 +12,9 @@ class AddDealerModel extends ChangeNotifier {
   ///经销商类型
   String _post;
 
+  ///经销商等级
+  String _postCode;
+
   ///经销商类型名称
   String _postName;
 
@@ -83,6 +86,7 @@ class AddDealerModel extends ChangeNotifier {
     _serviceCodeName = '';
     _post = '';
     _postName = '';
+    _postCode = '';
     _nature = '';
     _natureName = '';
     _corporateName = '';
@@ -114,6 +118,9 @@ class AddDealerModel extends ChangeNotifier {
 
   ///经销商类型
   String get post => _post;
+
+  ///经销商等级
+  String get postCode => _postCode;
 
   ///经销商类型名称
   String get postName => _postName;
@@ -198,6 +205,11 @@ class AddDealerModel extends ChangeNotifier {
 
   setPostName(String postName) {
     _postName = postName;
+    notifyListeners();
+  }
+
+  setPostCode(String postCode) {
+    _postCode = postCode;
     notifyListeners();
   }
 
@@ -298,13 +310,11 @@ class AddDealerModel extends ChangeNotifier {
 
   setIdCardImage(String idCardImage) {
     _idCardImage = idCardImage;
-    LogUtil.d('请求结果---idCardImage----$idCardImage');
     notifyListeners();
   }
 
   setLicenseImage(String licenseImage) {
     _licenseImage = licenseImage;
-    LogUtil.d('请求结果---licenseImage----$licenseImage');
     notifyListeners();
   }
 }
