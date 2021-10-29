@@ -565,6 +565,17 @@ class AppUtil {
     }
     return 1;
   }
+  ///月份或季度统计数据排序 month：是否为月份数据列表
+  static List<Map> monthOrSessionListSort(List<Map> list,bool month){
+    list.sort((a, b) {
+      String month1 = a['montht'] ?? '';
+      String month2 = b['montht'] ?? '';
+      double month1N = month? AppUtil.monthToNumber(month1):AppUtil.sessionToNumber(month1);
+      double month2N = month? AppUtil.monthToNumber(month2):AppUtil.sessionToNumber(month2);
+      return month1N.compareTo(month2N);
+    });
+    return list;
+  }
   ///String转double
   static double stringToDouble(String str){
     return  double.parse((str != null && str.isNotEmpty) ? str : '0');

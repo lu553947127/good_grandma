@@ -43,19 +43,30 @@ class _MyPerformancePageState extends State<MyPerformancePage> {
                 _monthTargets = <double, double>{};
                 _sessionTargets = <double, double>{};
                 _sessionTotals = <double, double>{};
+                List<Map> listMonth = [];
+                List<Map> listSession = [];
                 list.forEach((element) {
+                  String month = element['montht'] ?? '';
+                  if(month.contains('月')) listMonth.add(element);
+                  else if(month.contains('季度')) listSession.add(element);
+                });
+                listMonth = AppUtil.monthOrSessionListSort(listMonth, true);
+                listSession = AppUtil.monthOrSessionListSort(listSession, false);
+                listMonth.forEach((element) {
                   String month = element['montht'] ?? '';
                   String targets = element['targetssum'] ?? '';
                   String total = element['total'] ?? '';
-                  if(month.contains('月')){
-                    _monthTotals[AppUtil.monthToNumber(month)] = AppUtil.stringToDouble(total);
-                    _monthTargets[AppUtil.monthToNumber(month)] = AppUtil.stringToDouble(targets);
-                  }
-                  else if(month.contains('季度')){
-                    _sessionTotals[AppUtil.sessionToNumber(month)] = AppUtil.stringToDouble(total);
-                    _sessionTargets[AppUtil.sessionToNumber(month)] = AppUtil.stringToDouble(targets);
-                  }
+                  _monthTotals[AppUtil.monthToNumber(month)] = AppUtil.stringToDouble(total);
+                  _monthTargets[AppUtil.monthToNumber(month)] = AppUtil.stringToDouble(targets);
                 });
+                listSession.forEach((element) {
+                  String month = element['montht'] ?? '';
+                  String targets = element['targetssum'] ?? '';
+                  String total = element['total'] ?? '';
+                  _sessionTotals[AppUtil.sessionToNumber(month)] = AppUtil.stringToDouble(total);
+                  _sessionTargets[AppUtil.sessionToNumber(month)] = AppUtil.stringToDouble(targets);
+                });
+
                 // _sessionTargets = <double, double>{1: 9, 2: 12, 3: 10, 4: 20};
                 // _sessionTotals = <double, double>{1: 8, 2: 15, 3: 17, 4: 11};
                 // print('_sessionTargets  = $_sessionTargets');
