@@ -239,7 +239,7 @@ class MineHeaderView extends StatelessWidget {
               }),
               TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: () async {
                 Navigator.of(context).pop('ok');
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=> SwitchAccountPage(postId: model['postId'])), (route) => false);
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=> SwitchAccountPage(postId: model['id'])), (route) => false);
                 // Navigator.pushReplacement(context,
                 //     MaterialPageRoute(builder: (_) => SwitchAccountPage(postId: model['postId'])));
               })
