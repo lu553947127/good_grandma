@@ -141,20 +141,20 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       TextInputType keyBoardType,
       String value}) async {
     if (index == 0) {
-      //选择城市经理
+      //选择上级经理/客户
       Map<String, dynamic> map = {'type': model.postCode};
-      Map select = await showSelectListParameter(context, Api.allCsjlUser, '请选择城市经理', 'realName', map);
+      Map select = await showSelectListParameter(context, Api.allCsjlUser, '请选择上级经理/客户', 'realName', map);
       model.setServiceCode(select['id']);
       model.setServiceCodeName(select['realName']);
     } else if (index == 1) {
-      //选择岗位
+      //选择区域
       if(model.serviceCode == ''){
-        showToast("请先选择城市经理后，再选择岗位");
+        showToast("请先选择上级经理/客户后，再选择区域");
         return;
       }
 
       Map<String, dynamic> map = {'userId': model.serviceCode};
-      Map select = await showSelectListParameter(context, Api.allPostUserId, '请选择岗位', 'postName', map);
+      Map select = await showSelectListParameter(context, Api.allPostUserId, '请选择区域', 'postName', map);
       model.setDeptId(select['deptId']);
       model.setDeptIdName(select['postName']);
     } else if (index == 2) {
