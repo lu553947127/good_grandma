@@ -36,11 +36,11 @@ class AddFolderPage extends StatelessWidget {
                 }
                 if(model == null){
                   //新建文件夹
-                  _addNewFolderRequest(context);
+                  _addNewFolderRequest(context, parentId == '0' ? 2 : 1);
                 }
                 else{
                   //重命名
-                  _renameRequest(context);
+                  _renameRequest(context, parentId == '0' ? 2 : 1);
                 }
               },
               child: const Text(
@@ -95,10 +95,12 @@ class AddFolderPage extends StatelessWidget {
   }
 
   ///创建文件夹
-  void _addNewFolderRequest(BuildContext context){
+  void _addNewFolderRequest(BuildContext context, int status){
     Map<String, dynamic> map = {
       'parentId': parentId,
-      'fileName': _editingController.text};
+      'fileName': _editingController.text,
+      'status:': status
+    };
 
     requestGet(Api.fileAdd, param: map).then((val) async{
       var data = json.decode(val.toString());
@@ -114,10 +116,12 @@ class AddFolderPage extends StatelessWidget {
   }
 
   ///编辑文件夹
-  void _renameRequest(BuildContext context){
+  void _renameRequest(BuildContext context, int status){
     Map<String, dynamic> map = {
       'id': model.id,
-      'fileName': _editingController.text};
+      'fileName': _editingController.text,
+      'status:': status
+    };
 
     requestGet(Api.fileChangeName, param: map).then((val) async{
       var data = json.decode(val.toString());
