@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/utils.dart';
 
 ///报告中单独一个进度条封装
 class PostProgressView extends StatelessWidget {
@@ -75,7 +76,7 @@ class PostProgressView extends StatelessWidget {
         Text(
             (!showProgressLine ? '' : '  ') +
                 (fontSize == 12.0 ? '¥' : '') +
-                '${_numTranfer(current)}' +
+                '${AppUtil.numTranfer(current)}' +
                 (showWY ? '万元' : ''),
             style: TextStyle(color: textColor, fontSize: fontSize)),
       ],
@@ -87,16 +88,4 @@ class PostProgressView extends StatelessWidget {
     );
   }
 
-  String _numTranfer(double num) {
-    if (num ~/ 100000000 > 0)
-      return (num / 100000000).toStringAsFixed(2) + '亿';
-    else if (num ~/ 10000000 > 0)
-      return (num / 10000000).toStringAsFixed(2) + '千万';
-    else if (num ~/ 1000000 > 0)
-      return (num / 1000000).toStringAsFixed(2) + '百万';
-    else if (num ~/ 10000 > 0)
-      return (num / 10000).toStringAsFixed(2) + '万';
-    else
-      return num.toStringAsFixed(2);
-  }
 }

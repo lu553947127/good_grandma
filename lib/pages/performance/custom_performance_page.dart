@@ -56,11 +56,11 @@ class _CustomPerformancePageState extends State<CustomPerformancePage> {
           Expanded(
             child: Scrollbar(
               child: FutureBuilder(
-                  future: requestGet(Api.selectSaleMonthStatistics,param: {'userId':widget.id,'type':'月'}),
+                  future: requestGet(Api.selectMonthStatistics,param: {'customerId':widget.id,'type':'月'}),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final data = jsonDecode(snapshot.data.toString());
-                      // LogUtil.d('请求结果---selectSaleMonthStatistics----${snapshot.data}');
+                      // LogUtil.d('请求结果---selectMonthStatistics----${snapshot.data}');
                       final List<dynamic> list = data['data'];
                       if(list == null || list.isEmpty)
                         return NoDataWidget(emptyRetry: () => setState(() {}));
@@ -68,38 +68,38 @@ class _CustomPerformancePageState extends State<CustomPerformancePage> {
                       _monthTargets = <double, double>{};
                       _sessionTotals = <double, double>{};
                       _sessionTargets = <double, double>{};
-                      List<Map> listMonth = [];
-                      List<Map> listSession = [];
+                      /// 按顺序保存月份名
+                      List<String> monthNames = [];
+                      /// 按顺序保存季节名
+                      List<String> sessionNames = [];
+                      double i = 0;
+                      double j = 0;
                       list.forEach((element) {
                         String month = element['montht'] ?? '';
-                        if(month.contains('月')) listMonth.add(element);
-                        else if(month.contains('季度')) listSession.add(element);
-                      });
-                      listMonth = AppUtil.monthOrSessionListSort(listMonth, true);
-                      listSession = AppUtil.monthOrSessionListSort(listSession, false);
-                      listMonth.forEach((element) {
-                        String month = element['montht'] ?? '';
                         String targets = element['targetssum'] ?? '';
-                        String total = element['total'] ?? '';
-                        _monthTotals[AppUtil.monthToNumber(month)] = AppUtil.stringToDouble(total);
-                        _monthTargets[AppUtil.monthToNumber(month)] = AppUtil.stringToDouble(targets);
-                      });
-                      listSession.forEach((element) {
-                        String month = element['montht'] ?? '';
-                        String targets = element['targetssum'] ?? '';
-                        String total = element['total'] ?? '';
-                        _sessionTotals[AppUtil.sessionToNumber(month)] = AppUtil.stringToDouble(total);
-                        _sessionTargets[AppUtil.sessionToNumber(month)] = AppUtil.stringToDouble(targets);
+                        String total = element['totals'] ?? '';
+                        if(month.contains('月')){
+                          monthNames.add(month.replaceAll('月', ''));
+                          _monthTotals[i] = AppUtil.stringToDouble(total);
+                          _monthTargets[i] = AppUtil.stringToDouble(targets);
+                          i++;
+                        }
+                        else if(month.contains('季度')){
+                          sessionNames.add(month);
+                          _sessionTotals[j] = AppUtil.stringToDouble(total);
+                          _sessionTargets[j] = AppUtil.stringToDouble(targets);
+                          j++;
+                        }
                       });
                       // _sessionTargets = <double, double>{1: 9, 2: 12, 3: 10, 4: 20};
                       // _sessionTotals = <double, double>{1: 8, 2: 15, 3: 17, 4: 11};
                       return ListView(
                         padding: const EdgeInsets.all(0),
                         children: [
-                          LineChartWidget(totalMap: _monthTotals,targetMap: _monthTargets),
+                          LineChartWidget(totalMap: _monthTotals,targetMap: _monthTargets,bottomNames: monthNames),
                           Visibility(
                               visible: _sessionTotals.isNotEmpty || _sessionTargets.isNotEmpty,
-                              child: BarChartWidget(targetMap: _sessionTargets, totalMap: _sessionTotals)),
+                              child: BarChartWidget(targetMap: _sessionTargets, totalMap: _sessionTotals,bottomNames: sessionNames,)),
                         ],
                       );
                     }

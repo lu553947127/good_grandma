@@ -9,8 +9,6 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/performance/custom_performance_page.dart';
-import 'package:good_grandma/pages/performance/my_performance_page.dart';
-import 'package:good_grandma/pages/performance/subordinate_performance_page.dart';
 import 'package:good_grandma/widgets/statistics_cell.dart';
 import 'package:good_grandma/widgets/statistics_head_widget.dart';
 
@@ -83,26 +81,26 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
                     String current = map['current'];
                     String id = map['id'];
                     return StatisticsCell(
-                        avatar: avatar,
-                        name: name,
-                        target: target,
-                        current: current,
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => CustomPerformancePage(
-                                    id: id,
-                                    name: name,
-                                    target: AppUtil.stringToDouble(target),
-                                    total: AppUtil.stringToDouble(current)))),
-                        // onTap: () => Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (_) => SubordinatePerformancePage(
-                        //             id: id,
-                        //             name: name,
-                        //             target: AppUtil.stringToDouble(target),
-                        //             total: AppUtil.stringToDouble(current))))
+                      avatar: avatar,
+                      name: name,
+                      target: target,
+                      current: current,
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => CustomPerformancePage(
+                                  id: id,
+                                  name: name,
+                                  target: AppUtil.stringToDouble(target),
+                                  total: AppUtil.stringToDouble(current)))),
+                      // onTap: () => Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (_) => SubordinatePerformancePage(
+                      //             id: id,
+                      //             name: name,
+                      //             target: AppUtil.stringToDouble(target),
+                      //             total: AppUtil.stringToDouble(current))))
                     );
                   }, childCount: _dataArray.length)),
                 ),
@@ -145,7 +143,7 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
       };
       // print('param = $param');
       final val = await requestGet(Api.selectContractStatistics, param: param);
-      // LogUtil.d('selectContractStatistics value = $val');
+      LogUtil.d('selectContractStatistics value = $val');
       final data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
@@ -154,7 +152,7 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
         String total = map['totals'] ?? '0';
         String avatar = map['avatar'] ?? '';
         String name = map['customerName'] ?? '';
-        String saleId = map['customerId'] ?? '';
+        String saleId = map['customerId'] != null ? map['customerId'].toString() : '';
         _dataArray.add({
           'avatar': avatar,
           'name': name,

@@ -565,6 +565,22 @@ class AppUtil {
     }
     return 1;
   }
+  ///数字转换字符串
+  static String numTranfer(double num) {
+    if (num ~/ 100000000 > 0)
+      return (num / 100000000).toStringAsFixed(2) + '亿';
+    else if (num ~/ 10000000 > 0)
+      return (num / 10000000).toStringAsFixed(2) + '千万';
+    else if (num ~/ 1000000 > 0)
+      return (num / 1000000).toStringAsFixed(2) + '百万';
+    else if (num ~/ 10000 > 0)
+      return (num / 10000).toStringAsFixed(2) + '万';
+    else{
+      int numInt = num.toInt();
+      if(num - numInt == 0) return numInt.toString();
+      return num.toStringAsFixed(2);
+    }
+  }
   ///月份或季度统计数据排序 month：是否为月份数据列表
   static List<Map> monthOrSessionListSort(List<Map> list,bool month){
     list.sort((a, b) {
