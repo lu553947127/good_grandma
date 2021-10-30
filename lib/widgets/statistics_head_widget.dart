@@ -76,7 +76,7 @@ class StatisticsHeadWidget extends StatelessWidget {
                             _TitleCell(
                                 color: Colors.white,
                                 title: '完成比：',
-                                value: (ratio * 100).toStringAsFixed(0) + '%'),
+                                value: (ratio * 100).toStringAsFixed(2) + '%'),
                           ],
                         ),
                         Spacer(),
@@ -104,7 +104,7 @@ class StatisticsHeadWidget extends StatelessWidget {
                                                   color: Colors.white,
                                                   fontSize: 10))),
                                       Text(
-                                          (ratio * 100).toStringAsFixed(0) +
+                                          (ratio * 100).toStringAsFixed(2) +
                                               '%',
                                           style: TextStyle(
                                               color: Colors.white,
