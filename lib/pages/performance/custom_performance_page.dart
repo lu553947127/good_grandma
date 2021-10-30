@@ -60,7 +60,7 @@ class _CustomPerformancePageState extends State<CustomPerformancePage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final data = jsonDecode(snapshot.data.toString());
-                      // LogUtil.d('请求结果---processDetail----$data');
+                      // LogUtil.d('请求结果---selectSaleMonthStatistics----${snapshot.data}');
                       final List<dynamic> list = data['data'];
                       if(list == null || list.isEmpty)
                         return NoDataWidget(emptyRetry: () => setState(() {}));
@@ -93,7 +93,6 @@ class _CustomPerformancePageState extends State<CustomPerformancePage> {
                       });
                       // _sessionTargets = <double, double>{1: 9, 2: 12, 3: 10, 4: 20};
                       // _sessionTotals = <double, double>{1: 8, 2: 15, 3: 17, 4: 11};
-                      // print('_sessionTargets  = $_sessionTargets');
                       return ListView(
                         padding: const EdgeInsets.all(0),
                         children: [
@@ -104,9 +103,7 @@ class _CustomPerformancePageState extends State<CustomPerformancePage> {
                         ],
                       );
                     }
-                    if (snapshot.hasError) {
-                      return NoDataWidget(emptyRetry: () => setState(() {}));
-                    }
+                    if (snapshot.hasError) return NoDataWidget(emptyRetry: () => setState(() {}));
                     return LoadingWidget();
                   }
               ),

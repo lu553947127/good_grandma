@@ -35,7 +35,7 @@ class _MyPerformancePageState extends State<MyPerformancePage> {
           builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final data = jsonDecode(snapshot.data.toString());
-                // LogUtil.d('请求结果---processDetail----$data');
+                // LogUtil.d('selectSaleMonthStatistics----$data');
                 final List<dynamic> list = data['data'];
                 if(list == null || list.isEmpty)
                   return NoDataWidget(emptyRetry: () => setState(() {}));

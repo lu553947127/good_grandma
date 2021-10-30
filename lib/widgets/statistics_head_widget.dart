@@ -27,16 +27,14 @@ class StatisticsHeadWidget extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          bottom: 0,
+            bottom: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width - 15 * 2,
-                height: 50,
-              ),
-            )
-        ),
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width - 15 * 2,
+                  height: 50),
+            )),
         Image.asset('assets/images/performance_head.png',
             fit: BoxFit.fill, width: double.infinity),
         SafeArea(
@@ -78,45 +76,44 @@ class StatisticsHeadWidget extends StatelessWidget {
                             _TitleCell(
                                 color: Colors.white,
                                 title: '完成比：',
-                                value:
-                                    (ratio * 100).toStringAsFixed(0) + '%'),
+                                value: (ratio * 100).toStringAsFixed(0) + '%'),
                           ],
                         ),
                         Spacer(),
                         CustomPaint(
-                          painter: CircleBorderPinter(
-                              size: 110,
-                              color: Colors.white,
-                              ratio: ratio,
-                              strokeWidth: 10),
-                          child: SizedBox(
-                            width: 110,
-                            height: 110,
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 9.0),
-                                    child: Text('已完成',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10)),
-                                  ),
-                                  Text((ratio * 100).toStringAsFixed(0) + '%',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 24)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                            painter: CircleBorderPinter(
+                                size: 110,
+                                color: Colors.white,
+                                ratio: ratio,
+                                strokeWidth: 10),
+                            child: SizedBox(
+                                width: 110,
+                                height: 110,
+                                child: Center(
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 9.0),
+                                          child: Text('已完成',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10))),
+                                      Text(
+                                          (ratio * 100).toStringAsFixed(0) +
+                                              '%',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24))
+                                    ])))),
                         Visibility(
                             visible: showRightArrow,
-                            child: Icon(Icons.chevron_right,
-                                color: Colors.white)),
+                            child:
+                                Icon(Icons.chevron_right, color: Colors.white)),
                       ],
                     ),
                   )

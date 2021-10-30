@@ -12,7 +12,7 @@ import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/pages/order/order_page.dart';
-import 'package:good_grandma/pages/performance/my_performance_page.dart';
+import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
 import 'package:good_grandma/widgets/mine_header_view.dart';
 
 ///我的
@@ -190,7 +190,7 @@ class _MinePageState extends State<MinePage> {
         Navigator.push(context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
         break;
       case -1://我的业绩
-        Navigator.push(context, MaterialPageRoute(builder: (_) => MyPerformancePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => PerformanceStatisticsPage()));
         break;
       // case 0://我要报单
       //   DeclarationFormModel model = DeclarationFormModel();

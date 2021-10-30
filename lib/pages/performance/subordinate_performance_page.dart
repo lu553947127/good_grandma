@@ -15,7 +15,11 @@ import 'package:good_grandma/widgets/statistics_head_widget.dart';
 ///下级业绩
 class SubordinatePerformancePage extends StatefulWidget {
   const SubordinatePerformancePage(
-      {Key key, @required this.id, @required this.name,@required this.target,@required this.total})
+      {Key key,
+      @required this.id,
+      @required this.name,
+      @required this.target,
+      @required this.total})
       : super(key: key);
   final String id;
   final String name;
@@ -56,12 +60,11 @@ class _SubordinatePerformancePageState
       body: Column(
         children: [
           StatisticsHeadWidget(
-            titleView: titleView,
-            title: widget.name + '业绩',
-            target: widget.target,
-            current: widget.total,
-            showRightArrow: showRightArrow,
-          ),
+              titleView: titleView,
+              title: widget.name + '业绩',
+              target: widget.target,
+              current: widget.total,
+              showRightArrow: showRightArrow),
           Expanded(
               child: MyEasyRefreshSliverWidget(
                   controller: _controller,
@@ -70,47 +73,47 @@ class _SubordinatePerformancePageState
                   onRefresh: _refresh,
                   onLoad: _onLoad,
                   slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      sliver: SliverToBoxAdapter(
+                SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    sliver: SliverToBoxAdapter(
                         child: Container(
-                          color: Colors.white,
-                          padding: const EdgeInsets.all(10.0),
-                          child: const Text('客户业绩',
-                              style: const TextStyle(
-                                  color: AppColors.FFC1C8D7, fontSize: 12.0)),
-                        ),
-                      ),
-                    ),
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate((context, index) {
-                            Map map = _dataArray[index];
-                            String avatar = map['avatar'];
-                            String name = map['name'];
-                            String target = map['target'];
-                            String current = map['current'];
-                            String id = map['id'];
-                            return StatisticsCell(
-                                avatar: avatar,
-                                name: name,
-                                target: target,
-                                current: current,
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            CustomPerformancePage(id: id, name: name, target: AppUtil.stringToDouble(target), total: AppUtil.stringToDouble(current)))));
-                          }, childCount: _dataArray.length)),
-                    ),
-                    SliverSafeArea(sliver: SliverToBoxAdapter()),
-                  ])),
+                            color: Colors.white,
+                            padding: const EdgeInsets.all(10.0),
+                            child: const Text('客户业绩',
+                                style: const TextStyle(
+                                    color: AppColors.FFC1C8D7,
+                                    fontSize: 12.0))))),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                    Map map = _dataArray[index];
+                    String avatar = map['avatar'];
+                    String name = map['name'];
+                    String target = map['target'];
+                    String current = map['current'];
+                    String id = map['id'];
+                    return StatisticsCell(
+                        avatar: avatar,
+                        name: name,
+                        target: target,
+                        current: current,
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => CustomPerformancePage(
+                                    id: id,
+                                    name: name,
+                                    target: AppUtil.stringToDouble(target),
+                                    total: AppUtil.stringToDouble(current)))));
+                  }, childCount: _dataArray.length)),
+                ),
+                SliverSafeArea(sliver: SliverToBoxAdapter()),
+              ])),
         ],
       ),
     );
   }
-
 
   Future<void> _refresh() async {
     _current = 1;
@@ -127,12 +130,12 @@ class _SubordinatePerformancePageState
       Map<String, dynamic> param = {
         'current': _current,
         'size': _pageSize,
-        'queryType':'2',
-        'userId':widget.id
+        'queryType': '2',
+        'userId': widget.id
       };
-      print('param = $param');
+      // print('param = $param');
       final val = await requestGet(Api.selectContractStatistics, param: param);
-      LogUtil.d('selectMonthStatistics value = $val');
+      // LogUtil.d('selectMonthStatistics value = $val');
       final data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];

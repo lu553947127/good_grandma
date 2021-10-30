@@ -44,7 +44,7 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
           scrollController: _scrollController,
           dataCount: _dataArray.length,
           onRefresh: _refresh,
-          onLoad: _onLoad,
+          onLoad: null,
           slivers: [
             //搜索区域
             SearchTextWidget(
@@ -88,10 +88,10 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
     _downloadData();
   }
 
-  Future<void> _onLoad() async {
-    _current++;
-    _downloadData();
-  }
+  // Future<void> _onLoad() async {
+  //   _current++;
+  //   _downloadData();
+  // }
 
   Future<void> _downloadData() async {
     try {

@@ -8,6 +8,7 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/performance/custom_performance_page.dart';
 import 'package:good_grandma/pages/performance/my_performance_page.dart';
 import 'package:good_grandma/pages/performance/subordinate_performance_page.dart';
 import 'package:good_grandma/widgets/statistics_cell.dart';
@@ -42,7 +43,6 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
     Widget titleView = Text('我的业绩(元)',
         style: const TextStyle(
             color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold));
-    bool showRightArrow = true;
     return Scaffold(
       body: Column(
         children: [
@@ -50,9 +50,9 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
             titleView: titleView,
             target: _target,
             current: _total,
-            showRightArrow: showRightArrow,
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => MyPerformancePage())),
+            showRightArrow: false,
+            // onTap: () => Navigator.push(context,
+            //     MaterialPageRoute(builder: (_) => MyPerformancePage())),
           ),
           Expanded(
               child: MyEasyRefreshSliverWidget(
@@ -63,17 +63,15 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
                   onLoad: _onLoad,
                   slivers: [
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  sliver: SliverToBoxAdapter(
-                    child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(10.0),
-                      child: const Text('下级业绩',
-                          style: const TextStyle(
-                              color: AppColors.FFC1C8D7, fontSize: 12.0)),
-                    ),
-                  ),
-                ),
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    sliver: SliverToBoxAdapter(
+                        child: Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.all(10.0),
+                            child: const Text('下级业绩',
+                                style: const TextStyle(
+                                    color: AppColors.FFC1C8D7,
+                                    fontSize: 12.0))))),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   sliver: SliverList(
@@ -92,10 +90,20 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
                         onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => SubordinatePerformancePage(
-                                    id: id, name: name,
-                                  target: AppUtil.stringToDouble(target),
-                                  total: AppUtil.stringToDouble(current),))));
+                                builder: (_) => CustomPerformancePage(
+                                    id: id,
+                                    name: name,
+                                    target: AppUtil.stringToDouble(target),
+                                    total: AppUtil.stringToDouble(current)))),
+                        // onTap: () => Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (_) => SubordinatePerformancePage(
+                        //             id: id,
+                        //             name: name,
+                        //             target: AppUtil.stringToDouble(target),
+                        //             total: AppUtil.stringToDouble(current))))
+                    );
                   }, childCount: _dataArray.length)),
                 ),
                 SliverSafeArea(sliver: SliverToBoxAdapter()),
@@ -118,9 +126,10 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
 
   _getHeaderData() {
     requestGet(Api.selectSaleSubordinate).then((value) {
+      // LogUtil.d('selectSaleSubordinate value = $value');
       final map = jsonDecode(value.toString());
       String targetSum = map['data']['targetssum'];
-      String total = map['data']['total'];
+      String total = map['data']['totals'];
       _target = AppUtil.stringToDouble(targetSum);
       _total = AppUtil.stringToDouble(total);
       if (mounted) setState(() {});
@@ -132,21 +141,20 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
       Map<String, dynamic> param = {
         'current': _current,
         'size': _pageSize,
-        'queryType':'1'
+        // 'queryType': '1'
       };
-      print('param = $param');
+      // print('param = $param');
       final val = await requestGet(Api.selectContractStatistics, param: param);
-      LogUtil.d('selectContractStatistics value = $val');
+      // LogUtil.d('selectContractStatistics value = $val');
       final data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         String targetSum = map['targetssum'] ?? '0';
-        String total = map['total'] ?? '0';
+        String total = map['totals'] ?? '0';
         String avatar = map['avatar'] ?? '';
-        String name = map['contract']['saleName'] ?? '';
-        String saleId = map['contract']['saleId'] ?? '';
-        print('name = $name');
+        String name = map['customerName'] ?? '';
+        String saleId = map['customerId'] ?? '';
         _dataArray.add({
           'avatar': avatar,
           'name': name,
@@ -166,6 +174,7 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
       _controller.finishLoad(success: false, noMore: false);
     }
   }
+
   @override
   void dispose() {
     super.dispose();
