@@ -37,7 +37,8 @@ class _FilesPageState extends State<FilesPage> {
   _fileCabinetList(){
     Map<String, dynamic> map = {
       'parentId': parentId,
-      'isDeleted': '0'
+      'isDeleted': '0',
+      'status': '1'
     };
     requestGet(Api.fileCabinetList, param: map).then((val) async{
       var data = json.decode(val.toString());

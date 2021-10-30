@@ -20,7 +20,7 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
   String deptId = '';
   String areaName = '所有区域';
   String userId= '';
-  String userName = '所有客户';
+  String userName = '所有员工';
   String customerId = '';
   String customerName = '所有客户';
 
