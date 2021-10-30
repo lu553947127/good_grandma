@@ -261,7 +261,7 @@ class _FreezerStatisticsDetailState extends State<FreezerStatisticsDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('店主姓名',style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                            Text('${widget.data['realName']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                            Text('${widget.data['shopOwner']}',style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                           ],
                         ),
                         SizedBox(height: 15),
