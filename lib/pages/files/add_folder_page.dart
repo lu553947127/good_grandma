@@ -99,8 +99,10 @@ class AddFolderPage extends StatelessWidget {
     Map<String, dynamic> map = {
       'parentId': parentId,
       'fileName': _editingController.text,
-      'status:': status
+      'status': status
     };
+
+    LogUtil.d('请求结果---map----$map');
 
     requestGet(Api.fileAdd, param: map).then((val) async{
       var data = json.decode(val.toString());
@@ -120,7 +122,7 @@ class AddFolderPage extends StatelessWidget {
     Map<String, dynamic> map = {
       'id': model.id,
       'fileName': _editingController.text,
-      'status:': status
+      'status': status
     };
 
     requestGet(Api.fileChangeName, param: map).then((val) async{
