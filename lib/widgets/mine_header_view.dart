@@ -75,9 +75,9 @@ class MineHeaderView extends StatelessWidget {
                               ),
                               Positioned(
                                 right: 10,
-                                bottom: 5,
+                                bottom: 0,
                                 child: InkWell(
-                                    child: Image.asset('assets/images/icon_switch_account.png', width: 20, height: 20),
+                                    child: Image.asset('assets/images/icon_switch_account.png', width: 30, height: 30),
                                     onTap: () async {
                                       Map select = await showSelectList(context, Api.allPost, '请切换身份', 'postName');
                                       _switchAccount(context, select);

@@ -142,7 +142,8 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       String value}) async {
     if (index == 0) {
       //选择城市经理
-      Map select = await showSelectList(context, Api.allCsjlUser, '请选择城市经理', 'realName');
+      Map<String, dynamic> map = {'type': model.postCode};
+      Map select = await showSelectListParameter(context, Api.allCsjlUser, '请选择城市经理', 'realName', map);
       model.setServiceCode(select['id']);
       model.setServiceCodeName(select['realName']);
     } else if (index == 1) {
@@ -222,16 +223,16 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
   List<Map> _getList1(AddDealerModel _model) {
     List<Map> list1 = [
       {
-        'title': '城市经理',
+        'title': '上级经理/客户',
         'value': _model.serviceCodeName,
-        'hintText': '请选择城市经理',
+        'hintText': '请选择上级经理/客户',
         'keyBoardType': null,
         'end': '>'
       },
       {
-        'title': '岗位',
+        'title': '区域',
         'value': _model.deptIdName,
-        'hintText': '请选择岗位',
+        'hintText': '请选择区域',
         'keyBoardType': null,
         'end': '>'
       },
