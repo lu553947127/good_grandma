@@ -67,7 +67,7 @@ class StatisticsHeadWidget extends StatelessWidget {
                             titleView,
                             _TitleCell(
                                 color: Colors.white.withOpacity(0.4),
-                                title: '年度目标：',
+                                title: '业绩指标：',
                                 value: target.toStringAsFixed(2)),
                             _TitleCell(
                                 color: Colors.white.withOpacity(0.6),
