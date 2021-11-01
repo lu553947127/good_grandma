@@ -8,11 +8,15 @@ class SelectTreeProvider with ChangeNotifier{
   List<Map> horizontalList = [];
 
   SelectTreeProvider(type){
-    addData(
-        type == '全国' ? '1123598813738675201' : Store.readDeptId(),
-        type == '全国' ? '全国' : Store.readDeptName(),
-        0
-    );
+    if (type == 'oa'){
+      addExamine('0', '全部');
+    }else{
+      addData(
+          type == '全国' ? '1123598813738675201' : Store.readDeptId(),
+          type == '全国' ? '全国' : Store.readDeptName(),
+          0
+      );
+    }
   }
 
   //生成接口添加的数据
@@ -42,5 +46,22 @@ class SelectTreeProvider with ChangeNotifier{
       horizontalList.removeAt(index);
       notifyListeners();
     }
+  }
+
+  addExamine(id, name){
+    Map addData = new Map();
+    addData['id'] = id;
+    addData['name'] = name;
+    horizontalList.add(addData);
+    notifyListeners();
+  }
+
+  addExamineChild(id, name) async{
+    horizontalList.clear();
+    Map addData = new Map();
+    addData['id'] = id;
+    addData['name'] = name;
+    horizontalList.add(addData);
+    notifyListeners();
   }
 }

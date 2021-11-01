@@ -7,6 +7,7 @@ import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/home/examine/examine_add.dart';
 import 'package:good_grandma/pages/home/examine/examine_detail.dart';
 import 'package:good_grandma/pages/home/examine/examine_select.dart';
+import 'package:good_grandma/pages/home/examine/examine_select_tree.dart';
 import 'package:good_grandma/pages/home/examine/examine_view.dart';
 import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
 ///审批
@@ -79,13 +80,28 @@ class _ShenPiPageState extends State<ShenPiPage> {
   }
 
   ///可发起流程列表
-  _processList(){
-    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+  _processList(category){
+    Map<String, dynamic> map = {'category': category, 'current': '1', 'size': '999'};
     requestGet(Api.processList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---processList----$data');
       if (data['code'] == 200){
         listType = (data['data']['records'] as List).cast();
+
+        Map result = await showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return ExamineSelectDialog(list: listType);
+            }
+        );
+
+        if(result != null){
+          String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdd(
+            name: result['name'],
+            processId: result['id'],
+          )));
+          if(refresh != null && refresh == 'refresh') _refresh();
+        }
       }else {
         showToast(data['msg']);
       }
@@ -96,7 +112,6 @@ class _ShenPiPageState extends State<ShenPiPage> {
   void initState() {
     super.initState();
     _sendList();
-    _processList();
   }
 
   @override
@@ -104,7 +119,6 @@ class _ShenPiPageState extends State<ShenPiPage> {
     var bool = ModalRoute.of(context).isCurrent;
     if (bool) {
       _sendList();
-      _processList();
     }
   }
 
@@ -175,22 +189,12 @@ class _ShenPiPageState extends State<ShenPiPage> {
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFC68D3E),
         onPressed: () async{
-          Map result = await showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return ExamineSelectDialog(list: listType);
-              }
-          );
-          if(result != null){
-            String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdd(
-              name: result['name'],
-              processId: result['id'],
-            )));
-            if(refresh != null && refresh == 'refresh') _refresh();
 
-          }
-        },
-      ),
+          Map examineType = await showSelectExamineTreeList(context);
+
+          _processList(examineType['id']);
+        }
+      )
     );
   }
 

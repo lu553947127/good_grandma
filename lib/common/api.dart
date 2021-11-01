@@ -3,9 +3,9 @@ class Api {
   static String baseUrl() {
     /// 外网
     // return 'http://47.100.191.162';
-    // return 'https://haoapo.haoapochn.cn/';
+    return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    return 'http://172.167.40.141:1888';
+    // return 'http://172.167.40.141:1888';
     ///宁哥服务器
     // return 'http://172.167.40.77:1888';
     ///周芾服务器
@@ -29,6 +29,9 @@ class Api {
 
   ///可发起流程列表
   static const processList = "/api/hap-workflow/process/processList";
+
+  ///获取下级OA分类列表
+  static const categoryList = "/api/hap-workflow/design/category/list";
 
   ///发起流程
   static const startProcess = "/api/hap-workflow/process/startProcess";

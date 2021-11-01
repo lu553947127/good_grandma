@@ -15,6 +15,7 @@ import 'package:good_grandma/widgets/add_text_default.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
+import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/time_select.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,7 @@ class CustomFormView extends StatefulWidget {
 }
 
 class _CustomFormViewState extends State<CustomFormView> {
+
   @override
   Widget build(BuildContext context) {
     ImagesProvider imagesProvider = new ImagesProvider();
@@ -57,7 +59,6 @@ class _CustomFormViewState extends State<CustomFormView> {
       switch(data['type']){
         case 'date':
           addData[data['prop']] = nowTime;
-          timeSelectProvider.addValue(nowTime);
           return TextDefaultView(
               leftTitle: data['label'],
               rightPlaceholder: nowTime,
@@ -108,26 +109,42 @@ class _CustomFormViewState extends State<CustomFormView> {
           }
           break;
         case 'select':
-          return TextSelectView(
-            leftTitle: data['label'],
-            rightPlaceholder: '请选择${data['label']}',
-            sizeHeight: 1,
-            value: timeSelectProvider.value,
-            onPressed: () async{
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
-              LogUtil.d('select----$select');
+          // return TextSelectView(
+          //   leftTitle: data['label'],
+          //   rightPlaceholder: '请选择${data['label']}',
+          //   sizeHeight: 1,
+          //   value: timeSelectProvider.value,
+          //   onPressed: () async{
+          //     String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
+          //     LogUtil.d('select----$select');
+          //
+          //     for (String prop in dataList) {
+          //       if (data['prop'] == prop){
+          //         addData[prop] = select;
+          //       }
+          //     }
+          //
+          //     timeSelectProvider.addValue2(select);
+          //
+          //     LogUtil.d('addData----$addData');
+          //     return select;
+          //   },
+          // );
 
+          return PostAddInputCell(
+            title: data['label'],
+            value: timeSelectProvider.value,
+            hintText: '请选择${data['label']}',
+            endWidget: Icon(Icons.chevron_right),
+            onTap: () async {
+              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
               for (String prop in dataList) {
                 if (data['prop'] == prop){
                   addData[prop] = select;
                 }
               }
-
               timeSelectProvider.addValue2(select);
-
-              LogUtil.d('addData----$addData');
-              return select;
-            },
+            }
           );
           break;
         case 'datetimerange':
@@ -225,6 +242,7 @@ class _CustomFormViewState extends State<CustomFormView> {
 
     ///发起流程
     _startProcess(){
+      timeSelectProvider.addValue(nowTime);
 
       for (Map map in widget.list) {
         if ('upload' == map['type']){
