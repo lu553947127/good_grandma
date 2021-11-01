@@ -7,7 +7,7 @@ import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/provider/select_tree_provider.dart';
 import 'package:provider/provider.dart';
 
-///选择oa类型
+///选择oa审批类型
 class ExamineSelectTree extends StatefulWidget {
   ExamineSelectTree({Key key}) : super(key: key);
 
@@ -81,13 +81,14 @@ class _ExamineSelectTreeState extends State<ExamineSelectTree> {
             )
           ],
         ),
-        body: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(10),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.only(top: 10.0, left: 10.0),
                 child: Row(
                     children: [
-                      Text('选择类型：', style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
+                      Text('审批类型：', style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
                       Container(
                           width: 260,
                           height: 30,
@@ -119,31 +120,30 @@ class _ExamineSelectTreeState extends State<ExamineSelectTree> {
                           )
                       )
                     ]
-                ),
-              ),
-              categoryList.length > 0 ?
-              Container(
-                height: 500,
-                child: ListView.builder(
-                    itemCount: categoryList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                          title: Center(
-                            child: Text(categoryList[index]['name'], style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
-                          ),
-                          onTap: (){
-                            _categoryList(categoryList[index]['id']);
-                            selectTreeProvider.addExamine(categoryList[index]['id'], categoryList[index]['name']);
-                          }
-                      );
-                    }
-                ),
-              ) :
-              Container(
-                  margin: EdgeInsets.all(40),
-                  child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
               )
-            ]
+            ),
+            categoryList.length > 0 ?
+            SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return ListTile(
+                      title: Center(
+                        child: Text(categoryList[index]['name'], style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
+                      ),
+                      onTap: (){
+                        _categoryList(categoryList[index]['id']);
+                        selectTreeProvider.addExamine(categoryList[index]['id'], categoryList[index]['name']);
+                      }
+                  );
+                }, childCount: categoryList.length)
+            ) :
+            SliverToBoxAdapter(
+                child: Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
+            )
+          ]
         )
     );
   }

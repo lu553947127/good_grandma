@@ -137,7 +137,18 @@ class _CustomFormViewState extends State<CustomFormView> {
             hintText: '请选择${data['label']}',
             endWidget: Icon(Icons.chevron_right),
             onTap: () async {
-              String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
+              String select = '';
+              if (data['dicData'] != null){
+                List<Map> dicData = (data['dicData'] as List).cast();
+                List<String> dicDataString = [];
+                for (Map map in dicData) {
+                  dicDataString.add(map['label']);
+                }
+                select = await showPicker(dicDataString, context);
+              }else {
+                select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
+              }
+
               for (String prop in dataList) {
                 if (data['prop'] == prop){
                   addData[prop] = select;
