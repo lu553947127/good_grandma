@@ -215,4 +215,11 @@ class _MinePageState extends State<MinePage> {
         break;
     }
   }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
+  }
 }

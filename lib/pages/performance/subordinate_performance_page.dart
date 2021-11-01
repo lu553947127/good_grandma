@@ -164,4 +164,10 @@ class _SubordinatePerformancePageState
       _controller.finishLoad(success: false, noMore: false);
     }
   }
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 }

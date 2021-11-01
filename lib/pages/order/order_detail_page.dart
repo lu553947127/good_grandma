@@ -327,6 +327,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _controller.finishRefresh(success: false);
     }
   }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
+  }
 }
 
 class _TextCell extends StatelessWidget {
