@@ -127,12 +127,10 @@ class _SelectImagesViewState extends State<SelectImagesView> {
         context: context,
         builder: (BuildContext context) {
           double w = 240.0;
-          if (widget.title == '上传图片'){
-            w = 240.0;
-          }else if (widget.title == '上传身份证照片' || widget.title == '上传营业执照'){
-            w = 170.0;
-          }else {
+          if (widget.title == '拜访图片'){
             w = 120.0;
+          }else {
+            w = 240.0;
           }
           return Container(
             height: w,
@@ -145,7 +143,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                   }
                 ),
                 Visibility(
-                  visible: widget.title == '上传图片' || widget.title == '上传身份证照片' || widget.title == '上传营业执照' ? true : false,
+                  visible: widget.title == '拜访图片' ? false : true,
                   child: ListTile(
                       title: Text('从相册选择', textAlign: TextAlign.center),
                       onTap: () {
@@ -154,7 +152,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                   )
                 ),
                 Visibility(
-                    visible: widget.title == '上传图片' ? true : false,
+                    visible: widget.title == '拜访图片' ? false : true,
                     child: ListTile(
                         title: Text('从文件柜选择', textAlign: TextAlign.center),
                         onTap: () async {

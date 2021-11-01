@@ -45,18 +45,18 @@ class _EditActivitySummaryPageState extends State<EditActivitySummaryPage> {
                   stateColor: widget.stateColor,
                   showTime: false),
               PostDetailGroupTitle(color: null, name: '总结描述'),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  child: ChangeNotifierProvider<ImagesProvider>.value(
-                    value: imagesProvider,
-                    child: CustomPhotoWidget(
-                      title: '上传照片',
-                      length: 3,
-                      sizeHeight: 10,
-                    ),
-                  ),
-                ),
-              ),
+              // SliverToBoxAdapter(
+              //   child: SizedBox(
+              //     child: ChangeNotifierProvider<ImagesProvider>.value(
+              //       value: imagesProvider,
+              //       child: CustomPhotoWidget(
+              //         title: '上传照片',
+              //         length: 3,
+              //         sizeHeight: 10,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SliverToBoxAdapter(
                 child: ContentInputView(
                   sizeHeight: 10,
