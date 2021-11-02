@@ -108,6 +108,10 @@ class PostSalesTrackingCell extends StatelessWidget {
                               keyboardType: TextInputType.numberWithOptions(
                                   signed: false, decimal: true),
                               callBack: (text) {
+                                if(!AppUtil.isNumeric(text)){
+                                  AppUtil.showToastCenter('请输入数字');
+                                  return;
+                                }
                                 switch (index) {
                                   case 1:
                                     {

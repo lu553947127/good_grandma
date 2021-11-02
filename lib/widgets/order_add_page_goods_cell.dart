@@ -118,9 +118,13 @@ class AddPageGoodsCell extends StatelessWidget {
                           editingController: _editingController,
                           focusNode: _focusNode,
                           text: model.count.toString(),
-                          hintText: '请输入数字',
+                          hintText: '请输入数量',
                           keyboardType: TextInputType.number,
                           callBack: (num) {
+                            if(num.contains('.') || int.tryParse(num) == null){
+                              AppUtil.showToastCenter('请输入整数数量');
+                              return;
+                            }
                             if (num.isEmpty)
                               model.count = 0;
                             else
