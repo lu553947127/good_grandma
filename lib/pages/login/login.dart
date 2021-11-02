@@ -108,7 +108,8 @@ class _LoginPageState extends State<LoginPage> {
         LogUtil.d('请求结果---loginPassword----$data');
         if (data['error_description'] != null){
           Navigator.pop(context);
-          showToast(data['error_description']);
+          // showToast(data['error_description']);
+          showToast('登录失败');
         }else {
           if (_isAccount){
             Store.saveAccount(_username.text);

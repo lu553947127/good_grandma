@@ -167,7 +167,7 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       Map select = await showSelectList(context, Api.roleCustomer, '请选择所属角色', 'roleName');
       model.setRole(select['id']);
       model.setRoleName(select['roleName']);
-    } else if (index == 11) {
+    } else if (model.postCode != 'ejkh' && index == 11) {
       //选择经销商级别
       Map select = await showSelectList(context, Api.customer_type, '请选择经销商级别', 'dictValue');
       model.setCustomerType(select['dictKey']);
@@ -203,14 +203,31 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
               case 9: //法人电话
                 model.setJuridicalPhone(text);
                 break;
+              case 11: //开户银行
+                if (model.postCode == 'ejkh'){
+                  model.setBank(text);
+                }
+                break;
               case 12: //开户银行
-                model.setBank(text);
+                if (model.postCode == 'ejkh'){
+                  model.setBankAccount(text);
+                }else {
+                  model.setBank(text);
+                }
                 break;
               case 13: //银行账号
-                model.setBankAccount(text);
+                if (model.postCode == 'ejkh'){
+                  model.setBankUser(text);
+                }else {
+                  model.setBankAccount(text);
+                }
                 break;
               case 14: //开户人
-                model.setBankUser(text);
+                if (model.postCode == 'ejkh'){
+                  model.setBankCard(text);
+                }else {
+                  model.setBankUser(text);
+                }
                 break;
               case 15: //开户人身份证号
                 model.setBankCard(text);
@@ -369,70 +386,15 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       return;
     }
 
-    // if (model.corporateName == ''){
-    //   showToast("公司名称不能为空");
-    //   return;
-    // }
-
     if (model.address == ''){
       showToast("公司地址不能为空");
       return;
     }
 
-    // if (model.licenseNo == ''){
-    //   showToast("营业执照号不能为空");
-    //   return;
-    // }
-
-    // if (model.phone == ''){
-    //   showToast("联系手机不能为空");
-    //   return;
-    // }
-
-    // if (model.juridical == ''){
-    //   showToast("法人姓名不能为空");
-    //   return;
-    // }
-
-    // if (model.juridicalId == ''){
-    //   showToast("法人身份证不能为空");
-    //   return;
-    // }
-    //
-    // if (model.juridicalPhone == ''){
-    //   showToast("法人电话不能为空");
-    //   return;
-    // }
-
     if (model.role == ''){
       showToast("所属角色不能为空");
       return;
     }
-
-    // if (model.customerType == ''){
-    //   showToast("经销商级别不能为空");
-    //   return;
-    // }
-
-    // if (model.bank == ''){
-    //   showToast("开户银行不能为空");
-    //   return;
-    // }
-
-    // if (model.bankAccount == ''){
-    //   showToast("银行账号不能为空");
-    //   return;
-    // }
-    //
-    // if (model.bankUser == ''){
-    //   showToast("开户人不能为空");
-    //   return;
-    // }
-    //
-    // if (model.bankCard == ''){
-    //   showToast("开户人身份证号不能为空");
-    //   return;
-    // }
 
     if (model.account == ''){
       showToast("登录账户不能为空");
@@ -444,14 +406,14 @@ class _OpenDealerPageState extends State<OpenDealerPage> {
       return;
     }
 
-    if (_imagesProvider.urlList.length == 0){
+    if (model.natureName != '自然人' && _imagesProvider.urlList.length == 0){
       showToast("身份证照片不能为空");
       return;
     }
 
     model.setIdCardImage(listToString(_imagesProvider.urlList));
 
-    if (_imagesProvider2.urlList.length == 0){
+    if (model.natureName != '自然人' && _imagesProvider2.urlList.length == 0){
       showToast("营业执照不能为空");
       return;
     }

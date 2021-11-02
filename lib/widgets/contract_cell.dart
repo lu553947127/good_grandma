@@ -84,6 +84,9 @@ class ContractCell extends StatelessWidget {
         case '5':
           return '小型经销商合同';
           break;
+        case '6':
+          return '特约经销商补充协议';
+          break;
       }
     }
     

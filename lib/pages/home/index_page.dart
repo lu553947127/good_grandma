@@ -48,6 +48,9 @@ class _IndexPageState extends State<IndexPage> {
   @override
   void initState() {
     super.initState();
+
+    // _bottomNavItems.removeWhere((map) => map.label == '审批申请');
+
     _pages.addAll([
       HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index),),
       MsgPage(),

@@ -126,7 +126,8 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               ),
               onPressed: () async {
                 String result = await showPicker(
-                    ['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议', '冷冻设备借用协议（第三方）', '配送协议', '小型经销商合同'], context);
+                    ['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议'
+                      , '冷冻设备借用协议（第三方）', '配送协议', '小型经销商合同', '特约经销商补充协议'], context);
                 if (result != null && result.isNotEmpty) {
                   switch(result){
                     case '所有类型':
@@ -149,6 +150,9 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                       break;
                     case '小型经销商合同':
                       signType = '5';
+                      break;
+                    case '特约经销商补充协议':
+                      signType = '6';
                       break;
                   }
                   _btnName3 = result;
