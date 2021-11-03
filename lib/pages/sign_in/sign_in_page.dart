@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
@@ -24,6 +25,7 @@ class SignInPage extends StatefulWidget {
 }
 
 class _Body extends State<SignInPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +38,8 @@ class _Body extends State<SignInPage> {
               position: Store.readPostName()),
           //签到按钮
           _SignInButton(
-            onPressed: (address, latitude, longitude) =>
-                _signInOnTap(context, address, latitude, longitude),
+            onPressed: (address, latitude, longitude, deviceCode) =>
+                _signInOnTap(context, address, latitude, longitude, deviceCode),
           ),
         ],
       ),
@@ -45,20 +47,24 @@ class _Body extends State<SignInPage> {
   }
 
   _signInOnTap(BuildContext context, String address, String latitude,
-      String longitude) async {
-    // print('address = $address');
+      String longitude, String deviceCode) async {
+
     if (address.isEmpty || latitude.isEmpty || longitude.isEmpty) {
       Fluttertoast.showToast(
           msg: '未获取到定位信息，无法打卡', gravity: ToastGravity.CENTER);
       return;
     }
     Map param = {
+      'deviceCode': deviceCode,
       'address': address,
       'latitude': latitude,
       'longitude': longitude,
       'signTime':
           '${DateTime.now().year}-${AppUtil.dateForZero(DateTime.now().month)}-${AppUtil.dateForZero(DateTime.now().day)} ${AppUtil.dateForZero(DateTime.now().hour)}:${AppUtil.dateForZero(DateTime.now().minute)}:${AppUtil.dateForZero(DateTime.now().second)}'
     };
+
+    // print('param = $param');
+
     requestPost(Api.signAdd, json: jsonEncode(param)).then((value) {
       // LogUtil.d('value = $value');
       Map map = jsonDecode(value);
@@ -74,7 +80,7 @@ class _SignInButton extends StatefulWidget {
     Key key,
     @required this.onPressed,
   }) : super(key: key);
-  final Function(String address, String latitude, String longitude) onPressed;
+  final Function(String address, String latitude, String longitude, String deviceCode) onPressed;
   @override
   State<StatefulWidget> createState() => _SignInButtonState();
 }
@@ -87,6 +93,7 @@ class _SignInButtonState extends State<_SignInButton> {
   String _latitude = '';
   String _longitude = '';
   String _address = '';
+  String deviceCode = '';
 
   ///标记是否可以签到
   bool _canSignIn = false;
@@ -94,6 +101,20 @@ class _SignInButtonState extends State<_SignInButton> {
   StreamSubscription<Map<String, Object>> _locationListener;
 
   AMapFlutterLocation _locationPlugin = new AMapFlutterLocation();
+
+  ///获取手机唯一IMEI
+  void getDeviceInfo() async{
+    DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();
+    if(Platform.isIOS){
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      print('IOS设备：${iosInfo.identifierForVendor}');
+      deviceCode = iosInfo.identifierForVendor;
+    }else if(Platform.isAndroid){
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print('Android设备 ${androidInfo.androidId}');
+      deviceCode = androidInfo.androidId;
+    }
+  }
 
   @override
   void initState() {
@@ -118,6 +139,8 @@ class _SignInButtonState extends State<_SignInButton> {
     });
 
     _startLocation();
+
+    getDeviceInfo();
   }
 
   @override
@@ -143,7 +166,7 @@ class _SignInButtonState extends State<_SignInButton> {
               onPressed: () {
                 _stopLocation();
                 if (widget.onPressed != null)
-                  widget.onPressed(_address, _latitude, _longitude);
+                  widget.onPressed(_address, _latitude, _longitude, deviceCode);
               },
               style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(0),

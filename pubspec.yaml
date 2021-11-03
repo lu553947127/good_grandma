@@ -89,6 +89,8 @@ dependencies:
   barcode_scan: ^3.0.1
   #webview
   webview_flutter: ^2.0.0
+  #获取设备IMEI
+  device_info: ^2.0.3
 
 dev_dependencies:
   flutter_test:
