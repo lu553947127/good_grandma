@@ -6,7 +6,7 @@ import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/pages/home/examine/examine_detail_title.dart';
+import 'package:good_grandma/pages/examine/examine_detail_title.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/widgets/introduce_input.dart';
 

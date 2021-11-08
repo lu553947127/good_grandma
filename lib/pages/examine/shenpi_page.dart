@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/pages/home/examine/examine_add.dart';
-import 'package:good_grandma/pages/home/examine/examine_detail.dart';
-import 'package:good_grandma/pages/home/examine/examine_select_process.dart';
-import 'package:good_grandma/pages/home/examine/examine_view.dart';
+import 'package:good_grandma/pages/examine/examine_add.dart';
+import 'package:good_grandma/pages/examine/examine_detail.dart';
+import 'package:good_grandma/pages/examine/examine_select_process.dart';
+import 'package:good_grandma/pages/examine/examine_view.dart';
 import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
 ///审批
 class ShenPiPage extends StatefulWidget {

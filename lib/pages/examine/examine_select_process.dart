@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/pages/home/examine/examine_select_tree.dart';
+import 'package:good_grandma/pages/examine/examine_select_tree.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 
 ///oa审批选择流程审核列表页面

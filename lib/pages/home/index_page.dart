@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/pages/examine/shenpi_page.dart';
 import 'package:good_grandma/pages/home/app_page.dart';
 import 'package:good_grandma/pages/home/home_page.dart';
 import 'package:good_grandma/pages/mine/mine_page.dart';
 import 'package:good_grandma/pages/message/msg_page.dart';
-import 'package:good_grandma/pages/home/examine/shenpi_page.dart';
 
 ///首页底部tabbar
 class IndexPage extends StatefulWidget {

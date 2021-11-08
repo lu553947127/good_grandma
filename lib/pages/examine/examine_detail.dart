@@ -4,9 +4,9 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/pages/home/examine/examine_detail_content.dart';
-import 'package:good_grandma/pages/home/examine/examine_detail_title.dart';
-import 'package:good_grandma/pages/home/examine/examine_reject.dart';
+import 'package:good_grandma/pages/examine/examine_detail_content.dart';
+import 'package:good_grandma/pages/examine/examine_detail_title.dart';
+import 'package:good_grandma/pages/examine/examine_reject.dart';
 import 'examine_adopt.dart';
 import 'examine_detail_list.dart';
 

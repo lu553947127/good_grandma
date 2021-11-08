@@ -155,7 +155,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
             id: '',
           )));
         }
-      ),
+      )
     );
   }
 

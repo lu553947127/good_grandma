@@ -8,7 +8,7 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
 
-import 'package:good_grandma/pages/home/examine/examine_detail_title.dart';
+import 'package:good_grandma/pages/examine/examine_detail_title.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';

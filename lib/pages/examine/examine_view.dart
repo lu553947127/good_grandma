@@ -82,7 +82,7 @@ class ExamineView extends StatelessWidget {
                         , color: processIsFinished == '审核中' ? type == '知会我的' ? Color(0XFF2F4058) : Color(0XFFE45C26) : Color(0XFF2F4058))),
                     SizedBox(height: 10),
                     Text(data['createTime'],style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
-                  ],
+                  ]
                 ),
                 Offstage(
                   offstage: type == '知会我的' ? true : false,
@@ -91,11 +91,10 @@ class ExamineView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: _setBgColor(processIsFinished), borderRadius: BorderRadius.circular(3),
                     ),
-                    child: Text(processIsFinished
-                        , style: TextStyle(fontSize: 10, color: _setTextColor(processIsFinished))),
+                    child: Text(processIsFinished, style: TextStyle(fontSize: 10, color: _setTextColor(processIsFinished)))
                   )
                 )
-              ],
+              ]
             ),
             SizedBox(height: 10),
             //分割线
@@ -104,7 +103,7 @@ class ExamineView extends StatelessWidget {
               height: 1,
               child: DecoratedBox(
                 decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
-              ),
+              )
             ),
             SizedBox(height: 5),
             Container(
@@ -114,8 +113,8 @@ class ExamineView extends StatelessWidget {
                   Text('流程分类: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                   SizedBox(width: 10),
                   Text('${data['categoryName']}',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                ],
-              ),
+                ]
+              )
             ),
             Container(
               margin: EdgeInsets.only(top: 2),
@@ -124,8 +123,8 @@ class ExamineView extends StatelessWidget {
                   Text('当前节点: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                   SizedBox(width: 10),
                   Text('${data['taskName']}',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                ],
-              ),
+                ]
+              )
             ),
             Container(
               margin: EdgeInsets.only(top: 2),
@@ -134,13 +133,13 @@ class ExamineView extends StatelessWidget {
                   Text('申请人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                   SizedBox(width: 10),
                   Text('${data['startUsername']}',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                ],
-              ),
+                ]
+              )
             )
-          ],
+          ]
         ),
         onTap: onTap,
-      ),
+      )
     );
   }
 }
