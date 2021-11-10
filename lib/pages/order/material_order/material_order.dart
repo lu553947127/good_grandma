@@ -72,102 +72,97 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
           slivers: [
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return InkWell(
-                      child: Container(
-                          margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
-                          padding: const EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(4),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
-                                  offset: Offset(2, 1),
-                                  blurRadius: 1.5,
+                  return Container(
+                      margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.03),
+                              offset: Offset(2, 1),
+                              blurRadius: 1.5,
+                            )
+                          ]
+                      ),
+                      child: ListTile(
+                          title: Column(
+                              mainAxisSize:MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(materialList[index]['deptName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                            SizedBox(height: 10),
+                                            Text(materialList[index]['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                                          ]
+                                      ),
+                                      Container(
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
+                                          ),
+                                          child: Text(_setTextStatus(materialList[index]['status']),
+                                              style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
+                                      )
+                                    ]
+                                ),
+                                SizedBox(height: 10),
+                                SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 1,
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
+                                    )
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                    margin: EdgeInsets.only(top: 2),
+                                    child: Row(
+                                        children: [
+                                          Text('经销商名称: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                          SizedBox(width: 10),
+                                          Text(materialList[index]['customerName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                        ]
+                                    )
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 2),
+                                    child: Row(
+                                        children: [
+                                          Text('物料地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                          SizedBox(width: 10),
+                                          Text(materialList[index]['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                        ]
+                                    )
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 2),
+                                    child: Row(
+                                        children: [
+                                          Text('是否随货: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                          SizedBox(width: 10),
+                                          Text(materialList[index]['withGoods'] == 1 ? '是' : '否', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                        ]
+                                    )
                                 )
                               ]
                           ),
-                          child: ListTile(
-                              title: Column(
-                                  mainAxisSize:MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(materialList[index]['deptName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
-                                                SizedBox(height: 10),
-                                                Text(materialList[index]['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
-                                              ]
-                                          ),
-                                          Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
-                                              ),
-                                              child: Text(_setTextStatus(materialList[index]['status']),
-                                                  style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
-                                          )
-                                        ]
-                                    ),
-                                    SizedBox(height: 10),
-                                    SizedBox(
-                                        width: MediaQuery.of(context).size.width,
-                                        height: 1,
-                                        child: DecoratedBox(
-                                          decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
-                                        )
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                        margin: EdgeInsets.only(top: 2),
-                                        child: Row(
-                                            children: [
-                                              Text('经销商名称: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                              SizedBox(width: 10),
-                                              Text(materialList[index]['customerName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                            ]
-                                        )
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.only(top: 2),
-                                        child: Row(
-                                            children: [
-                                              Text('物料地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                              SizedBox(width: 10),
-                                              Text(materialList[index]['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                            ]
-                                        )
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.only(top: 2),
-                                        child: Row(
-                                            children: [
-                                              Text('是否随货: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                              SizedBox(width: 10),
-                                              Text(materialList[index]['withGoods'] == 1 ? '是' : '否', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                            ]
-                                        )
-                                    )
-                                  ]
-                              ),
-                              onTap: () async {
-                                bool needRefresh = await Navigator.push(context,
-                                    MaterialPageRoute(builder:(context)=> MaterialOrderDetail(data: materialList[index])));
-                                if(needRefresh != null && needRefresh){
-                                  _controller.callRefresh();
-                                }
-                              }
-                          )
-                      ),
-                      onTap: (){
-
-                      }
+                          onTap: () async {
+                            bool needRefresh = await Navigator.push(context,
+                                MaterialPageRoute(builder:(context)=> MaterialOrderDetail(data: materialList[index])));
+                            if(needRefresh != null && needRefresh){
+                              _controller.callRefresh();
+                            }
+                          }
+                      )
                   );
                 }, childCount: materialList.length)),
-          ],
+          ]
         ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),

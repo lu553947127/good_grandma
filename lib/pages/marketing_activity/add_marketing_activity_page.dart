@@ -138,30 +138,82 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                         TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                     trailing: IconButton(
                         onPressed: () async {
-                          Map select = await showSelectList(context, Api.materialSelectList, '请选择物料', 'materialName');
-                          activityModel.addSampleModel(select['id'], select['materialName']);
+                          // Map select = await showSelectList(context, Api.materialSelectList, '请选择物料', 'materialName');
+                          activityModel.addSampleModel(SampleModel());
                         },
                         icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
-                  ),
-                ),
+                  )
+                )
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    Map sampleMap = activityModel.sampleList[index];
+                    SampleModel sampleModel = activityModel.sampleList[index];
                     return Column(
                       children: [
-                        SizedBox(height: 1),
+                        SizedBox(height: index == 0 ? 1 : 10),
                         ActivityAddTextCell(
                             title: '物料名称',
-                            hintText: '',
-                            value: sampleMap['name'],
-                            trailing: IconButton(
+                            hintText: '请选择物料名称',
+                            value: sampleModel.materialAreaName,
+                            trailing: Icon(Icons.chevron_right),
+                            onTap: () async {
+                              Map select = await showSelectList(context, Api.materialNoPageList, '请选择物料名称', 'name');
+                              sampleModel.materialAreaId = select['id'];
+                              sampleModel.materialAreaName = select['name'];
+                              sampleModel.newQuantity = select['stock'];
+                              activityModel.editSampleModelWith(index, sampleModel);
+                            }
+                        ),
+                        ActivityAddTextCell(
+                            title: sampleModel.newQuantity == 0 ? '试吃品(箱)/数量': '试吃品(箱)/数量(${sampleModel.newQuantity})',
+                            hintText: '请输入试吃品(箱)/数量',
+                            value: sampleModel.sample,
+                            trailing: null,
+                            onTap: () => sampleModel.newQuantity == 0 ? showToast('请先选择物料后再输入哦') :
+                            AppUtil.showInputDialog(
+                                context: context,
+                                editingController: _editingController,
+                                focusNode: _focusNode,
+                                text: sampleModel.sample,
+                                hintText: '请输入数量',
+                                keyboardType: TextInputType.number,
+                                callBack: (text) {
+                                  if (int.parse(text) > sampleModel.newQuantity){
+                                    showToast('输入数量超出限制了哦');
+                                    return;
+                                  }
+                                  sampleModel.sample = text;
+                                  activityModel.editSampleModelWith(index, sampleModel);
+                                })
+                        ),
+                        ActivityAddTextCell(
+                            title: '费用描述',
+                            hintText: '请输入费用描述',
+                            value: sampleModel.costDescribe,
+                            trailing: null,
+                            onTap: () => AppUtil.showInputDialog(
+                                context: context,
+                                editingController: _editingController,
+                                focusNode: _focusNode,
+                                text: sampleModel.costDescribe,
+                                hintText: '请输入费用描述',
+                                keyboardType: TextInputType.text,
+                                callBack: (text) {
+                                  sampleModel.costDescribe = text;
+                                  activityModel.editSampleModelWith(index, sampleModel);
+                                })
+
+                        ),
+                        Container(
+                            width: double.infinity,
+                            color: Colors.white,
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
                                 onPressed: (){
                                   activityModel.deleteSampleModelWith(index);
                                 },
                                 icon: Icon(Icons.delete, color: AppColors.FFDD0000)
-                            ),
-                            onTap: null
+                            )
                         )
                       ]
                     );
@@ -256,8 +308,8 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                               costModel.costDescribe = tex;
                               activityModel.editCostModelWith(index, costModel);
                             }
-                        ),
-                      ],
+                        )
+                      ]
                     );
                   }, childCount: activityModel.costList.length)),
               SliverToBoxAdapter(
@@ -267,7 +319,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                     child: DecoratedBox(
                       decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
                     )
-                ),
+                )
               ),
               SliverToBoxAdapter(
                   child: ActivityAddTextCell(
@@ -372,19 +424,14 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
       return;
     }
 
-    List<String> materIdList = [];
-    activityModel.sampleList.forEach((element) {
-      materIdList.add(element['id']);
-    });
-
     Map<String, dynamic> map = {
       'name': activityModel.name,
       'starttime': activityModel.startTime + ' 00:00:00',
       'endtime': activityModel.endTime + ' 00:00:00',
       'customerName': activityModel.customerName,
       'sketch': activityModel.sketch,
-      'materialId': listToString(materIdList),
-      'activityCostList': activityModel.mapList,
+      'activityCosts': activityModel.sampleMapList,
+      'activityCostList': activityModel.costMapList,
       'purchasemoney': activityModel.purchaseMoney
     };
 

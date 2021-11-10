@@ -62,14 +62,26 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
                 }, childCount: _list1.length),
               )
             ),
+            PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '试吃品'),
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return Container(
+                    margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5),
+                          MarketingActivityMsgCell(title: '物料名称', value: widget.model.activityCosts[index]['materialName']),
+                          MarketingActivityMsgCell(title: '试吃品(箱)/数量', value: widget.model.activityCosts[index]['sample'].toString() + '箱'),
+                          MarketingActivityMsgCell(title: '费用描述', value: widget.model.activityCosts[index]['costDescribe']),
+                          MarketingActivityMsgCell(title: '现金', value: widget.model.activityCosts[index]['costCash'].toString())
+                        ]
+                    )
+                );
+              }, childCount: widget.model.activityCosts.length),
+            ),
             //费用信息
             PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '费用信息'),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: EdgeInsets.only(left: 15.0, right: 15.0),
-                child: MarketingActivityMsgCell(title: '试吃品', value: widget.model.materialName),
-              ),
-            ),
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 return Container(

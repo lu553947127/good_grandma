@@ -206,6 +206,8 @@ class WeekPostAddNewModel extends ChangeNotifier {
     _summaries = [];
     _initCities();
     _plans = [];
+
+    addToSalesTrackingList(SalesTrackingModel());
   }
 
   setTime(String time) {

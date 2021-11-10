@@ -49,6 +49,7 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
     requestGet(Api.activityList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---fileCabinetList----$data');
+
       activityList.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
@@ -61,9 +62,6 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
 
   ///行销规划列表
   _activityPlanList(){
-    Map<String, dynamic> map = {
-      'status': status
-    };
     requestGet(Api.activityPlanList).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---activityPlanList----$data');

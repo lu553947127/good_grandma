@@ -226,6 +226,16 @@ class _CustomFormViewState extends State<CustomFormView> {
                 if (data['prop'] == prop){
                   addData[prop] = tex;
                 }
+
+                if (data['prop'] == 'xingchenganpai'){
+                  addData[prop] = tex;
+                  timeSelectProvider.addxingchenganpai(tex);
+                }
+
+                if (data['prop'] == 'yujidachengxiaoguo'){
+                  addData[prop] = tex;
+                  timeSelectProvider.addyujidachengxiaoguo(tex);
+                }
               }
 
               LogUtil.d('addData----$addData');
@@ -276,6 +286,10 @@ class _CustomFormViewState extends State<CustomFormView> {
           addData[map['prop']] = timeSelectProvider.mudidi;
         }else if ('chuchaishiyou' == map['prop']){
           addData[map['prop']] = timeSelectProvider.chuchaishiyou;
+        }else if ('xingchenganpai' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.xingchenganpai;
+        }else if ('yujidachengxiaoguo' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.yujidachengxiaoguo;
         }
       }
 

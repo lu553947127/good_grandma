@@ -35,6 +35,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   ///编辑物料订单数据回显
   _materialEdit(MarketingOrderModel marketingOrderModel){
     _isEdit = true;
+    title = '编辑物料订单';
     marketingOrderModel.setDeptId(widget.data['deptId']);
     marketingOrderModel.setDeptName(widget.data['deptName']);
 
@@ -66,7 +67,6 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   Widget build(BuildContext context) {
     final MarketingOrderModel marketingOrderModel = Provider.of<MarketingOrderModel>(context);
     if (_isEdit == false && widget.id != ''){
-      title = '编辑物料订单';
       _materialEdit(marketingOrderModel);
     }
     return Scaffold(

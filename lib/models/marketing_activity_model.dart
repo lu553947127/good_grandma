@@ -14,8 +14,18 @@ class MarketingActivityModel extends ChangeNotifier {
   String _purchaseMoney;
   String _purchaseRatio;
   String _sketch;
+
+  ///费用信息列表
   List<CostModel> _costList;
-  List<Map> sampleList;
+
+  ///费用信息列表
+  List<Map> costMapList;
+
+  ///试吃品列表
+  List<SampleModel> _sampleList;
+
+  ///试吃品列表
+  List<Map> sampleMapList;
 
   MarketingActivityModel({
     id: '',
@@ -30,8 +40,9 @@ class MarketingActivityModel extends ChangeNotifier {
     _purchaseRatio = '';
     _sketch = '';
     _costList = [];
-    mapList = [];
-    sampleList = [];
+    costMapList = [];
+    _sampleList = [];
+    sampleMapList = [];
 
     addCostModel(CostModel(
         costType: '1',
@@ -74,16 +85,19 @@ class MarketingActivityModel extends ChangeNotifier {
   String get sketch => _sketch;
 
   ///费用信息列表
-  List<Map> mapList;
-
-  ///费用信息列表
   List<CostModel> get costList => _costList;
+
+  ///试吃品列表
+  List<SampleModel> get sampleList => _sampleList;
 
   ///发布时间
   String createTime = '';
 
   ///费用信息列表
   List<dynamic> activityCostList = [];
+
+  ///试吃品列表
+  List<dynamic> activityCosts = [];
 
   ///试吃品
   String materialName = '';
@@ -100,6 +114,7 @@ class MarketingActivityModel extends ChangeNotifier {
     _sketch = json['sketch'] ?? '';
     createTime = json['createTime'] ?? '';
     activityCostList = json['activityCostList'] ?? '';
+    activityCosts = json['activityCosts'] ?? '';
     materialName = json['materialName'] ?? '';
   }
 
@@ -144,34 +159,39 @@ class MarketingActivityModel extends ChangeNotifier {
   }
 
   ///添加试吃品
-  addSampleModel(String id, String name){
-    if(sampleList == null)
-      sampleList = [];
+  addSampleModel(SampleModel model){
+    if(_sampleList == null)
+      _sampleList = [];
+    _sampleList.add(model);
     Map addData = new Map();
-    addData['id'] = id;
-    addData['name'] = name;
-    sampleList.add(addData);
+    addData['materialAreaId'] = model.materialAreaId;
+    addData['sample'] = model.sample;
+    addData['costDescribe'] = model.costDescribe;
+    sampleMapList.add(addData);
     notifyListeners();
   }
 
   ///编辑当前item
-  editSampleModelWith(int index, String id, String name){
-    if(sampleList == null)
-      sampleList = [];
-    if(index >= sampleList.length) return;
+  editSampleModelWith(int index, SampleModel model){
+    if(_sampleList == null)
+      _sampleList = [];
+    if(index >= _sampleList.length) return;
+    _sampleList.setAll(index, [model]);
     Map addData = new Map();
-    addData['id'] = id;
-    addData['name'] = name;
-    sampleList.setAll(index, [addData]);
+    addData['materialAreaId'] = model.materialAreaId;
+    addData['sample'] = model.sample;
+    addData['costDescribe'] = model.costDescribe;
+    sampleMapList.setAll(index, [addData]);
     notifyListeners();
   }
 
   ///删除单个item
   deleteSampleModelWith(int index){
-    if(sampleList == null)
-      sampleList = [];
-    if(index >= sampleList.length) return;
-    sampleList.removeAt(index);
+    if(_sampleList == null)
+      _sampleList = [];
+    if(index >= _sampleList.length) return;
+    _sampleList.removeAt(index);
+    sampleMapList.removeAt(index);
     notifyListeners();
   }
 
@@ -185,8 +205,7 @@ class MarketingActivityModel extends ChangeNotifier {
     addData['costCash'] = model.costCash;
     addData['sample'] = model.sample;
     addData['costDescribe'] = model.costDescribe;
-    mapList.add(addData);
-    print('mapList------------$mapList');
+    costMapList.add(addData);
     notifyListeners();
   }
 
@@ -201,7 +220,7 @@ class MarketingActivityModel extends ChangeNotifier {
     addData['costCash'] = model.costCash;
     addData['sample'] = model.sample;
     addData['costDescribe'] = model.costDescribe;
-    mapList.setAll(index, [addData]);
+    costMapList.setAll(index, [addData]);
     notifyListeners();
   }
 
@@ -211,7 +230,7 @@ class MarketingActivityModel extends ChangeNotifier {
       _costList = [];
     if(index >= _costList.length) return;
     _costList.removeAt(index);
-    mapList.removeAt(index);
+    costMapList.removeAt(index);
     notifyListeners();
   }
 }
@@ -238,6 +257,33 @@ class CostModel {
     this.costType = '',
     this.costTypeName = '',
     this.costCash = '',
+    this.sample = '',
+    this.costDescribe = ''
+  });
+}
+
+///试吃品模型数据
+class SampleModel {
+
+  ///物料id
+  String materialAreaId;
+
+  ///物料名称
+  String materialAreaName;
+
+  ///现有数量
+  int newQuantity;
+
+  ///数量
+  String sample;
+
+  ///费用描述
+  String costDescribe;
+
+  SampleModel({
+    this.materialAreaId = '',
+    this.materialAreaName = '',
+    this.newQuantity = 0,
     this.sample = '',
     this.costDescribe = ''
   });

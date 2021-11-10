@@ -82,6 +82,8 @@ class MonthPostAddNewModel extends ChangeNotifier {
     _summaries = [];
     _plans = [];
     _reports = [];
+
+    addToSalesTrackingList(SalesTrackingModel());
   }
   String position;
   String area;

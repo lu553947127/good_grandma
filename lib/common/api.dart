@@ -61,16 +61,16 @@ class Api {
   static const visitPlanAdd = "/api/hap-app/app/visitplan/submit";
 
   ///市场物料列表
-  static const materialList = "/api/hap-app1/app/materialArea/list";
+  static const materialList = "/api/hap-app/app/materialArea/list";
 
   ///市场物料不分页选择列表
-  static const materialNoPageList = "/api/hap-app1/app/materialArea/areaMaterial";
+  static const materialNoPageList = "/api/hap-app/app/materialArea/areaMaterial";
 
   ///市场物料出入库列表
-  static const materialDetailsList = "/api/hap-app1/app/materialArea/areaDetailsList";
+  static const materialDetailsList = "/api/hap-app/app/materialArea/areaDetailsList";
 
   ///市场物料出入库新增
-  static const materialAdd = "/api/hap-app1/app/materialArea/areaDetailsAdd";
+  static const materialAdd = "/api/hap-app/app/materialArea/areaDetailsAdd";
 
   ///市场物料详情
   static const materialDetail = "/api/hap-app/app/material/detail";
@@ -146,6 +146,9 @@ class Api {
 
   ///规章文件
   static const regularDocList = "/api/hap-app/app/manage/list";
+
+  ///规章文件已读
+  static const regularDocRead = "/api/hap-app/app/manage/read";
 
   ///消息
   static const getCategoryCount = "/api/hap-app/app/notice/getCategoryCount";
@@ -304,17 +307,29 @@ class Api {
   static const upgrade = "/api/hap-app/app/system/app";
 
   ///物料订单列表
-  static const materialOrderList = "/api/hap-app1/app/materialRequisition/list";
+  static const materialOrderList = "/api/hap-app/app/materialRequisition/list";
 
   ///物料订单选择列表
-  static const materialSelectList = "/api/hap-app1/app/material/material_no_paging";
+  static const materialSelectList = "/api/hap-app/app/material/material_no_paging";
 
   ///物料订单添加
-  static const materialOrderAdd = "/api/hap-app1/app/materialRequisition/save";
+  static const materialOrderAdd = "/api/hap-app/app/materialRequisition/save";
 
   ///物料订单入库
-  static const materialOrderWarehousing = "/api/hap-app1/app/materialRequisition/warehousing";
+  static const materialOrderWarehousing = "/api/hap-app/app/materialRequisition/warehousing";
 
   ///物料订单编辑
-  static const materialOrderEdit = "/api/hap-app1/app/materialRequisition/edit";
+  static const materialOrderEdit = "/api/hap-app/app/materialRequisition/edit";
+
+  ///冰柜订单列表
+  static const freezerOrderList = "/api/hap-app3/app/freezerOrder/getFreezerOrderList";
+
+  ///冰柜订单新增
+  static const freezerOrderSave = "/api/hap-app3/app/freezerOrder/save";
+
+  ///冰柜品牌字典
+  static const freezer_brand = "/api/hap-system/dict/dictionaryPid?code=freezer_brand";
+
+  ///冰柜品牌字典
+  static const freezer_model = "/api/hap-system/dict/dictionaryPid?code=freezer_brand&pid=";
 }

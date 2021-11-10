@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
@@ -14,9 +18,20 @@ class RegularDocDetailPage extends StatefulWidget {
 }
 
 class _Body extends State<RegularDocDetailPage> {
+
+  ///规章文件已读
+  _regularDocRead(manageId){
+    Map<String, dynamic> map = {'manageId': manageId};
+    requestGet(Api.regularDocRead, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---regularDocRead----$data');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final MsgListModel model = Provider.of<MsgListModel>(context);
+    _regularDocRead(model.id);
     return Scaffold(
       appBar: AppBar(title: Text('规章详情')),
       body: Scrollbar(
@@ -31,12 +46,12 @@ class _Body extends State<RegularDocDetailPage> {
                 Visibility(
                   visible: model.haveEnclosure,
                   child: DownloadEnclosureWidget(model: model),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                )
+              ]
+            )
+          )
+        )
+      )
     );
   }
 }
@@ -115,16 +130,16 @@ class _DownloadEnclosureWidgetState extends State<DownloadEnclosureWidget> {
                 AppUtil.launchURL(widget.model.enclosureViewURL);
               else
                 AppUtil.showToastCenter('预览地址为空');
-            },
-          ),
+            }
+          )
         ),
         Visibility(
           visible: _pathMsg.isNotEmpty,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(_pathMsg),
-            )),
-      ],
+            ))
+      ]
     );
   }
 }
