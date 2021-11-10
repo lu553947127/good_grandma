@@ -1,14 +1,16 @@
-import 'dart:ffi';
-
-import 'package:date_format/date_format.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:good_grandma/pages/work/market_material/market_material_add.dart';
-import 'package:good_grandma/widgets/post_progress_view.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:good_grandma/common/api.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/widgets/marketing_activity_msg_cell.dart';
 
-///物料详细
+///出入库日志
 class MarketMaterialDetail extends StatefulWidget {
-  var data;
-  MarketMaterialDetail({Key key, this.data}) : super(key: key);
+  final String materialAreaId;
+  MarketMaterialDetail({Key key, this.materialAreaId}) : super(key: key);
 
   @override
   _MarketMaterialDetailState createState() => _MarketMaterialDetailState();
@@ -16,125 +18,119 @@ class MarketMaterialDetail extends StatefulWidget {
 
 class _MarketMaterialDetailState extends State<MarketMaterialDetail> {
 
-  List<Map> list = [];
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
 
-  _setTextColor(status){
-    switch(status){
-      case '总量':
-        return Color(0xFFC08A3F);
-        break;
-      case '已使用':
-        return Color(0xFF959EB1);
-        break;
-      case '库存':
-        return Color(0xFF05A8C6);
-        break;
-      case '耗损':
-        return Color(0xFFE45C26);
-        break;
-    }
+  int _current = 1;
+  int _pageSize = 10;
+  List<Map> materialDetailsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.callRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    list.add({'name' : '总量', 'number': '${double.parse(widget.data['quantity'])}'
-      , 'current': '${double.parse(widget.data['quantity']) / double.parse(widget.data['quantity'])}'});
-    list.add({'name' : '已使用', 'number': '${double.parse(widget.data['inuse'])}'
-      , 'current': '${double.parse(widget.data['inuse']) / double.parse(widget.data['quantity'])}'});
-    list.add({'name' : '库存', 'number': '${double.parse(widget.data['stock'])}'
-      , 'current': '${double.parse(widget.data['stock']) / double.parse(widget.data['quantity'])}'});
-    list.add({'name' : '耗损', 'number': '${double.parse(widget.data['loss'])}'
-      , 'current': '${double.parse(widget.data['loss']) / double.parse(widget.data['quantity'])}'});
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text("物料详细",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
-        actions: [
-          TextButton(
-              child: Text("编辑", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialAdd(
-                  id: widget.data['id'],
-                )));
-              }
-          )
-        ],
+        title: Text("出入库日志",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700))
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15.0), bottomRight: Radius.circular(15.0)),
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(2, 1), //x,y轴
-                          color: Colors.black.withOpacity(0.1), //投影颜色
-                          blurRadius: 1 //投影距离
-                      )
-                    ]),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${widget.data['deptName']}', style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
-                    SizedBox(height: 5),
-                    Text(widget.data['materialName']
-                        ,style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7))),
-                    SizedBox(height: 5),
-                    Text(widget.data['address']
-                        ,style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7))),
-                  ]
-                )
-              ),
-              ListView.builder(
-                  shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
-                  physics:NeverScrollableScrollPhysics(),//禁止滚动
-                  itemCount: list.length,
-                  itemBuilder: (context, index){
-                    return Container(
-                      margin: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(list[index]['name'], style: TextStyle(fontSize: 14, color: Color(0XFF959EB1))),
-                              Text('${list[index]['number']}',style: TextStyle(fontSize: 12, color: _setTextColor(list[index]['name'])))
-                            ]
+      body: MyEasyRefreshSliverWidget(
+        controller: _controller,
+        scrollController: _scrollController,
+        dataCount: materialDetailsList.length,
+        onRefresh: _refresh,
+        onLoad: _onLoad,
+        slivers: [
+          SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                return Container(
+                  margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white, borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.03),
+                          offset: Offset(2, 1),
+                          blurRadius: 1.5,
+                        )
+                      ]
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 15.0, right: 15.0),
+                          decoration: BoxDecoration(
+                            color: materialDetailsList[index]['state'] == 1 ? Color(0xFFFCEEEB) : Color(0xFFE8EAED)
+                              , borderRadius: BorderRadius.circular(3),
                           ),
-                          SizedBox(height: 10),
-                          SizedBox(
-                            height: 5.0,
-                            width: double.infinity,
-                            // 圆角矩形剪裁（`ClipRRect`）组件，使用圆角矩形剪辑其子项的组件。
-                            child: ClipRRect(
-                              // 边界半径（`borderRadius`）属性，圆角的边界半径。
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              child: LinearProgressIndicator(
-                                value: double.parse(list[index]['current']),
-                                backgroundColor: _setTextColor(list[index]['name']).withOpacity(0.6),
-                                valueColor: AlwaysStoppedAnimation<Color>(_setTextColor(list[index]['name'])),
-                              ),
-                            ),
-                          )
-                        ]
-                      )
-                    );
-                  }
-              )
-            ]
-          )
-        )
+                          child: Text(materialDetailsList[index]['state'] == 1 ? '入库' : '出库', style: TextStyle(fontSize: 10,
+                                  color: materialDetailsList[index]['state'] == 1 ? Color(0xFFE4A382) : Color(0xFFB3B5B8)))
+                      ),
+                      MarketingActivityMsgCell(title: '物料数量', value: materialDetailsList[index]['quantity'].toString()),
+                      Visibility(
+                        visible: materialDetailsList[index]['state'] == 1 ? true : false,
+                        child: MarketingActivityMsgCell(title: '损耗', value: materialDetailsList[index]['loss'].toString())
+                      ),
+                      MarketingActivityMsgCell(title: '申请人', value: materialDetailsList[index]['userName']),
+                      MarketingActivityMsgCell(title: '备注', value: materialDetailsList[index]['remarks']),
+                    ]
+                  )
+                );
+              }, childCount: materialDetailsList.length)),
+        ]
       )
     );
+  }
+
+  Future<void> _refresh() async {
+    _current = 1;
+    await _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    await _downloadData();
+  }
+
+  ///市场物料出入库列表
+  Future<void> _downloadData() async {
+    try {
+      Map<String, dynamic> map = {
+        'materialAreaId': widget.materialAreaId,
+        'current': _current,
+        'size': _pageSize
+      };
+      final val = await requestGet(Api.materialDetailsList, param: map);
+      var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---materialDetailsList----$data');
+      if (_current == 1) materialDetailsList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        materialDetailsList.add(map);
+      });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
   }
 }

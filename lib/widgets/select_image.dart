@@ -7,6 +7,7 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
+import 'package:good_grandma/widgets/progerss_dialog.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -51,13 +52,23 @@ void showImageRange({@required BuildContext context, @required Function(Map map)
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) {
+              return NetLoadingDialog(
+                requestCallBack: null,
+                outsideDismiss: false,
+                loadingText: '图片上传中...',
+              );
+            });
         var byte = await pickedFile.readAsBytes();
         print('pickedFile---size----${byte.length}');
 
         getPutFile(Api.putFile, pickedFile.path).then((val) async{
           var data = json.decode(val.toString());
           print('请求结果---uploadFile----$data');
+          Navigator.pop(context);
           param = {'name': data['data']['originalName'], 'image': data['data']['link'], 'size': byte.length};
 
           ///回传图片数据
@@ -106,9 +117,20 @@ class _SelectImagesViewState extends State<SelectImagesView> {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) {
+              return NetLoadingDialog(
+                  requestCallBack: null,
+                  outsideDismiss: false,
+                  loadingText: '图片上传中...',
+              );
+            });
         getPutFile(widget.url, pickedFile.path).then((val) async{
           var data = json.decode(val.toString());
           print('请求结果---uploadFile----$data');
+          Navigator.pop(context);
           widget.imagesProvider.fileList(data['data']['link'], 'png', '');
           widget.imagesProvider.addImageData(data['data']['link'], data['data']['originalName']);
         });
@@ -187,6 +209,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
           final source = await _showBottomSheet();
           //image
           if (source == null) return;
+
           final bool result = await _getImage(source);
           if (!result) return;
           setState(() {});

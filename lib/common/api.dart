@@ -61,13 +61,16 @@ class Api {
   static const visitPlanAdd = "/api/hap-app/app/visitplan/submit";
 
   ///市场物料列表
-  static const materialList = "/api/hap-app/app/material/list";
+  static const materialList = "/api/hap-app1/app/materialArea/list";
 
-  ///市场物料不分页列表
-  static const materialListNoPage = "/api/hap-app/app/material/noPagingList";
+  ///市场物料不分页选择列表
+  static const materialNoPageList = "/api/hap-app1/app/materialArea/areaMaterial";
 
-  ///市场物料添加
-  static const materialAdd = "/api/hap-app/app/material/submit";
+  ///市场物料出入库列表
+  static const materialDetailsList = "/api/hap-app1/app/materialArea/areaDetailsList";
+
+  ///市场物料出入库新增
+  static const materialAdd = "/api/hap-app1/app/materialArea/areaDetailsAdd";
 
   ///市场物料详情
   static const materialDetail = "/api/hap-app/app/material/detail";
@@ -299,4 +302,19 @@ class Api {
 
   ///版本升级
   static const upgrade = "/api/hap-app/app/system/app";
+
+  ///物料订单列表
+  static const materialOrderList = "/api/hap-app1/app/materialRequisition/list";
+
+  ///物料订单选择列表
+  static const materialSelectList = "/api/hap-app1/app/material/material_no_paging";
+
+  ///物料订单添加
+  static const materialOrderAdd = "/api/hap-app1/app/materialRequisition/save";
+
+  ///物料订单入库
+  static const materialOrderWarehousing = "/api/hap-app1/app/materialRequisition/warehousing";
+
+  ///物料订单编辑
+  static const materialOrderEdit = "/api/hap-app1/app/materialRequisition/edit";
 }

@@ -9,6 +9,7 @@ import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
+import 'package:good_grandma/pages/order/freezer_order/freezer_order.dart';
 import 'package:good_grandma/pages/order/material_order/material_order.dart';
 import 'package:good_grandma/pages/order/order_page.dart';
 import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
@@ -155,6 +156,7 @@ class _AppPageState extends State<AppPage> {
           Navigator.push(context, MaterialPageRoute(builder:(context)=> TrackPage()));
           break;
         case '冰柜订单':
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerOrderPage()));
           break;
         case '物料订单':
           Navigator.push(context, MaterialPageRoute(builder:(context)=> MaterialOrderPage()));

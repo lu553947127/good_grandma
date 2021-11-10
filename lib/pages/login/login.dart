@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
           builder: (_) {
             return NetLoadingDialog(
               requestCallBack: null,
-              outsideDismiss: false,
+              outsideDismiss: false
             );
           });
 

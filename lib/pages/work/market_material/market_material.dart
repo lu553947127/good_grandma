@@ -3,13 +3,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
-import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_add.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_detail.dart';
+import 'package:good_grandma/pages/work/market_material/market_material_model.dart';
 import 'package:good_grandma/widgets/custom_progress_circle.dart';
+import 'package:provider/provider.dart';
 
 ///市场物料
 class MarketMaterial extends StatefulWidget {
@@ -37,13 +38,43 @@ class _MarketMaterialState extends State<MarketMaterial> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
-      ),
+        appBar: AppBar(
+            centerTitle: true,
+            brightness: Brightness.light,
+            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(color: Colors.black),
+            title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+            actions: [
+              new PopupMenuButton<String>(
+                  child: Center(
+                      child: Container(
+                          margin: EdgeInsets.only(right: 10.0),
+                          child: Text("出入库", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))
+                          )
+                      )
+                  ),
+                  itemBuilder: (context) {
+                    return <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                          value: '出库',
+                          child: Text('出库')
+                      ),
+                      PopupMenuItem<String>(
+                          value: '入库',
+                          child: Text('入库')
+                      )
+                    ];
+                  },
+                  onSelected: (name){
+                    MarketMaterialModel model = MarketMaterialModel();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) =>
+                            ChangeNotifierProvider<MarketMaterialModel>.value(
+                              value: model,
+                              child: MarketMaterialAdd(title: name))));
+                  })
+            ]
+        ),
       body: MyEasyRefreshSliverWidget(
         controller: _controller,
         scrollController: _scrollController,
@@ -70,16 +101,9 @@ class _MarketMaterialState extends State<MarketMaterial> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 200,
-                                      child: Text(materialList[index]['deptName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
-                                    ),
-                                    SizedBox(height: 3),
-                                    Text(materialList[index]['materialName'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
-                                  ]
+                              Container(
+                                width: 200,
+                                child: Text(materialList[index]['materialName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                               ),
                               Row(
                                   children: [
@@ -88,7 +112,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                         children: [
                                           CustomProgressCircle(
                                             size: 25,
-                                            ratio: double.parse(materialList[index]['inuse']) / double.parse(materialList[index]['quantity']),
+                                            ratio: double.parse(materialList[index]['used'].toString()) / double.parse(materialList[index]['quantity'].toString()),
                                             color: Color(0XFF959EB1),
                                             width: 30,
                                             height: 30,
@@ -105,14 +129,14 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                         children: [
                                           CustomProgressCircle(
                                             size: 25,
-                                            ratio: double.parse(materialList[index]['stock']) / double.parse(materialList[index]['quantity']),
+                                            ratio: double.parse(materialList[index]['stock'].toString()) / double.parse(materialList[index]['quantity'].toString()),
                                             color: Color(0XFF05A8C6),
                                             width: 30,
                                             height: 30,
                                           ),
                                           Container(
                                               width: 30,
-                                              child: Text('库存', style: TextStyle(fontSize: 12, color: Color(0XFF05A8C6)))
+                                              child: Text('可用', style: TextStyle(fontSize: 12, color: Color(0XFF05A8C6)))
                                           )
                                         ]
                                     ),
@@ -122,7 +146,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                         children: [
                                           CustomProgressCircle(
                                             size: 25,
-                                            ratio: double.parse(materialList[index]['loss']) / double.parse(materialList[index]['quantity']),
+                                            ratio: double.parse(materialList[index]['loss'].toString()) / double.parse(materialList[index]['quantity'].toString()),
                                             color: Color(0XFFE45C26),
                                             width: 30,
                                             height: 30,
@@ -140,21 +164,12 @@ class _MarketMaterialState extends State<MarketMaterial> {
                     ),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialDetail(
-                        data: materialList[index],
+                        materialAreaId: materialList[index]['id'],
                       )));
                     }
                 );
               }, childCount: materialList.length)),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: AppColors.FFC68D3E,
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialAdd(
-            id: '',
-          )));
-        }
+        ]
       )
     );
   }

@@ -138,7 +138,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                         TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                     trailing: IconButton(
                         onPressed: () async {
-                          Map select = await showSelectList(context, Api.materialListNoPage, '请选择物料', 'materialName');
+                          Map select = await showSelectList(context, Api.materialSelectList, '请选择物料', 'materialName');
                           activityModel.addSampleModel(select['id'], select['materialName']);
                         },
                         icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
@@ -191,8 +191,8 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                           ));
                         },
                         icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
-                  ),
-                ),
+                  )
+                )
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
