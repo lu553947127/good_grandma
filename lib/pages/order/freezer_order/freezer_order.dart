@@ -143,10 +143,14 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
                                   Container(
                                       margin: EdgeInsets.only(top: 2),
                                       child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text('收货地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                                             SizedBox(width: 10),
-                                            Text(freezerOrderList[index]['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                            Container(
+                                              width: 200,
+                                              child: Text(freezerOrderList[index]['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                            )
                                           ]
                                       )
                                   )

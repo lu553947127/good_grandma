@@ -133,10 +133,14 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                 Container(
                                     margin: EdgeInsets.only(top: 2),
                                     child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text('物料地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                                           SizedBox(width: 10),
-                                          Text(materialList[index]['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                          Container(
+                                              width: 200,
+                                              child: Text(materialList[index]['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                          )
                                         ]
                                     )
                                 ),

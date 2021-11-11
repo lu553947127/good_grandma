@@ -322,14 +322,20 @@ class Api {
   static const materialOrderEdit = "/api/hap-app/app/materialRequisition/edit";
 
   ///冰柜订单列表
-  static const freezerOrderList = "/api/hap-app3/app/freezerOrder/getFreezerOrderList";
+  static const freezerOrderList = "/api/hap-app/app/freezerOrder/getFreezerOrderList";
 
   ///冰柜订单新增
-  static const freezerOrderSave = "/api/hap-app3/app/freezerOrder/save";
+  static const freezerOrderSave = "/api/hap-app/app/freezerOrder/save";
 
   ///冰柜品牌字典
   static const freezer_brand = "/api/hap-system/dict/dictionaryPid?code=freezer_brand";
 
   ///冰柜品牌字典
   static const freezer_model = "/api/hap-system/dict/dictionaryPid?code=freezer_brand&pid=";
+
+  ///冰柜订单取消订单
+  static const freezerOrderCancel = "/api/hap-app/app/freezerOrder/cancel";
+
+  ///冰柜订单确认收货
+  static const freezerOrderOver = "/api/hap-app/app/freezerOrder/over";
 }

@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_add.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_model.dart';
 import 'package:good_grandma/widgets/marketing_activity_msg_cell.dart';
@@ -114,10 +120,14 @@ class FreezerOrderDetail extends StatelessWidget {
                             Container(
                                 margin: EdgeInsets.only(top: 2),
                                 child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text('收货地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                                       SizedBox(width: 10),
-                                      Text(data['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                      Container(
+                                        width: 200,
+                                        child: Text(data['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
+                                      )
                                     ]
                                 )
                             )
@@ -146,6 +156,32 @@ class FreezerOrderDetail extends StatelessWidget {
               SliverSafeArea(
                   sliver: SliverToBoxAdapter(
                       child: Visibility(
+                          visible: data['status'] == 2 ? true : false,
+                          child: SubmitBtn(
+                              title: '确认收货',
+                              onPressed: () {
+                                _freezerOrderOver(context);
+                              }
+                          )
+                      )
+                  )
+              ),
+              SliverSafeArea(
+                  sliver: SliverToBoxAdapter(
+                      child: Visibility(
+                          visible: data['status'] == 0 ? true : false,
+                          child: SubmitBtn(
+                              title: '取消订单',
+                              onPressed: () {
+                                _freezerOrderCancel(context);
+                              }
+                          )
+                      )
+                  )
+              ),
+              SliverSafeArea(
+                  sliver: SliverToBoxAdapter(
+                      child: Visibility(
                           visible: data['status'] == 0 ? true : false,
                           child: SubmitBtn(
                               title: '编辑',
@@ -170,5 +206,35 @@ class FreezerOrderDetail extends StatelessWidget {
             ]
         )
     );
+  }
+
+  ///确认收货
+  void _freezerOrderOver(BuildContext context) async {
+    Map<String, dynamic> map = {'id': data['id']};
+    requestGet(Api.freezerOrderOver, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---freezerOrderOver----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
+  ///取消订单
+  void _freezerOrderCancel(BuildContext context) async {
+    Map<String, dynamic> map = {'id': data['id']};
+    requestGet(Api.freezerOrderCancel, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---freezerOrderCancel----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
   }
 }
