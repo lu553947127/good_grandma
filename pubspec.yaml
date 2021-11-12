@@ -63,7 +63,7 @@ dependencies:
   # MD5加密
   crypto: ^3.0.1
   # 保存图片到相册
-  image_gallery_saver: ^1.6.9
+  image_gallery_saver: ^1.7.1
   # 打开系统设置
   app_settings: ^4.1.1
   # 查看图片视图view
@@ -84,6 +84,7 @@ dependencies:
   flutter_html: ^2.1.2
   # 打开链接
   url_launcher: ^6.0.10
+  #用于在文件系统上查找常用位置
   path_provider: ^2.0.4
   #二维码/条形码扫描插件
   barcode_scan: ^3.0.1

@@ -6,14 +6,14 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/examine/apply/travel_schedule_apply.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
-import 'package:good_grandma/provider/time_select_provider.dart';
+import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
-import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
@@ -109,28 +109,6 @@ class _CustomFormViewState extends State<CustomFormView> {
           }
           break;
         case 'select':
-          // return TextSelectView(
-          //   leftTitle: data['label'],
-          //   rightPlaceholder: '请选择${data['label']}',
-          //   sizeHeight: 1,
-          //   value: timeSelectProvider.value,
-          //   onPressed: () async{
-          //     String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
-          //     LogUtil.d('select----$select');
-          //
-          //     for (String prop in dataList) {
-          //       if (data['prop'] == prop){
-          //         addData[prop] = select;
-          //       }
-          //     }
-          //
-          //     timeSelectProvider.addValue2(select);
-          //
-          //     LogUtil.d('addData----$addData');
-          //     return select;
-          //   },
-          // );
-
           return PostAddInputCell(
             title: data['label'],
             value: timeSelectProvider.value,
@@ -242,10 +220,22 @@ class _CustomFormViewState extends State<CustomFormView> {
             },
           );
           break;
+        case 'dynamic':
+          if (data['prop'] == 'chuchairicheng'){
+            return TravelScheduleFrom(
+              data: data,
+              timeSelectProvider: timeSelectProvider,
+            );
+          }else {
+            return Container(
+              child: Text('无法显示此类型')
+            );
+          }
+          break;
         case 'upload':
           return ChangeNotifierProvider<ImagesProvider>.value(
               value: imagesProvider,
-              child:  CustomPhotoWidget(
+              child: CustomPhotoWidget(
                 title: data['label'],
                 length: 3,
                 sizeHeight: 10,
@@ -255,7 +245,7 @@ class _CustomFormViewState extends State<CustomFormView> {
           break;
         default:
           return Container(
-            child: Text('无法显示此类型'),
+            child: Text('无法显示此类型')
           );
           break;
       }
@@ -275,9 +265,12 @@ class _CustomFormViewState extends State<CustomFormView> {
           List<String> timeList = [];
           timeList.add(timeSelectProvider.startTime + ':00');
           timeList.add(timeSelectProvider.endTime + ':00');
-
           addData['yujichuchairiqi'] = timeList;
           addData['days'] = timeSelectProvider.dayNumber;
+        }else if ('dynamic' == map['type']){
+          if ('chuchairicheng' == map['prop']){
+            addData[map['prop']] = timeSelectProvider.travelScheduleMapList;
+          }
         }
 
         if ('chufadi' == map['prop']){

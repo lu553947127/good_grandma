@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:good_grandma/common/log.dart';
 
 class FormProvider with ChangeNotifier{
 
@@ -23,7 +22,6 @@ class FormProvider with ChangeNotifier{
     if(_form == null)
       _form = [];
     _form.add(formModel);
-
     Map addData = new Map();
     addData['danweimingcheng'] = formModel.danweimingcheng;
     addData['zhanghao'] = formModel.zhanghao;
@@ -31,10 +29,7 @@ class FormProvider with ChangeNotifier{
     addData['jine'] = formModel.jine;
     addData['zhifufangshi'] = formModel.zhifufangshi;
     addData['yujizhifushijian'] = formModel.yujizhifushijian;
-
     mapList.add(addData);
-
-    print('mapList------------$mapList');
     notifyListeners();
   }
 
@@ -44,7 +39,6 @@ class FormProvider with ChangeNotifier{
       _form = [];
     if(index >= _form.length) return;
     _form.setAll(index, [formModel]);
-
     Map addData = new Map();
     addData['danweimingcheng'] = formModel.danweimingcheng;
     addData['zhanghao'] = formModel.zhanghao;
@@ -52,17 +46,7 @@ class FormProvider with ChangeNotifier{
     addData['jine'] = formModel.jine;
     addData['zhifufangshi'] = formModel.zhifufangshi;
     addData['yujizhifushijian'] = formModel.yujizhifushijian;
-
     mapList.setAll(index, [addData]);
-
-    print('addData------------$addData');
-    print('mapList------------$mapList');
-    // for (Map map in mapList) {
-    //   heji += double.parse(map['jine']);
-    // }
-    //
-    // LogUtil.d('heji----$heji');
-
     notifyListeners();
   }
 
@@ -73,7 +57,6 @@ class FormProvider with ChangeNotifier{
     if(index >= _form.length) return;
     _form.removeAt(index);
     mapList.removeAt(index);
-    print('mapList------------$mapList');
     notifyListeners();
   }
 }
@@ -107,5 +90,4 @@ class FormModel {
     this.zhifufangshi = '',
     this.yujizhifushijian = ''
   });
-
 }

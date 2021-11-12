@@ -110,7 +110,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
                             }
                             Map select = await showSelectList(context, Api.freezer_model + model.brand, '请选择规格', 'dictValue');
                             model.model = select['dictKey'];
-                            model.modelName = select['dictValue'];
+                            model.modelName = select['dictValue'] == 'qtc' ? '其他' : select['dictValue'];
                             freezerOrderModel.editModelWith(index, model);
                           }
                       ),

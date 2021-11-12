@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/provider/form_rovider.dart';
+import 'package:good_grandma/pages/examine/model/form_rovider.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
@@ -11,7 +11,7 @@ import 'package:good_grandma/widgets/select_form.dart';
 
 ///支付对象信息子表单
 class DynamicFormView extends StatefulWidget {
-  var data;
+  final dynamic data;
   DynamicFormView({Key key, this.data}) : super(key: key);
 
   @override
@@ -181,12 +181,12 @@ class _DynamicFormViewState extends State<DynamicFormView> {
                               icon: Icon(Icons.delete, color: AppColors.FFDD0000)
                           )
                         )
-                      ],
-                    ),
+                      ]
+                    )
                   );
                 }
             )
-          ],
+          ]
         )
     );
   }

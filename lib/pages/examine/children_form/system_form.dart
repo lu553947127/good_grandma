@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/provider/form_sys_provider.dart';
+import 'package:good_grandma/pages/examine/model/form_sys_provider.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:provider/provider.dart';
 import 'package:good_grandma/widgets/select_form.dart';

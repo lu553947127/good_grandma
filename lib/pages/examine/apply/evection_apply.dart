@@ -8,7 +8,7 @@ import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/examine/children_form/evection_form.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
-import 'package:good_grandma/provider/form_evection_provider.dart';
+import 'package:good_grandma/pages/examine/model/form_evection_provider.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_text_default.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';

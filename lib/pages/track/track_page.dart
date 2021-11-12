@@ -139,14 +139,14 @@ class _TrackPageState extends State<TrackPage> {
                         Icon(
                           Icons.arrow_drop_down,
                           color: AppColors.FFE45C26,
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-          ),
-        ],
-      ),
+                        )
+                      ]
+                    )
+                  )
+                ))
+          )
+        ]
+      )
     );
   }
 

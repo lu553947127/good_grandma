@@ -8,8 +8,8 @@ import 'package:good_grandma/pages/examine/apply/cost_apply.dart';
 import 'package:good_grandma/pages/examine/apply/cost_off_apply.dart';
 import 'package:good_grandma/pages/examine/apply/evection_apply.dart';
 import 'package:good_grandma/pages/examine/apply/leave_apply.dart';
-import 'package:good_grandma/provider/time_select_provider.dart';
-import 'package:good_grandma/widgets/custom_form.dart';
+import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
+import 'package:good_grandma/pages/examine/apply/custom_form.dart';
 import 'package:provider/provider.dart';
 
 ///审批添加

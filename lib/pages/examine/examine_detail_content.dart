@@ -7,7 +7,7 @@ import 'package:good_grandma/widgets/picture_big_view.dart';
 ///审核详情自定义内容
 class ExamineDetailContent extends StatelessWidget {
   final List taskFormList;
-  var variables;
+  final dynamic variables;
   ExamineDetailContent({Key key, this.taskFormList, this.variables}) : super(key: key);
 
   ///附件路径集合
@@ -18,8 +18,8 @@ class ExamineDetailContent extends StatelessWidget {
   List<Map> zhifuList = [];
   ///出差明细表单集合
   List<Map> chuchaiList = [];
-  ///显示子表单组件集合
-  List<Widget> _viewsChild = [];
+  ///出差日程表单集合
+  List<Map> chuchairichengList = [];
 
   double numRowWidth = 100.0;//单个表宽
   double numRowHeight = 48.0;//表格高
@@ -49,6 +49,11 @@ class ExamineDetailContent extends StatelessWidget {
       returnList.add(_buildSingleRow(-1, goodsList));
       for (int i = 0; i < goodsList.length; i++) {
         returnList.add(_buildSingleRow(i, goodsList));
+      }
+    }else if (name == '出差日程'){
+      returnList.add(_buildSingleRow3(-1, goodsList));
+      for (int i = 0; i < goodsList.length; i++) {
+        returnList.add(_buildSingleRow3(i, goodsList));
       }
     }
     return returnList;
@@ -81,6 +86,17 @@ class ExamineDetailContent extends StatelessWidget {
           _buildSideBox(index == -1 ? '金额' : goodsList[index]['jine'].toString(), index == -1),
           _buildSideBox(index == -1 ? '支付方式' : goodsList[index]['zhifufangshi'].toString(), index == -1),
           _buildSideBox(index == -1 ? '预计支付时间' : goodsList[index]['yujizhifushijian'].toString(), index == -1),
+        ]);
+  }
+
+  TableRow _buildSingleRow3(int index, List<Map> goodsList) {
+    return TableRow(
+      //第一行样式 添加背景色
+        children: [
+          _buildSideBox(index == -1 ? '出发地' : goodsList[index]['chufadi'].toString(), index == -1),
+          _buildSideBox(index == -1 ? '目的地' : goodsList[index]['mudidi'].toString(), index == -1),
+          _buildSideBox(index == -1 ? '预计出差日期' : goodsList[index]['yujichuchairiqi'].toString(), index == -1),
+          _buildSideBox(index == -1 ? '出差天数' : goodsList[index]['days'].toString(), index == -1),
         ]);
   }
 
@@ -259,6 +275,30 @@ class ExamineDetailContent extends StatelessWidget {
       LogUtil.d('taskFormList----$taskFormList');
     }
 
+    if(variables['chuchairicheng'] != null){
+      chuchairichengList = (variables['chuchairicheng'] as List).cast();
+
+      LogUtil.d('chuchairichengList----$chuchairichengList');
+
+      for(int i=0; i < taskFormList.length; i++) {
+
+        if (taskFormList[i]['name'] == '出发地'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '目的地'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '预计出差日期'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '出差天数'){
+          taskFormList.removeAt(i);
+        }
+      }
+
+      LogUtil.d('taskFormList----$taskFormList');
+    }
+
     return SliverToBoxAdapter(
       child: Container(
         margin: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -291,7 +331,8 @@ class ExamineDetailContent extends StatelessWidget {
                                 taskFormList[index]['name'] == '附件' ||
                                 taskFormList[index]['name'] == '支付对象信息' ||
                                 taskFormList[index]['name'] == '系统附件' ||
-                                taskFormList[index]['name'] == '出差明细' ?
+                                taskFormList[index]['name'] == '出差明细' ||
+                                taskFormList[index]['name'] == '出差日程'?
                             true : false,
                             child: Text.rich(TextSpan(
                                 text: '${taskFormList[index]['name']}   ',
@@ -330,6 +371,19 @@ class ExamineDetailContent extends StatelessWidget {
                             )
                         ),
                         Offstage(
+                            offstage: taskFormList[index]['name'] == '出差日程' ? false : true,
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                  SizedBox(width: 5),
+                                  chuchairichengList.length != 0 ?
+                                  Expanded(child: _buildChart(chuchairichengList, taskFormList[index]['name'])) :
+                                  Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
+                                ]
+                            )
+                        ),
+                        Offstage(
                             offstage: (taskFormList[index]['name'] == '表单附件' || taskFormList[index]['name'] == '附件') ? false : true,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,12 +399,12 @@ class ExamineDetailContent extends StatelessWidget {
                       ]
                     )
                   );
-                },
+                }
               )
             ]
           )
         )
-      ),
+      )
     );
   }
 }

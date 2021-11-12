@@ -10,7 +10,6 @@ import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   await Store.init();
-  // runApp(MyApp());
   initializeDateFormatting().then((_) => runApp(MyApp()));
   setupStatusBar();
 }
@@ -34,6 +33,7 @@ class MyApp extends StatelessWidget {
             centerTitle: true,
             shadowColor: Colors.black26,
             iconTheme: IconThemeData(color: Colors.black87),
+            titleTextStyle: TextStyle(color: Colors.black, fontSize: 18.0),
             actionsIconTheme: IconThemeData(color: Colors.black87),
             textTheme: TextTheme(
                 headline6: TextStyle(color: Colors.black87, fontSize: 18)),
