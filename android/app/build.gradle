@@ -69,9 +69,9 @@ flutter {
 
 dependencies {
     //定位功能
-    implementation 'com.amap.api:location:latest.integration'
+    implementation 'com.amap.api:location:5.5.1'
     //3D地图
-    implementation 'com.amap.api:3dmap:latest.integration'
+    implementation 'com.amap.api:3dmap:8.0.1'
     // 引入support支持库的multidex库
     implementation 'com.android.support:multidex:1.0.3'
     //或androidx支持库的multidex库

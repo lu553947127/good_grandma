@@ -199,10 +199,14 @@ class _TrackPageState extends State<TrackPage> {
                 double.parse(re['longitude']) ?? 0));
         _dataArray.add(model);
       });
-      if(_dataArray.isNotEmpty)
+      if(_dataArray.isNotEmpty){
+        _markers.clear();
         _addLine();
-      else
+      }else {
+        _polyLines.clear();
+        _markers.clear();
         AppUtil.showToastCenter('没有轨迹');
+      }
       if (mounted) setState(() {});
     } catch (error) {}
   }

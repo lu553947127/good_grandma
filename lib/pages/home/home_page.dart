@@ -244,15 +244,16 @@ class _Body extends State<HomePage> {
     }
     print('qrcode==========$qrcode');
 
-    Map<String, dynamic> map = {'code': qrcode};
-
-    ///扫码上传
-    requestGet(Api.analysisCode, param: map).then((val) {
-      var data = json.decode(val.toString());
-      print('请求结果---analysisCode----$data');
-      Fluttertoast.showToast(
-          msg: '扫描成功: $qrcode', gravity: ToastGravity.CENTER);
-    });
+    if (qrcode.isNotEmpty){
+      Map<String, dynamic> map = {'code': qrcode};
+      ///扫码上传
+      requestGet(Api.analysisCode, param: map).then((val) {
+        var data = json.decode(val.toString());
+        print('请求结果---analysisCode----$data');
+        Fluttertoast.showToast(
+            msg: '扫描成功: $qrcode', gravity: ToastGravity.CENTER);
+      });
+    }
   }
 
   ///获取版本号，判断是否升级
