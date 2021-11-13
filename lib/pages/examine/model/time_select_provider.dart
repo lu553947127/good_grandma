@@ -15,6 +15,8 @@ class TimeSelectProvider with ChangeNotifier{
   String value = '';
   List<String> valueList = [];
 
+  String shenqingren = '';
+
   String chufadi = '';
 
   String mudidi = '';
@@ -30,6 +32,11 @@ class TimeSelectProvider with ChangeNotifier{
     startTime = start_time;
     endTime = end_time;
     dayNumber = day_number;
+    notifyListeners();
+  }
+
+  addshenqingren(str){
+    shenqingren = str;
     notifyListeners();
   }
 

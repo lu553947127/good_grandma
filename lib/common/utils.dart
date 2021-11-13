@@ -363,6 +363,7 @@ class AppUtil {
     @required String text,
     @required String hintText,
     TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter> inputFormatters,//只能输入数字
     @required Function(String text) callBack,
   }) async {
     final txBottom = 40.0;
@@ -403,6 +404,7 @@ class AppUtil {
                                   focusNode: focusNode,
                                   maxLines: 1,
                                   keyboardType: keyboardType,
+                                  inputFormatters: inputFormatters,
                                   selectionHeightStyle: BoxHeightStyle.max,
                                   textInputAction: TextInputAction.send,
                                   onSubmitted: (text) => Navigator.pop(ctx2, text),

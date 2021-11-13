@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -42,8 +43,8 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
           brandName: element['brandName'],
           model: element['model'],
           modelName: element['modelName'],
-          longCount: element['longCount'].toString(),
-          returnCount: element['returnCount'].toString()
+          longCount: element['longCount'],
+          returnCount: element['returnCount']
       ));
     });
 
@@ -101,7 +102,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
                       ActivityAddTextCell(
                           title: '规格',
                           hintText: '请选择规格',
-                          value: model.model,
+                          value: model.modelName,
                           trailing: Icon(Icons.chevron_right),
                           onTap: () async {
                             if (model.brand == ''){
@@ -110,41 +111,47 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
                             }
                             Map select = await showSelectList(context, Api.freezer_model + model.brand, '请选择规格', 'dictValue');
                             model.model = select['dictKey'];
-                            model.modelName = select['dictValue'] == 'qtc' ? '其他' : select['dictValue'];
+                            model.modelName = select['dictValue'];
                             freezerOrderModel.editModelWith(index, model);
                           }
                       ),
                       ActivityAddTextCell(
                           title: '长押数量',
                           hintText: '请输入长押数量',
-                          value: model.longCount,
+                          value: model.longCount.toString(),
                           trailing: null,
                           onTap: () => AppUtil.showInputDialog(
                               context: context,
                               editingController: _editingController,
                               focusNode: _focusNode,
-                              text: model.longCount,
+                              text: model.longCount.toString(),
                               hintText: '请输入长押数量',
                               keyboardType: TextInputType.number,
+                              inputFormatters : [
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
                               callBack: (text) {
-                                model.longCount = text;
+                                model.longCount = int.parse(text);
                                 freezerOrderModel.editModelWith(index, model);
                               })
                       ),
                       ActivityAddTextCell(
                           title: '反押数量',
                           hintText: '请输入反押数量',
-                          value: model.returnCount,
+                          value: model.returnCount.toString(),
                           trailing: null,
                           onTap: () => AppUtil.showInputDialog(
                               context: context,
                               editingController: _editingController,
                               focusNode: _focusNode,
-                              text: model.returnCount,
+                              text: model.returnCount.toString(),
                               hintText: '请输入反押数量',
                               keyboardType: TextInputType.number,
+                              inputFormatters : [
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
                               callBack: (text) {
-                                model.returnCount = text;
+                                model.returnCount = int.parse(text);
                                 freezerOrderModel.editModelWith(index, model);
                               })
                       ),

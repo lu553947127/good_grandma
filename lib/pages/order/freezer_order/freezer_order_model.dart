@@ -133,17 +133,17 @@ class FreezerModel {
   String modelName;
 
   ///长押数量
-  String longCount;
+  int longCount;
 
   ///反押数量
-  String returnCount;
+  int returnCount;
 
   FreezerModel({
     this.brand = '',
     this.brandName = '',
     this.model = '',
     this.modelName = '',
-    this.longCount = '',
-    this.returnCount = ''
+    this.longCount = 0,
+    this.returnCount = 0
   });
 }

@@ -129,6 +129,8 @@ class _LoginPageState extends State<LoginPage> {
           Store.saveNickName(data['nick_name']);
           Store.saveUserAvatar(data['avatar']);
           Store.saveUserType(data['user_type']);
+          Store.saveAppRoleId(data['appRole']['id']);
+          Store.saveIsExamine(data['appRole']['jurisdiction']);
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder:(context)=> IndexPage()), (route) => false);
           // Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=> IndexPage()));
           _getDeptName(data['dept_id']);

@@ -70,6 +70,8 @@ class _CustomFormViewState extends State<CustomFormView> {
 
             addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
 
+            timeSelectProvider.addshenqingren('${Store.readPostName()}${Store.readNickName()}');
+
             return TextDefaultView(
                 leftTitle: data['label'],
                 rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
@@ -283,6 +285,8 @@ class _CustomFormViewState extends State<CustomFormView> {
           addData[map['prop']] = timeSelectProvider.xingchenganpai;
         }else if ('yujidachengxiaoguo' == map['prop']){
           addData[map['prop']] = timeSelectProvider.yujidachengxiaoguo;
+        }else if ('shenqingren' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.shenqingren;
         }
       }
 

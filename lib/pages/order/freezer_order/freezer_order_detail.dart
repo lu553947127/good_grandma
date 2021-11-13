@@ -37,6 +37,9 @@ class FreezerOrderDetail extends StatelessWidget {
         case 3:
           return '收货完成';
           break;
+        case 4:
+          return '取消订单';
+          break;
       }
     }
 
@@ -158,6 +161,7 @@ class FreezerOrderDetail extends StatelessWidget {
                       child: Visibility(
                           visible: data['status'] == 2 ? true : false,
                           child: SubmitBtn(
+                              vertical: 5.0,
                               title: '确认收货',
                               onPressed: () {
                                 _freezerOrderOver(context);
@@ -171,6 +175,7 @@ class FreezerOrderDetail extends StatelessWidget {
                       child: Visibility(
                           visible: data['status'] == 0 ? true : false,
                           child: SubmitBtn(
+                              vertical: 5.0,
                               title: '取消订单',
                               onPressed: () {
                                 _freezerOrderCancel(context);
@@ -184,6 +189,7 @@ class FreezerOrderDetail extends StatelessWidget {
                       child: Visibility(
                           visible: data['status'] == 0 ? true : false,
                           child: SubmitBtn(
+                              vertical: 5.0,
                               title: '编辑',
                               onPressed: () async {
                                 FreezerOrderModel model = FreezerOrderModel();

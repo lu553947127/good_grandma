@@ -1,9 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
@@ -27,7 +29,6 @@ import 'package:good_grandma/pages/work/market_material/market_material.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
-import 'package:good_grandma/pages/work/work_text.dart';
 
 ///应用
 class AppPage extends StatefulWidget {
@@ -39,6 +40,17 @@ class AppPage extends StatefulWidget {
 }
 
 class _AppPageState extends State<AppPage> {
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
+
+  ///应用菜单列表
+  List<Map> appMenuTreeList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.callRefresh();
+  }
 
   ///判断是否注册eqb
   isEqbContract(){
@@ -90,131 +102,178 @@ class _AppPageState extends State<AppPage> {
   Widget build(BuildContext context) {
 
     ///功能模块点击
-    void _btnOnPressed(BuildContext context, List<Map> list, int index) {
-      switch(list[index]['name']){
-        case '拜访计划':
+    void _btnOnPressed(BuildContext context, Map menu) {
+      switch(menu['code']){
+        case 'visitPlan'://拜访计划
           Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitPlan()));
           break;
-        case '客户拜访':
+        case 'customerVisit'://客户拜访
           Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitAdd()));
           break;
-        case '工作报告':
+        case 'workReport'://工作报告
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
           break;
-        case '市场物料':
+        case 'marketMaterial'://市场物料
           Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterial()));
           break;
-        case '市场活动':
+        case 'marketingActivities'://市场活动
           Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketingActivityPage()));
           break;
-        case '报修':
+        case 'reportForRepair'://报修
           Navigator.push(context, MaterialPageRoute(builder:(context)=> GuaranteePage()));
           break;
-        case '签到':
+        case 'signIn'://签到
           Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
           break;
-        case '规章文件':
+        case 'regulatoryDocuments'://规章文件
           Navigator.push(context, MaterialPageRoute(builder:(context)=> RegularDocPage()));
           break;
-        case '一级订单':
+        case 'firstOrder'://一级订单
           Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage()));
           break;
-        case '二级订单':
+        case 'secondaryOrder'://二级订单
           Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 2)));
           break;
-        case '审批申请':
-          if(widget.shenpiOnTap != null) widget.shenpiOnTap();
-          break;
-        case '商品销量统计':
-          Navigator.push(context, MaterialPageRoute(builder: (context) => SalesStatisticsPage()));
-          break;
-        case '企业文件柜':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> FilesPage()));
-          break;
-        case '拜访统计':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatistics()));
-          break;
-        case '冰柜销量':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
-          break;
-        case '冰柜统计':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
-          break;
-        case '客户库存':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> StockPage()));
-          break;
-        case '电子合同':
-          isEqbContract();
-          break;
-        case '业绩统计':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
-          break;
-        case '报告统计':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> ReportStatisticsPage()));
-          break;
-        case '行动轨迹':
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> TrackPage()));
-          break;
-        case '冰柜订单':
+        case 'freezerOrder'://冰柜订单
           Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerOrderPage()));
           break;
-        case '物料订单':
+        case 'materialOrder'://物料订单
           Navigator.push(context, MaterialPageRoute(builder:(context)=> MaterialOrderPage()));
+          break;
+        case 'approvalApplication'://审批申请
+          if(widget.shenpiOnTap != null) widget.shenpiOnTap();
+          break;
+        case 'commoditySalesStatistics'://商品销量统计
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SalesStatisticsPage()));
+          break;
+        case 'performanceStatistics'://业绩统计
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
+          break;
+        case 'visitStatistics'://拜访统计
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatistics()));
+          break;
+        case 'actionTrack'://行动轨迹
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> TrackPage()));
+          break;
+        case 'reportStatistics'://报告统计
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> ReportStatisticsPage()));
+          break;
+        case 'freezerSales'://冰柜销量
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
+          break;
+        case 'customerInventory'://客户库存
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> StockPage()));
+          break;
+        case 'freezerStatistics'://冰柜统计
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
+          break;
+        case 'electronicContract'://电子合同
+          isEqbContract();
+          break;
+        case 'enterpriseFilingCabinetFile'://企业文件柜
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> FilesPage()));
           break;
       }
     }
 
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
           brightness: Brightness.light,
           title: Text('应用'),
         ),
-        body: Container(
-            color: Colors.white,
-            child: ListView.builder(
-                itemCount: WorkText.listWork.length,
-                itemBuilder: (context, index){
-                  List<Map> list = (WorkText.listWork[index]['list'] as List).cast();
-                  if(Store.readUserType() == 'ejkh' && WorkText.listWork[index]['title'] == '订货订单')
-                    list.removeWhere((map) => map['name'] == '一级订单');
-                  return Container(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(WorkText.listWork[index]['title'], style: TextStyle(fontSize: 18, color: Color(0XFF333333))),
-                            GridView.builder(
-                                shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
-                                physics:NeverScrollableScrollPhysics(),//禁用滑动事件
-                                padding: EdgeInsets.zero,
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
-                                itemCount: list.length,
-                                itemBuilder: (context, index) {
-                                  return TextButton(
-                                      onPressed: () {
-                                        _btnOnPressed(context, list, index);
-                                      },
-                                      style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Image.asset(list[index]['image'], width: 55.0, height: 55.0),
-                                          Text(list[index]['name'], style: TextStyle(fontSize: 14, color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
-                                        ],
-                                      ));
-                                }
-                            )
-                          ]
-                      ),
-                      decoration: BoxDecoration(//分割线
-                        border: Border(bottom: BorderSide(width: 12, color: Color(0xFFF8F9FC))),
-                      )
-                  );
-                }
-            )
+        body: MyEasyRefreshSliverWidget(
+            controller: _controller,
+            scrollController: _scrollController,
+            dataCount: appMenuTreeList.length,
+            onRefresh: _refresh,
+            onLoad: null,
+            slivers: [
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    List<Map> list = (appMenuTreeList[index]['children'] as List).cast();
+                    return Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(appMenuTreeList[index]['name'], style: TextStyle(fontSize: 18, color: Color(0XFF333333))),
+                              GridView.builder(
+                                  shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
+                                  physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                                  padding: EdgeInsets.zero,
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
+                                  itemCount: list.length,
+                                  itemBuilder: (context, index) {
+                                    return TextButton(
+                                        onPressed: () {
+                                          _btnOnPressed(context, list[index]);
+                                        },
+                                        style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            MyCacheImageView(
+                                              imageURL: list[index]['source'],
+                                              width: 55.0,
+                                              height: 55.0,
+                                              errorWidgetChild: Image.asset(
+                                                  'assets/images/icon_empty_user.png',
+                                                  width: 55.0,
+                                                  height: 55.0),
+                                            ),
+                                            Text(list[index]['name'], style: TextStyle(fontSize: 14,
+                                                color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
+                                          ]
+                                        ));
+                                  }
+                              )
+                            ]
+                        ),
+                        decoration: BoxDecoration(//分割线
+                          border: Border(bottom: BorderSide(width: 12, color: Color(0xFFF8F9FC))),
+                        )
+                    );
+                  }, childCount: appMenuTreeList.length)
+              )
+            ]
         )
     );
+  }
+
+  Future<void> _refresh() async {
+   await _appMenuTree();
+  }
+
+  ///应用菜单列表
+  Future<void> _appMenuTree() async {
+    try {
+      Map<String, dynamic> map = {'roleIds': Store.readAppRoleId()};
+      final val = await requestGet(Api.appMenuTree, param: map);
+      var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---appMenuTree----$data');
+      final List<dynamic> list = data['data'];
+      appMenuTreeList.clear();
+      list.forEach((map) {
+        appMenuTreeList.add(map);
+      });
+      bool noMore = false;
+      if (appMenuTreeList == null || appMenuTreeList.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
   }
 }

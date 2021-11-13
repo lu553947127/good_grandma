@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,14 +7,31 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/store.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/home_report_model.dart';
+import 'package:good_grandma/pages/contract/contract_page.dart';
+import 'package:good_grandma/pages/files/files_page.dart';
+import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
 import 'package:good_grandma/pages/marketing_activity/marketing_activity_page.dart';
+import 'package:good_grandma/pages/order/freezer_order/freezer_order.dart';
+import 'package:good_grandma/pages/order/material_order/material_order.dart';
+import 'package:good_grandma/pages/order/order_page.dart';
 import 'package:good_grandma/pages/performance/performance_statistics_page.dart';
+import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
+import 'package:good_grandma/pages/repor_statistics/report_statistics_page.dart';
+import 'package:good_grandma/pages/sales_statistics/sales_statistics_page.dart';
 import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
+import 'package:good_grandma/pages/stock/stock_page.dart';
+import 'package:good_grandma/pages/track/track_page.dart';
+import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
+import 'package:good_grandma/pages/work/market_material/market_material.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
+import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
 import 'package:good_grandma/widgets/home_group_title.dart';
 import 'package:good_grandma/widgets/home_msg_title.dart';
@@ -42,6 +58,18 @@ class _Body extends State<HomePage> {
   List<HomeReportModel> _reportList = [];
   int _current = 1;
   int _pageSize = 7;
+
+  ///首页应用菜单列表
+  List<Map> homepageList = [];
+
+  ///首页权限列表
+  List<dynamic> jurisdictionList = [];
+
+  ///是否有拜访计划
+  bool isVisitPlan = false;
+
+  ///是否有工作报告
+  bool isWorkReport = false;
 
   @override
   void initState() {
@@ -72,40 +100,55 @@ class _Body extends State<HomePage> {
           onLoad: _onLoad,
           slivers: [
             //顶部按钮
-            HomeTableHeader(onTap: (name) => _titleBtnOnTap(context, name)),
+            HomeTableHeader(
+                onTap: (menu) => _titleBtnOnTap(context, menu),
+                homepageList: homepageList
+            ),
             //消息通知
             SliverToBoxAdapter(
                 child: Visibility(
                     visible: _msgCount != '0',
-                    child: HomeGroupTitle(title: '消息通知', showMore: false))),
+                    child: HomeGroupTitle(title: '消息通知', showMore: false)
+                )
+            ),
             //消息cell
             SliverToBoxAdapter(
                 child: HomeMsgTitle(
-              msgTime: _msgTime,
-              msgCount: _msgCount,
-              onTap: () {
-                if (widget.switchTabbarIndex != null)
-                  widget.switchTabbarIndex(1);
-              },
-            )),
+                    msgTime: _msgTime,
+                    msgCount: _msgCount,
+                    onTap: () {
+                      if (widget.switchTabbarIndex != null)
+                        widget.switchTabbarIndex(1);
+                    }
+                )
+            ),
             //拜访计划
             SliverToBoxAdapter(
-                child: HomeGroupTitle(
-                    title: '拜访计划',
-                    showMoreBtnOnTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => VisitPlan()));
-                    })),
+                child: Visibility(
+                  visible: isVisitPlan,
+                  child: HomeGroupTitle(
+                      title: '拜访计划',
+                      showMoreBtnOnTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => VisitPlan()));
+                      })
+                )),
             //日历和计划
-            SliverToBoxAdapter(child: HomePlanCell()),
+            SliverToBoxAdapter(child: Visibility(
+                visible: isVisitPlan,
+                child: HomePlanCell()
+            )),
             //工作报告
             SliverToBoxAdapter(
-                child: HomeGroupTitle(
-                    title: '工作报告',
-                    showMoreBtnOnTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WorkReport())))),
+                child: Visibility(
+                  visible: isWorkReport,
+                  child: HomeGroupTitle(
+                      title: '工作报告',
+                      showMoreBtnOnTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WorkReport())))
+                )),
             //报告列表
             _reportList.length > 0
                 ? SliverList(
@@ -126,44 +169,85 @@ class _Body extends State<HomePage> {
   }
 
   ///按钮点击事件
-  void _titleBtnOnTap(BuildContext context, String name) {
-    switch (name) {
-      case '工作报告':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => WorkReport()));
+  void _titleBtnOnTap(BuildContext context, Map menu) {
+    switch(menu['code']){
+      case 'visitPlan'://拜访计划
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitPlan()));
         break;
-      case '市场活动':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => MarketingActivityPage()));
+      case 'customerVisit'://客户拜访
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitAdd()));
         break;
-      case '审批申请':
+      case 'workReport'://工作报告
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));
+        break;
+      case 'marketMaterial'://市场物料
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterial()));
+        break;
+      case 'marketingActivities'://市场活动
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketingActivityPage()));
+        break;
+      case 'reportForRepair'://报修
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> GuaranteePage()));
+        break;
+      case 'signIn'://签到
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> SignInPage()));
+        break;
+      case 'regulatoryDocuments'://规章文件
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> RegularDocPage()));
+        break;
+      case 'firstOrder'://一级订单
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage()));
+        break;
+      case 'secondaryOrder'://二级订单
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 2)));
+        break;
+      case 'freezerOrder'://冰柜订单
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerOrderPage()));
+        break;
+      case 'materialOrder'://物料订单
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> MaterialOrderPage()));
+        break;
+      case 'approvalApplication'://审批申请
         if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(3);
         break;
-      case '签到':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignInPage()));
+      case 'commoditySalesStatistics'://商品销量统计
+        Navigator.push(context, MaterialPageRoute(builder: (context) => SalesStatisticsPage()));
         break;
-      case '业绩统计':
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PerformanceStatisticsPage()));
+      case 'performanceStatistics'://业绩统计
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> PerformanceStatisticsPage()));
         break;
-      case '冰柜销量':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => FreezerSales()));
+      case 'visitStatistics'://拜访统计
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatistics()));
         break;
-      case '冰柜统计':
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => FreezerStatistics()));
+      case 'actionTrack'://行动轨迹
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> TrackPage()));
         break;
-      case '更多':
+      case 'reportStatistics'://报告统计
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ReportStatisticsPage()));
+        break;
+      case 'freezerSales'://冰柜销量
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSales()));
+        break;
+      case 'customerInventory'://客户库存
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> StockPage()));
+        break;
+      case 'freezerStatistics'://冰柜统计
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerStatistics()));
+        break;
+      case 'electronicContract'://电子合同
+        isEqbContract();
+        break;
+      case 'enterpriseFilingCabinetFile'://企业文件柜
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> FilesPage()));
+        break;
+      case 'more'://更多
         if (widget.switchTabbarIndex != null) widget.switchTabbarIndex(2);
         break;
     }
   }
 
   Future<void> _refresh() async {
+    _homepageList();
     _getMsgCountRequest();
     _current = 1;
     _downloadData();
@@ -174,6 +258,7 @@ class _Body extends State<HomePage> {
     _downloadData();
   }
 
+  ///工作计划列表
   Future<void> _downloadData() async {
     try {
       Map<String, dynamic> map = {
@@ -206,6 +291,30 @@ class _Body extends State<HomePage> {
     }
   }
 
+  ///首页菜单列表
+  Future<void> _homepageList() async {
+    Map<String, dynamic> map = {'roleIds': Store.readAppRoleId()};
+    requestGet(Api.homepageList, param: map).then((value) {
+      var data = jsonDecode(value.toString());
+      LogUtil.d('请求结果---homepageList----$data');
+      homepageList = (data['data']['menuList'] as List).cast();
+      homepageList.add({'source': 'assets/images/home_more.png', 'name': '更多' , 'code': 'more'});
+      jurisdictionList = (data['data']['jurisdictionList'] as List).cast();
+
+      ///判断首页菜单下方功能是否显示
+      jurisdictionList.forEach((element) {
+        if (element == 'visitPlan'){
+          isVisitPlan = true;
+        }
+        if (element == 'workReport'){
+          isWorkReport = true;
+        }
+      });
+      if (mounted) setState(() {});
+    });
+  }
+
+  ///获取未读消息显示
   Future<void> _getMsgCountRequest() async {
     requestGet(Api.getCategoryCount).then((value) {
       var data = jsonDecode(value.toString());
@@ -309,6 +418,52 @@ class _Body extends State<HomePage> {
     } else {
       Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
     }
+  }
+
+  ///判断是否注册eqb
+  isEqbContract(){
+    requestPost(Api.isEqbContract).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---isEqbContract----$data');
+      if (data['msg'] == 'success'){
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
+      }else if (data['msg'] == 'fail_contract'){
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  title: Text('温馨提示'),
+                  content: Text('您还未开通电子合同账号，是否开通？'),
+                  actions: <Widget>[
+                    TextButton(child: Text('取消',style: TextStyle(color: Color(0xFF999999))),onPressed: (){
+                      Navigator.of(context).pop('cancel');
+                    }),
+                    TextButton(child: Text('确认',style: TextStyle(color: Color(0xFFC08A3F))),onPressed: () async {
+                      Navigator.of(context).pop('ok');
+                      registerContract();
+                    })
+                  ]
+              );
+            });
+      }else if (data['msg'] == 'fail_customer'){
+        AppUtil.showToastCenter('客户不存在');
+      }
+    });
+  }
+
+  ///注册电子合同账号
+  registerContract(){
+    requestPost(Api.registerContract).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---registerContract----$data');
+      if (data['code'] == 200){
+        AppUtil.showToastCenter('开通账号成功');
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
+      }else {
+        AppUtil.showToastCenter(data['msg']);
+      }
+    });
   }
 
   @override

@@ -4,22 +4,49 @@ class Store {
   static init() async {
     await GetStorage.init();
   }
-
   static final _box = GetStorage();
 
+  ///登录账号
   static const _account = "account";
+
+  ///登录密码
   static const _password = "password";
+
+  ///当前登录人手机号
   static const _phone= "phone";
+
+  ///当前登录人token
   static const _kToken = "keyToken";
+
+  ///当前登录人用户id
   static const _userId = "userid";
+
+  ///当前登录人用户昵称
   static const _userName = "user_name";
+
+  ///当前登录人区域id
   static const _deptId = "dept_id";
+
+  ///当前登录人区域名称
   static const _deptName = "dept_name";
+
+  ///当前登录人身份
   static const _postName = "post_name";
+
+  ///当前登录人临时姓名
   static const _nickName = "nick_name";
+
+  ///当前登录人头像
   static const _userAvatar = "avatar";
+
   ///用户类别，主要判断是不是职能
   static const _userType = "userType";
+
+  ///当前登录人应用菜单角色权限id
+  static const _appRoleId = "appRoleId";
+
+  ///当前登录人首页底部菜单权限
+  static const _isExamine = "isExamine";
 
   static saveUserType(String userType) {
     _box.write(_userType, userType);
@@ -27,6 +54,22 @@ class Store {
 
   static String readUserType() {
     return _box.read(_userType);
+  }
+
+  static saveAppRoleId(String appRoleId) {
+    _box.write(_appRoleId, appRoleId);
+  }
+
+  static String readAppRoleId() {
+    return _box.read(_appRoleId);
+  }
+
+  static saveIsExamine(bool isExamine) {
+    _box.write(_isExamine, isExamine);
+  }
+
+  static bool readIsExamine() {
+    return _box.read(_isExamine);
   }
 
   static saveAccount(String account) {

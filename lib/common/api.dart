@@ -5,7 +5,7 @@ class Api {
     // return 'http://47.100.191.162';
     // return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    return 'http://172.167.40.141:1888';
+      return 'http://172.167.40.141:1888';
     ///宁哥服务器
     // return 'http://172.167.40.77:1888';
     ///周芾服务器
@@ -338,4 +338,10 @@ class Api {
 
   ///冰柜订单确认收货
   static const freezerOrderOver = "/api/hap-app/app/freezerOrder/over";
+
+  ///首页菜单列表
+  static const homepageList = "/api/hap-app1/app/menu/homepageList";
+
+  ///应用菜单列表
+  static const appMenuTree = "/api/hap-app1/app/menu/appMenuTree";
 }

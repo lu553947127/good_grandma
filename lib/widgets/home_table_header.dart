@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/my_cache_image_view.dart';
 
 ///顶部按钮列表
 class HomeTableHeader extends StatelessWidget {
-  HomeTableHeader({Key key,@required this.onTap}) : super(key: key);
-  final Function(String name) onTap;
-
-  final List<Map> _list = [
-    {'image': 'assets/images/home_sign_in.png', 'name': '签到'},
-    {'image': 'assets/images/home_baogao.png', 'name': '工作报告'},
-    {'image': 'assets/images/home_huodong.png', 'name': '市场活动'},
-    {'image': 'assets/images/home_shenpi.png', 'name': '审批申请'},
-    {'image': 'assets/images/home_tongji.png', 'name': '业绩统计'},
-    {'image': 'assets/images/home_xiaoliang.png', 'name': '冰柜销量'},
-    {'image': 'assets/images/home_binggui.png', 'name': '冰柜统计'},
-    {'image': 'assets/images/home_more.png', 'name': '更多'}
-  ];
+  HomeTableHeader({Key key,@required this.onTap, this.homepageList}) : super(key: key);
+  final Function(Map menu) onTap;
+  final List<Map> homepageList;
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       child: SliverGrid(
           delegate: SliverChildBuilderDelegate((context, index) {
-            Map map = _list[index];
-            String image = map['image'];
+            Map map = homepageList[index];
+            String image = map['source'];
             String name = map['name'];
             List<BoxShadow> shadows = [];
             BorderRadius radius;
             if (index == 4) {
               radius = BorderRadius.only(bottomLeft: Radius.circular(10.0));
             }
-            else if (index == _list.length - 1) {
+            else if (index == homepageList.length - 1) {
               radius = BorderRadius.only(bottomRight: Radius.circular(10.0));
             }
             return Container(
@@ -41,17 +33,26 @@ class HomeTableHeader extends StatelessWidget {
               child: TextButton(
                   onPressed: () {
                     if(onTap != null)
-                      onTap(name);
+                      onTap(homepageList[index]);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset(image, width: 50.0, height: 50.0),
-                      Text(name, style: const TextStyle(color: AppColors.FF142339,fontSize: 14.0))
-                    ],
-                  )),
+                      name == '更多' ? Image.asset(image, width: 50.0, height: 50.0) :
+                      MyCacheImageView(
+                        imageURL: image,
+                        width: 50.0,
+                        height: 50.0,
+                        errorWidgetChild: Image.asset(
+                            'assets/images/icon_empty_user.png',
+                            width: 50.0,
+                            height: 50.0),
+                      ),
+                      Text(name, style: const TextStyle(color: AppColors.FF142339,fontSize: 14.0), overflow: TextOverflow.ellipsis)
+                    ]
+                  ))
             );
-          }, childCount: _list.length),
+          }, childCount: homepageList.length),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4, childAspectRatio: 1.0)),
     );

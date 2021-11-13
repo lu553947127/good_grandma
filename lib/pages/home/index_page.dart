@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/examine/shenpi_page.dart';
 import 'package:good_grandma/pages/home/app_page.dart';
 import 'package:good_grandma/pages/home/home_page.dart';
@@ -48,15 +49,22 @@ class _IndexPageState extends State<IndexPage> {
   @override
   void initState() {
     super.initState();
-
-    // _bottomNavItems.removeWhere((map) => map.label == '审批申请');
-
-    _pages.addAll([
-      HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index),),
-      MsgPage(),
-      AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3),),
-      ShenPiPage(),
-      MinePage()]);
+    ///判断当前登录人是否有审批申请模块的权限
+    if (Store.readIsExamine()){
+      _pages.addAll([
+        HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index)),
+        MsgPage(),
+        AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3)),
+        ShenPiPage(),
+        MinePage()]);
+    }else{
+      _bottomNavItems.removeWhere((map) => map.label == '审批申请');
+      _pages.addAll([
+        HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index)),
+        MsgPage(),
+        AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3)),
+        MinePage()]);
+    }
   }
 
   @override

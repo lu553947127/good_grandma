@@ -52,6 +52,9 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
         case 3:
           return '收货完成';
           break;
+        case 4:
+          return '取消订单';
+          break;
       }
     }
 
