@@ -340,8 +340,8 @@ class Api {
   static const freezerOrderOver = "/api/hap-app/app/freezerOrder/over";
 
   ///首页菜单列表
-  static const homepageList = "/api/hap-app1/app/menu/homepageList";
+  static const homepageList = "/api/hap-app/app/menu/homepageList";
 
   ///应用菜单列表
-  static const appMenuTree = "/api/hap-app1/app/menu/appMenuTree";
+  static const appMenuTree = "/api/hap-app/app/menu/appMenuTree";
 }
