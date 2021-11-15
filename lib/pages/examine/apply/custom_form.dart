@@ -67,11 +67,6 @@ class _CustomFormViewState extends State<CustomFormView> {
           break;
         case 'input':
           if (data['label'] == '申请人'){
-
-            addData[data['prop']] = '${Store.readPostName()}${Store.readNickName()}';
-
-            timeSelectProvider.addshenqingren('${Store.readPostName()}${Store.readNickName()}');
-
             return TextDefaultView(
                 leftTitle: data['label'],
                 rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
@@ -104,8 +99,6 @@ class _CustomFormViewState extends State<CustomFormView> {
                     timeSelectProvider.addchuchaishiyou(tex);
                   }
                 }
-
-                LogUtil.d('addData----$addData');
               },
             );
           }
@@ -148,24 +141,15 @@ class _CustomFormViewState extends State<CustomFormView> {
                   : '',
               dayNumber: timeSelectProvider.dayNumber,
               onPressed: (param) {
-                print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
-                print('param--------onPressed--------- $param');
-
                 timeSelectProvider.addStartTime(param['startTime'], param['endTime'], param['days']);
-
                 List<String> timeList = [];
                 timeList.add(param['startTime']);
                 timeList.add(param['endTime']);
-
                 for (String prop in dataList) {
                   if (data['prop'] == prop){
                     addData[prop] = timeList;
                   }
                 }
-
-                addData['days'] = param['days'];
-
-                LogUtil.d('addData----$addData');
               }
           );
           break;
@@ -189,8 +173,6 @@ class _CustomFormViewState extends State<CustomFormView> {
                     addData[prop] = tex;
                   }
                 }
-
-                LogUtil.d('addData----$addData');
               },
             );
           }
@@ -286,7 +268,7 @@ class _CustomFormViewState extends State<CustomFormView> {
         }else if ('yujidachengxiaoguo' == map['prop']){
           addData[map['prop']] = timeSelectProvider.yujidachengxiaoguo;
         }else if ('shenqingren' == map['prop']){
-          addData[map['prop']] = timeSelectProvider.shenqingren;
+          addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }
       }
 

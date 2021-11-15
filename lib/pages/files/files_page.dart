@@ -138,7 +138,7 @@ class _FilesPageState extends State<FilesPage> {
                 child: Text('我的文件'),
               ),
             ),
-            //列表
+            fileCabinetList.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   FileModel model = fileCabinetList[index];
@@ -149,7 +149,13 @@ class _FilesPageState extends State<FilesPage> {
                     copyAction: () => _cellCopyFile(context, model),
                     deleteAction: () => _cellDeleteWith(context, model)
                   );
-                }, childCount: fileCabinetList.length)),
+                }, childCount: fileCabinetList.length)) :
+            SliverToBoxAdapter(
+                child: Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
+            )
           ]
         )
       ),

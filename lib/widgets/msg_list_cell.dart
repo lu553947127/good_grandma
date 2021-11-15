@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/common/http.dart';
-import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:provider/provider.dart';
+
 ///消息列表cell样式，也用于规章文件
 class MsgListCell extends StatelessWidget {
   final VoidCallback cellOnTap;
@@ -78,11 +76,11 @@ class MsgListCell extends StatelessWidget {
                                       ? AppColors.FFC1C8D7
                                       : AppColors.FFC08A3F,
                                   fontSize: 11.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                            )
+                          )
+                        )
+                      )
+                    ]
                   ),
                   //内容
                   Padding(
@@ -96,7 +94,7 @@ class MsgListCell extends StatelessWidget {
                           fontSize: 12.0),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                    ),
+                    )
                   ),
                   //附件
                   Visibility(
@@ -119,7 +117,7 @@ class MsgListCell extends StatelessWidget {
                                     color: AppColors.FF959EB1, fontSize: 12.0),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                              ),
+                              )
                             ),
                             // Spacer(),
                             Visibility(
@@ -130,7 +128,7 @@ class MsgListCell extends StatelessWidget {
                                     : 'assets/images/msg_unsign.png',
                                 width: 12,
                                 height: 12,
-                              ),
+                              )
                             ),
                             Visibility(
                               visible: model.forDuiZhangDan,
@@ -141,12 +139,12 @@ class MsgListCell extends StatelessWidget {
                                         ? AppColors.FFC08A3F
                                         : AppColors.FF2F4058,
                                     fontSize: 11),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                              )
+                            )
+                          ]
+                        )
+                      )
+                    )
                   ),
                   //查看详情
                   Row(
@@ -166,28 +164,18 @@ class MsgListCell extends StatelessWidget {
                             ? AppColors.FF959EB1
                             : AppColors.FF2F4058,
                         size: 24,
-                      ),
-                    ],
+                      )
+                    ]
                   )
-                ],
-              ),
+                ]
+              )
             ),
             onTap: () {
-              if(!model.forRegularDoc)
-                _setReadRequest(context, model);
               if (cellOnTap != null) cellOnTap();
-            },
-          ),
-        ],
-      ),
+            }
+          )
+        ]
+      )
     );
-  }
-  _setReadRequest(BuildContext context,MsgListModel model){
-    if(model.read) return;
-    requestGet(
-        Api.settingRead + '/' + model.id).then((value) {
-          LogUtil.d('settingRead value = $value');
-      model.setRead(true);
-    });
   }
 }

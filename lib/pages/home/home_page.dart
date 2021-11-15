@@ -150,7 +150,7 @@ class _Body extends State<HomePage> {
                               builder: (context) => WorkReport())))
                 )),
             //报告列表
-            _reportList.length > 0
+            isWorkReport && _reportList.length > 0
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                     HomeReportModel model = _reportList[index];

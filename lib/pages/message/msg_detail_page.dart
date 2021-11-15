@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
+import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
 ///消息详情
@@ -12,11 +16,6 @@ class MsgDetailPage extends StatefulWidget {
 }
 
 class _Body extends State<MsgDetailPage> {
-  @override
-  void initState() {
-    super.initState();
-    _refresh();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +58,35 @@ class _Body extends State<MsgDetailPage> {
                           AppUtil.launchURL(model.enclosureViewURL);
                         else
                           AppUtil.showToastCenter('预览地址为空');
-                      },
-                    ),
-                  ),
+                      }
+                    )
+                  )
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                Visibility(
+                  visible: !model.read,
+                  child: SubmitBtn(
+                      title: '立即签收',
+                      onPressed: () {
+                        _setReadRequest(context, model);
+                      }
+                  )
+                )
+              ]
+            )
+          )
+        )
+      )
     );
   }
 
-  void _refresh() {}
+  ///公告已读
+  _setReadRequest(BuildContext context, MsgListModel model){
+    if(model.read) return;
+    requestGet(Api.settingRead + '/' + model.id).then((value) {
+      LogUtil.d('settingRead value = $value');
+      model.setRead(true);
+      Navigator.pop(context, true);
+      showToast('签收完成');
+    });
+  }
 }

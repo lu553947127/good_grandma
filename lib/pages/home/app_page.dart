@@ -200,6 +200,7 @@ class _AppPageState extends State<AppPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(appMenuTreeList[index]['name'], style: TextStyle(fontSize: 18, color: Color(0XFF333333))),
+                              list.length > 0 ?
                               GridView.builder(
                                   shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
                                   physics:NeverScrollableScrollPhysics(),//禁用滑动事件
@@ -229,7 +230,8 @@ class _AppPageState extends State<AppPage> {
                                           ]
                                         ));
                                   }
-                              )
+                              ) :
+                              Container()
                             ]
                         ),
                         decoration: BoxDecoration(//分割线

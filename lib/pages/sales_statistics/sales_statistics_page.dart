@@ -77,8 +77,9 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
                 customerId = select['id'];
                 customerName = select['realName'];
                 _commoditySalesList();
-              },
+              }
             ),
+            commoditySalesList.length > 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
               Map map = commoditySalesList[index];
@@ -91,11 +92,17 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
                 salesPrice: salesPrice,
                 onTap: null,
               );
-            }, childCount: commoditySalesList.length)),
+            }, childCount: commoditySalesList.length)) :
+            SliverToBoxAdapter(
+                child: Container(
+                    margin: EdgeInsets.all(40),
+                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+                )
+            ),
             SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
 }
