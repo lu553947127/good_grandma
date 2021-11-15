@@ -8,7 +8,8 @@ import 'package:good_grandma/pages/examine/examine_detail.dart';
 import 'package:good_grandma/pages/examine/examine_select_process.dart';
 import 'package:good_grandma/pages/examine/examine_view.dart';
 import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
-///审批
+
+///OA审批列表
 class ShenPiPage extends StatefulWidget {
   const ShenPiPage({Key key}) : super(key: key);
 
@@ -78,15 +79,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
   @override
   void initState() {
     super.initState();
-    _sendList();
-  }
-
-  @override
-  void deactivate() {
-    var bool = ModalRoute.of(context).isCurrent;
-    if (bool) {
-      _sendList();
-    }
+    _refresh();
   }
 
   @override
@@ -138,7 +131,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
                         type: type,
                         processIsFinished: processIsFinished,
                         status: list[index]['status'],
-                      ))).then((value) => _sendList());
+                      ))).then((value) => _refresh());
                       if(refresh != null && refresh == 'refresh') _refresh();
                     }
                   );

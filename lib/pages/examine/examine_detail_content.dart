@@ -26,6 +26,18 @@ class ExamineDetailContent extends StatelessWidget {
 
   ///创建一个表单
   Widget _buildChart(List<Map> goodsList, name) {
+    switch(name){
+      case '支付对象信息':
+        numRowWidth = 100.0;
+        break;
+      case '出差明细':
+        numRowWidth = 120.0;
+        break;
+      case '出差日程':
+        numRowWidth = 40.0;
+        break;
+    }
+
     return Container(
       child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -96,7 +108,6 @@ class ExamineDetailContent extends StatelessWidget {
           _buildSideBox(index == -1 ? '出发地' : goodsList[index]['chufadi'].toString(), index == -1),
           _buildSideBox(index == -1 ? '目的地' : goodsList[index]['mudidi'].toString(), index == -1),
           _buildSideBox(index == -1 ? '预计出差日期' : goodsList[index]['yujichuchairiqi'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '出差天数' : goodsList[index]['days'].toString(), index == -1),
         ]);
   }
 
@@ -289,9 +300,6 @@ class ExamineDetailContent extends StatelessWidget {
           taskFormList.removeAt(i);
         }
         if (taskFormList[i]['name'] == '预计出差日期'){
-          taskFormList.removeAt(i);
-        }
-        if (taskFormList[i]['name'] == '出差天数'){
           taskFormList.removeAt(i);
         }
       }
