@@ -88,10 +88,15 @@ class TimeSelectProvider with ChangeNotifier{
     if(_travelScheduleList == null)
       _travelScheduleList = [];
     _travelScheduleList.add(model);
+
+    List<String> timeList = [];
+    timeList.add(model.startTime + ':00');
+    timeList.add(model.endTime + ':00');
+
     Map addData = new Map();
     addData['chufadi'] = model.chufadi;
     addData['mudidi'] = model.mudidi;
-    addData['yujichuchairiqi'] = model.yujichuchairiqi;
+    addData['yujichuchairiqi'] = timeList;
     addData['days'] = model.days;
     travelScheduleMapList.add(addData);
     notifyListeners();
@@ -103,10 +108,15 @@ class TimeSelectProvider with ChangeNotifier{
       _travelScheduleList = [];
     if(index >= _travelScheduleList.length) return;
     _travelScheduleList.setAll(index, [model]);
+
+    List<String> timeList = [];
+    timeList.add(model.startTime + ':00');
+    timeList.add(model.endTime + ':00');
+
     Map addData = new Map();
     addData['chufadi'] = model.chufadi;
     addData['mudidi'] = model.mudidi;
-    addData['yujichuchairiqi'] = model.yujichuchairiqi;
+    addData['yujichuchairiqi'] = timeList;
     addData['days'] = model.days;
     travelScheduleMapList.setAll(index, [addData]);
     notifyListeners();
@@ -132,8 +142,12 @@ class TravelModel {
   ///目的地
   String mudidi;
 
-  ///预计出差日期
-  String yujichuchairiqi;
+
+  ///预计出差日期开始时间
+  String startTime;
+
+  ///预计出差日期结束时间
+  String endTime;
 
   ///出差天数
   String days;
@@ -141,7 +155,8 @@ class TravelModel {
   TravelModel({
     this.chufadi = '',
     this.mudidi = '',
-    this.yujichuchairiqi = '',
+    this.startTime = '',
+    this.endTime = '',
     this.days = ''
   });
 }

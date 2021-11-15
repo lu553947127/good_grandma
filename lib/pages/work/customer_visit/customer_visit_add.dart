@@ -183,6 +183,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
   ///处理定位结果
   void _locationResultDeal(Map<String, Object> result) async {
+    print('address${result['address']}');
     address = result['address'];
     // final streetNumber = result['streetNumber'];
     latitude = result['latitude'];
@@ -340,7 +341,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                   SizedBox(width: 3),
                   Container(
                     width: 300,
-                    child: Text(address.isEmpty ? '' : address, style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                    child: Text(address == null ? '定位获取失败，请检查定位权限是否开启' : address, style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                   )
                 ]
               )

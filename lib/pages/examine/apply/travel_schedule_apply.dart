@@ -43,12 +43,14 @@ class _TravelScheduleFromState extends State<TravelScheduleFrom> {
           return TimeSelectView(
               leftTitle: data['label'],
               rightPlaceholder: '请选择${data['label']}',
-              value: travelModel.yujichuchairiqi,
+              value: (travelModel.startTime.isNotEmpty && travelModel.endTime.isNotEmpty)
+                  ? '${travelModel.startTime + '\n' + travelModel.endTime}'
+                  : '',
               dayNumber: travelModel.days,
               sizeHeight: 0,
               onPressed: (param) {
-                travelModel.yujichuchairiqi = (param['startTime'].isNotEmpty && param['endTime'].isNotEmpty)
-                    ? '${param['startTime'] + '\n' + param['endTime']}' : '';
+                travelModel.startTime = param['startTime'];
+                travelModel.endTime = param['endTime'];
                 travelModel.days = param['days'];
                 widget.timeSelectProvider.editFormWith(index, travelModel);
               }
