@@ -3,9 +3,9 @@ class Api {
   static String baseUrl() {
     /// 外网
     // return 'http://47.100.191.162';
-    return 'https://haoapo.haoapochn.cn/';
+    // return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    //   return 'http://172.167.40.141:1888';
+      return 'http://172.167.40.141:1888';
     ///宁哥服务器
     // return 'http://172.167.40.77:1888';
     ///周芾服务器
@@ -126,11 +126,17 @@ class Api {
   ///市场活动列表
   static const activityList = "/api/hap-app/app/activity/list";
 
+  ///市场活动详情
+  static const activityDetail = "/api/hap-app/app/activity/detail";
+
   ///市场活动 行销规划列表
   static const activityPlanList = "/api/hap-app/app/activity/planList";
 
   ///市场活动添加
   static const activityAdd = "/api/hap-app/app/activity/submit";
+
+  ///市场活动编辑
+  static const activityEdit = "/api/hap-app/app/activity/update";
 
   ///商品销量统计列表
   static const commoditySalesList = "/api/hap-app/app/goods/getCommoditySales";

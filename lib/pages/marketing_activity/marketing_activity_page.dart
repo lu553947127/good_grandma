@@ -132,8 +132,7 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
                 SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return MarketingActivityCell(
-                          model: activityList[index],
-                          state: statusName
+                          model: activityList[index]
                       );
                     }, childCount: activityList.length)
                 ):
@@ -169,14 +168,14 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
         child: Icon(Icons.add),
         backgroundColor: AppColors.FFC68D3E,
         onPressed: () async{
-          MarketingActivityModel model = MarketingActivityModel();
+          MarketingActivityModel model = MarketingActivityModel(id: '');
           bool needRefresh = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (_) =>
                       ChangeNotifierProvider<MarketingActivityModel>.value(
                         value: model,
-                        child: AddMarketingActivityPage(),
+                        child: AddMarketingActivityPage(id: ''),
                       )));
           if(needRefresh != null && needRefresh){
             _activityList();

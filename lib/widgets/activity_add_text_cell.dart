@@ -37,14 +37,14 @@ class ActivityAddTextCell extends StatelessWidget {
                           textAlign: TextAlign.end,
                           style: const TextStyle(
                               color: AppColors.FFC1C8D7, fontSize: 14.0)),
-                ),
-              ],
+                )
+              ]
             ),
             trailing: trailing,
           ),
           const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-        ],
-      ),
+        ]
+      )
     );
   }
 }

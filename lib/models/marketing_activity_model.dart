@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 class MarketingActivityModel extends ChangeNotifier {
   String id;
   String status;
+  int statusId;
 
   ///发布时间
   String _name;
@@ -44,20 +45,20 @@ class MarketingActivityModel extends ChangeNotifier {
     _sampleList = [];
     sampleMapList = [];
 
-    addCostModel(CostModel(
-        costType: '1',
-        costTypeName: '促销员费用',
-        costCash: '',
-        sample: '',
-        costDescribe: ''
-    ));
-    addCostModel(CostModel(
-        costType: '2',
-        costTypeName: '生动化工具费',
-        costCash: '',
-        sample: '',
-        costDescribe: ''
-    ));
+    if (id == ''){
+      addCostModel(CostModel(
+          costType: '1',
+          costTypeName: '促销员费用',
+          costCash: '',
+          costDescribe: ''
+      ));
+      addCostModel(CostModel(
+          costType: '2',
+          costTypeName: '生动化工具费',
+          costCash: '',
+          costDescribe: ''
+      ));
+    }
   }
 
   ///活动名称
@@ -116,6 +117,7 @@ class MarketingActivityModel extends ChangeNotifier {
     activityCostList = json['activityCostList'] ?? '';
     activityCosts = json['activityCosts'] ?? '';
     materialName = json['materialName'] ?? '';
+    statusId = json['status'] ?? '';
   }
 
   setName(String name) {
@@ -203,7 +205,6 @@ class MarketingActivityModel extends ChangeNotifier {
     Map addData = new Map();
     addData['costType'] = model.costType;
     addData['costCash'] = model.costCash;
-    addData['sample'] = model.sample;
     addData['costDescribe'] = model.costDescribe;
     costMapList.add(addData);
     notifyListeners();
@@ -218,7 +219,6 @@ class MarketingActivityModel extends ChangeNotifier {
     Map addData = new Map();
     addData['costType'] = model.costType;
     addData['costCash'] = model.costCash;
-    addData['sample'] = model.sample;
     addData['costDescribe'] = model.costDescribe;
     costMapList.setAll(index, [addData]);
     notifyListeners();
@@ -247,9 +247,6 @@ class CostModel {
   ///现金
   String costCash;
 
-  ///试吃品(箱)
-  String sample;
-
   ///费用描述
   String costDescribe;
 
@@ -257,7 +254,6 @@ class CostModel {
     this.costType = '',
     this.costTypeName = '',
     this.costCash = '',
-    this.sample = '',
     this.costDescribe = ''
   });
 }

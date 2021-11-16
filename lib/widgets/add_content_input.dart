@@ -56,11 +56,11 @@ class _ContentInputViewState extends State<ContentInputView> {
                       widget.onChanged(txt);
                     }
                   });
-                },
+                }
               )
           )
-        ],
-      ),
+        ]
+      )
     );
   }
 }

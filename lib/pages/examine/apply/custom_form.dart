@@ -140,6 +140,7 @@ class _CustomFormViewState extends State<CustomFormView> {
                   ? '${timeSelectProvider.startTime + '\n' + timeSelectProvider.endTime}'
                   : '',
               dayNumber: timeSelectProvider.dayNumber,
+              isDays: true,
               onPressed: (param) {
                 timeSelectProvider.addStartTime(param['startTime'], param['endTime'], param['days']);
                 List<String> timeList = [];

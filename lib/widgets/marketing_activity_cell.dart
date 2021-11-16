@@ -7,19 +7,33 @@ import 'package:good_grandma/pages/marketing_activity/marketing_activity_detail_
 class MarketingActivityCell extends StatelessWidget {
   const MarketingActivityCell({
     Key key,
-    @required this.model,
-    @required this.state,
+    @required this.model
   }) : super(key: key);
 
   final MarketingActivityModel model;
-  final String state;
 
   @override
   Widget build(BuildContext context) {
     Color stateColor = AppColors.FFE45C26;
-    if (state == '进行中')
-      stateColor = AppColors.FF05A8C6;
-    else if (state == '已完结') stateColor = AppColors.FF959EB1;
+    String statusName = '';
+    switch(model.statusId){
+      case 1:
+        statusName = '未进行';
+        stateColor = AppColors.FFE45C26;
+        break;
+      case 2:
+        statusName = '进行中';
+        stateColor = AppColors.FF05A8C6;
+        break;
+      case 3:
+        statusName = '已完结';
+        stateColor = AppColors.FF959EB1;
+        break;
+      case 4:
+        statusName = '驳回';
+        stateColor = AppColors.FFC68D3E;
+        break;
+    }
 
     List<Widget> views1 = [];
     List<String> titles = ['活动时间：', '上级通路客户：', '申请资源费用合计：', '预计进货额：', '预计进货投入产出比：'];
@@ -48,7 +62,7 @@ class MarketingActivityCell extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (_) => MarketingActivityDetailPage(
-                  model: model, state: state, stateColor: stateColor))),
+                  model: model, state: statusName, stateColor: stateColor))),
       title: Card(
         child: Column(
           children: [
@@ -72,7 +86,7 @@ class MarketingActivityCell extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6.5, vertical: 5),
                       child: Text(
-                        state,
+                        statusName,
                         style: TextStyle(color: stateColor, fontSize: 11.0),
                       )
                     )

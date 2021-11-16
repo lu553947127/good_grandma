@@ -47,7 +47,8 @@ class _TravelScheduleFromState extends State<TravelScheduleFrom> {
                   ? '${travelModel.startTime + '\n' + travelModel.endTime}'
                   : '',
               dayNumber: travelModel.days,
-              sizeHeight: 0,
+              sizeHeight: 1,
+              isDays: false,
               onPressed: (param) {
                 travelModel.startTime = param['startTime'];
                 travelModel.endTime = param['endTime'];

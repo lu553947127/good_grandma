@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/models/marketing_activity_model.dart';
+import 'package:good_grandma/pages/marketing_activity/add_marketing_activity_page.dart';
 import 'package:good_grandma/widgets/marketing_activity_detail_title.dart';
 import 'package:good_grandma/widgets/marketing_activity_msg_cell.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
+import 'package:good_grandma/widgets/submit_btn.dart';
+import 'package:provider/provider.dart';
 
 ///市场活动详情
 class MarketingActivityDetailPage extends StatefulWidget {
@@ -96,7 +99,6 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
                       ),
                       SizedBox(height: 5),
                       MarketingActivityMsgCell(title: '现金', value: widget.model.activityCostList[index]['costCash']),
-                      MarketingActivityMsgCell(title: '试吃品', value: widget.model.activityCostList[index]['sample'].toString() + '箱'),
                       MarketingActivityMsgCell(title: '费用描述', value: widget.model.activityCostList[index]['costDescribe'])
                     ]
                   )
@@ -116,7 +118,31 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
                 }, childCount: _list2.length),
               )
             ),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
+            SliverSafeArea(
+                sliver: SliverToBoxAdapter(
+                    child: Visibility(
+                        visible: widget.state == '驳回' ? true : false,
+                        child: SubmitBtn(
+                            vertical: 5.0,
+                            title: '编辑',
+                            onPressed: () async {
+                              MarketingActivityModel model = MarketingActivityModel(id: 'id');
+                              bool needRefresh = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                      ChangeNotifierProvider<MarketingActivityModel>.value(
+                                        value: model,
+                                        child: AddMarketingActivityPage(id: widget.model.id),
+                                      )));
+                              if(needRefresh != null && needRefresh){
+                                Navigator.pop(context, true);
+                              }
+                            }
+                        )
+                    )
+                )
+            )
           ]
         )
       )

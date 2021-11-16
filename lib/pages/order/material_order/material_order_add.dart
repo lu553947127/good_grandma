@@ -270,7 +270,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
     );
   }
 
-  ///新增物料订单
+  ///新增/编辑物料订单
   void _submitAction(BuildContext context, MarketingOrderModel marketingOrderModel) async {
 
     if (marketingOrderModel.deptId == ''){

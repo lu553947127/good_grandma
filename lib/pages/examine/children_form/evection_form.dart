@@ -38,6 +38,7 @@ class _DynamicEvectionFormViewState extends State<DynamicEvectionFormView> {
                   : '',
               dayNumber: formEvectionModel.hejitianshu,
               sizeHeight: 0,
+              isDays: true,
               onPressed: (param) {
                 // print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
                 // print('param--------onPressed--------- $param');

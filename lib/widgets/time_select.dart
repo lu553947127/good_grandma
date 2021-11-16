@@ -3,6 +3,7 @@ import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 
+///选择开始时间和结束时间弹窗
 class TimeSelectView extends StatefulWidget {
   ///左侧标题
   final String leftTitle;
@@ -16,6 +17,8 @@ class TimeSelectView extends StatefulWidget {
   double sizeHeight = 0;
   ///请假天数
   String dayNumber;
+  ///是否显示请假天数
+  bool isDays = true;
 
   TimeSelectView({Key key,
     this.leftTitle,
@@ -24,6 +27,7 @@ class TimeSelectView extends StatefulWidget {
     this.sizeHeight,
     this.dayNumber = '0',
     this.value = '',
+    this.isDays
   }) : super(key: key);
 
   @override
@@ -73,25 +77,31 @@ class _TimeSelectViewState extends State<TimeSelectView> {
               },
             )
           ),
-          SizedBox(
-              width: double.infinity,
-              height: 1,
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-              )
+          Visibility(
+            visible: widget.isDays,
+            child: SizedBox(
+                width: double.infinity,
+                height: 1,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
+                )
+            )
           ),
-          Container(
-              height: 60,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('天数', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
-                  Text('${widget.dayNumber}天', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
-                ],
-              )
+          Visibility(
+              visible: widget.isDays,
+            child: Container(
+                height: 60,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('天数', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                      Text('${widget.dayNumber}天', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                    ]
+                )
+            )
           )
-        ],
-      ),
+        ]
+      )
     );
   }
 }

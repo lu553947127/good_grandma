@@ -79,6 +79,7 @@ class _ExamineLeaveApplyState extends State<ExamineLeaveApply> {
                   ? '${timeSelectProvider.startTime + '\n' + timeSelectProvider.endTime}'
                   : '',
             dayNumber: timeSelectProvider.dayNumber,
+              isDays: true,
             onPressed: (param) {
               print('onPressed=============  ${param['startTime'] + ' - ' + param['endTime']}');
               print('param--------onPressed--------- $param');

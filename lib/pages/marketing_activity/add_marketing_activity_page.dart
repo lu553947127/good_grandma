@@ -7,14 +7,14 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/marketing_activity_model.dart';
 import 'package:good_grandma/widgets/activity_add_text_cell.dart';
-import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
 ///新增市场活动
 class AddMarketingActivityPage extends StatefulWidget {
-  const AddMarketingActivityPage({Key key}) : super(key: key);
+  final String id;
+  const AddMarketingActivityPage({Key key, this.id}) : super(key: key);
 
   @override
   _AddMarketingActivityPageState createState() =>
@@ -24,16 +24,60 @@ class AddMarketingActivityPage extends StatefulWidget {
 class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
   final TextEditingController _editingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  bool _isEdit = false;
+  String title = '新增市场活动';
+
+  ///编辑市场活动数据回显
+  _marketingActivityEdit(MarketingActivityModel activityModel){
+    _isEdit = true;
+    title = '编辑市场活动';
+
+    Map<String, dynamic> map = {'id': widget.id};
+    LogUtil.d('请求结果---activityDetail----$map');
+    requestGet(Api.activityDetail, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---activityDetail----$data');
+      activityModel.setName(data['data']['name']);
+      activityModel.setStartTime(data['data']['starttime']);
+      activityModel.setEndTime(data['data']['endtime']);
+      activityModel.setCustomerName(data['data']['customerName']);
+      activityModel.setSketch(data['data']['sketch']);
+      activityModel.setPurchaseMoney(data['data']['purchasemoney']);
+
+      List<Map> activityCosts = (data['data']['activityCosts'] as List).cast();
+      activityCosts.forEach((element) {
+        activityModel.addSampleModel(SampleModel(
+            materialAreaId: element['materialAreaId'],
+            materialAreaName: element['materialName'],
+            sample: element['sample'].toString(),
+            costDescribe: element['costDescribe']
+        ));
+      });
+
+      List<Map> activityCostList = (data['data']['activityCostList'] as List).cast();
+      activityCostList.forEach((element) {
+        activityModel.addCostModel(CostModel(
+            costType: element['costType'].toString(),
+            costTypeName: element['costTypeName'],
+            costCash: element['costCash'].toString(),
+            costDescribe: element['costDescribe']
+        ));
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final MarketingActivityModel activityModel = Provider.of<MarketingActivityModel>(context);
+    if (_isEdit == false && widget.id != ''){
+      _marketingActivityEdit(activityModel);
+    }
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('新增市场活动')),
+        appBar: AppBar(title: Text(title)),
         body: Scrollbar(
           child: CustomScrollView(
             slivers: [
@@ -112,14 +156,22 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
               ),
               //活动简述
               SliverToBoxAdapter(
-                  child: ContentInputView(
-                      sizeHeight: 10,
-                      color: Colors.white,
-                      leftTitle: '活动简述',
-                      rightPlaceholder: '请输入活动简述',
-                      onChanged: (tex) {
-                        activityModel.setSketch(tex);
-                      }
+                  child: ActivityAddTextCell(
+                      title: '活动简述',
+                      hintText: '请输入活动简述',
+                      value: activityModel.sketch,
+                      trailing: null,
+                      onTap: () => AppUtil.showInputDialog(
+                          context: context,
+                          editingController: _editingController,
+                          focusNode: _focusNode,
+                          text: activityModel.sketch,
+                          hintText: '请输入活动简述',
+                          keyboardType: TextInputType.text,
+                          callBack: (text) {
+                            activityModel.setSketch(text);
+                          })
+
                   )
               ),
               SliverToBoxAdapter(
@@ -157,7 +209,8 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                             value: sampleModel.materialAreaName,
                             trailing: Icon(Icons.chevron_right),
                             onTap: () async {
-                              Map select = await showSelectList(context, Api.materialNoPageList, '请选择物料名称', 'name');
+                              Map<String, dynamic> map = {'type': '1'};
+                              Map select = await showSelectListParameter(context, Api.materialNoPageList, '请选择物料名称', 'name', map);
                               sampleModel.materialAreaId = select['id'];
                               sampleModel.materialAreaName = select['name'];
                               sampleModel.newQuantity = select['stock'];
@@ -238,7 +291,6 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                               costType: '4',
                               costTypeName: '其他费用',
                               costCash: '',
-                              sample: '',
                               costDescribe: ''
                           ));
                         },
@@ -283,31 +335,22 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                                 })
                         ),
                         ActivityAddTextCell(
-                            title: '试吃品',
-                            hintText: '请输入数量',
-                            value: costModel.sample,
-                            trailing: Text('箱'),
+                            title: '费用描述',
+                            hintText: '请输入费用描述',
+                            value: costModel.costDescribe,
+                            trailing: null,
                             onTap: () => AppUtil.showInputDialog(
                                 context: context,
                                 editingController: _editingController,
                                 focusNode: _focusNode,
-                                text: costModel.sample,
-                                hintText: '请输入数量',
-                                keyboardType: TextInputType.number,
+                                text: costModel.costDescribe,
+                                hintText: '请输入费用描述',
+                                keyboardType: TextInputType.text,
                                 callBack: (text) {
-                                  costModel.sample = text;
+                                  costModel.costDescribe = text;
                                   activityModel.editCostModelWith(index, costModel);
                                 })
-                        ),
-                        ContentInputView(
-                            sizeHeight: 0,
-                            color: Colors.white,
-                            leftTitle: '费用描述',
-                            rightPlaceholder: '请输入费用描述',
-                            onChanged: (tex) {
-                              costModel.costDescribe = tex;
-                              activityModel.editCostModelWith(index, costModel);
-                            }
+
                         )
                       ]
                     );
@@ -356,7 +399,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
     );
   }
 
-  ///添加市场活动
+  ///添加/编辑市场活动
   void _submitAction(BuildContext context, MarketingActivityModel activityModel) async {
 
     if (activityModel.name == ''){
@@ -394,11 +437,6 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
       return;
     }
 
-    if (activityModel.costList[0].sample == ''){
-      showToast('促销员费用试吃品不能为空');
-      return;
-    }
-
     if (activityModel.costList[0].costDescribe == ''){
       showToast('促销员费用费用描述不能为空');
       return;
@@ -406,11 +444,6 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
 
     if (activityModel.costList[1].costCash == ''){
       showToast('生动化工具费现金不能为空');
-      return;
-    }
-
-    if (activityModel.costList[1].sample == ''){
-      showToast('生动化工具费试吃品不能为空');
       return;
     }
 
@@ -425,9 +458,10 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
     }
 
     Map<String, dynamic> map = {
+      'id': widget.id,
       'name': activityModel.name,
-      'starttime': activityModel.startTime + ' 00:00:00',
-      'endtime': activityModel.endTime + ' 00:00:00',
+      'starttime': widget.id != '' ? activityModel.startTime : activityModel.startTime + ' 00:00:00',
+      'endtime': widget.id != '' ? activityModel.endTime : activityModel.endTime + ' 00:00:00',
       'customerName': activityModel.customerName,
       'sketch': activityModel.sketch,
       'activityCosts': activityModel.sampleMapList,
@@ -435,11 +469,18 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
       'purchasemoney': activityModel.purchaseMoney
     };
 
-    LogUtil.d('请求结果---activityAdd----$map');
+    String url = '';
+    if (widget.id != ''){
+      url = Api.activityEdit;
+    }else {
+      url = Api.activityAdd;
+    }
 
-    requestPost(Api.activityAdd, formData: map).then((val) async{
+    LogUtil.d('请求结果---$url----$map');
+
+    requestPost(url, formData: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---activityAdd----$data');
+      LogUtil.d('请求结果---$url----$data');
       if (data['code'] == 200){
         showToast("成功");
         Navigator.pop(context, true);
