@@ -127,6 +127,9 @@ Future requestPost(url, {formData, json}) async{
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
       // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
+    }else if (e.response.statusCode == 500){
+      showToast('接口报500啦');
+      throw e;
     }
     throw e;
   }
@@ -214,6 +217,9 @@ Future getPutFile(url, file) async{
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
       // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
+      throw e;
+    }else if (e.response.statusCode == 500){
+      showToast('接口报500啦');
       throw e;
     }
     throw e;
