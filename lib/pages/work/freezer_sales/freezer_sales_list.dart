@@ -52,7 +52,7 @@ class FreezerSalesList extends StatelessWidget {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('客户名称: ${data['realName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                        Text('客户名称: ${data['customerName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                         SizedBox(height: 3),
                         Container(
                           width: 200,
@@ -67,7 +67,7 @@ class FreezerSalesList extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Text('${data['sales']}', style: TextStyle(fontSize: 15, color: Color(0XFFE45C26))),
+                        Text('${data['num']}', style: TextStyle(fontSize: 15, color: Color(0XFFE45C26))),
                         Text('销量', style: TextStyle(fontSize: 10, color: Color(0XFFE45C26))),
                       ],
                     ),

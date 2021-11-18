@@ -436,25 +436,19 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
       return;
     }
 
-    if (activityModel.costList[0].costCash == ''){
-      showToast('促销员费用现金不能为空');
-      return;
-    }
+    activityModel.sampleList.forEach((element) {
+      if (element.materialAreaId == ''){
+        showToast('试吃品物料名称不能为空');
+        return;
+      }
+    });
 
-    if (activityModel.costList[0].costDescribe == ''){
-      showToast('促销员费用费用描述不能为空');
-      return;
-    }
-
-    if (activityModel.costList[1].costCash == ''){
-      showToast('生动化工具费现金不能为空');
-      return;
-    }
-
-    if (activityModel.costList[1].costDescribe == ''){
-      showToast('生动化工具费费用描述不能为空');
-      return;
-    }
+    activityModel.costList.forEach((element) {
+      if (element.costCash == ''){
+        showToast('费用信息${element.costTypeName}现金不能为空');
+        return;
+      }
+    });
 
     if (activityModel.purchaseMoney == ''){
       showToast('预计进货额不能为空');

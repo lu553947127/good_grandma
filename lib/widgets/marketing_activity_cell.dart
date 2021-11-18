@@ -36,7 +36,7 @@ class MarketingActivityCell extends StatelessWidget {
     }
 
     List<Widget> views1 = [];
-    List<String> titles = ['活动时间：', '上级通路客户：', '申请资源费用合计：', '预计进货额：', '预计进货投入产出比：'];
+    List<String> titles = ['活动时间：', '上级通路客户：', '申请资源费用合计(元)：', '预计进货额(元)：', '预计进货投入产出比(%)：'];
     List<String> values = [
       model.startTime + ' - ' + model.endTime,
       model.customerName,

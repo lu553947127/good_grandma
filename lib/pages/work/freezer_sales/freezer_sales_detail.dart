@@ -104,7 +104,7 @@ class _FreezerSalesDetailState extends State<FreezerSalesDetail> {
                                 SizedBox(width: 3),
                                 Text('客户名称: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                                 SizedBox(width: 3),
-                                Text('${widget.data['realName']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                Text('${widget.data['customerName']}',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                               ],
                             ),
                             SizedBox(height: 5),
@@ -150,14 +150,14 @@ class _FreezerSalesDetailState extends State<FreezerSalesDetail> {
                                     children: [
                                       Text('总销量(箱): ',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                       SizedBox(width: 3),
-                                      Text('${widget.data['sales']}',style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                      Text('${widget.data['num']}',style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
                                     ],
                                   ),
                                   Row(
                                       children: [
                                         Text('总销售金额(元): ',style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                         SizedBox(width: 3),
-                                        Text('¥${widget.data['money']}',style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                        Text('¥${widget.data['price']}',style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
                                       ]
                                   )
                                 ]
