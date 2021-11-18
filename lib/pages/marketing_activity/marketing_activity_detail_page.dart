@@ -37,9 +37,9 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
     ];
 
     List<Map> _list2 = [
-      {'title': '申请资源费用合计', 'value': widget.model.costTotal},
-      {'title': '预计进货额', 'value': widget.model.purchaseMoney},
-      {'title': '预计进货投入产出比', 'value': widget.model.purchaseRatio.toString() + '%'}
+      {'title': '申请资源费用合计(元)', 'value': widget.model.costTotal},
+      {'title': '预计进货额(元)', 'value': widget.model.purchaseMoney},
+      {'title': '预计进货投入产出比(%)', 'value': widget.model.purchaseRatio.toString() + '%'}
     ];
 
     return Scaffold(

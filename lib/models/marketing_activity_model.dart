@@ -271,7 +271,7 @@ class SampleModel {
   int newQuantity;
 
   ///数量
-  String sample;
+  int sample;
 
   ///费用描述
   String costDescribe;
@@ -280,7 +280,7 @@ class SampleModel {
     this.materialAreaId = '',
     this.materialAreaName = '',
     this.newQuantity = 0,
-    this.sample = '',
+    this.sample = 0,
     this.costDescribe = ''
   });
 }

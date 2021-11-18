@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -49,7 +50,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
         activityModel.addSampleModel(SampleModel(
             materialAreaId: element['materialAreaId'],
             materialAreaName: element['materialName'],
-            sample: element['sample'].toString(),
+            sample: element['sample'],
             costDescribe: element['costDescribe']
         ));
       });
@@ -220,22 +221,25 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                         ActivityAddTextCell(
                             title: sampleModel.newQuantity == 0 ? '试吃品(箱)/数量': '试吃品(箱)/数量(${sampleModel.newQuantity})',
                             hintText: '请输入试吃品(箱)/数量',
-                            value: sampleModel.sample,
+                            value: sampleModel.sample.toString(),
                             trailing: null,
                             onTap: () => sampleModel.newQuantity == 0 ? showToast('请先选择物料后再输入哦') :
                             AppUtil.showInputDialog(
                                 context: context,
                                 editingController: _editingController,
                                 focusNode: _focusNode,
-                                text: sampleModel.sample,
+                                text: sampleModel.sample.toString(),
                                 hintText: '请输入数量',
                                 keyboardType: TextInputType.number,
+                                inputFormatters : [
+                                  WhitelistingTextInputFormatter.digitsOnly
+                                ],
                                 callBack: (text) {
                                   if (int.parse(text) > sampleModel.newQuantity){
                                     showToast('输入数量超出限制了哦');
                                     return;
                                   }
-                                  sampleModel.sample = text;
+                                  sampleModel.sample = int.parse(text);
                                   activityModel.editSampleModelWith(index, sampleModel);
                                 })
                         ),
@@ -366,8 +370,8 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
               ),
               SliverToBoxAdapter(
                   child: ActivityAddTextCell(
-                      title: '预计进货额',
-                      hintText: '请输入预计进货额',
+                      title: '预计进货额(元)',
+                      hintText: '请输入预计进货额(元)',
                       value: activityModel.purchaseMoney,
                       trailing: null,
                       onTap: () => AppUtil.showInputDialog(
@@ -375,7 +379,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                           editingController: _editingController,
                           focusNode: _focusNode,
                           text: activityModel.purchaseMoney,
-                          hintText: '请输入预计进货额',
+                          hintText: '请输入预计进货额(元)',
                           keyboardType: TextInputType.number,
                           callBack: (text) {
                             activityModel.setPurchaseMoney(text);
