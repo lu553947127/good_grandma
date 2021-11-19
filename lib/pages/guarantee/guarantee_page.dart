@@ -5,6 +5,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/widgets/guarantee_cell.dart';
 import 'package:good_grandma/widgets/switch_type_title_widget.dart';
@@ -66,7 +67,7 @@ class _GuaranteePageState extends State<GuaranteePage> {
                 delegate: SliverChildBuilderDelegate((context, index) {
               Map map = _dataArray[index];
               String id = map['code'];
-              String type = map['brand'] + map['model'];
+              String type = map['brandName'] + map['modelName'];
               String shopName = (map['freezerLogsVO'] as Map)['shop'];
               String name = (map['freezerLogsVO'] as Map)['shopOwner'];
               String phone = (map['freezerLogsVO'] as Map)['shopPhone'];
@@ -111,9 +112,9 @@ class _GuaranteePageState extends State<GuaranteePage> {
       };
       final val = await requestGet(Api.getFreezerRepairList, param: map);
       var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---getFreezerRepairList----$data');
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
-      // print(list.toString());
       list.forEach((map) {
         _dataArray.add(map as Map);
       });
