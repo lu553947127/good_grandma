@@ -126,6 +126,10 @@ class _DownloadEnclosureWidgetState extends State<DownloadEnclosureWidget> {
                   height: 24),
             ),
             onTap: () {
+              if(widget.model.secrecy != 0){
+                AppUtil.showToastCenter('当前文件已加密，不能查看');
+                return;
+              }
               if (widget.model.enclosureViewURL.isNotEmpty)
                 AppUtil.launchURL(widget.model.enclosureViewURL);
               else

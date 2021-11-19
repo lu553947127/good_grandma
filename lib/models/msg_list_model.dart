@@ -38,6 +38,10 @@ class MsgListModel extends ChangeNotifier {
   ///是否拥有附件
   bool get haveEnclosure =>
       (enclosureURL.isNotEmpty || enclosureViewURL.isNotEmpty);
+
+  ///规章文件是否加密
+  int secrecy;
+
   setRead(bool read) {
     _read = read;
     notifyListeners();
@@ -62,6 +66,7 @@ class MsgListModel extends ChangeNotifier {
     this.enclosureURL = '',
     this.enclosureViewURL = '',
     this.forRegularDoc = false,
+    this.secrecy = 0
   }) {
     setRead(false);
     setSign(false);
@@ -76,6 +81,7 @@ class MsgListModel extends ChangeNotifier {
     enclosureViewURL = json['fileViewPath'] ?? '';
     enclosureSize = json['fileSize'] ?? '';
     enclosureName = json['fileName'] ?? '';
+    secrecy = json['secrecy'] ?? '';
     setRead(json['readStatus'] == '1');
     setSign(false);
     this.forRegularDoc = false;
