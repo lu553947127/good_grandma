@@ -482,8 +482,6 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
       if (data['code'] == 200){
         showToast("成功");
         Navigator.pop(context, true);
-      }else {
-        showToast(data['msg']);
       }
     });
   }

@@ -407,6 +407,9 @@ class Api {
   ///客户列表
   static const customerList = "/api/hap-app/app/user/areaUser";
 
+  ///客户拜访新客户列表
+  static const customerNewList = "/api/hap-app/app/visitplan/customerNewList";
+
   ///员工列表
   static const userList = "/api/hap-app/app/user/areaSaleUsers";
 

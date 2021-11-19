@@ -33,6 +33,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
   bool _isNewCustomer = false;//是否新客户
 
+  TextEditingController controller = new TextEditingController();
   ImagesProvider imagesProvider = new ImagesProvider();
   String customerId = '';
   String customerName = '';
@@ -51,12 +52,17 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
     }
 
     if (visitContent == ''){
-      showToast('内容不能为空');
+      showToast('行动过程不能为空');
       return;
     }
 
     if (imagesProvider.urlList.length != 0){
       images = listToString(imagesProvider.urlList);
+    }
+
+    if (images == ''){
+      showToast('拜访图片不能为空');
+      return;
     }
 
     Map<String, dynamic> map = {
@@ -255,107 +261,141 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text("客户拜访",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                color: Colors.white,
-                height: 60,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('是否新客户',style: TextStyle(fontSize: 15, color: AppColors.FF070E28)),
-                      Checkbox(
-                          value: _isNewCustomer,
-                          activeColor: Color(0xFFC68D3E),
-                          onChanged: (value){
+        appBar: AppBar(
+          centerTitle: true,
+          brightness: Brightness.light,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text("客户拜访",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        ),
+        body: SingleChildScrollView(
+            child: Column(
+                children: [
+                  Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      color: Colors.white,
+                      height: 60,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('是否新客户',style: TextStyle(fontSize: 15, color: AppColors.FF070E28)),
+                            Checkbox(
+                                value: _isNewCustomer,
+                                activeColor: Color(0xFFC68D3E),
+                                onChanged: (value){
+                                  setState(() {
+                                    _isNewCustomer = value;
+                                  });
+                                }
+                            )
+                          ]
+                      )
+                  ),
+                  Offstage(
+                      offstage: _isNewCustomer ? false : true,
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  width: 260,
+                                  child: TextInputView(
+                                      controller: controller,
+                                      rightLength: 120,
+                                      sizeHeight: 1,
+                                      leftTitle: '客户姓名',
+                                      rightPlaceholder: '请输入客户名称',
+                                      onChanged: (tex){
+                                        customerName = tex;
+                                      }
+                                  )
+                              ),
+                              Container(
+                                  width: 70,
+                                  height: 30,
+                                  margin: EdgeInsets.only(right: 10.0),
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(colors: [Color(0xFFC68D3E),Color(0xFFC68D3E)]),
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: TextButton(
+                                      child: Text('选择客户', style: TextStyle(fontSize: 12, color: Colors.white)),
+                                      onPressed: () async{
+                                        Map select = await showSelectList(context, Api.customerNewList, '请选择客户名称', 'customerName');
+                                        LogUtil.d('请求结果---select----$select');
+                                        setState(() {
+                                          customerName = select['customerName'];
+                                          controller.text = customerName;
+                                        });
+                                        return select['realName'];
+                                      }
+                                  )
+                              )
+                            ]
+                        )
+                      )
+                  ),
+                  Offstage(
+                      offstage: _isNewCustomer ? true : false,
+                      child: TextSelectView(
+                          sizeHeight: 1,
+                          leftTitle: '客户名称',
+                          rightPlaceholder: '请选择老客户',
+                          value: customerName,
+                          onPressed: () async{
+                            Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                            LogUtil.d('请求结果---select----$select');
                             setState(() {
-                              _isNewCustomer = value;
+                              customerName = select['realName'];
+                              customerId = select['id'];
                             });
+                            return select['realName'];
                           }
                       )
-                    ]
-                )
-            ),
-            Offstage(
-                offstage: _isNewCustomer ? false : true,
-                child: TextInputView(
-                    rightLength: 120,
-                    leftTitle: '客户姓名',
-                    rightPlaceholder: '请输入客户名称',
-                    onChanged: (tex){
-                      customerName = tex;
-                    }
-                )
-            ),
-            Offstage(
-                offstage: _isNewCustomer ? true : false,
-                child: TextSelectView(
-                    sizeHeight: 1,
-                    leftTitle: '客户名称',
-                    rightPlaceholder: '请选择客户',
-                    value: customerName,
-                    onPressed: () async{
-                      Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
-                      LogUtil.d('请求结果---select----$select');
-                      setState(() {
-                        customerName = select['realName'];
-                        customerId = select['id'];
-                      });
-                      return select['realName'];
-                    }
-                )
-            ),
-            ContentInputView(
-              sizeHeight: 10,
-              color: Colors.white,
-              leftTitle: '行动过程',
-              rightPlaceholder: '行动过程',
-              onChanged: (tex){
-                visitContent = tex;
-              }
-            ),
-            ChangeNotifierProvider<ImagesProvider>.value(
-                value: imagesProvider,
-                child:  CustomPhotoWidget(
-                  title: '拜访图片',
-                  length: 3,
-                  sizeHeight: 10,
-                  url: Api.putFile
-                )
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 10, top: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset('assets/images/icon_address.png', width: 12, height: 12),
-                  SizedBox(width: 3),
+                  ),
+                  ContentInputView(
+                      sizeHeight: 10,
+                      color: Colors.white,
+                      leftTitle: '行动过程',
+                      rightPlaceholder: '行动过程',
+                      onChanged: (tex){
+                        visitContent = tex;
+                      }
+                  ),
+                  ChangeNotifierProvider<ImagesProvider>.value(
+                      value: imagesProvider,
+                      child:  CustomPhotoWidget(
+                          title: '拜访图片',
+                          length: 3,
+                          sizeHeight: 10,
+                          url: Api.putFile
+                      )
+                  ),
                   Container(
-                    width: 300,
-                    child: Text(address == null ? '定位获取失败，请检查定位权限是否开启' : address, style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                      margin: EdgeInsets.only(left: 10, top: 10),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.asset('assets/images/icon_address.png', width: 12, height: 12),
+                            SizedBox(width: 3),
+                            Container(
+                              width: 300,
+                              child: Text(address == null ? '定位获取失败，请检查定位权限是否开启' : address, style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                            )
+                          ]
+                      )
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(20),
+                      child: LoginBtn(
+                          title: '提交',
+                          onPressed: _customerVisitAdd
+                      )
                   )
                 ]
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: LoginBtn(
-                title: '提交',
-                onPressed: _customerVisitAdd
-              )
             )
-          ]
         )
-      )
     );
   }
 }
