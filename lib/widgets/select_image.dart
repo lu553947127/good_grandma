@@ -1,15 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_luban/flutter_luban.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/provider/image_provider.dart';
+import 'package:good_grandma/widgets/images_detail.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
 import 'package:good_grandma/widgets/progerss_dialog.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ///选择图片弹窗
@@ -127,12 +131,19 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                   loadingText: '图片上传中...',
               );
             });
-        getPutFile(widget.url, pickedFile.path).then((val) async{
-          var data = json.decode(val.toString());
-          print('请求结果---uploadFile----$data');
-          Navigator.pop(context);
-          widget.imagesProvider.fileList(data['data']['link'], 'png', '');
-          widget.imagesProvider.addImageData(data['data']['link'], data['data']['originalName']);
+        final tempDir = await getTemporaryDirectory();
+        CompressObject compressObject = CompressObject(
+            imageFile: File(pickedFile.path),
+            path: tempDir.path
+        );
+        Luban.compressImage(compressObject).then((_path) {
+          getPutFile(widget.url, _path).then((val) async{
+            var data = json.decode(val.toString());
+            print('请求结果---uploadFile----$data');
+            Navigator.pop(context);
+            widget.imagesProvider.fileList(data['data']['link'], 'png', '');
+            widget.imagesProvider.addImageData(data['data']['link'], data['data']['originalName']);
+          });
         });
         return true;
       } else {
@@ -252,11 +263,12 @@ class _SelectImagesViewState extends State<SelectImagesView> {
                   widget.imagesProvider.filePath[widget.index]['type'] == 'jpeg'){
                 List<String> imagesList = [];
                 imagesList.add(widget.imagesProvider.filePath[widget.index]['image']);
-                Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
-                  images: imagesList,//传入图片list
-                  index: widget.index,//传入当前点击的图片的index
-                  heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
-                )));
+                // Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+                //   images: imagesList,//传入图片list
+                //   index: widget.index,//传入当前点击的图片的index
+                //   heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+                // )));
+                Navigator.push(context, MaterialPageRoute(builder:(context)=> ImagesDetailPage(images: imagesList[widget.index])));
               }else {
                 _launchURL(widget.imagesProvider.filePath[widget.index]['image']);
               }

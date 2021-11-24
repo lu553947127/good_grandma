@@ -45,6 +45,7 @@ class _PhotoViewGalleryScreenState extends State<PhotoViewGalleryScreen> {
                 child: PhotoViewGallery.builder(
                   scrollPhysics: const BouncingScrollPhysics(),
                   builder: (BuildContext context, int index) {
+                    print('请求结果---widget.images[index]----${widget.images[index]}');
                     return PhotoViewGalleryPageOptions(
                       // imageProvider: FileImage(widget.images[index]),
                       imageProvider: NetworkImage(widget.images[index]),

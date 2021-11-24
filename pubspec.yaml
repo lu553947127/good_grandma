@@ -92,6 +92,8 @@ dependencies:
   webview_flutter: ^2.0.0
   #获取设备IMEI
   device_info: ^2.0.3
+  #鲁班压缩
+  flutter_luban: ^0.1.13
 
 dev_dependencies:
   flutter_test:
