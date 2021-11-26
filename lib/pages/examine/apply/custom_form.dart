@@ -8,7 +8,6 @@ import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/examine/apply/travel_schedule_apply.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
-import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
@@ -17,6 +16,7 @@ import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
+import 'package:good_grandma/widgets/select_tree.dart';
 import 'package:good_grandma/widgets/time_select.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +39,6 @@ class _CustomFormViewState extends State<CustomFormView> {
 
   @override
   Widget build(BuildContext context) {
-    ImagesProvider imagesProvider = new ImagesProvider();
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
 
     DateTime now = new DateTime.now();
@@ -52,8 +51,6 @@ class _CustomFormViewState extends State<CustomFormView> {
     for (Map map in widget.list) {
       dataList.add(map['prop']);
     }
-
-    LogUtil.d('dataList----$dataList');
 
     _childWidget(data){
       switch(data['type']){
@@ -98,15 +95,27 @@ class _CustomFormViewState extends State<CustomFormView> {
                     addData[prop] = tex;
                     timeSelectProvider.addchuchaishiyou(tex);
                   }
+
+                  if (data['prop'] == 'money'){
+                    addData[prop] = tex;
+                    timeSelectProvider.addmoney(tex);
+                  }
                 }
               },
             );
           }
           break;
         case 'select':
+          String value = '';
+          if (data['label'] == '公司'){
+            value = timeSelectProvider.gongsi;
+          }else {
+            value = timeSelectProvider.value;
+          }
+
           return PostAddInputCell(
             title: data['label'],
-            value: timeSelectProvider.value,
+            value: value,
             hintText: '请选择${data['label']}',
             endWidget: Icon(Icons.chevron_right),
             onTap: () async {
@@ -126,9 +135,26 @@ class _CustomFormViewState extends State<CustomFormView> {
                 if (data['prop'] == prop){
                   addData[prop] = select;
                 }
+
+                if (data['prop'] == 'gongsi'){
+                  timeSelectProvider.addgongsi(select);
+                }else {
+                  timeSelectProvider.addValue2(select);
+                }
               }
-              timeSelectProvider.addValue2(select);
             }
+          );
+          break;
+        case 'tree':
+          return PostAddInputCell(
+              title: data['label'],
+              value: timeSelectProvider.bumenName,
+              hintText: '请选择${data['label']}',
+              endWidget: Icon(Icons.chevron_right),
+              onTap: () async {
+                Map area = await showSelectTreeList(context, '全国');
+                timeSelectProvider.addbumen(area['deptId'], area['areaName']);
+              }
           );
           break;
         case 'datetimerange':
@@ -199,9 +225,27 @@ class _CustomFormViewState extends State<CustomFormView> {
                   addData[prop] = tex;
                   timeSelectProvider.addyujidachengxiaoguo(tex);
                 }
-              }
 
-              LogUtil.d('addData----$addData');
+                if (data['prop'] == 'zhuzhi'){
+                  addData[prop] = tex;
+                  timeSelectProvider.addzhuzhi(tex);
+                }
+
+                if (data['prop'] == 'shuoming'){
+                  addData[prop] = tex;
+                  timeSelectProvider.addshuoming(tex);
+                }
+
+                if (data['prop'] == 'purpose'){
+                  addData[prop] = tex;
+                  timeSelectProvider.addpurpose(tex);
+                }
+
+                if (data['prop'] == 'desc'){
+                  addData[prop] = tex;
+                  timeSelectProvider.adddesc(tex);
+                }
+              }
             },
           );
           break;
@@ -218,14 +262,12 @@ class _CustomFormViewState extends State<CustomFormView> {
           }
           break;
         case 'upload':
-          return ChangeNotifierProvider<ImagesProvider>.value(
-              value: imagesProvider,
-              child: CustomPhotoWidget(
-                title: data['label'],
-                length: 3,
-                sizeHeight: 10,
-                url: data['action']
-              )
+          return OaPhotoWidget(
+              title: data['label'],
+              length: 3,
+              sizeHeight: 10,
+              url: data['action'],
+              timeSelectProvider: timeSelectProvider
           );
           break;
         default:
@@ -242,7 +284,7 @@ class _CustomFormViewState extends State<CustomFormView> {
 
       for (Map map in widget.list) {
         if ('upload' == map['type']){
-          addData[map['prop']] = imagesProvider.imagePath;
+          addData[map['prop']] = timeSelectProvider.imagePath;
           LogUtil.d('请求结果---prop----${map['prop']}');
         }else if ('date' == map['type']){
           addData[map['prop']] = timeSelectProvider.select;
@@ -255,6 +297,12 @@ class _CustomFormViewState extends State<CustomFormView> {
         }else if ('dynamic' == map['type']){
           if ('chuchairicheng' == map['prop']){
             addData[map['prop']] = timeSelectProvider.travelScheduleMapList;
+          }
+        }else if ('select' == map['type']){
+          if ('gongsi' == map['prop']){
+            addData[map['prop']] = timeSelectProvider.gongsi;
+          }else {
+            addData[map['prop']] = timeSelectProvider.value;
           }
         }
 
@@ -269,6 +317,20 @@ class _CustomFormViewState extends State<CustomFormView> {
         }else if ('yujidachengxiaoguo' == map['prop']){
           addData[map['prop']] = timeSelectProvider.yujidachengxiaoguo;
         }else if ('shenqingren' == map['prop']){
+          addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
+        }else if ('bumen' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.bumenName;
+        }else if ('shuoming' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.shuoming;
+        }else if ('zhuzhi' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.zhuzhi;
+        }else if ('purpose' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.purpose;
+        }else if ('desc' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.desc;
+        }else if ('money' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.money;
+        }else if ('applyer' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }
       }

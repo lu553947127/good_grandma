@@ -45,15 +45,24 @@ class _PhotoViewGalleryScreenState extends State<PhotoViewGalleryScreen> {
                 child: PhotoViewGallery.builder(
                   scrollPhysics: const BouncingScrollPhysics(),
                   builder: (BuildContext context, int index) {
-                    print('请求结果---widget.images[index]----${widget.images[index]}');
                     return PhotoViewGalleryPageOptions(
-                      // imageProvider: FileImage(widget.images[index]),
                       imageProvider: NetworkImage(widget.images[index]),
                       heroAttributes: widget.heroTag.isNotEmpty ? PhotoViewHeroAttributes(tag: widget.heroTag) : null,
                     );
                   },
                   itemCount: widget.images.length,
-                  // loadingChild: Container(),
+                  loadingBuilder: (context, event) => Center(
+                    child: Container(
+                      width: 20.0,
+                      height: 20.0,
+                      child: CircularProgressIndicator(
+                        color: Color(0xFFC68D3E),
+                        value: event == null
+                            ? 0
+                            : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+                      ),
+                    ),
+                  ),
                   backgroundDecoration: null,
                   pageController: widget.controller,
                   enableRotation: true,

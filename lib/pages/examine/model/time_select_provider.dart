@@ -25,6 +25,22 @@ class TimeSelectProvider with ChangeNotifier{
 
   String yujidachengxiaoguo = '';
 
+  String bumen = '';
+
+  String bumenName = '';
+
+  String gongsi = '';
+
+  String zhuzhi = '';
+
+  String shuoming = '';
+
+  String purpose = '';
+
+  String desc = '';
+
+  String money = '';
+
   ///添加
   addStartTime(start_time, end_time, day_number) {
     startTime = start_time;
@@ -67,6 +83,82 @@ class TimeSelectProvider with ChangeNotifier{
   addyujidachengxiaoguo(str){
     yujidachengxiaoguo = str;
     notifyListeners();
+  }
+
+  addbumen(str, str2){
+    bumen = str;
+    bumenName = str2;
+    notifyListeners();
+  }
+
+  addgongsi(str){
+    gongsi = str;
+    notifyListeners();
+  }
+
+  addzhuzhi(str){
+    zhuzhi = str;
+    notifyListeners();
+  }
+
+  addshuoming(str){
+    shuoming = str;
+    notifyListeners();
+  }
+
+  addpurpose(str){
+    purpose = str;
+    notifyListeners();
+  }
+
+  adddesc(str){
+    desc = str;
+    notifyListeners();
+  }
+
+  addmoney(str){
+    money = str;
+    notifyListeners();
+  }
+
+
+  ///图片地址
+  var imgPath;
+  ///文件地址结合
+  List<Map> filePath = [];
+  ///map图片集合
+  List<Map> imagePath = [];
+  ///图片url集合
+  List<String> urlList = [];
+
+  //选择附件图片集合
+  fileList(String image, String type, String iconName) async{
+    Map addData = new Map();
+    addData['image'] = image;
+    addData['type'] = type;
+    addData['iconName'] = iconName;
+    filePath.add(addData);
+    notifyListeners();
+  }
+
+  //生成接口添加的数据
+  addImageData(images, name) async{
+    Map addData = new Map();
+    addData['label'] = name;
+    addData['value'] = images;
+    imagePath.add(addData);
+    urlList.add(images);
+    notifyListeners();
+  }
+
+  //选择图片集合删除
+  imagesListDelete(int index) async{
+    if(filePath.length > 0){
+      filePath.removeAt(index);
+      imagePath.removeAt(index);
+      urlList.removeAt(index);
+      notifyListeners();
+    }
   }
 
   ///动态列表

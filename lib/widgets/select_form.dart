@@ -36,7 +36,7 @@ class SelectFormPage extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             var data = jsonDecode(snapshot.data.toString());
-            LogUtil.d('请求结果---url----$data');
+            LogUtil.d('请求结果---$url----$data');
             List<Map> list = (data['data'] as List).cast();
             LogUtil.d('请求结果---list----$list');
             return ListView.builder(

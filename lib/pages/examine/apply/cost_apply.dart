@@ -8,7 +8,6 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
-import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
@@ -38,7 +37,6 @@ class _ExamineCostApplyState extends State<ExamineCostApply> {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
-    ImagesProvider imagesProvider = new ImagesProvider();
 
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
@@ -133,14 +131,12 @@ class _ExamineCostApplyState extends State<ExamineCostApply> {
           );
           break;
         case 'upload':
-          return ChangeNotifierProvider<ImagesProvider>.value(
-              value: imagesProvider,
-              child:  CustomPhotoWidget(
-                title: data['label'],
-                length: 3,
-                url: data['action'],
-                sizeHeight: 10
-              )
+          return OaPhotoWidget(
+              title: data['label'],
+              length: 3,
+              sizeHeight: 10,
+              url: data['action'],
+              timeSelectProvider: timeSelectProvider
           );
           break;
         default:
@@ -152,7 +148,7 @@ class _ExamineCostApplyState extends State<ExamineCostApply> {
     ///发起流程
     _startProcess(){
       addData['type'] = timeSelectProvider.select;
-      addData['file'] = imagesProvider.imagePath;
+      addData['file'] = timeSelectProvider.imagePath;
       LogUtil.d('addData----$addData');
       requestPost(Api.startProcess, json: addData).then((val) async{
         var data = json.decode(val.toString());

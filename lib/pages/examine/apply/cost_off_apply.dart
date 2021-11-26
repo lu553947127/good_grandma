@@ -11,7 +11,6 @@ import 'package:good_grandma/pages/examine/children_form/system_form.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/examine/model/form_rovider.dart';
 import 'package:good_grandma/pages/examine/model/form_sys_provider.dart';
-import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
@@ -41,7 +40,6 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
   @override
   Widget build(BuildContext context) {
 
-    ImagesProvider imagesProvider = new ImagesProvider();
     FormProvider formProvider = new FormProvider();
     FormSysProvider formSysProvider = new FormSysProvider();
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
@@ -192,14 +190,12 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
           }
           break;
         case 'upload':
-          return ChangeNotifierProvider<ImagesProvider>.value(
-              value: imagesProvider,
-              child:  CustomPhotoWidget(
-                  title: data['label'],
-                  length: 3,
-                  sizeHeight: 10,
-                  url: data['action']
-              )
+          return OaPhotoWidget(
+              title: data['label'],
+              length: 3,
+              sizeHeight: 10,
+              url: data['action'],
+              timeSelectProvider: timeSelectProvider
           );
           break;
         default:
@@ -213,7 +209,7 @@ class _ExamineCostOffApplyState extends State<ExamineCostOffApply> {
       addData['feiyongleibie'] = timeSelectProvider.select;
       addData['feiyongshenqing'] = timeSelectProvider.valueList;
 
-      addData['file'] = imagesProvider.imagePath;
+      addData['file'] = timeSelectProvider.imagePath;
       addData['zhifuduixiangxinxi'] = formProvider.mapList;
       LogUtil.d('addData----$addData');
       requestPost(Api.startProcess, json: addData).then((val) async{
