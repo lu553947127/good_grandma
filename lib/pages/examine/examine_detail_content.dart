@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///审核详情自定义内容
 class ExamineDetailContent extends StatelessWidget {
@@ -130,6 +132,15 @@ class ExamineDetailContent extends StatelessWidget {
     );
   }
 
+  ///用内置浏览器打开网页
+  _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -137,27 +148,46 @@ class ExamineDetailContent extends StatelessWidget {
       fileList = (variables['file'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
-        _views.add(InkWell(
-          child: Container(
-              margin: EdgeInsets.only(top: 3),
-              child: MyCacheImageView(
-                  imageURL: file['value'],
-                  width: 112,
-                  height: 63
-              )
-          ),
-          onTap: (){
-            List<String> imagesList = [];
-            for (Map file in fileList) {
-              imagesList.add(file['value']);
-            }
-            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
-              images: imagesList,//传入图片list
-              index: 0,//传入当前点击的图片的index
-              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
-            )));
-          },
-        ));
+        if(file['value'] != null) {
+          String last = '';
+          try {
+            last = file['value'].split('.').last;
+          } on Exception catch (e, s) {
+            print(s);
+          }
+
+          List<String> imagesList = [];
+          imagesList.add(file['value']);
+
+          _views.add(last.toLowerCase() == 'jpg' ||
+              last.toLowerCase() == 'jpeg' ||
+              last.toLowerCase() == 'png' ||
+              last.toLowerCase() == 'gif' ? InkWell(
+              child: Container(
+                  margin: EdgeInsets.only(top: 3),
+                  child: MyCacheImageView(
+                      imageURL: file['value'],
+                      width: 112,
+                      height: 63
+                  )
+              ),
+              onTap: (){
+                Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+                  images: imagesList,//传入图片list
+                  index: 0,//传入当前点击的图片的index
+                  heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+                )));
+              }
+          ) :
+          InkWell(
+            child: Text(file['label']),
+            onTap: (){
+              _launchURL(file['value']);
+            },
+          ));
+        }else {
+          _views.add(Text('数据显示异常'));
+        }
       }
     }
 
@@ -165,27 +195,46 @@ class ExamineDetailContent extends StatelessWidget {
       fileList = (variables['biaodanfujian'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
-        _views.add(InkWell(
-          child: Container(
-              margin: EdgeInsets.only(top: 3),
-              child: MyCacheImageView(
-                  imageURL: file['value'],
-                  width: 112,
-                  height: 63
-              )
-          ),
-          onTap: (){
-            List<String> imagesList = [];
-            for (Map file in fileList) {
-              imagesList.add(file['value']);
-            }
-            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
-              images: imagesList,//传入图片list
-              index: 0,//传入当前点击的图片的index
-              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
-            )));
-          },
-        ));
+        if(file['value'] != null) {
+          String last = '';
+          try {
+            last = file['value'].split('.').last;
+          } on Exception catch (e, s) {
+            print(s);
+          }
+
+          List<String> imagesList = [];
+          imagesList.add(file['value']);
+
+          _views.add(last.toLowerCase() == 'jpg' ||
+              last.toLowerCase() == 'jpeg' ||
+              last.toLowerCase() == 'png' ||
+              last.toLowerCase() == 'gif' ? InkWell(
+              child: Container(
+                  margin: EdgeInsets.only(top: 3),
+                  child: MyCacheImageView(
+                      imageURL: file['value'],
+                      width: 112,
+                      height: 63
+                  )
+              ),
+              onTap: (){
+                Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+                  images: imagesList,//传入图片list
+                  index: 0,//传入当前点击的图片的index
+                  heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+                )));
+              }
+          ) :
+          InkWell(
+            child: Text(file['label']),
+            onTap: (){
+              _launchURL(file['value']);
+            },
+          ));
+        }else {
+          _views.add(Text('数据显示异常'));
+        }
       }
     }
 
@@ -193,27 +242,46 @@ class ExamineDetailContent extends StatelessWidget {
       fileList = (variables['fujian'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
-        _views.add(InkWell(
-          child: Container(
-              margin: EdgeInsets.only(top: 3),
-              child: MyCacheImageView(
-                  imageURL: file['value'],
-                  width: 112,
-                  height: 63
-              )
-          ),
-          onTap: (){
-            List<String> imagesList = [];
-            for (Map file in fileList) {
-              imagesList.add(file['value']);
-            }
-            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
-              images: imagesList,//传入图片list
-              index: 0,//传入当前点击的图片的index
-              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
-            )));
-          },
-        ));
+        if(file['value'] != null) {
+          String last = '';
+          try {
+            last = file['value'].split('.').last;
+          } on Exception catch (e, s) {
+            print(s);
+          }
+
+          List<String> imagesList = [];
+          imagesList.add(file['value']);
+
+          _views.add(last.toLowerCase() == 'jpg' ||
+              last.toLowerCase() == 'jpeg' ||
+              last.toLowerCase() == 'png' ||
+              last.toLowerCase() == 'gif' ? InkWell(
+              child: Container(
+                  margin: EdgeInsets.only(top: 3),
+                  child: MyCacheImageView(
+                      imageURL: file['value'],
+                      width: 112,
+                      height: 63
+                  )
+              ),
+              onTap: (){
+                Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+                  images: imagesList,//传入图片list
+                  index: 0,//传入当前点击的图片的index
+                  heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+                )));
+              }
+          ) :
+          InkWell(
+            child: Text(file['label']),
+            onTap: (){
+              _launchURL(file['value']);
+            },
+          ));
+        }else {
+          _views.add(Text('数据显示异常'));
+        }
       }
     }
 
@@ -221,27 +289,46 @@ class ExamineDetailContent extends StatelessWidget {
       fileList = (variables['1630552552652_12159'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
-        _views.add(InkWell(
-          child: Container(
-              margin: EdgeInsets.only(top: 3),
-              child: MyCacheImageView(
-                  imageURL: file['value'],
-                  width: 112,
-                  height: 63
-              )
-          ),
-          onTap: (){
-            List<String> imagesList = [];
-            for (Map file in fileList) {
-              imagesList.add(file['value']);
-            }
-            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
-              images: imagesList,//传入图片list
-              index: 0,//传入当前点击的图片的index
-              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
-            )));
-          },
-        ));
+        if(file['value'] != null) {
+          String last = '';
+          try {
+            last = file['value'].split('.').last;
+          } on Exception catch (e, s) {
+            print(s);
+          }
+
+          List<String> imagesList = [];
+          imagesList.add(file['value']);
+
+          _views.add(last.toLowerCase() == 'jpg' ||
+              last.toLowerCase() == 'jpeg' ||
+              last.toLowerCase() == 'png' ||
+              last.toLowerCase() == 'gif' ? InkWell(
+              child: Container(
+                  margin: EdgeInsets.only(top: 3),
+                  child: MyCacheImageView(
+                      imageURL: file['value'],
+                      width: 112,
+                      height: 63
+                  )
+              ),
+              onTap: (){
+                Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+                  images: imagesList,//传入图片list
+                  index: 0,//传入当前点击的图片的index
+                  heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+                )));
+              }
+          ) :
+          InkWell(
+            child: Text(file['label']),
+            onTap: (){
+              _launchURL(file['value']);
+            },
+          ));
+        }else {
+          _views.add(Text('数据显示异常'));
+        }
       }
     }
 
