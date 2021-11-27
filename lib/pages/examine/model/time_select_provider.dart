@@ -41,6 +41,10 @@ class TimeSelectProvider with ChangeNotifier{
 
   String money = '';
 
+  String feiyongshenqing = '';
+
+  String fylb = '';
+
   ///添加
   addStartTime(start_time, end_time, day_number) {
     startTime = start_time;
@@ -121,7 +125,19 @@ class TimeSelectProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  addfeiyongshenqing(str){
+    feiyongshenqing = str;
+    notifyListeners();
+  }
 
+  addfylb(str){
+    fylb = str;
+    notifyListeners();
+  }
+
+  /**
+   * 上传附件
+   */
   ///图片地址
   var imgPath;
   ///文件地址结合
@@ -161,6 +177,16 @@ class TimeSelectProvider with ChangeNotifier{
     }
   }
 
+  TimeSelectProvider() {
+    _travelScheduleList = [];
+    travelScheduleMapList = [];
+    _zhifuduixiangxinxiList = [];
+    zhifuduixiangxinxiMapList = [];
+  }
+
+  /**
+   * 出差日程动态表单
+   */
   ///动态列表
   List<TravelModel> _travelScheduleList;
 
@@ -169,11 +195,6 @@ class TimeSelectProvider with ChangeNotifier{
 
   ///动态列表
   List<Map> travelScheduleMapList;
-
-  TimeSelectProvider() {
-    _travelScheduleList = [];
-    travelScheduleMapList = [];
-  }
 
   ///添加item
   addForm(TravelModel model){
@@ -223,6 +244,62 @@ class TimeSelectProvider with ChangeNotifier{
     travelScheduleMapList.removeAt(index);
     notifyListeners();
   }
+
+
+/**
+ * 支付对象信息动态表单
+ */
+
+  ///动态列表
+  List<FormModel> _zhifuduixiangxinxiList;
+
+  ///动态列表
+  List<FormModel> get zhifuduixiangxinxiList => _zhifuduixiangxinxiList;
+
+  List<Map> zhifuduixiangxinxiMapList;
+
+  ///添加item
+  addzhifuduixiangForm(FormModel formModel){
+    if(_zhifuduixiangxinxiList == null)
+      _zhifuduixiangxinxiList = [];
+    _zhifuduixiangxinxiList.add(formModel);
+    Map addData = new Map();
+    addData['danweimingcheng'] = formModel.danweimingcheng;
+    addData['zhanghao'] = formModel.zhanghao;
+    addData['kaihuhangmingcheng'] = formModel.kaihuhangmingcheng;
+    addData['jine'] = formModel.jine;
+    addData['zhifufangshi'] = formModel.zhifufangshi;
+    addData['beizhu'] = formModel.beizhu;
+    zhifuduixiangxinxiMapList.add(addData);
+    notifyListeners();
+  }
+
+  ///编辑当前item
+  editzhifuduixiangFormWith(int index, FormModel formModel){
+    if(_zhifuduixiangxinxiList == null)
+      _zhifuduixiangxinxiList = [];
+    if(index >= _zhifuduixiangxinxiList.length) return;
+    _zhifuduixiangxinxiList.setAll(index, [formModel]);
+    Map addData = new Map();
+    addData['danweimingcheng'] = formModel.danweimingcheng;
+    addData['zhanghao'] = formModel.zhanghao;
+    addData['kaihuhangmingcheng'] = formModel.kaihuhangmingcheng;
+    addData['jine'] = formModel.jine;
+    addData['zhifufangshi'] = formModel.zhifufangshi;
+    addData['beizhu'] = formModel.beizhu;
+    zhifuduixiangxinxiMapList.setAll(index, [addData]);
+    notifyListeners();
+  }
+
+  ///删除单个item
+  deletezhifuduixiangFormWith(int index){
+    if(_zhifuduixiangxinxiList == null)
+      _zhifuduixiangxinxiList = [];
+    if(index >= _zhifuduixiangxinxiList.length) return;
+    _zhifuduixiangxinxiList.removeAt(index);
+    zhifuduixiangxinxiMapList.removeAt(index);
+    notifyListeners();
+  }
 }
 
 ///出差日程模型
@@ -250,5 +327,36 @@ class TravelModel {
     this.startTime = '',
     this.endTime = '',
     this.days = ''
+  });
+}
+
+///支付对象信息模型
+class FormModel {
+
+  ///单位名称
+  String danweimingcheng;
+
+  ///账号
+  String zhanghao;
+
+  ///开户行名称
+  String kaihuhangmingcheng;
+
+  ///金额
+  String jine;
+
+  ///支付方式
+  String zhifufangshi;
+
+  ///备注
+  String beizhu;
+
+  FormModel({
+    this.danweimingcheng = '',
+    this.zhanghao = '',
+    this.kaihuhangmingcheng = '',
+    this.jine = '',
+    this.zhifufangshi = '',
+    this.beizhu = ''
   });
 }
