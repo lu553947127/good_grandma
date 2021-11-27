@@ -12,8 +12,6 @@ import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
-import 'package:good_grandma/widgets/add_text_default.dart';
-import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
@@ -37,6 +35,8 @@ class CustomFormView extends StatefulWidget {
 }
 
 class _CustomFormViewState extends State<CustomFormView> {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _editingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,56 +57,83 @@ class _CustomFormViewState extends State<CustomFormView> {
       switch(data['type']){
         case 'date':
           addData[data['prop']] = nowTime;
-          return TextDefaultView(
-              leftTitle: data['label'],
-              rightPlaceholder: nowTime,
-              sizeHeight: 0
+          return PostAddInputCell(
+              title: data['label'],
+              value: nowTime,
+              hintText: nowTime,
+              endWidget: null,
+              onTap: null
           );
           break;
         case 'input':
           if (data['label'] == '申请人'){
-            return TextDefaultView(
-                leftTitle: data['label'],
-                rightPlaceholder: '${Store.readPostName()}${Store.readNickName()}',
-                sizeHeight: 1
+            return PostAddInputCell(
+                title: data['label'],
+                value: '${Store.readPostName()}${Store.readNickName()}',
+                hintText: '${Store.readPostName()}${Store.readNickName()}',
+                endWidget: null,
+                onTap: null
             );
           }else if (data['prop'] == 'hejidaxie'){
             return Container();
           }else if (data['prop'] == 'hejixiaoxie'){
             return Container();
           }else {
-            return TextInputView(
-              leftTitle: data['label'],
-              rightPlaceholder: '请输入${data['label']}',
-              sizeHeight: 1,
-              rightLength: 120,
-              onChanged: (tex){
-                for (String prop in dataList) {
-                  if (data['prop'] == prop){
-                    addData[prop] = tex;
-                  }
+            String value = '';
+            if (data['prop'] == 'chufadi'){
+              value = timeSelectProvider.chufadi;
+            }else if(data['prop'] == 'mudidi'){
+              value = timeSelectProvider.mudidi;
+            }else if(data['prop'] == 'chuchaishiyou'){
+              value = timeSelectProvider.chuchaishiyou;
+            }else if(data['prop'] == 'money'){
+              value = timeSelectProvider.money;
+            }else if(data['prop'] == 'nianduyusuan'){
+              value = timeSelectProvider.nianduyusuan;
+            }
+            return PostAddInputCell(
+                title: data['label'],
+                value: value,
+                hintText: '请输入${data['label']}',
+                endWidget: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: value,
+                    hintText: '请输入${data['label']}',
+                    callBack: (text) {
+                      for (String prop in dataList) {
+                        if (data['prop'] == prop){
+                          addData[prop] = text;
+                        }
 
-                  if (data['prop'] == 'chufadi'){
-                    addData[prop] = tex;
-                    timeSelectProvider.addchufadi(tex);
-                  }
+                        if (data['prop'] == 'chufadi'){
+                          addData[prop] = text;
+                          timeSelectProvider.addchufadi(text);
+                        }
 
-                  if (data['prop'] == 'mudidi'){
-                    addData[prop] = tex;
-                    timeSelectProvider.addmudidi(tex);
-                  }
+                        if (data['prop'] == 'mudidi'){
+                          addData[prop] = text;
+                          timeSelectProvider.addmudidi(text);
+                        }
 
-                  if (data['prop'] == 'chuchaishiyou'){
-                    addData[prop] = tex;
-                    timeSelectProvider.addchuchaishiyou(tex);
-                  }
+                        if (data['prop'] == 'chuchaishiyou'){
+                          addData[prop] = text;
+                          timeSelectProvider.addchuchaishiyou(text);
+                        }
 
-                  if (data['prop'] == 'money'){
-                    addData[prop] = tex;
-                    timeSelectProvider.addmoney(tex);
-                  }
-                }
-              }
+                        if (data['prop'] == 'money'){
+                          addData[prop] = text;
+                          timeSelectProvider.addmoney(text);
+                        }
+
+                        if (data['prop'] == 'nianduyusuan'){
+                          addData[prop] = text;
+                          timeSelectProvider.addnianduyusuan(text);
+                        }
+                      }
+                    })
             );
           }
           break;
@@ -354,6 +381,8 @@ class _CustomFormViewState extends State<CustomFormView> {
           addData[map['prop']] = timeSelectProvider.feiyongshenqing;
         }else if ('fylb' == map['prop']){
           addData[map['prop']] = timeSelectProvider.fylb;
+        }else if ('nianduyusuan' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.nianduyusuan;
         }else if ('applyer' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }
@@ -391,5 +420,12 @@ class _CustomFormViewState extends State<CustomFormView> {
           )
         ]
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _editingController?.dispose();
+    _focusNode?.dispose();
   }
 }

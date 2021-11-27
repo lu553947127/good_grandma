@@ -100,13 +100,8 @@ class _Body extends State<MsgPostListPage> {
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
-      // print(list.toString());
       list.forEach((map) {
         MsgListModel model = MsgListModel.fromJson(map);
-        // model.enclosureURL = 'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg';
-        // model.enclosureViewURL = 'https://c-ssl.duitang.com/uploads/item/201707/28/20170728212204_zcyWe.thumb.1000_0.jpeg';
-        // model.enclosureName = 'fujian';
-        // model.enclosureSize = '1.2M';
         _dataArray.add(model);
       });
       bool noMore = false;

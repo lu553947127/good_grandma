@@ -1,137 +1,174 @@
 import 'package:flutter/cupertino.dart';
 
 class TimeSelectProvider with ChangeNotifier{
-  ///开始时间
-  String startTime ='';
 
-  ///结束时间
-  String endTime = '';
+  String _startTime = '';
+  String _endTime;
+  String _dayNumber;
+  String _select;
+  String _value;
+  List<String> _valueList;
+  String _chufadi;
+  String _mudidi;
+  String _chuchaishiyou;
+  String _xingchenganpai;
+  String _yujidachengxiaoguo;
+  String _bumen;
+  String _bumenName;
+  String _gongsi;
+  String _zhuzhi;
+  String _shuoming;
+  String _purpose;
+  String _desc;
+  String _money;
+  String _feiyongshenqing;
+  String _fylb;
+  String _nianduyusuan;
 
-  String dayNumber = '0';
+  TimeSelectProvider() {
+    _startTime = '';
+    _endTime = '';
+    _dayNumber = '0';
+    _select = '';
+    _value = '';
+    _valueList = [];
+    _chufadi = '';
+    _mudidi = '';
+    _chuchaishiyou = '';
+    _xingchenganpai = '';
+    _yujidachengxiaoguo = '';
+    _bumen = '';
+    _bumenName = '';
+    _gongsi = '';
+    _zhuzhi = '';
+    _shuoming = '';
+    _purpose = '';
+    _desc = '';
+    _money = '';
+    _feiyongshenqing = '';
+    _fylb = '';
+    _nianduyusuan = '';
+    _travelScheduleList = [];
+    travelScheduleMapList = [];
+    _zhifuduixiangxinxiList = [];
+    zhifuduixiangxinxiMapList = [];
+  }
 
-  ///普通选择value
-  String select = '';
-
-  String value = '';
-  List<String> valueList = [];
-
-  String chufadi = '';
-
-  String mudidi = '';
-
-  String chuchaishiyou = '';
-
-  String xingchenganpai = '';
-
-  String yujidachengxiaoguo = '';
-
-  String bumen = '';
-
-  String bumenName = '';
-
-  String gongsi = '';
-
-  String zhuzhi = '';
-
-  String shuoming = '';
-
-  String purpose = '';
-
-  String desc = '';
-
-  String money = '';
-
-  String feiyongshenqing = '';
-
-  String fylb = '';
+  String get startTime => _startTime;
+  String get endTime => _endTime;
+  String get dayNumber => _dayNumber;
+  String get select => _select;
+  String get value => _value;
+  List<String> get valueList => _valueList;
+  String get chufadi => _chufadi;
+  String get mudidi => _mudidi;
+  String get chuchaishiyou => _chuchaishiyou;
+  String get xingchenganpai => _xingchenganpai;
+  String get yujidachengxiaoguo => _yujidachengxiaoguo;
+  String get bumen => _bumen;
+  String get bumenName => _bumenName;
+  String get gongsi => _gongsi;
+  String get zhuzhi => _zhuzhi;
+  String get shuoming => _shuoming;
+  String get purpose => _purpose;
+  String get desc => _desc;
+  String get money => _money;
+  String get feiyongshenqing => _feiyongshenqing;
+  String get fylb => _fylb;
+  String get nianduyusuan => _nianduyusuan;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
-    startTime = start_time;
-    endTime = end_time;
-    dayNumber = day_number;
+    _startTime = start_time;
+    _endTime = end_time;
+    _dayNumber = day_number;
     notifyListeners();
   }
 
   addValue(str){
-    select = str;
+    _select = str;
     notifyListeners();
   }
 
   addValue2(str){
-    value = str;
-    valueList.add(value);
+    _value = str;
+    _valueList.add(value);
     notifyListeners();
   }
 
   addchufadi(str){
-    chufadi = str;
+    _chufadi = str;
     notifyListeners();
   }
 
   addmudidi(str){
-    mudidi = str;
+    _mudidi = str;
     notifyListeners();
   }
 
   addchuchaishiyou(str){
-    chuchaishiyou = str;
+    _chuchaishiyou = str;
     notifyListeners();
   }
 
   addxingchenganpai(str){
-    xingchenganpai = str;
+    _xingchenganpai = str;
     notifyListeners();
   }
 
   addyujidachengxiaoguo(str){
-    yujidachengxiaoguo = str;
+    _yujidachengxiaoguo = str;
     notifyListeners();
   }
 
   addbumen(str, str2){
-    bumen = str;
-    bumenName = str2;
+    _bumen = str;
+    _bumenName = str2;
     notifyListeners();
   }
 
   addgongsi(str){
-    gongsi = str;
+    _gongsi = str;
     notifyListeners();
   }
 
   addzhuzhi(str){
-    zhuzhi = str;
+    _zhuzhi = str;
     notifyListeners();
   }
 
   addshuoming(str){
-    shuoming = str;
+    _shuoming = str;
     notifyListeners();
   }
 
   addpurpose(str){
-    purpose = str;
+    _purpose = str;
     notifyListeners();
   }
 
   adddesc(str){
-    desc = str;
+    _desc = str;
     notifyListeners();
   }
 
   addmoney(str){
-    money = str;
+    _money = str;
     notifyListeners();
   }
 
   addfeiyongshenqing(str){
-    feiyongshenqing = str;
+    _feiyongshenqing = str;
     notifyListeners();
   }
 
   addfylb(str){
-    fylb = str;
+    _fylb = str;
+    notifyListeners();
+  }
+
+  addnianduyusuan(str){
+    _nianduyusuan = str;
     notifyListeners();
   }
 
@@ -175,13 +212,6 @@ class TimeSelectProvider with ChangeNotifier{
       urlList.removeAt(index);
       notifyListeners();
     }
-  }
-
-  TimeSelectProvider() {
-    _travelScheduleList = [];
-    travelScheduleMapList = [];
-    _zhifuduixiangxinxiList = [];
-    zhifuduixiangxinxiMapList = [];
   }
 
   /**

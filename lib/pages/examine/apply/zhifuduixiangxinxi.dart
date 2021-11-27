@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';

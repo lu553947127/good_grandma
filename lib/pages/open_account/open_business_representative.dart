@@ -13,6 +13,7 @@ import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
+///开通业务代表页面
 class OpenBusinessRepresentative extends StatefulWidget {
   const OpenBusinessRepresentative({Key key}) : super(key: key);
 
@@ -57,6 +58,24 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
                             Map select = await showSelectList(context, Api.customerList, '请选择经销商名称', 'realName');
                             _model.setServiceCode(select['id']);
                             _model.setServiceCodeName(select['realName']);
+                            break;
+                          default: //输入框
+                            AppUtil.showInputDialog(
+                                context: context,
+                                editingController: _editingController,
+                                focusNode: _focusNode,
+                                text: value,
+                                hintText: hintText,
+                                callBack: (text) {
+                                  switch (index) {
+                                    case 2: //手机
+                                      _model.setPhone(text);
+                                      break;
+                                    case 3: //姓名
+                                      _model.setJuridical(text);
+                                      break;
+                                  }
+                                });
                             break;
                         }
                       }
@@ -120,6 +139,20 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
         'hintText': '请选择经销商',
         'keyBoardType': null,
         'end': '>'
+      },
+      {
+        'title': '手机',
+        'value': _model.phone,
+        'hintText': '请填写手机',
+        'keyBoardType': TextInputType.number,
+        'end': ''
+      },
+      {
+        'title': '姓名',
+        'value': _model.juridical,
+        'hintText': '请填写姓名',
+        'keyBoardType': TextInputType.text,
+        'end': ''
       }
     ];
     return list1;
@@ -146,6 +179,16 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
       return;
     }
 
+    if (model.phone == ''){
+      showToast("手机不能为空");
+      return;
+    }
+
+    if (model.juridical == ''){
+      showToast("姓名不能为空");
+      return;
+    }
+
     if (model.account == ''){
       showToast("登录账户不能为空");
       return;
@@ -160,6 +203,8 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
       'postId': model.post,
       'serviceCode': model.serviceCode,
       'roleId': model.role,
+      'phone': model.phone,
+      'juridical': model.juridical,
       'account': model.account,
       'password': model.pwd
     };
