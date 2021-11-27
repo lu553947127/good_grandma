@@ -24,6 +24,8 @@ class TimeSelectProvider with ChangeNotifier{
   String _feiyongshenqing;
   String _fylb;
   String _nianduyusuan;
+  String _type;
+  String _jine;
 
   TimeSelectProvider() {
     _startTime = '';
@@ -48,6 +50,8 @@ class TimeSelectProvider with ChangeNotifier{
     _feiyongshenqing = '';
     _fylb = '';
     _nianduyusuan = '';
+    _type = '';
+    _jine = '';
     _travelScheduleList = [];
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
@@ -76,6 +80,8 @@ class TimeSelectProvider with ChangeNotifier{
   String get feiyongshenqing => _feiyongshenqing;
   String get fylb => _fylb;
   String get nianduyusuan => _nianduyusuan;
+  String get type => _type;
+  String get jine => _jine;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
@@ -172,44 +178,53 @@ class TimeSelectProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  addtype(str){
+    _type = str;
+    notifyListeners();
+  }
+
+  addjine(str){
+    _jine = str;
+    notifyListeners();
+  }
+
   /**
    * 上传附件
    */
-  ///图片地址
-  var imgPath;
-  ///文件地址结合
-  List<Map> filePath = [];
-  ///map图片集合
-  List<Map> imagePath = [];
-  ///图片url集合
-  List<String> urlList = [];
 
-  //选择附件图片集合
-  fileList(String image, String type, String iconName) async{
+  ///文件map结合
+  List<Map> filePath = [];
+  ///图片map集合
+  List<Map> imagePath = [];
+
+  fileAdd(String image, String type, String iconName){
     Map addData = new Map();
-    addData['image'] = image;
-    addData['type'] = type;
+    addData['value'] = image;
+    addData['label'] = type;
     addData['iconName'] = iconName;
     filePath.add(addData);
     notifyListeners();
   }
 
-  //生成接口添加的数据
-  addImageData(images, name) async{
+  fileDelete(int index) async{
+    if(filePath.length > 0){
+      filePath.removeAt(index);
+      notifyListeners();
+    }
+  }
+
+  imageAdd(String image, String type, String iconName) {
     Map addData = new Map();
-    addData['label'] = name;
-    addData['value'] = images;
+    addData['value'] = image;
+    addData['label'] = type;
+    addData['iconName'] = iconName;
     imagePath.add(addData);
-    urlList.add(images);
     notifyListeners();
   }
 
-  //选择图片集合删除
-  imagesListDelete(int index) async{
-    if(filePath.length > 0){
-      filePath.removeAt(index);
+  imageDelete(int index) async{
+    if(imagePath.length > 0){
       imagePath.removeAt(index);
-      urlList.removeAt(index);
       notifyListeners();
     }
   }

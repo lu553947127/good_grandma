@@ -108,6 +108,13 @@ class OaPhotoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Map> fileList = [];
+    if (title == '图片'){
+      fileList = timeSelectProvider.imagePath;
+    }else {
+      fileList = timeSelectProvider.filePath;
+    }
+
     return Container(
         color: bgColor,
         child: Column(
@@ -139,7 +146,7 @@ class OaPhotoWidget extends StatelessWidget {
                                 shrinkWrap: true,//为true可以解决子控件必须设置高度的问题
                                 physics:NeverScrollableScrollPhysics(),//禁用滑动事件
                                 padding: const EdgeInsets.all(0),
-                                itemCount: timeSelectProvider.filePath.length == length ? timeSelectProvider.filePath.length : length,
+                                itemCount: fileList.length == length ? fileList.length : length,
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
                                     mainAxisSpacing: 8,

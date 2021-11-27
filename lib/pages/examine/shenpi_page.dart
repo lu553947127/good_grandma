@@ -7,7 +7,7 @@ import 'package:good_grandma/pages/examine/examine_add.dart';
 import 'package:good_grandma/pages/examine/examine_detail.dart';
 import 'package:good_grandma/pages/examine/examine_select_process.dart';
 import 'package:good_grandma/pages/examine/examine_view.dart';
-import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
+import 'package:good_grandma/pages/examine/model/shenpi_type.dart';
 
 ///OA审批列表
 class ShenPiPage extends StatefulWidget {
@@ -22,7 +22,8 @@ class _ShenPiPageState extends State<ShenPiPage> {
   String type = '我申请的';
   List<Map> listTitle = [
     {'name': '我申请的'},
-    {'name': '我审批的'},
+    {'name': '我的待办'},
+    {'name': '我的已办'},
     {'name': '知会我的'},
   ];
   ///审批申请列表数据
@@ -31,6 +32,8 @@ class _ShenPiPageState extends State<ShenPiPage> {
   List<Map> sendList = [];
   ///我审批的列表
   List<Map> todoList = [];
+  ///我已审批的列表
+  List<Map> doneList = [];
   ///知会我的列表
   List<Map> copyList = [];
 
@@ -62,6 +65,20 @@ class _ShenPiPageState extends State<ShenPiPage> {
     });
   }
 
+  ///已办列表
+  _doneList(){
+    Map<String, dynamic> map = {'current': '1', 'size': '999'};
+    requestGet(Api.myDoneList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---myDoneList----$data');
+      setState(() {
+        doneList = (data['data']['records'] as List).cast();
+        type = listTitle[2]['name'];
+        list = doneList;
+      });
+    });
+  }
+
   ///我的抄送列表(知会我的)
   _copyList(){
     Map<String, dynamic> map = {'current': '1', 'size': '999'};
@@ -70,7 +87,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
       LogUtil.d('请求结果---copyList----$data');
       setState(() {
         copyList = (data['data']['records'] as List).cast();
-        type = listTitle[2]['name'];
+        type = listTitle[3]['name'];
         list = copyList;
       });
     });
@@ -91,7 +108,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
       ),
       body: CustomScrollView(
           slivers: [
-            WorkTypeTitle(
+            ExamineTypeTitle(
               color: null,
               type: type,
               list: listTitle,
@@ -102,8 +119,11 @@ class _ShenPiPageState extends State<ShenPiPage> {
                 _todoList();
               },
               onPressed3: (){
-                _copyList();
+                _doneList();
               },
+              onPressed4: (){
+                _copyList();
+              }
             ),
             list.length > 0 ?
             SliverList(
@@ -170,6 +190,9 @@ class _ShenPiPageState extends State<ShenPiPage> {
       _todoList();
     }
     else if(type == listTitle[2]['name']){
+      _doneList();
+    }
+    else if(type == listTitle[3]['name']){
       _copyList();
     }
   }

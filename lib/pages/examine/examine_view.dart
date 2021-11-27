@@ -23,6 +23,9 @@ class ExamineView extends StatelessWidget {
       case 'reject':
         processIsFinished = '已驳回';
         break;
+      case 'withdraw':
+        processIsFinished = '已撤回';
+        break;
     }
 
     _setTextColor(status){
@@ -35,6 +38,9 @@ class ExamineView extends StatelessWidget {
           break;
         case '已驳回':
           return Color(0xFFC08A3F);
+          break;
+        case '已撤回':
+          return Color(0xFF999999);
           break;
       }
     }
@@ -49,6 +55,9 @@ class ExamineView extends StatelessWidget {
           break;
         case '已驳回':
           return Color(0xFFF1EEEA);
+          break;
+        case '已撤回':
+          return Color(0xFFEEEFF2);
           break;
       }
     }
@@ -78,8 +87,11 @@ class ExamineView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(data['processDefinitionName'], style: TextStyle(fontSize: 14
-                        , color: processIsFinished == '审核中' ? type == '知会我的' ? Color(0XFF2F4058) : Color(0XFFE45C26) : Color(0XFF2F4058))),
+                    Container(
+                      width: 220,
+                      child: Text(data['processDefinitionName'], style: TextStyle(fontSize: 14
+                          , color: processIsFinished == '审核中' ? type == '知会我的' ? Color(0XFF2F4058) : Color(0XFFE45C26) : Color(0XFF2F4058)))
+                    ),
                     SizedBox(height: 10),
                     Text(data['createTime'],style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                   ]

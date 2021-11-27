@@ -212,8 +212,11 @@ class Api {
   ///我的请求列表(我申请的)
   static const sendList = "/api/hap-workflow/process/sendList";
 
-  ///待办列表(我审批的)
+  ///待办列表(我审批的 未审批)
   static const todoList = "/api/hap-workflow/process/todoList";
+
+  ///待办列表(我的已办)
+  static const myDoneList = "/api/hap-workflow/process/myDoneList";
 
   ///我的抄送列表(知会我的)
   static const copyList = "/api/hap-workflow/process/copyList";

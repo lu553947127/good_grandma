@@ -334,8 +334,11 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
             var data = json.decode(val.toString());
             print('请求结果---uploadFile----$data');
             Navigator.pop(context);
-            widget.timeSelectProvider.fileList(data['data']['link'], 'png', '');
-            widget.timeSelectProvider.addImageData(data['data']['link'], data['data']['originalName']);
+            if (widget.title == '图片'){
+              widget.timeSelectProvider.imageAdd(data['data']['link'], 'png', '');
+            }else {
+              widget.timeSelectProvider.fileAdd(data['data']['link'], 'png', '');
+            }
           });
         });
         return true;
@@ -353,11 +356,6 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
         context: context,
         builder: (BuildContext context) {
           double w = 240.0;
-          if (widget.title == '拜访图片'){
-            w = 120.0;
-          }else {
-            w = 240.0;
-          }
           return Container(
               height: w,
               child: Column(
@@ -368,27 +366,24 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
                           Navigator.pop(context, ImageSource.camera);
                         }
                     ),
-                    Visibility(
-                        visible: widget.title == '拜访图片' ? false : true,
-                        child: ListTile(
-                            title: Text('从相册选择', textAlign: TextAlign.center),
-                            onTap: () {
-                              Navigator.pop(context, ImageSource.gallery);
-                            }
-                        )
+                    ListTile(
+                        title: Text('从相册选择', textAlign: TextAlign.center),
+                        onTap: () {
+                          Navigator.pop(context, ImageSource.gallery);
+                        }
                     ),
-                    Visibility(
-                        visible: widget.title == '拜访图片' ? false : true,
-                        child: ListTile(
-                            title: Text('从文件柜选择', textAlign: TextAlign.center),
-                            onTap: () async {
-                              Navigator.pop(context);
-                              Map select = await showSelectFileList(context);
-                              print('请求结果---select----$select');
-                              widget.timeSelectProvider.fileList(select['path'], select['type'], select['iconName']);
-                              widget.timeSelectProvider.addImageData(select['path'], select['name']);
-                            }
-                        )
+                    ListTile(
+                        title: Text('从文件柜选择', textAlign: TextAlign.center),
+                        onTap: () async {
+                          Navigator.pop(context);
+                          Map select = await showSelectFileList(context);
+                          print('请求结果---select----$select');
+                          if (widget.title == '图片'){
+                            widget.timeSelectProvider.imageAdd(select['path'], select['type'], select['iconName']);
+                          }else {
+                            widget.timeSelectProvider.fileAdd(select['path'], select['type'], select['iconName']);
+                          }
+                        }
                     ),
                     ListTile(
                         title: Text('取消', textAlign: TextAlign.center),
@@ -404,8 +399,13 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
 
   @override
   Widget build(BuildContext context) {
-
-    if(widget.index == widget.timeSelectProvider.filePath.length){
+    List<Map> fileList = [];
+    if (widget.title == '图片'){
+      fileList = widget.timeSelectProvider.imagePath;
+    }else {
+      fileList = widget.timeSelectProvider.filePath;
+    }
+    if(widget.index == fileList.length){
       return GestureDetector(
         child: Image.asset('assets/images/icon_add_images.png', width: 192, height: 108),
         onTap: () async{
@@ -421,21 +421,20 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
       );
     }else{
       return Container(
-          child: widget.timeSelectProvider.filePath.length > widget.index ?
+          child: fileList.length > widget.index ?
           InkWell(
             child: Stack(
                 children: <Widget>[
-                  widget.timeSelectProvider.filePath[widget.index]['type'] == 'png' ||
-                      widget.timeSelectProvider.filePath[widget.index]['type'] == 'jpg' ||
-                      widget.timeSelectProvider.filePath[widget.index]['type'] == 'jpeg' ?
+                  fileList[widget.index]['label'] == 'png' ||
+                      fileList[widget.index]['label'] == 'jpg' ||
+                      fileList[widget.index]['label'] == 'jpeg' ?
                   MyCacheImageView(
-                    imageURL: widget.timeSelectProvider.filePath[widget.index]['image'],
+                    imageURL: fileList[widget.index]['image'],
                     width: 192,
                     height: 108,
                     errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 192.0, height: 108.0),
                   ):
-                  // Image.network(widget.imagesProvider.filePath[widget.index]['image'], width: 192, height: 108) :
-                  Image.asset(widget.timeSelectProvider.filePath[widget.index]['iconName'], width: 192, height: 108),
+                  Image.asset(fileList[widget.index]['iconName'], width: 192, height: 108),
                   Positioned(
                       right: 0,
                       child: InkWell(
@@ -444,25 +443,29 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
                             child: Image.asset('assets/images/icon_delete_images.png', width: 13, height: 13),
                           ),
                           onTap: (){
-                            widget.timeSelectProvider.imagesListDelete(widget.index);
+                            if (widget.title == '图片'){
+                              widget.timeSelectProvider.imageDelete(widget.index);
+                            }else {
+                              widget.timeSelectProvider.fileDelete(widget.index);
+                            }
                           }
                       )
                   )
                 ]
             ),
             onTap: (){
-              if (widget.timeSelectProvider.filePath[widget.index]['type'] == 'png' ||
-                  widget.timeSelectProvider.filePath[widget.index]['type'] == 'jpg' ||
-                  widget.timeSelectProvider.filePath[widget.index]['type'] == 'jpeg'){
+              if (fileList[widget.index]['label'] == 'png' ||
+                  fileList[widget.index]['label'] == 'jpg' ||
+                  fileList[widget.index]['label'] == 'jpeg'){
                 List<String> imagesList = [];
-                imagesList.add(widget.timeSelectProvider.filePath[widget.index]['image']);
+                imagesList.add(fileList[widget.index]['image']);
                 Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
                   images: imagesList,//传入图片list
                   index: widget.index,//传入当前点击的图片的index
                   heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
                 )));
               }else {
-                _launchURL(widget.timeSelectProvider.filePath[widget.index]['image']);
+                _launchURL(fileList[widget.index]['image']);
               }
             },
           ) :

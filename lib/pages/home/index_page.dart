@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/examine/shenpi_page.dart';
 import 'package:good_grandma/pages/home/app_page.dart';
 import 'package:good_grandma/pages/home/home_page.dart';
 import 'package:good_grandma/pages/mine/mine_page.dart';
 import 'package:good_grandma/pages/message/msg_page.dart';
+import 'package:badges/badges.dart';
 
 ///首页底部tabbar
 class IndexPage extends StatefulWidget {
@@ -18,32 +24,24 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   int _selectedIndex = 0;
-  final List<BottomNavigationBarItem> _bottomNavItems = [
-    BottomNavigationBarItem(
-        icon: Image.asset('assets/images/tabbar_home.png',width: 22.0,height: 22.0),
-        activeIcon: Image.asset('assets/images/tabbar_home_sel.png',width: 22.0,height: 22.0),
-        label: '首页'),
-    BottomNavigationBarItem(
-        icon: Image.asset('assets/images/tabbar_msg.png',width: 22.0,height: 22.0),
-        activeIcon: Image.asset('assets/images/tabbar_msg_sel.png',width: 22.0,height: 22.0),
-        label: '消息'),
-    BottomNavigationBarItem(
-        icon: Image.asset('assets/images/tabbar_app.png',width: 22.0,height: 22.0),
-        activeIcon: Image.asset('assets/images/tabbar_app_sel.png',width: 22.0,height: 22.0),
-        label: '应用'),
-    BottomNavigationBarItem(
-        icon: Image.asset('assets/images/tabbar_shenpi.png',width: 22.0,height: 22.0),
-        activeIcon: Image.asset('assets/images/tabbar_shenpi_sel.png',width: 22.0,height: 22.0),
-        label: '审批申请'),
-    BottomNavigationBarItem(
-        icon: Image.asset('assets/images/tabbar_mine.png',width: 22.0,height: 22.0),
-        activeIcon: Image.asset('assets/images/tabbar_mine_sel.png',width: 22.0,height: 22.0),
-        label: '我的'),
-  ];
+  int _badge = 0;
+  List<BottomNavigationBarItem> _bottomNavItems = [];
   List<Widget> _pages = [];
 
   void _switchTabbarIndex(int index){
     setState(() => _selectedIndex = index);
+  }
+
+  ///待办列表(我审批的)
+  _todoList(){
+    Map<String, dynamic> map = {'current': '1', 'size': '1'};
+    requestGet(Api.todoList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---todoList----$data');
+      setState(() {
+        _badge = data['data']['total'];
+      });
+    });
   }
 
   @override
@@ -65,11 +63,14 @@ class _IndexPageState extends State<IndexPage> {
         AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3)),
         MinePage()]);
     }
+
+    _todoList();
   }
 
   @override
   Widget build(BuildContext context) {
     Application.appContext = context;
+    _bottomNavItems = _getBottomNavItems();
     return Scaffold(
       ///使用BottomNavigationBar 切换页面时重新加载的解决方案
       body: IndexedStack(
@@ -89,6 +90,39 @@ class _IndexPageState extends State<IndexPage> {
         type: BottomNavigationBarType.fixed,
       ),
     );
+  }
+
+  List<BottomNavigationBarItem> _getBottomNavItems(){
+    return [
+      BottomNavigationBarItem(
+          icon: Image.asset('assets/images/tabbar_home.png',width: 22.0,height: 22.0),
+          activeIcon: Image.asset('assets/images/tabbar_home_sel.png',width: 22.0,height: 22.0),
+          label: '首页'),
+      BottomNavigationBarItem(
+          icon: Image.asset('assets/images/tabbar_msg.png',width: 22.0,height: 22.0),
+          activeIcon: Image.asset('assets/images/tabbar_msg_sel.png',width: 22.0,height: 22.0),
+          label: '消息'),
+      BottomNavigationBarItem(
+          icon: Image.asset('assets/images/tabbar_app.png',width: 22.0,height: 22.0),
+          activeIcon: Image.asset('assets/images/tabbar_app_sel.png',width: 22.0,height: 22.0),
+          label: '应用'),
+      BottomNavigationBarItem(
+          icon: Badge(
+            badgeContent: Text('$_badge', style: TextStyle(color: Colors.white)),
+            child: Image.asset('assets/images/tabbar_shenpi.png',width: 22.0,height: 22.0),
+            showBadge: _badge != 0 ? true : false
+          ),
+          activeIcon: Badge(
+            badgeContent: Text('$_badge', style: TextStyle(color: Colors.white)),
+            child: Image.asset('assets/images/tabbar_shenpi_sel.png',width: 22.0,height: 22.0),
+            showBadge: _badge != 0 ? true : false
+          ),
+          label: '审批申请'),
+      BottomNavigationBarItem(
+          icon: Image.asset('assets/images/tabbar_mine.png',width: 22.0,height: 22.0),
+          activeIcon: Image.asset('assets/images/tabbar_mine_sel.png',width: 22.0,height: 22.0),
+          label: '我的'),
+    ];
   }
 
   void _onItemTapped(int index) {

@@ -81,7 +81,10 @@ class ExamineDetailTitle extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                    Container(
+                      width: 190,
+                      child: Text(title, style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                    ),
                     SizedBox(height: 3),
                     Row(
                       children: [

@@ -11,7 +11,6 @@ import 'package:good_grandma/pages/examine/apply/zhifuduixiangxinxi.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
-import 'package:good_grandma/widgets/add_number_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
@@ -139,12 +138,14 @@ class _CustomFormViewState extends State<CustomFormView> {
           break;
         case 'select':
           String value = '';
-          if (data['label'] == '公司'){
+          if (data['prop'] == 'gongsi'){
             value = timeSelectProvider.gongsi;
-          }else if(data['label'] == '费用申请'){
+          }else if(data['prop'] == 'feiyongshenqing'){
             value = timeSelectProvider.feiyongshenqing;
-          }else if(data['label'] == '费用类别'){
+          }else if(data['prop'] == 'fylb'){
             value = timeSelectProvider.fylb;
+          }else if(data['prop'] == 'type'){
+            value = timeSelectProvider.type;
           }else {
             value = timeSelectProvider.value;
           }
@@ -178,6 +179,8 @@ class _CustomFormViewState extends State<CustomFormView> {
                   timeSelectProvider.addfeiyongshenqing(select);
                 }else if (data['prop'] == 'fylb'){
                   timeSelectProvider.addfylb(select);
+                }else if (data['prop'] == 'type'){
+                  timeSelectProvider.addtype(select);
                 }else {
                   timeSelectProvider.addValue2(select);
                 }
@@ -226,21 +229,34 @@ class _CustomFormViewState extends State<CustomFormView> {
           }else if (data['label'] == '出差天数'){
             return Container();
           }else {
-            return NumberInputView(
-              leftTitle: data['label'],
-              rightPlaceholder: '请输入${data['label']}',
-              leftInput: '',
-              rightInput: '',
-              type: TextInputType.number,
-              rightLength: 120,
-              sizeHeight: 1,
-              onChanged: (tex){
-                for (String prop in dataList) {
-                  if (data['prop'] == prop){
-                    addData[prop] = tex;
-                  }
-                }
-              }
+            String value = '';
+            if (data['prop'] == 'jine'){
+              value = timeSelectProvider.jine;
+            }
+            return PostAddInputCell(
+                title: data['label'],
+                value: value,
+                hintText: '请输入${data['label']}',
+                endWidget: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: value,
+                    hintText: '请输入${data['label']}',
+                    keyboardType: TextInputType.number,
+                    callBack: (text) {
+                      for (String prop in dataList) {
+                        if (data['prop'] == prop){
+                          addData[prop] = text;
+                        }
+
+                        if (data['prop'] == 'jine'){
+                          addData[prop] = text;
+                          timeSelectProvider.addjine(text);
+                        }
+                      }
+                    })
             );
           }
           break;
@@ -329,8 +345,11 @@ class _CustomFormViewState extends State<CustomFormView> {
 
       for (Map map in widget.list) {
         if ('upload' == map['type']){
-          addData[map['prop']] = timeSelectProvider.imagePath;
-          LogUtil.d('请求结果---prop----${map['prop']}');
+          if ('图片' == map['label']){
+            addData[map['prop']] = timeSelectProvider.imagePath;
+          }else {
+            addData[map['prop']] = timeSelectProvider.filePath;
+          }
         }else if ('date' == map['type']){
           addData[map['prop']] = timeSelectProvider.select;
         }else if ('datetimerange' == map['type']){
@@ -383,6 +402,10 @@ class _CustomFormViewState extends State<CustomFormView> {
           addData[map['prop']] = timeSelectProvider.fylb;
         }else if ('nianduyusuan' == map['prop']){
           addData[map['prop']] = timeSelectProvider.nianduyusuan;
+        }else if ('type' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.type;
+        }else if ('jine' == map['prop']){
+          addData[map['prop']] = timeSelectProvider.jine;
         }else if ('applyer' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }

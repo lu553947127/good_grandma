@@ -12,8 +12,12 @@ class ExamineDetailContent extends StatelessWidget {
 
   ///附件路径集合
   List<Map> fileList = [];
-  ///显示图片组件集合
+  ///图片路径集合
+  List<Map> imagesList = [];
+  ///显示附件组件集合
   List<Widget> _views = [];
+  ///显示图片组件集合
+  List<Widget> _views2 = [];
   ///支付对象信息表单集合
   List<Map> zhifuList = [];
   ///出差明细表单集合
@@ -97,7 +101,7 @@ class ExamineDetailContent extends StatelessWidget {
           _buildSideBox(index == -1 ? '开户行名称' : goodsList[index]['kaihuhangmingcheng'].toString(), index == -1),
           _buildSideBox(index == -1 ? '金额' : goodsList[index]['jine'].toString(), index == -1),
           _buildSideBox(index == -1 ? '支付方式' : goodsList[index]['zhifufangshi'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '预计支付时间' : goodsList[index]['yujizhifushijian'].toString(), index == -1),
+          _buildSideBox(index == -1 ? '备注' : goodsList[index]['beizhu'].toString(), index == -1),
         ]);
   }
 
@@ -213,6 +217,62 @@ class ExamineDetailContent extends StatelessWidget {
       }
     }
 
+    if(variables['1630552552652_12159'] != null){
+      fileList = (variables['1630552552652_12159'] as List).cast();
+      LogUtil.d('fileList----$fileList');
+      for (Map file in fileList) {
+        _views.add(InkWell(
+          child: Container(
+              margin: EdgeInsets.only(top: 3),
+              child: MyCacheImageView(
+                  imageURL: file['value'],
+                  width: 112,
+                  height: 63
+              )
+          ),
+          onTap: (){
+            List<String> imagesList = [];
+            for (Map file in fileList) {
+              imagesList.add(file['value']);
+            }
+            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+              images: imagesList,//传入图片list
+              index: 0,//传入当前点击的图片的index
+              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+            )));
+          },
+        ));
+      }
+    }
+
+    if(variables['tupian'] != null){
+      imagesList = (variables['tupian'] as List).cast();
+      LogUtil.d('tupian----$imagesList');
+      for (Map file in imagesList) {
+        _views2.add(InkWell(
+          child: Container(
+              margin: EdgeInsets.only(top: 3),
+              child: MyCacheImageView(
+                  imageURL: file['value'],
+                  width: 112,
+                  height: 63
+              )
+          ),
+          onTap: (){
+            List<String> images = [];
+            for (Map file in imagesList) {
+              images.add(file['value']);
+            }
+            Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+              images: images,//传入图片list
+              index: 0,//传入当前点击的图片的index
+              heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+            )));
+          },
+        ));
+      }
+    }
+
     if(variables['zhifuduixiangxinxi'] != null){
       zhifuList = (variables['zhifuduixiangxinxi'] as List).cast();
 
@@ -234,7 +294,7 @@ class ExamineDetailContent extends StatelessWidget {
         if (taskFormList[i]['name'] == '支付方式'){
           taskFormList.removeAt(i);
         }
-        if (taskFormList[i]['name'] == '预计支付时间'){
+        if (taskFormList[i]['name'] == '备注'){
           taskFormList.removeAt(i);
         }
       }
@@ -334,6 +394,7 @@ class ExamineDetailContent extends StatelessWidget {
                                               taskFormList[index]['name'] == '支付对象信息' ||
                                               taskFormList[index]['name'] == '系统附件' ||
                                               taskFormList[index]['name'] == '出差明细' ||
+                                              taskFormList[index]['name'] == '图片' ||
                                               taskFormList[index]['name'] == '出差日程'?
                                           true : false,
                                           child: Text.rich(TextSpan(
@@ -394,6 +455,19 @@ class ExamineDetailContent extends StatelessWidget {
                                                 SizedBox(width: 10),
                                                 fileList.length != 0 ?
                                                 Column(children: _views) :
+                                                Text('暂无附件', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
+                                              ]
+                                          )
+                                      ),
+                                      Offstage(
+                                          offstage: (taskFormList[index]['name'] == '图片') ? false : true,
+                                          child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                                SizedBox(width: 10),
+                                                imagesList.length != 0 ?
+                                                Column(children: _views2) :
                                                 Text('暂无附件', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                               ]
                                           )
