@@ -6,6 +6,7 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/examine/apply/chuchaimingxi.dart';
 import 'package:good_grandma/pages/examine/apply/travel_schedule_apply.dart';
 import 'package:good_grandma/pages/examine/apply/zhifuduixiangxinxi.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
@@ -76,6 +77,16 @@ class _CustomFormViewState extends State<CustomFormView> {
           }else if (data['prop'] == 'hejidaxie'){
             return Container();
           }else if (data['prop'] == 'hejixiaoxie'){
+            return Container();
+          }else if (data['prop'] == 'jiaotongjineheji'){
+            return Container();
+          }else if (data['prop'] == 'shineijiaotongheji'){
+            return Container();
+          }else if (data['prop'] == 'zhusujineheji'){
+            return Container();
+          }else if (data['prop'] == 'buzhujineheji'){
+            return Container();
+          }else if (data['prop'] == 'qitajineheji'){
             return Container();
           }else {
             String value = '';
@@ -316,6 +327,11 @@ class _CustomFormViewState extends State<CustomFormView> {
               data: data,
               timeSelectProvider: timeSelectProvider
             );
+          }else if (data['prop'] == 'chuchaimingxi'){
+            return chuchaimingxiForm(
+                data: data,
+                timeSelectProvider: timeSelectProvider
+            );
           }else {
             return Container(
                 child: Text('无法显示未知子表单')
@@ -346,65 +362,168 @@ class _CustomFormViewState extends State<CustomFormView> {
       for (Map map in widget.list) {
         if ('upload' == map['type']){
           if ('图片' == map['label']){
+            if (timeSelectProvider.imagePath.length == 0){
+              showToast('${map['label']}不能为空');
+              return;
+            }
             addData[map['prop']] = timeSelectProvider.imagePath;
           }else {
+            if (timeSelectProvider.filePath.length == 0){
+              showToast('${map['label']}不能为空');
+              return;
+            }
             addData[map['prop']] = timeSelectProvider.filePath;
           }
         }else if ('date' == map['type']){
+          if (timeSelectProvider.select == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.select;
         }else if ('datetimerange' == map['type']){
           List<String> timeList = [];
           timeList.add(timeSelectProvider.startTime + ':00');
           timeList.add(timeSelectProvider.endTime + ':00');
+
+          if (timeSelectProvider.startTime == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData['yujichuchairiqi'] = timeList;
           addData['days'] = timeSelectProvider.dayNumber;
         }else if ('dynamic' == map['type']){
           if ('chuchairicheng' == map['prop']){
+            if (timeSelectProvider.travelScheduleMapList.length == 0){
+              showToast('${map['label']}不能为空');
+              return;
+            }
             addData[map['prop']] = timeSelectProvider.travelScheduleMapList;
           }else if ('zhifuduixiangxinxi' == map['prop']){
+            if (timeSelectProvider.zhifuduixiangxinxiMapList.length == 0){
+              showToast('${map['label']}不能为空');
+              return;
+            }
             addData[map['prop']] = timeSelectProvider.zhifuduixiangxinxiMapList;
+          }else if ('chuchaimingxi' == map['prop']){
+            if (timeSelectProvider.chuchaimingxiMapList.length == 0){
+              showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.chuchaimingxiMapList;
           }
         }else if ('select' == map['type']){
           if ('gongsi' == map['prop']){
+            if (timeSelectProvider.gongsi == ''){
+              showToast('${map['label']}不能为空');
+              return;
+            }
             addData[map['prop']] = timeSelectProvider.gongsi;
           }else {
+            if (timeSelectProvider.value == ''){
+              showToast('${map['label']}不能为空');
+              return;
+            }
             addData[map['prop']] = timeSelectProvider.value;
           }
         }
 
         if ('chufadi' == map['prop']){
+          if (timeSelectProvider.chufadi == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.chufadi;
         }else if ('mudidi' == map['prop']){
+          if (timeSelectProvider.mudidi == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.mudidi;
         }else if ('chuchaishiyou' == map['prop']){
+          if (timeSelectProvider.chuchaishiyou == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.chuchaishiyou;
         }else if ('xingchenganpai' == map['prop']){
+          if (timeSelectProvider.xingchenganpai == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.xingchenganpai;
         }else if ('yujidachengxiaoguo' == map['prop']){
+          if (timeSelectProvider.yujidachengxiaoguo == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.yujidachengxiaoguo;
         }else if ('shenqingren' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }else if ('bumen' == map['prop']){
+          if (timeSelectProvider.bumenName == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.bumenName;
         }else if ('shuoming' == map['prop']){
+          if (timeSelectProvider.shuoming == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.shuoming;
         }else if ('zhuzhi' == map['prop']){
+          if (timeSelectProvider.zhuzhi == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.zhuzhi;
         }else if ('purpose' == map['prop']){
+          if (timeSelectProvider.purpose == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.purpose;
         }else if ('desc' == map['prop']){
+          if (timeSelectProvider.desc == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.desc;
         }else if ('money' == map['prop']){
+          if (timeSelectProvider.money == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.money;
         }else if ('feiyongshenqing' == map['prop']){
+          if (timeSelectProvider.feiyongshenqing == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.feiyongshenqing;
         }else if ('fylb' == map['prop']){
+          if (timeSelectProvider.fylb == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.fylb;
         }else if ('nianduyusuan' == map['prop']){
+          if (timeSelectProvider.nianduyusuan == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.nianduyusuan;
         }else if ('type' == map['prop']){
           addData[map['prop']] = timeSelectProvider.type;
+          // if (timeSelectProvider.type == ''){
+          //   showToast('${map['label']}不能为空');
+          //   return;
+          // }
         }else if ('jine' == map['prop']){
+          if (timeSelectProvider.jine == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
           addData[map['prop']] = timeSelectProvider.jine;
         }else if ('applyer' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';

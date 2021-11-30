@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/models/main_provider.dart';
 import 'package:good_grandma/pages/examine/examine_add.dart';
 import 'package:good_grandma/pages/examine/examine_detail.dart';
 import 'package:good_grandma/pages/examine/examine_select_process.dart';
 import 'package:good_grandma/pages/examine/examine_view.dart';
 import 'package:good_grandma/pages/examine/model/shenpi_type.dart';
+import 'package:provider/provider.dart';
 
 ///OA审批列表
 class ShenPiPage extends StatefulWidget {
@@ -37,6 +39,8 @@ class _ShenPiPageState extends State<ShenPiPage> {
   ///知会我的列表
   List<Map> copyList = [];
 
+  MainProvider mainProvider;
+
   ///我的请求列表(我申请的)
   _sendList(){
     Map<String, dynamic> map = {'current': '1', 'size': '999'};
@@ -57,6 +61,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
     requestGet(Api.todoList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---todoList----$data');
+      mainProvider.setBadge(data['data']['total']);
       setState(() {
         todoList = (data['data']['records'] as List).cast();
         type = listTitle[1]['name'];
@@ -101,6 +106,7 @@ class _ShenPiPageState extends State<ShenPiPage> {
 
   @override
   Widget build(BuildContext context) {
+    mainProvider = Provider.of<MainProvider>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

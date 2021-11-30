@@ -6,6 +6,7 @@ import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 
+///支付对象信息子表单
 class zhifuduixiangxinxiFrom extends StatefulWidget {
   final dynamic data;
   final TimeSelectProvider timeSelectProvider;

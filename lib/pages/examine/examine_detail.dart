@@ -35,6 +35,8 @@ class _ExamineDetailState extends State<ExamineDetail> {
 
     Map<String, dynamic> map = {'processInsId': widget.processInsId, 'taskId': widget.taskId};
 
+    String processDefinitionId = '';
+
     bool wf_pass = false;//通过
     bool wf_reject = false;//驳回
     bool wf_transfer = false;//转办
@@ -90,6 +92,8 @@ class _ExamineDetailState extends State<ExamineDetail> {
               ///获取基本信息详情数据
               var process = data['data']['process'];
               LogUtil.d('process----$process');
+
+              processDefinitionId = process['processDefinitionId'];
 
               LogUtil.d('variables----${process['variables']}');
 
@@ -185,6 +189,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               process: process,
                                               type: widget.type,
                                               processIsFinished: widget.processIsFinished,
+                                              processDefinitionId: processDefinitionId,
                                               processInsId: widget.processInsId,
                                               taskId: widget.taskId,
                                               wait: '等待${flowList[0]['user']['name']}审批',

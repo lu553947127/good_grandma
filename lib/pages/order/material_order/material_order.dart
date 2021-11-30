@@ -7,6 +7,7 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/order/material_order/material_order_add.dart';
 import 'package:good_grandma/pages/order/material_order/material_order_detail.dart';
 import 'package:good_grandma/pages/order/material_order/material_order_model.dart';
@@ -28,6 +29,8 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
   int _current = 1;
   int _pageSize = 10;
   List<Map> materialList = [];
+  ///是否有添加权限
+  bool isJurisdiction = false;
 
   @override
   void initState() {
@@ -51,6 +54,9 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
           break;
         case 4:
           return '驳回';
+          break;
+        default:
+          return '无';
           break;
       }
     }
@@ -172,17 +178,21 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
             child: Icon(Icons.add),
             backgroundColor: AppColors.FFC68D3E,
             onPressed: () async {
-              MarketingOrderModel model = MarketingOrderModel();
-              bool needRefresh = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                      ChangeNotifierProvider<MarketingOrderModel>.value(
-                        value: model,
-                        child: MaterialOrderAddPage(id: '', data: null),
-                      )));
-              if(needRefresh != null && needRefresh){
-                _controller.callRefresh();
+              if (isJurisdiction){
+                MarketingOrderModel model = MarketingOrderModel();
+                bool needRefresh = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                        ChangeNotifierProvider<MarketingOrderModel>.value(
+                          value: model,
+                          child: MaterialOrderAddPage(id: '', data: null),
+                        )));
+                if(needRefresh != null && needRefresh){
+                  _controller.callRefresh();
+                }
+              }else {
+                showToast("抱歉，您没有添加权限");
               }
             }
         )
@@ -192,6 +202,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
   Future<void> _refresh() async {
     _current = 1;
     await _downloadData();
+    _processList();
   }
 
   Future<void> _onLoad() async {
@@ -220,6 +231,24 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
       _controller.finishRefresh(success: false);
       _controller.finishLoad(success: false, noMore: false);
     }
+  }
+
+  ///可发起的流程列表
+  Future<void> _processList() async{
+    Map<String, dynamic> map = {'category': '1451433477268877314', 'current': '1', 'size': '999'};
+    requestGet(Api.processList, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---processList----$data');
+      List<Map> processList = (data['data']['records'] as List).cast();
+      processList.forEach((element) {
+        String key = element['key'];
+        String key2 = 'fysq-scfy-';
+        if (key.contains(key2)){
+          isJurisdiction = true;
+        }
+      });
+      if (mounted) setState(() {});
+    });
   }
 
   @override

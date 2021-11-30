@@ -19,7 +19,6 @@ class _ExamineSelectTreeState extends State<ExamineSelectTree> {
 
   List<Map> categoryList = [];
 
-  ///全国的区域id
   String pid_equal = '0';
 
   String id = '';

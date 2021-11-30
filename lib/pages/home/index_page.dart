@@ -7,12 +7,14 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
+import 'package:good_grandma/models/main_provider.dart';
 import 'package:good_grandma/pages/examine/shenpi_page.dart';
 import 'package:good_grandma/pages/home/app_page.dart';
 import 'package:good_grandma/pages/home/home_page.dart';
 import 'package:good_grandma/pages/mine/mine_page.dart';
 import 'package:good_grandma/pages/message/msg_page.dart';
 import 'package:badges/badges.dart';
+import 'package:provider/provider.dart';
 
 ///首页底部tabbar
 class IndexPage extends StatefulWidget {
@@ -24,9 +26,9 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   int _selectedIndex = 0;
-  int _badge = 0;
   List<BottomNavigationBarItem> _bottomNavItems = [];
   List<Widget> _pages = [];
+  MainProvider _mainProvider;
 
   void _switchTabbarIndex(int index){
     setState(() => _selectedIndex = index);
@@ -38,9 +40,7 @@ class _IndexPageState extends State<IndexPage> {
     requestGet(Api.todoList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---todoList----$data');
-      setState(() {
-        _badge = data['data']['total'];
-      });
+      _mainProvider.setBadge(data['data']['total']);
     });
   }
 
@@ -63,13 +63,13 @@ class _IndexPageState extends State<IndexPage> {
         AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3)),
         MinePage()]);
     }
-
     _todoList();
   }
 
   @override
   Widget build(BuildContext context) {
     Application.appContext = context;
+    _mainProvider = Provider.of<MainProvider>(context);
     _bottomNavItems = _getBottomNavItems();
     return Scaffold(
       ///使用BottomNavigationBar 切换页面时重新加载的解决方案
@@ -108,14 +108,14 @@ class _IndexPageState extends State<IndexPage> {
           label: '应用'),
       BottomNavigationBarItem(
           icon: Badge(
-            badgeContent: Text('$_badge', style: TextStyle(color: Colors.white)),
+            badgeContent: Text('${_mainProvider.badge}', style: TextStyle(color: Colors.white)),
             child: Image.asset('assets/images/tabbar_shenpi.png',width: 22.0,height: 22.0),
-            showBadge: _badge != 0 ? true : false
+            showBadge: _mainProvider.badge != 0 ? true : false
           ),
           activeIcon: Badge(
-            badgeContent: Text('$_badge', style: TextStyle(color: Colors.white)),
+            badgeContent: Text('${_mainProvider.badge}', style: TextStyle(color: Colors.white)),
             child: Image.asset('assets/images/tabbar_shenpi_sel.png',width: 22.0,height: 22.0),
-            showBadge: _badge != 0 ? true : false
+            showBadge: _mainProvider.badge != 0 ? true : false
           ),
           label: '审批申请'),
       BottomNavigationBarItem(

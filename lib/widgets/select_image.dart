@@ -327,6 +327,7 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
         final tempDir = await getTemporaryDirectory();
         CompressObject compressObject = CompressObject(
             imageFile: File(pickedFile.path),
+            quality: 10,
             path: tempDir.path
         );
         Luban.compressImage(compressObject).then((_path) {
@@ -429,7 +430,7 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
                       fileList[widget.index]['label'] == 'jpg' ||
                       fileList[widget.index]['label'] == 'jpeg' ?
                   MyCacheImageView(
-                    imageURL: fileList[widget.index]['image'],
+                    imageURL: fileList[widget.index]['value'],
                     width: 192,
                     height: 108,
                     errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 192.0, height: 108.0),
@@ -458,14 +459,14 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
                   fileList[widget.index]['label'] == 'jpg' ||
                   fileList[widget.index]['label'] == 'jpeg'){
                 List<String> imagesList = [];
-                imagesList.add(fileList[widget.index]['image']);
+                imagesList.add(fileList[widget.index]['value']);
                 Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
                   images: imagesList,//传入图片list
                   index: widget.index,//传入当前点击的图片的index
                   heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
                 )));
               }else {
-                _launchURL(fileList[widget.index]['image']);
+                _launchURL(fileList[widget.index]['value']);
               }
             },
           ) :

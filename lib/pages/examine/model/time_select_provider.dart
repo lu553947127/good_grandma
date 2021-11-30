@@ -56,6 +56,8 @@ class TimeSelectProvider with ChangeNotifier{
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
     zhifuduixiangxinxiMapList = [];
+    _chuchaimingxiList = [];
+    chuchaimingxiMapList = [];
   }
 
   String get startTime => _startTime;
@@ -345,6 +347,75 @@ class TimeSelectProvider with ChangeNotifier{
     zhifuduixiangxinxiMapList.removeAt(index);
     notifyListeners();
   }
+
+/**
+ * 出差明细动态表单
+ */
+
+  ///动态列表
+  List<FormEvectionModel> _chuchaimingxiList;
+
+  ///动态列表
+  List<FormEvectionModel> get chuchaimingxiList => _chuchaimingxiList;
+
+  List<Map> chuchaimingxiMapList;
+
+  ///添加item
+  addchuchaimingxiForm(FormEvectionModel formModel){
+    if(_chuchaimingxiList == null)
+      _chuchaimingxiList = [];
+    _chuchaimingxiList.add(formModel);
+    Map addData = new Map();
+    List<String> timeList = [];
+    timeList.add(formModel.start_time);
+    timeList.add(formModel.end_time);
+    addData['qizhishijian'] = timeList;
+    addData['days'] = formModel.hejitianshu;
+    addData['qizhididian'] = formModel.qizhididian;
+    addData['chuchaimudi'] = formModel.chuchaimudi;
+    addData['jiaotongjine'] = formModel.jiaotongjine;
+    addData['shineijiaotong'] = formModel.shineijiaotong;
+    addData['zhusujine'] = formModel.zhusujine;
+    addData['buzhujine'] = formModel.buzhujine;
+    addData['qitajine'] = formModel.qitajine;
+    addData['beizhu'] = formModel.beizhu;
+    chuchaimingxiMapList.add(addData);
+    notifyListeners();
+  }
+
+  ///编辑当前item
+  editchuchaimingxiFormWith(int index, FormEvectionModel formModel){
+    if(_chuchaimingxiList == null)
+      _chuchaimingxiList = [];
+    if(index >= _chuchaimingxiList.length) return;
+    _chuchaimingxiList.setAll(index, [formModel]);
+    Map addData = new Map();
+    List<String> timeList = [];
+    timeList.add(formModel.start_time + ':00');
+    timeList.add(formModel.end_time + ':00');
+    addData['qizhishijian'] = timeList;
+    addData['days'] = formModel.hejitianshu;
+    addData['qizhididian'] = formModel.qizhididian;
+    addData['chuchaimudi'] = formModel.chuchaimudi;
+    addData['jiaotongjine'] = formModel.jiaotongjine;
+    addData['shineijiaotong'] = formModel.shineijiaotong;
+    addData['zhusujine'] = formModel.zhusujine;
+    addData['buzhujine'] = formModel.buzhujine;
+    addData['qitajine'] = formModel.qitajine;
+    addData['beizhu'] = formModel.beizhu;
+    chuchaimingxiMapList.setAll(index, [addData]);
+    notifyListeners();
+  }
+
+  ///删除单个item
+  deletechuchaimingxiFormWith(int index){
+    if(_chuchaimingxiList == null)
+      _chuchaimingxiList = [];
+    if(index >= _chuchaimingxiList.length) return;
+    _chuchaimingxiList.removeAt(index);
+    chuchaimingxiMapList.removeAt(index);
+    notifyListeners();
+  }
 }
 
 ///出差日程模型
@@ -402,6 +473,55 @@ class FormModel {
     this.kaihuhangmingcheng = '',
     this.jine = '',
     this.zhifufangshi = '',
+    this.beizhu = ''
+  });
+}
+
+///出差明细模型
+class FormEvectionModel {
+
+  ///起止时间
+  String start_time;
+  String end_time;
+
+  ///合计天数
+  String hejitianshu;
+
+  ///起止地点
+  String qizhididian;
+
+  ///出差目的
+  String chuchaimudi;
+
+  ///交通金额
+  String jiaotongjine;
+
+  ///市内交通
+  String shineijiaotong;
+
+  ///市内交通
+  String zhusujine;
+
+  ///补助金额
+  String buzhujine;
+
+  ///其他金额
+  String qitajine;
+
+  ///备注
+  String beizhu;
+
+  FormEvectionModel({
+    this.start_time = '',
+    this.end_time = '',
+    this.hejitianshu = '0',
+    this.qizhididian = '',
+    this.chuchaimudi = '',
+    this.jiaotongjine = '',
+    this.shineijiaotong = '',
+    this.zhusujine = '',
+    this.buzhujine = '',
+    this.qitajine = '',
     this.beizhu = ''
   });
 }

@@ -13,12 +13,13 @@ import 'package:good_grandma/widgets/introduce_input.dart';
 ///审核驳回页面
 class ExamineReject extends StatelessWidget {
   final String title;
-  var process;
+  final dynamic process;
   final String type;
   final String processIsFinished;
   final String processInsId;
   final String taskId;
   final String wait;
+  final String processDefinitionId;
 
   ExamineReject({Key key
     , this.title
@@ -26,7 +27,9 @@ class ExamineReject extends StatelessWidget {
     , this.type
     , this.processIsFinished
     , this.processInsId
-    , this.taskId, this.wait
+    , this.taskId
+    , this.wait
+    , this.processDefinitionId
   }) : super(key: key);
 
   String comment = '';
@@ -42,6 +45,7 @@ class ExamineReject extends StatelessWidget {
     Map<String, dynamic> map = {
       'pass': false,
       'processInstanceId': processInsId,
+      'processDefinitionId': processDefinitionId,
       'taskId': taskId,
       'comment': comment};
 

@@ -132,7 +132,7 @@ class ExamineView extends StatelessWidget {
               margin: EdgeInsets.only(top: 2),
               child: Row(
                 children: [
-                  Text('当前节点: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                  Text(type == '我的已办' ? '操作节点: ' : '当前节点: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                   SizedBox(width: 10),
                   Text('${data['taskName']}',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
                 ]
