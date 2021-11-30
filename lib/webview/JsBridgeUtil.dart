@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/webview/JsBridge.dart';
 import 'package:good_grandma/widgets/select_image.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class JsBridgeUtil {
   /// 将json字符串转化成对象
@@ -12,7 +13,7 @@ class JsBridgeUtil {
   }
 
   /// 向H5开发接口调用
-  static executeMethod(context, JsBridge jsBridge) async{
+  static executeMethod(context, JsBridge jsBridge, WebViewController _webViewController) async{
     LogUtil.d('jsBridge.method------------${jsBridge}');
     if (jsBridge.method == 'wf_start') {
       Navigator.of(context).pop(true);
@@ -28,14 +29,8 @@ class JsBridgeUtil {
       showImageRange(
           context: context,
           callBack: (Map param){
-            LogUtil.d('prop------------${jsBridge.data['prop']}');
-            LogUtil.d('param------------$param');
-            Map addMap = new Map();
-            addMap['prop'] = jsBridge.data['prop'];
-            addMap['originalName'] = param['name'];
-            addMap['link'] = param['image'];
-            jsBridge.success?.call(addMap);
-            LogUtil.d('addMap------------$addMap');
+            // 之后可以调用 _webViewController 的 evaluateJavascript 属性来注入JS
+            _webViewController.evaluateJavascript("javascript:wf_upload_callback(\""+jsBridge.data['prop']+"\",\""+param['name']+"\",\""+param['image']+"\")");
           }
       );
       return;
