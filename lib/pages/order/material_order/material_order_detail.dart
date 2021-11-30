@@ -148,7 +148,7 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
                                   builder: (_) =>
                                   ChangeNotifierProvider<MarketingOrderModel>.value(
                                     value: model,
-                                    child: MaterialOrderAddPage(id: widget.data['id'], data: widget.data),
+                                    child: MaterialOrderAddPage(id: widget.data['id'], data: widget.data, newKey: ''),
                                   )));
                           if(needRefresh != null && needRefresh){
                             Navigator.pop(context, true);

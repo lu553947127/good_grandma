@@ -18,7 +18,8 @@ import 'package:provider/provider.dart';
 class MaterialOrderAddPage extends StatefulWidget {
   final String id;
   final dynamic data;
-  const MaterialOrderAddPage({Key key, this.id, this.data}) : super(key: key);
+  final String newKey;
+  const MaterialOrderAddPage({Key key, this.id, this.data, this.newKey}) : super(key: key);
 
   @override
   _MaterialOrderAddPageState createState() => _MaterialOrderAddPageState();
@@ -295,6 +296,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
 
     Map<String, dynamic> map = {
       'id': widget.id,
+      'key': widget.newKey,
       'deptId': marketingOrderModel.deptId,
       'materialDetails': marketingOrderModel.mapList,
       'withGoods': marketingOrderModel.withGoods,

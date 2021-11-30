@@ -31,6 +31,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
   List<Map> materialList = [];
   ///是否有添加权限
   bool isJurisdiction = false;
+  String key = '';
 
   @override
   void initState() {
@@ -186,7 +187,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                         builder: (_) =>
                         ChangeNotifierProvider<MarketingOrderModel>.value(
                           value: model,
-                          child: MaterialOrderAddPage(id: '', data: null),
+                          child: MaterialOrderAddPage(id: '', data: null, newKey: key),
                         )));
                 if(needRefresh != null && needRefresh){
                   _controller.callRefresh();
@@ -241,7 +242,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
       LogUtil.d('请求结果---processList----$data');
       List<Map> processList = (data['data']['records'] as List).cast();
       processList.forEach((element) {
-        String key = element['key'];
+        key = element['key'];
         String key2 = 'fysq-scfy-';
         if (key.contains(key2)){
           isJurisdiction = true;
