@@ -90,6 +90,7 @@ class ExamineDetailContent extends StatelessWidget {
           _buildSideBox(index == -1 ? '市内交通' : goodsList[index]['shineijiaotong'].toString(), index == -1),
           _buildSideBox(index == -1 ? '住宿金额' : goodsList[index]['zhusujine'].toString(), index == -1),
           _buildSideBox(index == -1 ? '补助金额' : goodsList[index]['buzhujine'].toString(), index == -1),
+          _buildSideBox(index == -1 ? '其他金额' : goodsList[index]['qitajine'].toString(), index == -1),
           _buildSideBox(index == -1 ? '备注' : goodsList[index]['beizhu'].toString(), index == -1),
         ]);
   }
@@ -417,6 +418,9 @@ class ExamineDetailContent extends StatelessWidget {
           taskFormList.removeAt(i);
         }
         if (taskFormList[i]['name'] == '补助金额'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '其他金额'){
           taskFormList.removeAt(i);
         }
         if (taskFormList[i]['name'] == '备注'){
