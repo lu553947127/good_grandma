@@ -56,7 +56,6 @@ class _IndexPageState extends State<IndexPage> {
         ShenPiPage(),
         MinePage()]);
     }else{
-      _bottomNavItems.removeWhere((map) => map.label == '审批申请');
       _pages.addAll([
         HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index)),
         MsgPage(),
@@ -71,6 +70,12 @@ class _IndexPageState extends State<IndexPage> {
     Application.appContext = context;
     _mainProvider = Provider.of<MainProvider>(context);
     _bottomNavItems = _getBottomNavItems();
+
+    ///判断当前登录人是否有审批申请模块的权限
+    if (!Store.readIsExamine()){
+      _bottomNavItems.removeWhere((map) => map.label == '审批申请');
+    }
+
     return Scaffold(
       ///使用BottomNavigationBar 切换页面时重新加载的解决方案
       body: IndexedStack(
