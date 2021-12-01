@@ -26,6 +26,7 @@ class TimeSelectProvider with ChangeNotifier{
   String _nianduyusuan;
   String _type;
   String _jine;
+  String _hexiaojine;
 
   TimeSelectProvider() {
     _startTime = '';
@@ -52,6 +53,7 @@ class TimeSelectProvider with ChangeNotifier{
     _nianduyusuan = '';
     _type = '';
     _jine = '';
+    _hexiaojine = '';
     _travelScheduleList = [];
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
@@ -84,6 +86,7 @@ class TimeSelectProvider with ChangeNotifier{
   String get nianduyusuan => _nianduyusuan;
   String get type => _type;
   String get jine => _jine;
+  String get hexiaojine => _hexiaojine;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
@@ -187,6 +190,11 @@ class TimeSelectProvider with ChangeNotifier{
 
   addjine(str){
     _jine = str;
+    notifyListeners();
+  }
+
+  addhexiaojine(str){
+    _hexiaojine  = str;
     notifyListeners();
   }
 

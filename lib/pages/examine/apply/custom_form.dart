@@ -100,6 +100,8 @@ class _CustomFormViewState extends State<CustomFormView> {
               value = timeSelectProvider.money;
             }else if(data['prop'] == 'nianduyusuan'){
               value = timeSelectProvider.nianduyusuan;
+            }else if(data['prop'] == 'hexiaojine'){
+              value = timeSelectProvider.hexiaojine;
             }
             return PostAddInputCell(
                 title: data['label'],
@@ -141,6 +143,11 @@ class _CustomFormViewState extends State<CustomFormView> {
                         if (data['prop'] == 'nianduyusuan'){
                           addData[prop] = text;
                           timeSelectProvider.addnianduyusuan(text);
+                        }
+
+                        if (data['prop'] == 'hexiaojine'){
+                          addData[prop] = text;
+                          timeSelectProvider.addhexiaojine(text);
                         }
                       }
                     })
@@ -403,6 +410,32 @@ class _CustomFormViewState extends State<CustomFormView> {
               showToast('${map['label']}不能为空');
               return;
             }
+            for (Map map in timeSelectProvider.zhifuduixiangxinxiMapList) {
+              if (map['danweimingcheng'] == ''){
+                showToast('单位名称不能为空');
+                return;
+              }
+              if (map['zhanghao'] == ''){
+                showToast('账号不能为空');
+                return;
+              }
+              if (map['kaihuhangmingcheng'] == ''){
+                showToast('开户行名称不能为空');
+                return;
+              }
+              if (map['jine'] == ''){
+                showToast('金额不能为空');
+                return;
+              }
+              if (map['zhifufangshi'] == ''){
+                showToast('支付方式不能为空');
+                return;
+              }
+              if (map['beizhu'] == ''){
+                showToast('备注不能为空');
+                return;
+              }
+            }
             addData[map['prop']] = timeSelectProvider.zhifuduixiangxinxiMapList;
           }else if ('chuchaimingxi' == map['prop']){
             if (timeSelectProvider.chuchaimingxiMapList.length == 0){
@@ -519,6 +552,12 @@ class _CustomFormViewState extends State<CustomFormView> {
             return;
           }
           addData[map['prop']] = timeSelectProvider.gongsi;
+        }else if ('hexiaojine' == map['prop']){
+          if (timeSelectProvider.hexiaojine == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
+          addData[map['prop']] = timeSelectProvider.hexiaojine;
         }else if ('applyer' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }

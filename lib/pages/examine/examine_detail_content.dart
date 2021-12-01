@@ -37,7 +37,7 @@ class ExamineDetailContent extends StatelessWidget {
         numRowWidth = 100.0;
         break;
       case '出差明细':
-        numRowWidth = 120.0;
+        numRowWidth = 140.0;
         break;
       case '出差日程':
         numRowWidth = 40.0;
