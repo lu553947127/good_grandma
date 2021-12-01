@@ -10,7 +10,7 @@ import 'package:good_grandma/pages/examine/examine_add.dart';
 import 'package:good_grandma/pages/examine/examine_detail.dart';
 import 'package:good_grandma/pages/examine/examine_select_process.dart';
 import 'package:good_grandma/pages/examine/examine_view.dart';
-import 'package:good_grandma/pages/examine/model/shenpi_type.dart';
+import 'package:good_grandma/pages/examine/examine_type_title.dart';
 import 'package:good_grandma/webview/webview.dart';
 import 'package:provider/provider.dart';
 

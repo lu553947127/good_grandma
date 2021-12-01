@@ -64,7 +64,7 @@ class ExamineAdopt extends StatelessWidget {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text(title,style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text(title, style: TextStyle(fontSize: 18, color: Colors.black)),
       ),
       body: CustomScrollView(
         slivers: [

@@ -47,7 +47,7 @@ class _ExamineSelectProcessState extends State<ExamineSelectProcess> {
           brightness: Brightness.light,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
-          title: Text('请选择审批流程',style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+          title: Text('请选择审批流程', style: TextStyle(fontSize: 18, color: Colors.black)),
         ),
         body: Container(
           color: Colors.white,

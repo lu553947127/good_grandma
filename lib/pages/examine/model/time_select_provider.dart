@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+///oa审批模型
 class TimeSelectProvider with ChangeNotifier{
 
   String _startTime = '';
@@ -27,6 +28,7 @@ class TimeSelectProvider with ChangeNotifier{
   String _type;
   String _jine;
   String _hexiaojine;
+  String _reason;
 
   TimeSelectProvider() {
     _startTime = '';
@@ -54,6 +56,7 @@ class TimeSelectProvider with ChangeNotifier{
     _type = '';
     _jine = '';
     _hexiaojine = '';
+    _reason = '';
     _travelScheduleList = [];
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
@@ -87,6 +90,7 @@ class TimeSelectProvider with ChangeNotifier{
   String get type => _type;
   String get jine => _jine;
   String get hexiaojine => _hexiaojine;
+  String get reason => _reason;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
@@ -195,6 +199,11 @@ class TimeSelectProvider with ChangeNotifier{
 
   addhexiaojine(str){
     _hexiaojine  = str;
+    notifyListeners();
+  }
+
+  addreason(str){
+    _reason  = str;
     notifyListeners();
   }
 

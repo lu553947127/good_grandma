@@ -55,7 +55,7 @@ class _ExamineSelectTreeState extends State<ExamineSelectTree> {
           brightness: Brightness.light,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
-          title: Text('请选择审批类型', style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+          title: Text('请选择审批类型', style: TextStyle(fontSize: 18, color: Colors.black)),
           actions: [
             TextButton(
                 child: Text("确定", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),

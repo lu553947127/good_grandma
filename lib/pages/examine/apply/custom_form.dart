@@ -6,9 +6,9 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/pages/examine/apply/chuchaimingxi.dart';
-import 'package:good_grandma/pages/examine/apply/travel_schedule_apply.dart';
-import 'package:good_grandma/pages/examine/apply/zhifuduixiangxinxi.dart';
+import 'package:good_grandma/pages/examine/children_form/chuchaimingxi.dart';
+import 'package:good_grandma/pages/examine/children_form/travel_schedule_apply.dart';
+import 'package:good_grandma/pages/examine/children_form/zhifuduixiangxinxi.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
@@ -319,6 +319,11 @@ class _CustomFormViewState extends State<CustomFormView> {
                   addData[prop] = tex;
                   timeSelectProvider.adddesc(tex);
                 }
+
+                if (data['prop'] == 'reason'){
+                  addData[prop] = tex;
+                  timeSelectProvider.addreason(tex);
+                }
               }
             }
           );
@@ -558,6 +563,12 @@ class _CustomFormViewState extends State<CustomFormView> {
             return;
           }
           addData[map['prop']] = timeSelectProvider.hexiaojine;
+        }else if ('reason' == map['prop']){
+          if (timeSelectProvider.reason == ''){
+            showToast('${map['label']}不能为空');
+            return;
+          }
+          addData[map['prop']] = timeSelectProvider.reason;
         }else if ('applyer' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }

@@ -20,8 +20,8 @@ import 'package:url_launcher/url_launcher.dart';
 void showImageRange({@required BuildContext context, @required Function(Map map) callBack}) async {
   final _picker = ImagePicker();
   Map param;
-
-  final source = await showModalBottomSheet(
+  var source;
+  source = await showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
@@ -32,22 +32,22 @@ void showImageRange({@required BuildContext context, @required Function(Map map)
                 title: Text('拍照', textAlign: TextAlign.center),
                 onTap: () {
                   Navigator.pop(context, ImageSource.camera);
-                },
+                }
               ),
               ListTile(
                 title: Text('从相册选择', textAlign: TextAlign.center),
                 onTap: () {
                   Navigator.pop(context, ImageSource.gallery);
-                },
+                }
               ),
               ListTile(
                 title: Text('取消', textAlign: TextAlign.center),
                 onTap: () {
                   Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+                }
+              )
+            ]
+          )
         );
       });
 
@@ -133,8 +133,9 @@ class _SelectImagesViewState extends State<SelectImagesView> {
             });
         final tempDir = await getTemporaryDirectory();
         CompressObject compressObject = CompressObject(
-            imageFile: File(pickedFile.path),
-            path: tempDir.path
+          imageFile: File(pickedFile.path),
+          path: tempDir.path,
+          quality: 5,
         );
         Luban.compressImage(compressObject).then((_path) {
           getPutFile(widget.url, _path).then((val) async{
@@ -327,7 +328,7 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
         final tempDir = await getTemporaryDirectory();
         CompressObject compressObject = CompressObject(
             imageFile: File(pickedFile.path),
-            quality: 10,
+            quality: 5,
             path: tempDir.path
         );
         Luban.compressImage(compressObject).then((_path) {

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 ///审批列表
 class ExamineView extends StatelessWidget {
-
-  var data;
-  String type;
+  final dynamic data;
+  final String type;
   final VoidCallback onTap;
   ExamineView({Key key, this.data, this.type, this.onTap}) : super(key: key);
 

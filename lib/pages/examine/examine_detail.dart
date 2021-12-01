@@ -50,7 +50,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text('审批详情', style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text('审批详情', style: TextStyle(fontSize: 18, color: Colors.black)),
       ),
       body: FutureBuilder(
           future: requestGet(Api.processDetail, param: map),

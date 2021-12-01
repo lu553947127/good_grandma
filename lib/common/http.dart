@@ -40,10 +40,16 @@ Future requestPostLogin(url, {formData}) async{
     response = await dio.post(Api.baseUrl() + url, data: formData);
 
     return response.data;
-  }catch(e){
-    print('ERROR:===$url===>$e');
-    print('ERROR:===${response.data}');
-    return print('ERROR:===$url===>$e');
+  } on DioError catch(e){
+    LogUtil.d('ERROR:===$url===>$e');
+    if (e.response.statusCode == 500){
+      showToast('接口报500啦');
+      throw e;
+    }else if (e.response.statusCode == 404){
+      showToast('接口报404啦');
+      throw e;
+    }
+    throw e;
   }
 }
 
@@ -76,10 +82,16 @@ Future requestPostSwitch(url, {formData}) async{
     response = await dio.post(Api.baseUrl() + url, data: formData);
 
     return response.data;
-  }catch(e){
-    print('ERROR:===$url===>$e');
-    print('ERROR:===${response.data}');
-    return print('ERROR:===$url===>$e');
+  } on DioError catch(e){
+    LogUtil.d('ERROR:===$url===>$e');
+    if (e.response.statusCode == 500){
+      showToast('接口报500啦');
+      throw e;
+    }else if (e.response.statusCode == 404){
+      showToast('接口报404啦');
+      throw e;
+    }
+    throw e;
   }
 }
 
@@ -130,6 +142,9 @@ Future requestPost(url, {formData, json}) async{
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
       throw e;
+    }else if (e.response.statusCode == 404){
+      showToast('接口报404啦');
+      throw e;
     }
     throw e;
   }
@@ -172,6 +187,9 @@ Future requestGet(url, {param})async{
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
+      throw e;
+    }else if (e.response.statusCode == 404){
+      showToast('接口报404啦');
       throw e;
     }
     throw e;
@@ -220,6 +238,9 @@ Future getPutFile(url, file) async{
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
+      throw e;
+    }else if (e.response.statusCode == 404){
+      showToast('接口报404啦');
       throw e;
     }
     throw e;

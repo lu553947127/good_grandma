@@ -43,7 +43,7 @@ class ExamineSelectDialog extends StatelessWidget {
                     child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
                 )
               )
-            ],
+            ]
           );
         }
     );

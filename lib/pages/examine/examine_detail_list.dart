@@ -4,7 +4,7 @@ import 'package:good_grandma/common/my_cache_image_view.dart';
 
 ///审核流程列表
 class ExamineDetailList extends StatelessWidget {
-  var flow;
+  final dynamic flow;
   final bool isLast;
 
   ExamineDetailList({Key key, this.flow, this.isLast}) : super(key: key);

@@ -62,8 +62,7 @@ class WebViewState extends State<Webview> {
           onPageFinished: (url) {
             _webViewController.evaluateJavascript("document.title").then((result){
               LogUtil.d('result------------$result');
-            }
-            );
+            });
           }
         )
     );
