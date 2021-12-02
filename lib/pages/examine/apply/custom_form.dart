@@ -353,7 +353,6 @@ class _CustomFormViewState extends State<CustomFormView> {
         case 'upload':
           return OaPhotoWidget(
               title: data['label'],
-              length: 3,
               sizeHeight: 10,
               url: data['action'],
               timeSelectProvider: timeSelectProvider

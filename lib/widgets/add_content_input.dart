@@ -10,6 +10,7 @@ class ContentInputView extends StatefulWidget {
   final String rightPlaceholder;
   final OnChanged onChanged;
   final Color color;
+  TextEditingController controller = new TextEditingController();
 
   ///分割线间距
   double sizeHeight = 0;
@@ -20,6 +21,7 @@ class ContentInputView extends StatefulWidget {
     this.onChanged,
     this.color,
     this.sizeHeight,
+    this.controller
   }) : super(key: key);
 
   @override
@@ -50,6 +52,7 @@ class _ContentInputViewState extends State<ContentInputView> {
               padding: EdgeInsets.only(left: 5, right: 5),
               child: InputWidget(
                 placeholder: widget.rightPlaceholder,
+                controller: widget.controller,
                 onChanged: (String txt){
                   setState(() {
                     if(widget.onChanged != null){

@@ -104,7 +104,7 @@ class DeclarationFormModel extends ChangeNotifier {
       case 1:
         return '待确认';
       case 2:
-        return '待发货';
+        return '待审核';
       case 3:
         return '待收货';
       case 4:
@@ -113,6 +113,8 @@ class DeclarationFormModel extends ChangeNotifier {
         return '驳回';
       case 6:
         return '已取消';
+      case 7:
+        return '待发货';
       default:
         return '未知状态';
     }

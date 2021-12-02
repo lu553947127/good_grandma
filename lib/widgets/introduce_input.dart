@@ -5,13 +5,15 @@ typedef OnChanged = void Function(String txt);
 
 ///带右下角计数的输入框
 class InputWidget extends StatefulWidget {
-  const InputWidget({
+   InputWidget({
     this.placeholder='请输入',
     this.onChanged,
     this.maxLength = 1000,
     this.maxLines = 10,
+    this.controller
   });
 
+  TextEditingController controller = new TextEditingController();
   final String placeholder;
   final OnChanged onChanged;
   final int maxLength;
@@ -45,6 +47,7 @@ class _InputWidgetState extends State<InputWidget> {
           ),
           alignment: AlignmentDirectional.topStart,
           child: CupertinoTextField(
+            controller: widget.controller,
             placeholder: widget.placeholder,
             cursorColor: Color(0xFFC68D3E),//修改光标颜色
             style: TextStyle(fontSize: 15, color: Colors.black),

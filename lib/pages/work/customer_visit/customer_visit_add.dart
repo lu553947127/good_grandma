@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
@@ -15,8 +16,8 @@ import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
-import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
+import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -35,8 +36,11 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
   TextEditingController controller = new TextEditingController();
   ImagesProvider imagesProvider = new ImagesProvider();
+  String deviceCode = '';
   String customerId = '';
   String customerName = '';
+  String customerType = '';
+  String customerTypeName = '';
   String visitContent = '';
   double latitude = 0.0;
   double longitude = 0.0;
@@ -51,8 +55,8 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       return;
     }
 
-    if (visitContent == ''){
-      showToast('行动过程不能为空');
+    if (customerType == ''){
+      showToast('客户类型不能为空');
       return;
     }
 
@@ -60,12 +64,9 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       images = listToString(imagesProvider.urlList);
     }
 
-    if (images == ''){
-      showToast('拜访图片不能为空');
-      return;
-    }
-
     Map<String, dynamic> map = {
+      'appCode': deviceCode,
+      'customerType': customerType,
       'customerId': customerId,
       'customerName': customerName,
       'visitContent': visitContent,
@@ -86,6 +87,20 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
         showToast(data['msg']);
       }
     });
+  }
+
+  ///获取手机唯一IMEI
+  void getDeviceInfo() async{
+    DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();
+    if(Platform.isIOS){
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      print('IOS设备：${iosInfo.identifierForVendor}');
+      deviceCode = iosInfo.identifierForVendor;
+    }else if(Platform.isAndroid){
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print('Android设备 ${androidInfo.androidId}');
+      deviceCode = androidInfo.androidId;
+    }
   }
 
   StreamSubscription<Map<String, Object>> _locationListener;
@@ -109,6 +124,8 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
         .listen((Map<String, Object> result) {
       _locationResultDeal(result);
     });
+
+    getDeviceInfo();
   }
 
   @override
@@ -338,21 +355,42 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                   ),
                   Offstage(
                       offstage: _isNewCustomer ? true : false,
-                      child: TextSelectView(
-                          sizeHeight: 1,
-                          leftTitle: '客户名称',
-                          rightPlaceholder: '请选择老客户',
+                      child: PostAddInputCell(
+                          title: '客户名称',
                           value: customerName,
-                          onPressed: () async{
-                            Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
-                            LogUtil.d('请求结果---select----$select');
+                          hintText: '请选择老客户',
+                          endWidget: Icon(Icons.chevron_right),
+                          onTap: () async {
+                            Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'corporateName');
                             setState(() {
-                              customerName = select['realName'];
+                              customerName = select['corporateName'];
                               customerId = select['id'];
                             });
-                            return select['realName'];
                           }
                       )
+                  ),
+                  PostAddInputCell(
+                      title: '客户类型',
+                      value: customerTypeName,
+                      hintText: '请选择客户类型',
+                      endWidget: Icon(Icons.chevron_right),
+                      onTap: () async {
+                        String select = await showPicker(['一级客户', '二级客户', '终端'], context);
+                        setState(() {
+                          customerTypeName = select;
+                          switch(select){
+                            case '一级客户':
+                              customerType = '1';
+                              break;
+                            case '二级客户':
+                              customerType = '2';
+                              break;
+                            case '终端':
+                              customerType = '3';
+                              break;
+                          }
+                        });
+                      }
                   ),
                   ContentInputView(
                       sizeHeight: 10,

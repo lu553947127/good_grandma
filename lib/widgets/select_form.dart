@@ -240,7 +240,7 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
                 Navigator.of(context).pop(result);
               }
           )
-        ],
+        ]
       ),
       body: fileCabinetList.length > 0 ?
       ListView.builder(

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 class VisitStatisticsSelect extends StatefulWidget {
-
-  Color color;
-  String type;
-  List<Map> list;
+  final Color color;
+  final String type;
+  final List<Map> list;
   final void Function() onPressed;
   final void Function() onPressed2;
 
@@ -43,41 +42,39 @@ class _VisitStatisticsSelectState extends State<VisitStatisticsSelect> {
       }
     }
     final double w = (MediaQuery.of(context).size.width - 15 * 2) / 3;
-    return SliverToBoxAdapter(
-        child: Container(
-            padding: EdgeInsets.all(10),
-            color: widget.color,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: w,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      color: _setBgColor(widget.list[0]['name'])
-                      , borderRadius: BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0), topRight: Radius.circular(0.0), bottomRight: Radius.circular(0.0))
-                      , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
-                    ),
-                    child: TextButton(
-                      child: Text(widget.list[0]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[0]['name']))),
-                      onPressed: widget.onPressed
-                    ),
-                  ),
-                  Container(
-                    width: w,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      color: _setBgColor(widget.list[1]['name'])
-                      , borderRadius: BorderRadius.only(topLeft: Radius.circular(0.0), bottomLeft: Radius.circular(0.0), topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0))
-                      , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
-                    ),
-                    child: TextButton(
-                      child: Text(widget.list[1]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[1]['name']))),
-                      onPressed: widget.onPressed2
-                    ),
-                  )
-                ]
-            )
+    return Container(
+        padding: EdgeInsets.all(10),
+        color: widget.color,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: w,
+                height: 35,
+                decoration: BoxDecoration(
+                  color: _setBgColor(widget.list[0]['name'])
+                  , borderRadius: BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0), topRight: Radius.circular(0.0), bottomRight: Radius.circular(0.0))
+                  , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
+                ),
+                child: TextButton(
+                    child: Text(widget.list[0]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[0]['name']))),
+                    onPressed: widget.onPressed
+                ),
+              ),
+              Container(
+                width: w,
+                height: 35,
+                decoration: BoxDecoration(
+                  color: _setBgColor(widget.list[1]['name'])
+                  , borderRadius: BorderRadius.only(topLeft: Radius.circular(0.0), bottomLeft: Radius.circular(0.0), topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0))
+                  , border:  Border.all(width: 1, color: Color(0xFFC68D3E)),
+                ),
+                child: TextButton(
+                    child: Text(widget.list[1]['name'], style: TextStyle(fontSize: 12, color: _setTextColor(widget.list[1]['name']))),
+                    onPressed: widget.onPressed2
+                ),
+              )
+            ]
         )
     );
   }

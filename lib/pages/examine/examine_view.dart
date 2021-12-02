@@ -20,10 +20,13 @@ class ExamineView extends StatelessWidget {
         processIsFinished = '已审核';
         break;
       case 'reject':
-        processIsFinished = '已驳回';
+        processIsFinished = '已终止';
         break;
       case 'withdraw':
         processIsFinished = '已撤回';
+        break;
+      case 'rollback':
+        processIsFinished = '已驳回';
         break;
     }
 
@@ -34,6 +37,9 @@ class ExamineView extends StatelessWidget {
           break;
         case '审核中':
           return Color(0xFFDD0000);
+          break;
+        case '已终止':
+          return Color(0xFFC08A3F);
           break;
         case '已驳回':
           return Color(0xFFC08A3F);
@@ -51,6 +57,9 @@ class ExamineView extends StatelessWidget {
           break;
         case '审核中':
           return Color(0xFFF1E1E2);
+          break;
+        case '已终止':
+          return Color(0xFFF1EEEA);
           break;
         case '已驳回':
           return Color(0xFFF1EEEA);

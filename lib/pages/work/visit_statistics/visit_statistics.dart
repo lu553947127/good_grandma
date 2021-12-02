@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_list.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_select.dart';
@@ -19,6 +21,10 @@ class VisitStatistics extends StatefulWidget {
 }
 
 class _VisitStatisticsState extends State<VisitStatistics> {
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
+  int _current = 1;
+  int _pageSize = 10;
 
   ///拜访统计列表
   List<Map> customerVisitList = [];
@@ -53,38 +59,10 @@ class _VisitStatisticsState extends State<VisitStatistics> {
   ///结束时间
   String endDate = '';
 
-  ///拜访统计列表
-  _customerVisitList(){
-    Map<String, dynamic> map = {
-      'type': typeId,
-      'userId': userId,
-      'customerId': customerId,
-      'startDate': startDate,
-      'endDate': endDate,
-      'current': '1',
-      'size': '999'
-    };
-
-    LogUtil.d('请求结果---map----$map');
-
-    requestGet(Api.customerVisitList, param: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---customerVisitList----$data');
-      setState(() {
-        if (typeId == '1'){
-          type = listTitle[0]['name'];
-        }else {
-          type = listTitle[1]['name'];
-        }
-        customerVisitList = (data['data'] as List).cast();
-      });
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _customerVisitList();
+    _controller.callRefresh();
   }
 
   @override
@@ -97,8 +75,8 @@ class _VisitStatisticsState extends State<VisitStatistics> {
         iconTheme: IconThemeData(color: Colors.black),
         title: Text("拜访统计",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
       ),
-      body: CustomScrollView(
-        slivers: [
+      body: Column(
+        children: [
           VisitStatisticsSelect(
             color: Colors.white,
             type: type,
@@ -108,14 +86,16 @@ class _VisitStatisticsState extends State<VisitStatistics> {
               userId = '';
               customerId = '';
               customerName = '所有人';
-              _customerVisitList();
+              type = listTitle[0]['name'];
+              _controller.callRefresh();
             },
             onPressed2: () {
               typeId = '2';
               userId = '';
               customerId = '';
               customerName = '所有人';
-              _customerVisitList();
+              type = listTitle[1]['name'];
+              _controller.callRefresh();
             }
           ),
           VisitStatisticsType(
@@ -128,10 +108,9 @@ class _VisitStatisticsState extends State<VisitStatistics> {
                   typeId == '1' ? '请选择员工' : '请选择客户',
                   'realName'
               );
-
               typeId == '1' ? userId = select['id'] : customerId = select['id'];
               customerName = select['realName'];
-              _customerVisitList();
+              _controller.callRefresh();
             },
             onPressed2: () async {
               showPickerDateRange(
@@ -140,24 +119,76 @@ class _VisitStatisticsState extends State<VisitStatistics> {
                     time = '${param['startTime'] + '\n' + param['endTime']}';
                     startDate = param['startTime'];
                     endDate = param['endTime'];
-                    _customerVisitList();
+                    _controller.callRefresh();
                   }
               );
-            },
+            }
           ),
-          customerVisitList.length > 0 ?
-          SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return VisitStatisticsList(data: customerVisitList[index]);
-              }, childCount: customerVisitList.length)) :
-          SliverToBoxAdapter(
-              child: Container(
-                  margin: EdgeInsets.all(40),
-                  child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
-              )
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: customerVisitList.length,
+                onRefresh: _refresh,
+                onLoad: _onLoad,
+                slivers: [
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return VisitStatisticsList(data: customerVisitList[index]);
+                      }, childCount: customerVisitList.length))
+                ]
+            )
           )
-        ],
+        ]
       )
     );
+  }
+
+  Future<void> _refresh() async {
+    _current = 1;
+    await _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    await _downloadData();
+  }
+
+  ///拜访统计列表
+  Future<void> _downloadData() async {
+    try {
+      Map<String, dynamic> map = {
+        'type': typeId,
+        'userId': userId,
+        'customerId': customerId,
+        'startDate': startDate,
+        'endDate': endDate,
+        'current': _current,
+        'size': _pageSize
+      };
+      final val = await requestGet(Api.customerVisitList, param: map);
+      var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---customerVisitList----$data');
+      if (_current == 1) customerVisitList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        customerVisitList.add(map);
+      });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
   }
 }

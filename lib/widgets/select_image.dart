@@ -309,96 +309,6 @@ class OaSelectImagesView extends StatefulWidget {
 
 class _OaSelectImagesViewState extends State<OaSelectImagesView> {
 
-  final ImagePicker _picker = ImagePicker();
-
-  Future<bool> _getImage(ImageSource source) async {
-    try {
-      final pickedFile = await _picker.pickImage(source: source);
-      if (pickedFile != null) {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) {
-              return NetLoadingDialog(
-                requestCallBack: null,
-                outsideDismiss: false,
-                loadingText: '图片上传中...',
-              );
-            });
-        final tempDir = await getTemporaryDirectory();
-        CompressObject compressObject = CompressObject(
-            imageFile: File(pickedFile.path),
-            quality: 5,
-            path: tempDir.path
-        );
-        Luban.compressImage(compressObject).then((_path) {
-          getPutFile(widget.url, _path).then((val) async{
-            var data = json.decode(val.toString());
-            print('请求结果---uploadFile----$data');
-            Navigator.pop(context);
-            if (widget.title == '图片'){
-              widget.timeSelectProvider.imageAdd(data['data']['link'], 'png', '');
-            }else {
-              widget.timeSelectProvider.fileAdd(data['data']['link'], 'png', '');
-            }
-          });
-        });
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('Pick image error: $e');
-      return false;
-    }
-  }
-
-  Future<ImageSource> _showBottomSheet() async {
-    return await showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          double w = 240.0;
-          return Container(
-              height: w,
-              child: Column(
-                  children: <Widget>[
-                    ListTile(
-                        title: Text('拍照', textAlign: TextAlign.center),
-                        onTap: () {
-                          Navigator.pop(context, ImageSource.camera);
-                        }
-                    ),
-                    ListTile(
-                        title: Text('从相册选择', textAlign: TextAlign.center),
-                        onTap: () {
-                          Navigator.pop(context, ImageSource.gallery);
-                        }
-                    ),
-                    ListTile(
-                        title: Text('从文件柜选择', textAlign: TextAlign.center),
-                        onTap: () async {
-                          Navigator.pop(context);
-                          Map select = await showSelectFileList(context);
-                          print('请求结果---select----$select');
-                          if (widget.title == '图片'){
-                            widget.timeSelectProvider.imageAdd(select['path'], select['type'], select['iconName']);
-                          }else {
-                            widget.timeSelectProvider.fileAdd(select['path'], select['type'], select['iconName']);
-                          }
-                        }
-                    ),
-                    ListTile(
-                        title: Text('取消', textAlign: TextAlign.center),
-                        onTap: () {
-                          Navigator.pop(context);
-                        }
-                    )
-                  ]
-              )
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     List<Map> fileList = [];
@@ -407,73 +317,53 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
     }else {
       fileList = widget.timeSelectProvider.filePath;
     }
-    if(widget.index == fileList.length){
-      return GestureDetector(
-        child: Image.asset('assets/images/icon_add_images.png', width: 192, height: 108),
-        onTap: () async{
-          //show
-          final source = await _showBottomSheet();
-          //image
-          if (source == null) return;
-
-          final bool result = await _getImage(source);
-          if (!result) return;
-          setState(() {});
-        },
-      );
-    }else{
-      return Container(
-          child: fileList.length > widget.index ?
-          InkWell(
-            child: Stack(
-                children: <Widget>[
-                  fileList[widget.index]['label'] == 'png' ||
-                      fileList[widget.index]['label'] == 'jpg' ||
-                      fileList[widget.index]['label'] == 'jpeg' ?
-                  MyCacheImageView(
-                    imageURL: fileList[widget.index]['value'],
-                    width: 192,
-                    height: 108,
-                    errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 192.0, height: 108.0),
-                  ):
-                  Image.asset(fileList[widget.index]['iconName'], width: 192, height: 108),
-                  Positioned(
-                      right: 0,
-                      child: InkWell(
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Image.asset('assets/images/icon_delete_images.png', width: 13, height: 13),
-                          ),
-                          onTap: (){
-                            if (widget.title == '图片'){
-                              widget.timeSelectProvider.imageDelete(widget.index);
-                            }else {
-                              widget.timeSelectProvider.fileDelete(widget.index);
-                            }
-                          }
-                      )
-                  )
-                ]
-            ),
-            onTap: (){
-              if (fileList[widget.index]['label'] == 'png' ||
-                  fileList[widget.index]['label'] == 'jpg' ||
-                  fileList[widget.index]['label'] == 'jpeg'){
-                List<String> imagesList = [];
-                imagesList.add(fileList[widget.index]['value']);
-                Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
-                  images: imagesList,//传入图片list
-                  index: widget.index,//传入当前点击的图片的index
-                  heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
-                )));
-              }else {
-                _launchURL(fileList[widget.index]['value']);
-              }
-            },
-          ) :
-          Container()
-      );
-    }
+    return InkWell(
+      child: Stack(
+          children: <Widget>[
+            fileList[widget.index]['label'] == 'png' ||
+                fileList[widget.index]['label'] == 'jpg' ||
+                fileList[widget.index]['label'] == 'jpeg' ?
+            MyCacheImageView(
+              imageURL: fileList[widget.index]['value'],
+              width: 192,
+              height: 108,
+              errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 192.0, height: 108.0),
+            ):
+            Image.asset(fileList[widget.index]['iconName'], width: 192, height: 108),
+            Positioned(
+                right: 0,
+                child: InkWell(
+                    child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Image.asset('assets/images/icon_delete_images.png', width: 13, height: 13),
+                    ),
+                    onTap: (){
+                      if (widget.title == '图片'){
+                        widget.timeSelectProvider.imageDelete(widget.index);
+                      }else {
+                        widget.timeSelectProvider.fileDelete(widget.index);
+                      }
+                    }
+                )
+            )
+          ]
+      ),
+      onTap: (){
+        if (fileList[widget.index]['label'] == 'png' ||
+            fileList[widget.index]['label'] == 'jpg' ||
+            fileList[widget.index]['label'] == 'jpeg'){
+          List<String> imagesList = [];
+          imagesList.add(fileList[widget.index]['value']);
+          Navigator.of(context).push(FadeRoute(page: PhotoViewGalleryScreen(
+            images: imagesList,//传入图片list
+            index: widget.index,//传入当前点击的图片的index
+            heroTag: 'simple',//传入当前点击的图片的hero tag （可选）
+          )));
+        }else {
+          _launchURL(fileList[widget.index]['value']);
+        }
+      },
+    );
   }
 
   ///用内置浏览器打开网页

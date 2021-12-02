@@ -68,6 +68,9 @@ class Api {
   ///客户拜访新增
   static const customerVisitAdd = "/api/hap-app/app/visitplan/customerVisitSave";
 
+  ///客户拜访编辑
+  static const customerVisitEdit = "/api/hap-app/app/visitplan/customerVisitEdit";
+
 
   /** 工作报告相关 **/
 
