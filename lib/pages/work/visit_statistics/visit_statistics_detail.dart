@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_edit.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
 
@@ -54,11 +55,15 @@ class VisitStatisticsDetail extends StatelessWidget {
             title: Text("拜访统计详细", style: TextStyle(fontSize: 18, color: Colors.black)),
             actions: [
               Visibility(
-                visible: data['status'] == 1,
+                visible: data['status'] == 1 && data['createUser'] == Store.readUserId(),
                 child: TextButton(
                     child: Text("编辑", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitEdit(data: data)));
+                    onPressed: () async {
+                      bool needRefresh = await Navigator.push(context,
+                          MaterialPageRoute(builder:(context)=> CustomerVisitEdit(data: data)));
+                      if(needRefresh != null && needRefresh){
+                        Navigator.pop(context, true);
+                      }
                     }
                 )
               )

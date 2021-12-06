@@ -191,10 +191,8 @@ class _StockAddPageState extends State<StockAddPage> {
 
   ///选择客户
   _pickCustomerAction(BuildContext context, StockAddModel _model) async {
-    EmployeeModel model =
-        await Navigator.push(context, MaterialPageRoute(builder: (_) {
-      return SelectCustomerPage(url: Api.customerList);
-    }));
+    Map select = await showSelectSearchList(context, Api.customerList, '请选择客户', 'name');
+    EmployeeModel model = EmployeeModel(name: select['name'] ?? '', id: select['id'] ?? '');
     if (model != null) {
       _model.setStockList([]);
       _model.setCustomer(model);

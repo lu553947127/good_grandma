@@ -13,12 +13,12 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
-import 'package:good_grandma/widgets/select_form.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -339,8 +339,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                                   child: TextButton(
                                       child: Text('选择客户', style: TextStyle(fontSize: 12, color: Colors.white)),
                                       onPressed: () async{
-                                        Map select = await showSelectList(context, Api.customerNewList, '请选择客户名称', 'customerName');
-                                        LogUtil.d('请求结果---select----$select');
+                                        Map select = await showSelectSearchList(context, Api.customerNewList, '请选择客户名称', 'customerName');
                                         setState(() {
                                           customerName = select['customerName'];
                                           controller.text = customerName;
@@ -361,7 +360,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                           hintText: '请选择老客户',
                           endWidget: Icon(Icons.chevron_right),
                           onTap: () async {
-                            Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'corporateName');
+                            Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'corporateName');
                             setState(() {
                               customerName = select['corporateName'];
                               customerId = select['id'];

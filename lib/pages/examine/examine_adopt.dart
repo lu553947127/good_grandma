@@ -6,7 +6,6 @@ import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/models/employee_model.dart';
 
 import 'package:good_grandma/pages/examine/examine_detail_title.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
@@ -195,16 +194,12 @@ class _ExamineOperationState extends State<ExamineOperation> {
               rightPlaceholder: '请选择客户',
               value: customerName,
               onPressed: () async{
-                EmployeeModel model = await Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return SelectCustomerPage(url: Api.allUser);
-                }));
-
+                Map select = await showSelectSearchList(context, Api.allUser, '请选择客户', 'name');
                 setState(() {
-                  customerId = model.id;
-                  customerName = model.name;
+                  customerId = select['id'];
+                  customerName = select['name'];
                 });
-
-                return model.name;
+                return select['name'];
               }
           ),
           SizedBox(height: 15),

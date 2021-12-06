@@ -59,7 +59,7 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
       LogUtil.d('请求结果---customerVisitEdit----$data');
       if (data['code'] == 200){
         showToast("编辑成功");
-        Navigator.of(Application.appContext).pop('refresh');
+        Navigator.pop(context, true);
       }else {
         showToast(data['msg']);
       }

@@ -7,10 +7,11 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
+import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_detail.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_list.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_select.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_type.dart';
-import 'package:good_grandma/widgets/select_form.dart';
 
 ///拜访统计
 class VisitStatistics extends StatefulWidget {
@@ -102,7 +103,7 @@ class _VisitStatisticsState extends State<VisitStatistics> {
             customerName: customerName,
             time: time,
             onPressed: () async {
-              Map select = await showSelectList(
+              Map select = await showSelectSearchList(
                   context,
                   typeId == '1' ? Api.userList : Api.customerList,
                   typeId == '1' ? '请选择员工' : '请选择客户',
@@ -134,7 +135,17 @@ class _VisitStatisticsState extends State<VisitStatistics> {
                 slivers: [
                   SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        return VisitStatisticsList(data: customerVisitList[index]);
+                        return VisitStatisticsList(
+                            data: customerVisitList[index],
+                            onTap: () async {
+                              bool needRefresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatisticsDetail(
+                                data: customerVisitList[index],
+                              )));
+                              if(needRefresh != null && needRefresh){
+                                _controller.callRefresh();
+                              }
+                            }
+                        );
                       }, childCount: customerVisitList.length))
                 ]
             )

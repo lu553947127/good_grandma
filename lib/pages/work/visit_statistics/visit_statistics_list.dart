@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:good_grandma/pages/work/visit_statistics/visit_statistics_detail.dart';
 
 ///拜访统计列表
 class VisitStatisticsList extends StatelessWidget {
   final dynamic data;
-  VisitStatisticsList({Key key, this.data}) : super(key: key);
+  final Function() onTap;
+  VisitStatisticsList({Key key, this.data, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,15 +104,11 @@ class VisitStatisticsList extends StatelessWidget {
                 Text('拜访客户: ${data['customerName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                 SizedBox(height: 3),
                 Text('客户类型: ${data['customerTypeName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
-              ],
+              ]
             )
-          ],
+          ]
         ),
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitStatisticsDetail(
-            data: data,
-          )));
-        }
+        onTap: onTap
       )
     );
   }

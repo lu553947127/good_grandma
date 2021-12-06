@@ -398,9 +398,6 @@ class _Body extends State<HomePage> {
               title: Text('有新版本，是否升级？'),
               content: Text(content),
               actions: <Widget>[
-                TextButton(child: Text('取消', style: TextStyle(color: Color(0xFF999999))), onPressed: (){
-                  Navigator.of(context).pop('cancel');
-                }),
                 TextButton(child: Text('确认', style: TextStyle(color: Color(0xFFC68D3E))), onPressed: (){
                   Navigator.of(context).pop('ok');
                   _launchURL(url);

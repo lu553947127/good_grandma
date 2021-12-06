@@ -9,6 +9,7 @@ import 'package:good_grandma/models/main_provider.dart';
 import 'package:good_grandma/pages/examine/examine_add.dart';
 import 'package:good_grandma/pages/examine/examine_detail.dart';
 import 'package:good_grandma/pages/examine/examine_select_process.dart';
+import 'package:good_grandma/pages/examine/examine_select_process_new.dart';
 import 'package:good_grandma/pages/examine/examine_view.dart';
 import 'package:good_grandma/pages/examine/examine_type_title.dart';
 import 'package:good_grandma/webview/webview.dart';
@@ -127,7 +128,8 @@ class _ShenPiPageState extends State<ShenPiPage> {
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFC68D3E),
         onPressed: () async{
-          Map result = await showSelectProcessList(context);
+          Map result = await showSelectProcessListNew(context);
+          // Map result = await showSelectProcessList(context);
           if(result != null){
             String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdd(
               name: result['name'],
