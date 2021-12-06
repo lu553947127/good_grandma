@@ -98,8 +98,16 @@ class VisitStatisticsList extends StatelessWidget {
                 Text('拜访人: ${data['userName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                 SizedBox(height: 3),
                 Text('开始时间: ${data['createTime']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
-                SizedBox(height: 3),
-                Text('结束时间: ${data['updateTime']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                Visibility(
+                  visible: data['status'] == 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 3),
+                      Text('结束时间: ${data['updateTime']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                    ]
+                  )
+                ),
                 SizedBox(height: 3),
                 Text('拜访客户: ${data['customerName']}', style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
                 SizedBox(height: 3),

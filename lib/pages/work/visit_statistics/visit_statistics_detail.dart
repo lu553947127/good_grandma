@@ -137,15 +137,23 @@ class VisitStatisticsDetail extends StatelessWidget {
                                             Text(data['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                           ]
                                       ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                          children: [
-                                            Image.asset('assets/images/icon_visit_statistics_time.png', width: 15, height: 15),
-                                            SizedBox(width: 3),
-                                            Text('结束时间: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
-                                            SizedBox(width: 3),
-                                            Text(data['updateTime'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
-                                          ]
+                                      Visibility(
+                                          visible: data['status'] == 2,
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 5),
+                                                Row(
+                                                    children: [
+                                                      Image.asset('assets/images/icon_visit_statistics_time.png', width: 15, height: 15),
+                                                      SizedBox(width: 3),
+                                                      Text('结束时间: ',style: TextStyle(fontSize: 12, color: Color(0XFF959EB1))),
+                                                      SizedBox(width: 3),
+                                                      Text(data['updateTime'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                                    ]
+                                                )
+                                              ]
+                                          )
                                       ),
                                       SizedBox(height: 5),
                                       Row(
