@@ -4,9 +4,9 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_list.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_type.dart';
-import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 
 ///冰柜统计
@@ -77,7 +77,7 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
                 _freezerList();
               },
               onPressed2: () async{
-                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
                 customerId = select['id'];
                 customerName = select['realName'];
                 _freezerList();

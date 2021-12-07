@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_type.dart';
 import 'package:good_grandma/widgets/sales_statistics_cell.dart';
-import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 
 ///商品销量统计
@@ -67,13 +67,13 @@ class _SalesStatisticsPageState extends State<SalesStatisticsPage> {
                 _commoditySalesList();
               },
               onPressed2: () async{
-                Map select = await showSelectList(context, Api.customerList, '请选择员工名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.userList, '请选择员工名称', 'realName');
                 userId = select['id'];
                 userName = select['realName'];
                 _commoditySalesList();
               },
               onPressed3: () async {
-                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
                 customerId = select['id'];
                 customerName = select['realName'];
                 _commoditySalesList();

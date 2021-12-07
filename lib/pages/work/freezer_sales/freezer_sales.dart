@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_list.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_type.dart';
-import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 
 ///冰柜销量
@@ -73,7 +73,7 @@ class _FreezerSalesState extends State<FreezerSales> {
                 _freezerSalesList();
               },
               onPressed2: () async{
-                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
                 customerId = select['id'];
                 customerName = select['realName'];
                 _freezerSalesList();
