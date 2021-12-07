@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
-import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
@@ -46,71 +44,81 @@ class _SelectStorePageState extends State<SelectStorePage> {
         endIndent: 15.0);
     return Scaffold(
       appBar: AppBar(title: Text('选择商户')),
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _stores.length,
-          onRefresh: _refresh,
-          onLoad: null,
-          slivers: [
-            //搜索
-            SearchTextWidget(
-                hintText: '请输入商户名称',
-                editingController: _editingController,
-                focusNode: _focusNode,
-                onSearch: _searchAction),
-            //列表
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              StoreModel model = _stores[index];
-              return Column(
-                children: [
-                  ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(model.name ?? ''),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Visibility(
-                            visible: model.phone.isNotEmpty,
-                            child: Row(
-                              children: [
-                                Image.asset('assets/images/ic_login_phone.png',
-                                    width: 12, height: 12),
-                                Expanded(
-                                    child: Text(' ' + model.phone,
-                                        style: const TextStyle(
-                                            color: AppColors.FF959EB1,
-                                            fontSize: 12)))
-                              ],
+      body: Column(
+        children: [
+          //搜索
+          SearchTextWidget(
+              hintText: '请输入商户名称',
+              editingController: _editingController,
+              focusNode: _focusNode,
+              onSearch: _searchAction,
+              onChanged: (text){
+                _searchAction(text);
+              }
+          ),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: _stores.length,
+                onRefresh: _refresh,
+                onLoad: null,
+                slivers: [
+                  //列表
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        StoreModel model = _stores[index];
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(model.name ?? ''),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Visibility(
+                                      visible: model.phone.isNotEmpty,
+                                      child: Row(
+                                        children: [
+                                          Image.asset('assets/images/ic_login_phone.png',
+                                              width: 12, height: 12),
+                                          Expanded(
+                                              child: Text(' ' + model.phone,
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1,
+                                                      fontSize: 12)))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: model.address.isNotEmpty,
+                                    child: Row(
+                                      children: [
+                                        Image.asset('assets/images/sign_in_local2.png',
+                                            width: 12, height: 12),
+                                        Expanded(
+                                            child: Text(' ' + model.address,
+                                                style: const TextStyle(
+                                                    color: AppColors.FF959EB1,
+                                                    fontSize: 12)))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () => Navigator.pop(context, model),
                             ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: model.address.isNotEmpty,
-                          child: Row(
-                            children: [
-                              Image.asset('assets/images/sign_in_local2.png',
-                                  width: 12, height: 12),
-                              Expanded(
-                                  child: Text(' ' + model.address,
-                                      style: const TextStyle(
-                                          color: AppColors.FF959EB1,
-                                          fontSize: 12)))
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () => Navigator.pop(context, model),
-                  ),
-                  divider
-                ],
-              );
-            }, childCount: _stores.length)),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ]),
+                            divider
+                          ],
+                        );
+                      }, childCount: _stores.length)),
+                  SliverSafeArea(sliver: SliverToBoxAdapter()),
+                ])
+          )
+        ]
+      )
     );
   }
 

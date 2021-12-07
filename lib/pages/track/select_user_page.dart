@@ -33,33 +33,43 @@ class _SelectUserPageState extends State<SelectUserPage> {
         endIndent: 15.0);
     return Scaffold(
       appBar: AppBar(title: const Text('选择人员')),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              //搜索区域
-              SearchTextWidget(
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  onSearch: _searchAction),
-              //列表
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                EmployeeModel model = _employees[index];
-                return Column(
-                  children: [
-                    ListTile(
-                        title: Text(model.name ?? ''),
-                        onTap: () => Navigator.pop(context, model)),
-                    divider
-                  ],
-                );
-              }, childCount: _employees.length)),
-            ],
+      body: Column(
+        children: [
+          //搜索区域
+          SearchTextWidget(
+              editingController: _editingController,
+              focusNode: _focusNode,
+              onSearch: _searchAction,
+              onChanged: (text){
+                _searchAction(text);
+              }
           ),
-        ),
-      ),
+          Expanded(
+            child: RefreshIndicator(
+                onRefresh: _refresh,
+                child: Scrollbar(
+                    child: CustomScrollView(
+                        slivers: [
+                          //列表
+                          SliverList(
+                              delegate: SliverChildBuilderDelegate((context, index) {
+                                EmployeeModel model = _employees[index];
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                        title: Text(model.name ?? ''),
+                                        onTap: () => Navigator.pop(context, model)),
+                                    divider
+                                  ],
+                                );
+                              }, childCount: _employees.length))
+                        ]
+                    )
+                )
+            )
+          )
+        ]
+      )
     );
   }
   _searchAction(String text) {

@@ -35,35 +35,45 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _dataArray.length,
-          onRefresh: _refresh,
-          onLoad: null,
-          slivers: [
-            //搜索
-            SearchTextWidget(
-                hintText: '请输入搜索关键字',
-                editingController: _editingController,
-                focusNode: _focusNode,
-                onSearch: _searchAction),
-            //列表
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              Map model = _dataArray[index];
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text(model[widget.name]),
-                    onTap: () => Navigator.pop(context, model)
-                  ),
-                  const Divider(thickness: 1, height: 1),
-                ]
-              );
-            }, childCount: _dataArray.length)),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ])
+      body: Column(
+        children: [
+          //搜索
+          SearchTextWidget(
+            hintText: '请输入搜索关键字',
+            editingController: _editingController,
+            focusNode: _focusNode,
+            onSearch: _searchAction,
+            onChanged: (text){
+              _searchAction(text);
+            }
+          ),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: _dataArray.length,
+                onRefresh: _refresh,
+                onLoad: null,
+                slivers: [
+                  //列表
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        Map model = _dataArray[index];
+                        return Column(
+                            children: [
+                              ListTile(
+                                  title: Text(model[widget.name]),
+                                  onTap: () => Navigator.pop(context, model)
+                              ),
+                              const Divider(thickness: 1, height: 1),
+                            ]
+                        );
+                      }, childCount: _dataArray.length)),
+                  SliverSafeArea(sliver: SliverToBoxAdapter()),
+                ])
+          )
+        ]
+      )
     );
   }
 

@@ -58,48 +58,58 @@ class _StockPageState extends State<StockPage> {
           }
         },
       ),
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _dataArray.length,
-          onRefresh: _refresh,
-          onLoad: _onLoad,
-          slivers: [
-            //搜索区域
-            SearchTextWidget(
-                hintText: '请输入客户名称',
-                editingController: _editingController,
-                focusNode: _focusNode,
-                onSearch: _searchAction),
-            //列表
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              Map map = _dataArray[index];
-              String avatar = map['avatar'] ?? '';
-              String shopName = map['realName'] ?? '商户名称';
-              String name = map['juridical'] ?? '';
-              String juridicalPhone = map['juridicalPhone'] ?? '';
-              String address = map['address'] ?? '';
-              int number = map['count'] ?? 0;
-              String id = map['userId'].toString() ?? '';
-              return _StockCell(
-                avatar: avatar,
-                name: shopName,
-                number: number.toString(),
-                id:id,
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => StockDetailPage(
-                      id: id,
-                      shopName: shopName,
-                      avatar: avatar,
-                      name: name,
-                      phone: juridicalPhone,
-                      address: address,
-                      boxNum: number.toString(),))),
-              );
-            }, childCount: _dataArray.length)),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ]),
+      body: Column(
+        children: [
+          //搜索区域
+          SearchTextWidget(
+              hintText: '请输入客户名称',
+              editingController: _editingController,
+              focusNode: _focusNode,
+              onSearch: _searchAction,
+              onChanged: (text){
+                _searchAction(text);
+              }
+          ),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: _dataArray.length,
+                onRefresh: _refresh,
+                onLoad: _onLoad,
+                slivers: [
+                  //列表
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        Map map = _dataArray[index];
+                        String avatar = map['avatar'] ?? '';
+                        String shopName = map['realName'] ?? '商户名称';
+                        String name = map['juridical'] ?? '';
+                        String juridicalPhone = map['juridicalPhone'] ?? '';
+                        String address = map['address'] ?? '';
+                        int number = map['count'] ?? 0;
+                        String id = map['userId'].toString() ?? '';
+                        return _StockCell(
+                          avatar: avatar,
+                          name: shopName,
+                          number: number.toString(),
+                          id:id,
+                          onTap: () => Navigator.push(context,
+                              MaterialPageRoute(builder: (_) => StockDetailPage(
+                                id: id,
+                                shopName: shopName,
+                                avatar: avatar,
+                                name: name,
+                                phone: juridicalPhone,
+                                address: address,
+                                boxNum: number.toString(),))),
+                        );
+                      }, childCount: _dataArray.length)),
+                  SliverSafeArea(sliver: SliverToBoxAdapter()),
+                ])
+          )
+        ]
+      )
     );
   }
 

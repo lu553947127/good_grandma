@@ -54,34 +54,44 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('选择产品')),
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _goodsList.length,
-          onRefresh: _refresh,
-          onLoad: _onLoad,
-          slivers: [
-            //搜索
-            SearchTextWidget(
-                editingController: _editingController,
-                focusNode: _focusNode,
-                hintText: '请输入商品名称',
-                onSearch: _searchAction),
-            //列表
-            SliverGrid(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  GoodsModel goodsModel = _goodsList[index];
-                  return _GoodsGridCell(
-                    goodsModel: goodsModel,
-                    onTap: widget.selectSingle
-                        ? () => Navigator.pop(context, [goodsModel])
-                        : null,
-                  );
-                }, childCount: _goodsList.length),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, childAspectRatio: 0.8)),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ]),
+      body: Column(
+        children: [
+          //搜索
+          SearchTextWidget(
+              editingController: _editingController,
+              focusNode: _focusNode,
+              hintText: '请输入商品名称',
+              onSearch: _searchAction,
+              onChanged: (text){
+                _searchAction(text);
+              }
+          ),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: _goodsList.length,
+                onRefresh: _refresh,
+                onLoad: _onLoad,
+                slivers: [
+                  //列表
+                  SliverGrid(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        GoodsModel goodsModel = _goodsList[index];
+                        return _GoodsGridCell(
+                          goodsModel: goodsModel,
+                          onTap: widget.selectSingle
+                              ? () => Navigator.pop(context, [goodsModel])
+                              : null,
+                        );
+                      }, childCount: _goodsList.length),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, childAspectRatio: 0.8)),
+                  SliverSafeArea(sliver: SliverToBoxAdapter()),
+                ])
+          )
+        ]
+      ),
       bottomNavigationBar: Visibility(
         visible: !widget.selectSingle,
         child: SafeArea(

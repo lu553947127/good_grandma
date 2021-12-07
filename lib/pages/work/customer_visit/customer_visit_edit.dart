@@ -58,7 +58,7 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---customerVisitEdit----$data');
       if (data['code'] == 200){
-        showToast("编辑成功");
+        showToast("拜访结束");
         Navigator.pop(context, true);
       }else {
         showToast(data['msg']);

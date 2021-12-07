@@ -41,59 +41,69 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
         endIndent: 15.0);
     return Scaffold(
       appBar: AppBar(title: Text('选择员工')),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              //搜索区域
-              SearchTextWidget(
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  onSearch: _searchAction),
-              //所有人
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(_selectedAll
-                          ? Icons.check_box
-                          : Icons.check_box_outline_blank),
-                      title: Text('所有人'),
-                      onTap: () {
-                        _selectedAllBtnOnTap(context);
-                      },
+      body: Column(
+        children: [
+          //搜索区域
+          SearchTextWidget(
+              editingController: _editingController,
+              focusNode: _focusNode,
+              onSearch: _searchAction,
+              onChanged: (text){
+                _searchAction(text);
+              }
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refresh,
+              child: Scrollbar(
+                child: CustomScrollView(
+                  slivers: [
+                    //所有人
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(_selectedAll
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank),
+                            title: Text('所有人'),
+                            onTap: () {
+                              _selectedAllBtnOnTap(context);
+                            },
+                          ),
+                          divider
+                        ],
+                      ),
                     ),
-                    divider
+                    //列表
+                    SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          EmployeeModel model = _employees[index];
+                          return Column(
+                            children: [
+                              ListTile(
+                                leading: Icon(model.isSelected
+                                    ? Icons.check_box
+                                    : Icons.check_box_outline_blank),
+                                title: Text(model.name ?? ''),
+                                onTap: () {
+                                  setState(() {
+                                    model.isSelected = !model.isSelected;
+                                    if (!model.isSelected && _selectedAll)
+                                      _selectedAll = false;
+                                  });
+                                },
+                              ),
+                              divider
+                            ],
+                          );
+                        }, childCount: _employees.length)),
                   ],
                 ),
               ),
-              //列表
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                EmployeeModel model = _employees[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(model.isSelected
-                          ? Icons.check_box
-                          : Icons.check_box_outline_blank),
-                      title: Text(model.name ?? ''),
-                      onTap: () {
-                        setState(() {
-                          model.isSelected = !model.isSelected;
-                          if (!model.isSelected && _selectedAll)
-                            _selectedAll = false;
-                        });
-                      },
-                    ),
-                    divider
-                  ],
-                );
-              }, childCount: _employees.length)),
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       ),
       bottomNavigationBar: SafeArea(
         child: SubmitBtn(

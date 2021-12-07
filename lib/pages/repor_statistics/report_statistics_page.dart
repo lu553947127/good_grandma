@@ -39,47 +39,57 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('报告统计')),
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _dataArray.length,
-          onRefresh: _refresh,
-          onLoad: null,
-          slivers: [
-            //搜索区域
-            SearchTextWidget(
-                hintText: '请输入员工姓名',
-                editingController: _editingController,
-                focusNode: _focusNode,
-                onSearch: _searchAction),
-            //列表
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              Map map = _dataArray[index];
-              String avatar = map['avatar'];
-              String name = map['name'];
-              String day = map['day'];
-              String week = map['week'];
-              String month = map['month'];
-              String id = map['id'];
-              return _ReportStatisticsCell(
-                avatar: avatar,
-                name: name,
-                day: day,
-                week: week,
-                month: month,
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ReportStatisticsDetailPage(
-                              id: id,
-                              name: name,
-                              avatar: avatar,
-                            ))),
-              );
-            }, childCount: _dataArray.length)),
-            SliverSafeArea(sliver: SliverToBoxAdapter()),
-          ]),
+      body: Column(
+        children: [
+          //搜索区域
+          SearchTextWidget(
+              hintText: '请输入员工姓名',
+              editingController: _editingController,
+              focusNode: _focusNode,
+              onSearch: _searchAction,
+              onChanged: (text){
+                _searchAction(text);
+              }
+          ),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: _dataArray.length,
+                onRefresh: _refresh,
+                onLoad: null,
+                slivers: [
+                  //列表
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        Map map = _dataArray[index];
+                        String avatar = map['avatar'];
+                        String name = map['name'];
+                        String day = map['day'];
+                        String week = map['week'];
+                        String month = map['month'];
+                        String id = map['id'];
+                        return _ReportStatisticsCell(
+                          avatar: avatar,
+                          name: name,
+                          day: day,
+                          week: week,
+                          month: month,
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => ReportStatisticsDetailPage(
+                                    id: id,
+                                    name: name,
+                                    avatar: avatar,
+                                  ))),
+                        );
+                      }, childCount: _dataArray.length)),
+                  SliverSafeArea(sliver: SliverToBoxAdapter()),
+                ])
+          )
+        ]
+      )
     );
   }
 

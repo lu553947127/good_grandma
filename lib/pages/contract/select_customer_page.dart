@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
 ///选择客户
@@ -42,11 +41,11 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
           child: CustomScrollView(
             slivers: [
               //搜索区域
-              SearchTextWidget(
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  hintText: '请输入客户名称',
-                  onSearch: (text) {}),
+              // SearchTextWidget(
+              //     editingController: _editingController,
+              //     focusNode: _focusNode,
+              //     hintText: '请输入客户名称',
+              //     onSearch: (text) {}),
               //所有人
               SliverToBoxAdapter(
                 child: Column(

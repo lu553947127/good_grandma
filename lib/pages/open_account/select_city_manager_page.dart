@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/models/employee_model.dart';
-import 'package:good_grandma/widgets/search_text_widget.dart';
 
 ///选择人员
 class SelectCityManagerPage extends StatefulWidget {
@@ -28,12 +27,12 @@ class _SelectCityManagerPageState extends State<SelectCityManagerPage> {
         child: Scrollbar(
           child: CustomScrollView(
             slivers: [
-              //搜索区域
-              SearchTextWidget(
-                  hintText: '请输入城市经理姓名',
-                  editingController: _editingController,
-                  focusNode: _focusNode,
-                  onSearch: (text) {}),
+              // //搜索区域
+              // SearchTextWidget(
+              //     hintText: '请输入城市经理姓名',
+              //     editingController: _editingController,
+              //     focusNode: _focusNode,
+              //     onSearch: (text) {}),
               //列表
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
