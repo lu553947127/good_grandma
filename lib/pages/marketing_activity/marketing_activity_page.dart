@@ -86,25 +86,27 @@ class _MarketingActivityPageState extends State<MarketingActivityPage> {
         child: CustomScrollView(
           slivers: [
             //切换选项卡
-            WorkTypeTitle(
-              color: Colors.transparent,
-              type: statusName,
-              list: _listTitle,
-              onPressed: () {
-                status = '1';
-                statusName = '未进行';
-                _activityList();
-              },
-              onPressed2: () {
-                status = '2';
-                statusName = '进行中';
-                _activityList();
-              },
-              onPressed3: () {
-                status = '3';
-                statusName = '已完结';
-                _activityList();
-              },
+            SliverToBoxAdapter(
+              child: WorkTypeTitle(
+                  color: Colors.transparent,
+                  type: statusName,
+                  list: _listTitle,
+                  onPressed: () {
+                    status = '1';
+                    statusName = '未进行';
+                    _activityList();
+                  },
+                  onPressed2: () {
+                    status = '2';
+                    statusName = '进行中';
+                    _activityList();
+                  },
+                  onPressed3: () {
+                    status = '3';
+                    statusName = '已完结';
+                    _activityList();
+                  }
+              )
             ),
             SliverVisibility(
               visible: statusName == '未进行' ? true : false,

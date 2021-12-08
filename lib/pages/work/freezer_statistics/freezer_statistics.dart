@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_list.dart';
@@ -18,6 +20,10 @@ class FreezerStatistics extends StatefulWidget {
 }
 
 class _FreezerStatisticsState extends State<FreezerStatistics> {
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
+  int _current = 1;
+  int _pageSize = 10;
 
   String deptId = '';
   String areaName = '区域';
@@ -28,28 +34,10 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
 
   List<Map> freezerList = [];
 
-  ///冰柜销量列表
-  _freezerList(){
-    Map<String, dynamic> map = {
-      'dealerId': customerId,
-      'deptId': deptId,
-      'openFreezer': status,
-      'current': '1',
-      'size': '999'
-    };
-    requestGet(Api.freezerList, param: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---freezerList----$data');
-      setState(() {
-        freezerList = (data['data'] as List).cast();
-      });
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _freezerList();
+    _controller.callRefresh();
   }
 
   @override
@@ -60,12 +48,12 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text("冰柜统计",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+        title: Text("冰柜统计",style: TextStyle(fontSize: 18, color: Colors.black)),
       ),
       body: Container(
         margin: EdgeInsets.only(bottom: 20),
-        child: CustomScrollView(
-          slivers: [
+        child: Column(
+          children: [
             FreezerStatisticsType(
               areaName: areaName,
               customerName: customerName,
@@ -74,13 +62,13 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
                 Map area = await showSelectTreeList(context, '全国');
                 deptId = area['deptId'];
                 areaName = area['areaName'];
-                _freezerList();
+                _controller.callRefresh();
               },
               onPressed2: () async{
                 Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
                 customerId = select['id'];
                 customerName = select['realName'];
-                _freezerList();
+                _controller.callRefresh();
               },
               onPressed3: () async {
                 String result = await showPicker(['所有状态', '未开柜', '已开柜'], context);
@@ -96,23 +84,73 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
                     break;
                 }
                 statusName = result;
-                _freezerList();
-              },
+                _controller.callRefresh();
+              }
             ),
-            freezerList.length > 0 ?
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return FreezerStatisticsList(data: freezerList[index]);
-                }, childCount: freezerList.length)) :
-            SliverToBoxAdapter(
-                child: Container(
-                    margin: EdgeInsets.all(40),
-                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
-                )
+            Expanded(
+              child: MyEasyRefreshSliverWidget(
+                  controller: _controller,
+                  scrollController: _scrollController,
+                  dataCount: freezerList.length,
+                  onRefresh: _refresh,
+                  onLoad: _onLoad,
+                  slivers: [
+                    SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return FreezerStatisticsList(data: freezerList[index]);
+                        }, childCount: freezerList.length))
+                  ]
+              )
             )
           ]
         )
       )
     );
+  }
+
+  Future<void> _refresh() async {
+    _current = 1;
+    await _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    await _downloadData();
+  }
+
+  ///冰柜统计列表
+  Future<void> _downloadData() async {
+    try {
+      Map<String, dynamic> map = {
+        'dealerId': customerId,
+        'deptId': deptId,
+        'openFreezer': status,
+        'current': _current,
+        'size': _pageSize
+      };
+      final val = await requestGet(Api.freezerList, param: map);
+      var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---freezerList----$data');
+      if (_current == 1) freezerList.clear();
+      final List<dynamic> list = data['data'];
+      list.forEach((map) {
+        freezerList.add(map);
+      });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
   }
 }

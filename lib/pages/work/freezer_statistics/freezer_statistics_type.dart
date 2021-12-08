@@ -22,80 +22,78 @@ class FreezerStatisticsType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double w = (MediaQuery.of(context).size.width - 15 * 2) / 3;
-    return SliverToBoxAdapter(
-      child: Container(
+    return Container(
         color: Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 15.0),
         child: Row(
-          children: [
-            //区域
-            Container(
-              width: w,
-              child: TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(areaName,
-                        style: TextStyle(
-                            fontSize: 14, color: AppColors.FF2F4058)),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.5),
-                      child: Image.asset('assets/images/ic_work_down.png',
-                          width: 10, height: 10),
-                    )
-                  ]
-                ),
-                onPressed: onPressed
-              )
-            ),
-            //客户
-            Container(
-              width: w,
-              child: TextButton(
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.symmetric(
-                          vertical:
-                          BorderSide(color: AppColors.FFC1C8D7, width: 1))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(customerName,
-                          style: TextStyle(
-                              fontSize: 14, color: AppColors.FF2F4058)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.5),
-                        child: Image.asset('assets/images/ic_work_down.png',
-                            width: 10, height: 10),
-                      )
-                    ]
+            children: [
+              //区域
+              Container(
+                  width: w,
+                  child: TextButton(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(areaName,
+                                style: TextStyle(
+                                    fontSize: 14, color: AppColors.FF2F4058)),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.5),
+                              child: Image.asset('assets/images/ic_work_down.png',
+                                  width: 10, height: 10),
+                            )
+                          ]
+                      ),
+                      onPressed: onPressed
                   )
-                ),
-                onPressed: onPressed2
+              ),
+              //客户
+              Container(
+                  width: w,
+                  child: TextButton(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.symmetric(
+                                  vertical:
+                                  BorderSide(color: AppColors.FFC1C8D7, width: 1))),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(customerName,
+                                    style: TextStyle(
+                                        fontSize: 14, color: AppColors.FF2F4058)),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 4.5),
+                                  child: Image.asset('assets/images/ic_work_down.png',
+                                      width: 10, height: 10),
+                                )
+                              ]
+                          )
+                      ),
+                      onPressed: onPressed2
+                  )
+              ),
+              Container(
+                  width: w,
+                  child: TextButton(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(statusName,
+                                style: TextStyle(
+                                    fontSize: 14, color: AppColors.FF2F4058)),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.5),
+                              child: Image.asset('assets/images/ic_work_down.png',
+                                  width: 10, height: 10),
+                            )
+                          ]
+                      ),
+                      onPressed: onPressed3
+                  )
               )
-            ),
-            Container(
-              width: w,
-              child: TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(statusName,
-                        style: TextStyle(
-                            fontSize: 14, color: AppColors.FF2F4058)),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.5),
-                      child: Image.asset('assets/images/ic_work_down.png',
-                          width: 10, height: 10),
-                    )
-                  ]
-                ),
-                onPressed: onPressed3
-              )
-            )
-          ]
+            ]
         )
-      )
     );
   }
 }

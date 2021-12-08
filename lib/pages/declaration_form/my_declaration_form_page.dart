@@ -5,7 +5,6 @@ import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/pages/declaration_form/add_declaration_form_page.dart';
 import 'package:good_grandma/pages/declaration_form/declaration_form_detail_page.dart';
-import 'package:good_grandma/pages/work/work_report/work_type_title.dart';
 import 'package:good_grandma/widgets/my_declaration_form_cell.dart';
 import 'package:provider/provider.dart';
 
@@ -40,26 +39,26 @@ class _MyDeclarationFormPageState extends State<MyDeclarationFormPage> {
         child: CustomScrollView(
           slivers: [
             //切换选项卡
-            WorkTypeTitle(
-              color: Colors.transparent,
-              type: _type,
-              list: _listTitle,
-              onPressed: () {
-                setState(() {
-                  _type = _listTitle[0]['name'];
-                });
-              },
-              onPressed2: () {
-                setState(() {
-                  _type = _listTitle[1]['name'];
-                });
-              },
-              onPressed3: () {
-                setState(() {
-                  _type = _listTitle[2]['name'];
-                });
-              },
-            ),
+            // WorkTypeTitle(
+            //   color: Colors.transparent,
+            //   type: _type,
+            //   list: _listTitle,
+            //   onPressed: () {
+            //     setState(() {
+            //       _type = _listTitle[0]['name'];
+            //     });
+            //   },
+            //   onPressed2: () {
+            //     setState(() {
+            //       _type = _listTitle[1]['name'];
+            //     });
+            //   },
+            //   onPressed3: () {
+            //     setState(() {
+            //       _type = _listTitle[2]['name'];
+            //     });
+            //   },
+            // ),
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
               DeclarationFormModel model = _dataArray[index];

@@ -43,8 +43,7 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
       }
     }
     final double w = (MediaQuery.of(context).size.width - 15 * 2) / 3;
-    return SliverToBoxAdapter(
-      child: Container(
+    return Container(
         padding: EdgeInsets.all(10),
         color: widget.color,
         child: Row(
@@ -90,7 +89,6 @@ class _WorkTypeTitleState extends State<WorkTypeTitle> {
               )
             ]
         )
-      )
     );
   }
 }

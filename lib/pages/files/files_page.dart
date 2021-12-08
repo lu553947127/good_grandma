@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/file_model.dart';
@@ -22,7 +24,11 @@ class FilesPage extends StatefulWidget {
 }
 
 class _FilesPageState extends State<FilesPage> {
-
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
+  int _current = 1;
+  int _pageSize = 10;
+  String parentId = '1';
   String type = '我的文档';
   List<Map> listTitle = [
     {'name': '我的文档'},//1
@@ -30,27 +36,134 @@ class _FilesPageState extends State<FilesPage> {
     {'name': '公开库'},//0
   ];
 
-  String parentId = '1';
   List<FileModel> fileCabinetList = [];
 
-  ///文件柜列表
-  _fileCabinetList(){
-    Map<String, dynamic> map = {
-      'parentId': parentId,
-      'isDeleted': '0',
-      'status': '1'
-    };
-    requestGet(Api.fileCabinetList, param: map).then((val) async{
-      var data = json.decode(val.toString());
-      // LogUtil.d('请求结果---fileCabinetList----$data');
-      fileCabinetList.clear();
+  @override
+  void initState() {
+    super.initState();
+    _controller.callRefresh();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('文件柜')),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          WorkTypeTitle(
+              color: Colors.white,
+              type: type,
+              list: listTitle,
+              onPressed: () {
+                parentId= '1';
+                type = '我的文档';
+                _controller.callRefresh();
+              },
+              onPressed2: () {
+                parentId= '2';
+                type = '部门文档';
+                _controller.callRefresh();
+              },
+              onPressed3: () {
+                parentId= '0';
+                type = '公开库';
+                _controller.callRefresh();
+              }
+          ),
+          Padding(
+              padding: const EdgeInsets.only(left: 15, top: 16, bottom: 10),
+              child: Text('我的文件')
+          ),
+          Expanded(
+            child: MyEasyRefreshSliverWidget(
+                controller: _controller,
+                scrollController: _scrollController,
+                dataCount: fileCabinetList.length,
+                onRefresh: _refresh,
+                onLoad: _onLoad,
+                slivers: [
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        FileModel model = fileCabinetList[index];
+                        return FileCell(
+                            model: model,
+                            parentId: parentId,
+                            editAction: () => _cellEditName(context, model),
+                            copyAction: () => _cellCopyFile(context, model),
+                            deleteAction: () => _cellDeleteWith(context, model)
+                        );
+                      }, childCount: fileCabinetList.length))
+                ]
+            )
+          )
+        ]
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: AppColors.FFC68D3E,
+        onPressed: () async {
+          bool file = await _buildNewFileDialog(context);
+          if (file != null) {
+            if(file){//n上传文件
+              showImageRange(
+                  context: context,
+                  callBack: (Map param){
+                    _fileAddFile(context, param);
+                  }
+              );
+            }
+            else{//n文件夹
+              String needRefresh = await Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => AddFolderPage(parentId: parentId)));
+              if(needRefresh != null){
+                _controller.callRefresh();
+              }
+            }
+          }
+        }
+      )
+    );
+  }
+
+  Future<void> _refresh() async {
+    _current = 1;
+    await _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    await _downloadData();
+  }
+
+  ///文件柜
+  Future<void> _downloadData() async {
+    try {
+      Map<String, dynamic> map = {
+        'parentId': parentId,
+        'isDeleted': '0',
+        'status': '1',
+        'current': _current,
+        'size': _pageSize
+      };
+      final val = await requestGet(Api.fileCabinetList, param: map);
+      var data = jsonDecode(val.toString());
+      LogUtil.d('请求结果---fileCabinetList----$data');
+      if (_current == 1) fileCabinetList.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         FileModel model = FileModel.fromJson(map);
         fileCabinetList.add(model);
       });
-      setState(() {});
-    });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
+      _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
+    }
   }
 
   ///文件删除
@@ -90,100 +203,11 @@ class _FilesPageState extends State<FilesPage> {
       LogUtil.d('请求结果---fileAddFile----$data');
       if (data['code'] == 200){
         showToast("成功");
-        _fileCabinetList();
+        _controller.callRefresh();
       }else {
         showToast(data['msg']);
       }
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _fileCabinetList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('文件柜')),
-      body: Scrollbar(
-        child: CustomScrollView(
-          slivers: [
-            //搜索区域
-            //切换选项卡
-            WorkTypeTitle(
-              color: Colors.white,
-              type: type,
-              list: listTitle,
-              onPressed: () {
-                parentId= '1';
-                type = '我的文档';
-                _fileCabinetList();
-              },
-              onPressed2: () {
-                parentId= '2';
-                type = '部门文档';
-                _fileCabinetList();
-              },
-              onPressed3: () {
-                parentId= '0';
-                type = '公开库';
-                _fileCabinetList();
-              }
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15, top: 16, bottom: 10),
-                child: Text('我的文件'),
-              ),
-            ),
-            fileCabinetList.length > 0 ?
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  FileModel model = fileCabinetList[index];
-                  return FileCell(
-                    model: model,
-                    parentId: parentId,
-                    editAction: () => _cellEditName(context, model),
-                    copyAction: () => _cellCopyFile(context, model),
-                    deleteAction: () => _cellDeleteWith(context, model)
-                  );
-                }, childCount: fileCabinetList.length)) :
-            SliverToBoxAdapter(
-                child: Container(
-                    margin: EdgeInsets.all(40),
-                    child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
-                )
-            )
-          ]
-        )
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: AppColors.FFC68D3E,
-        onPressed: () async {
-          bool file = await _buildNewFileDialog(context);
-          if (file != null) {
-            if(file){//n上传文件
-              showImageRange(
-                  context: context,
-                  callBack: (Map param){
-                    _fileAddFile(context, param);
-                  }
-              );
-            }
-            else{//n文件夹
-              String needRefresh = await Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => AddFolderPage(parentId: parentId)));
-              if(needRefresh != null){
-                _fileCabinetList();
-              }
-            }
-          }
-        }
-      )
-    );
   }
 
   ///重命名
@@ -199,7 +223,7 @@ class _FilesPageState extends State<FilesPage> {
         MaterialPageRoute(builder: (_) => AddFolderPage(parentId: parentId, model: model)));
     if (rename != null && rename.isNotEmpty) {
       model.name = rename;
-      _fileCabinetList();
+      _controller.callRefresh();
     }
   }
 
@@ -211,7 +235,7 @@ class _FilesPageState extends State<FilesPage> {
             builder: (_) =>
                 FileMoveCopyPage(model: model,folderModel: FileModel(id: parentId,name: '文件柜'), id: parentId, parentId: parentId)));
     if (needRefresh != null && needRefresh) {
-      _fileCabinetList();
+      _controller.callRefresh();
     }
   }
 
@@ -280,5 +304,12 @@ class _FilesPageState extends State<FilesPage> {
                 )
               );
             });
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _controller?.dispose();
+    super.dispose();
   }
 }
