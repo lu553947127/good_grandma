@@ -29,6 +29,7 @@ class TimeSelectProvider with ChangeNotifier{
   String _jine;
   String _hexiaojine;
   String _reason;
+  String _copyUserName;
 
   TimeSelectProvider() {
     _startTime = '';
@@ -57,12 +58,14 @@ class TimeSelectProvider with ChangeNotifier{
     _jine = '';
     _hexiaojine = '';
     _reason = '';
+    _copyUserName = '';
     _travelScheduleList = [];
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
     zhifuduixiangxinxiMapList = [];
     _chuchaimingxiList = [];
     chuchaimingxiMapList = [];
+    _userList = [];
   }
 
   String get startTime => _startTime;
@@ -91,6 +94,7 @@ class TimeSelectProvider with ChangeNotifier{
   String get jine => _jine;
   String get hexiaojine => _hexiaojine;
   String get reason => _reason;
+  String get copyUserName => _copyUserName;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
@@ -204,6 +208,11 @@ class TimeSelectProvider with ChangeNotifier{
 
   addreason(str){
     _reason  = str;
+    notifyListeners();
+  }
+
+  addcopyUserName(str){
+    _copyUserName  = str;
     notifyListeners();
   }
 
@@ -433,6 +442,12 @@ class TimeSelectProvider with ChangeNotifier{
     chuchaimingxiMapList.removeAt(index);
     notifyListeners();
   }
+
+  ///抄送用户列表
+  List<UserModel> _userList = [];
+
+  ///抄送用户列表
+  List<UserModel> get userList => _userList;
 }
 
 ///出差日程模型
@@ -541,4 +556,30 @@ class FormEvectionModel {
     this.qitajine = '',
     this.beizhu = ''
   });
+}
+
+///用户模型
+class UserModel {
+
+  String image;
+
+  String name;
+
+  String id;
+
+  bool isSelected;
+
+  UserModel({
+    this.image = '',
+    this.name = '',
+    this.id = '',
+    this.isSelected = false
+  });
+
+  UserModel.fromJson(Map<String, dynamic> json) {
+    name = json['name'] ?? '';
+    id = json['id'] ?? '';
+    image = json['avatar'] ?? '';
+    isSelected = false;
+  }
 }

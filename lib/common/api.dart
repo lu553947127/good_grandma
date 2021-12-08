@@ -251,6 +251,9 @@ class Api {
   ///转办
   static const transferTask = "/api/hap-workflow/process/transferTask";
 
+  ///抄送多选人员列表
+  static const sendSelectUser = "/api/hap-user/search/user";
+
 
   /** 商品销量统计 **/
 

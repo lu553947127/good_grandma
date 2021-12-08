@@ -8,15 +8,19 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 
 import 'package:good_grandma/pages/examine/examine_detail_title.dart';
+import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/introduce_input.dart';
+import 'package:good_grandma/widgets/post_add_input_cell.dart';
+import 'package:good_grandma/widgets/select_more_user.dart';
+import 'package:provider/provider.dart';
 
 ///审核意见页面
 class ExamineAdopt extends StatelessWidget {
   final String title;
-  var process;
+  final dynamic process;
   final String type;
   final String processIsFinished;
   final String processInsId;
@@ -28,10 +32,12 @@ class ExamineAdopt extends StatelessWidget {
     , this.type
     , this.processIsFinished
     , this.processInsId
-    , this.taskId, this.wait
+    , this.taskId
+    , this.wait
   }) : super(key: key);
 
   String comment = '';
+  String copyUser = '';
 
   ///通过
   _completeTask(){
@@ -40,7 +46,9 @@ class ExamineAdopt extends StatelessWidget {
       'pass': true,
       'processInstanceId': processInsId,
       'taskId': taskId,
-      'comment': comment};
+      'comment': comment,
+      'copyUser': copyUser
+    };
 
     requestPost(Api.completeTask, json: map).then((val) async{
       var data = json.decode(val.toString());
@@ -57,6 +65,7 @@ class ExamineAdopt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -77,6 +86,19 @@ class ExamineAdopt extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: SizedBox(height: 15),
+          ),
+          SliverToBoxAdapter(
+              child: PostAddInputCell(
+                  title: '抄送人',
+                  value: timeSelectProvider.copyUserName,
+                  hintText: '请选择抄送人',
+                  endWidget: Icon(Icons.chevron_right),
+                  onTap: () async {
+                    Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
+                    copyUser = area['id'];
+                    timeSelectProvider.addcopyUserName(area['name']);
+                  }
+              )
           ),
           SliverToBoxAdapter(
             child: InputWidget(
@@ -117,6 +139,7 @@ class _ExamineOperationState extends State<ExamineOperation> {
   String customerId = '';
   String customerName = '';
   String comment = '';
+  String copyUser = '';
 
   ///转办
   _transferTask(){
@@ -133,7 +156,9 @@ class _ExamineOperationState extends State<ExamineOperation> {
     Map<String, dynamic> map = {
       'assignee': customerId,
       'taskId': widget.taskId,
-      'comment': comment};
+      'comment': comment,
+      'copyUser': copyUser
+    };
 
     requestPost(Api.transferTask, json: map).then((val) async{
       var data = json.decode(val.toString());
@@ -178,6 +203,7 @@ class _ExamineOperationState extends State<ExamineOperation> {
 
   @override
   Widget build(BuildContext context) {
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -203,6 +229,17 @@ class _ExamineOperationState extends State<ExamineOperation> {
               }
           ),
           SizedBox(height: 15),
+          PostAddInputCell(
+              title: '抄送人',
+              value: timeSelectProvider.copyUserName,
+              hintText: '请选择抄送人',
+              endWidget: Icon(Icons.chevron_right),
+              onTap: () async {
+                Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
+                copyUser = area['id'];
+                timeSelectProvider.addcopyUserName(area['name']);
+              }
+          ),
           InputWidget(
             placeholder: '请填写${widget.title}原因',
             onChanged: (String txt){

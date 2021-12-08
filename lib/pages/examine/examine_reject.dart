@@ -7,8 +7,12 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/examine/examine_detail_title.dart';
+import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/widgets/introduce_input.dart';
+import 'package:good_grandma/widgets/post_add_input_cell.dart';
+import 'package:good_grandma/widgets/select_more_user.dart';
+import 'package:provider/provider.dart';
 
 ///审核驳回页面
 class ExamineReject extends StatelessWidget {
@@ -33,6 +37,7 @@ class ExamineReject extends StatelessWidget {
   }) : super(key: key);
 
   String comment = '';
+  String copyUser = '';
 
   ///驳回
   _completeTask(){
@@ -47,7 +52,9 @@ class ExamineReject extends StatelessWidget {
       'processInstanceId': processInsId,
       'processDefinitionId': processDefinitionId,
       'taskId': taskId,
-      'comment': comment};
+      'comment': comment,
+      'copyUser': copyUser
+    };
 
     requestPost(Api.completeTask, json: map).then((val) async{
       var data = json.decode(val.toString());
@@ -64,6 +71,7 @@ class ExamineReject extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -86,12 +94,25 @@ class ExamineReject extends StatelessWidget {
             child: SizedBox(height: 15),
           ),
           SliverToBoxAdapter(
+              child: PostAddInputCell(
+                  title: '抄送人',
+                  value: timeSelectProvider.copyUserName,
+                  hintText: '请选择抄送人',
+                  endWidget: Icon(Icons.chevron_right),
+                  onTap: () async {
+                    Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
+                    copyUser = area['id'];
+                    timeSelectProvider.addcopyUserName(area['name']);
+                  }
+              )
+          ),
+          SliverToBoxAdapter(
             child: InputWidget(
               placeholder: '请填写$title原因',
               onChanged: (String txt){
                 comment = txt;
-              },
-            ),
+              }
+            )
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -100,10 +121,10 @@ class ExamineReject extends StatelessWidget {
                   title: '确定',
                   onPressed: _completeTask
               )
-            ),
+            )
           )
-        ],
-      ),
+        ]
+      )
     );
   }
 }

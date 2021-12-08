@@ -15,6 +15,7 @@ import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
+import 'package:good_grandma/widgets/select_more_user.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 import 'package:good_grandma/widgets/time_select.dart';
 import 'package:provider/provider.dart';
@@ -593,6 +594,22 @@ class _CustomFormViewState extends State<CustomFormView> {
               delegate: SliverChildBuilderDelegate((context, index) {
                 return _childWidget(widget.list[index]);
               }, childCount: widget.list.length)
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: EdgeInsets.only(top: 10.0),
+              child: PostAddInputCell(
+                  title: '抄送人',
+                  value: timeSelectProvider.copyUserName,
+                  hintText: '请选择抄送人',
+                  endWidget: Icon(Icons.chevron_right),
+                  onTap: () async {
+                    Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
+                    addData['copyUser'] = area['id'];
+                    timeSelectProvider.addcopyUserName(area['name']);
+                  }
+              )
+            )
           ),
           SliverToBoxAdapter(
               child: Padding(

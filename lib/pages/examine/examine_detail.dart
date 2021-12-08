@@ -7,6 +7,8 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/pages/examine/examine_detail_content.dart';
 import 'package:good_grandma/pages/examine/examine_detail_title.dart';
 import 'package:good_grandma/pages/examine/examine_reject.dart';
+import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
+import 'package:provider/provider.dart';
 import 'examine_adopt.dart';
 import 'examine_detail_list.dart';
 
@@ -32,7 +34,7 @@ class ExamineDetail extends StatefulWidget {
 class _ExamineDetailState extends State<ExamineDetail> {
   @override
   Widget build(BuildContext context) {
-
+    TimeSelectProvider timeSelectProvider = new TimeSelectProvider();
     Map<String, dynamic> map = {'processInsId': widget.processInsId, 'taskId': widget.taskId};
 
     String processDefinitionId = '';
@@ -184,17 +186,21 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               ]
                                           ),
                                           onPressed: () async{
-                                            String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineReject(
-                                              title: '驳回',
-                                              process: process,
-                                              type: widget.type,
-                                              processIsFinished: widget.processIsFinished,
-                                              processDefinitionId: processDefinitionId,
-                                              processInsId: widget.processInsId,
-                                              taskId: widget.taskId,
-                                              wait: '等待${flowList[0]['user']['name']}审批',
+                                            String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                                            ChangeNotifierProvider<TimeSelectProvider>.value(
+                                              value: timeSelectProvider,
+                                              child: ExamineReject(
+                                                  title: '驳回',
+                                                  process: process,
+                                                  type: widget.type,
+                                                  processIsFinished: widget.processIsFinished,
+                                                  processDefinitionId: processDefinitionId,
+                                                  processInsId: widget.processInsId,
+                                                  taskId: widget.taskId,
+                                                  wait: '等待${flowList[0]['user']['name']}审批'
+                                              )
                                             )));
-                                            if(refresh2 != null) Navigator.pop(context,'refresh');
+                                            if(refresh2 != null) Navigator.pop(context, 'refresh');
                                           },
                                         )
                                       ),
@@ -209,14 +215,18 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               ],
                                             ),
                                             onPressed: () async{
-                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
-                                                title: '通过',
-                                                process: process,
-                                                type: widget.type,
-                                                processIsFinished: widget.processIsFinished,
-                                                processInsId: widget.processInsId,
-                                                taskId: widget.taskId,
-                                                wait: '等待${flowList[0]['user']['name']}审批',
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                                              ChangeNotifierProvider<TimeSelectProvider>.value(
+                                                  value: timeSelectProvider,
+                                                  child: ExamineAdopt(
+                                                      title: '通过',
+                                                      process: process,
+                                                      type: widget.type,
+                                                      processIsFinished: widget.processIsFinished,
+                                                      processInsId: widget.processInsId,
+                                                      taskId: widget.taskId,
+                                                      wait: '等待${flowList[0]['user']['name']}审批'
+                                                  )
                                               )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }
@@ -233,14 +243,18 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               ],
                                             ),
                                             onPressed: () async{
-                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineAdopt(
-                                                title: '重新申请',
-                                                process: process,
-                                                type: widget.type,
-                                                processIsFinished: widget.processIsFinished,
-                                                processInsId: widget.processInsId,
-                                                taskId: widget.taskId,
-                                                wait: '等待${flowList[0]['user']['name']}审批',
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                                              ChangeNotifierProvider<TimeSelectProvider>.value(
+                                                  value: timeSelectProvider,
+                                                  child: ExamineAdopt(
+                                                      title: '重新申请',
+                                                      process: process,
+                                                      type: widget.type,
+                                                      processIsFinished: widget.processIsFinished,
+                                                      processInsId: widget.processInsId,
+                                                      taskId: widget.taskId,
+                                                      wait: '等待${flowList[0]['user']['name']}审批'
+                                                  )
                                               )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }
@@ -257,10 +271,11 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               ],
                                             ),
                                             onPressed: () async{
-                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineOperation(
-                                                title: '转办',
-                                                taskId: widget.taskId
-                                              )));
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                                                      ChangeNotifierProvider<TimeSelectProvider>.value(
+                                                        value: timeSelectProvider,
+                                                        child: ExamineOperation(title: '转办', taskId: widget.taskId),
+                                                      )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }
                                         ),
@@ -276,9 +291,10 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               ],
                                             ),
                                             onPressed: () async{
-                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder:(context)=> ExamineOperation(
-                                                  title: '委托',
-                                                  taskId: widget.taskId
+                                              String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                                              ChangeNotifierProvider<TimeSelectProvider>.value(
+                                                value: timeSelectProvider,
+                                                child: ExamineOperation(title: '委托', taskId: widget.taskId),
                                               )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }

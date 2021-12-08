@@ -26,9 +26,7 @@ class _ExamineAddState extends State<ExamineAdd> {
 
   @override
   Widget build(BuildContext context) {
-
     TimeSelectProvider timeSelectProvider = new TimeSelectProvider();
-
     Map<String, dynamic> map = {'processId': widget.processId};
     return Scaffold(
       appBar: AppBar(
