@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_luban/flutter_luban.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/provider/image_provider.dart';
-import 'package:good_grandma/widgets/progerss_dialog.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/select_image.dart';
 import 'package:image_picker/image_picker.dart';
@@ -124,27 +124,18 @@ class _OaPhotoWidgetState extends State<OaPhotoWidget> {
     try {
       final pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
-        showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) {
-              return NetLoadingDialog(
-                requestCallBack: null,
-                outsideDismiss: false,
-                loadingText: '图片上传中...',
-              );
-            });
         final tempDir = await getTemporaryDirectory();
         CompressObject compressObject = CompressObject(
-            imageFile: File(pickedFile.path),
-            quality: 5,
-            path: tempDir.path
+          imageFile: File(pickedFile.path),
+          path: tempDir.path,
+          quality: 5,
         );
+        EasyLoading.show(status: '图片压缩中...');
         Luban.compressImage(compressObject).then((_path) {
+          EasyLoading.dismiss();
           getPutFile(widget.url, _path).then((val) async{
             var data = json.decode(val.toString());
             print('请求结果---uploadFile----$data');
-            Navigator.pop(context);
             if (widget.title == '图片'){
               widget.timeSelectProvider.imageAdd(data['data']['link'], 'png', '');
             }else {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         title: '好阿婆',
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.light,
+        builder: EasyLoading.init(),
         theme: ThemeData(
             scaffoldBackgroundColor: AppColors.FFF4F5F8,
             brightness: Brightness.light,

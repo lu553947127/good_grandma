@@ -96,6 +96,8 @@ dependencies:
   flutter_luban: ^0.1.13
   #角标
   badges: ^2.0.1
+  #带进度条提示加载框
+  flutter_easyloading: ^3.0.3
 
 dev_dependencies:
   flutter_test:

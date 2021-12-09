@@ -11,6 +11,7 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/login.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 ///post接口请求
 Future requestPostLogin(url, {formData}) async{
@@ -225,7 +226,23 @@ Future getPutFile(url, file) async{
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(file, filename:name)
     });
-    response = await dio.post(Api.baseUrl() + url, data: formData);
+    response = await dio.post(
+        Api.baseUrl() + url,
+        data: formData,
+        onSendProgress: (progress, total){
+          Future.delayed(Duration(milliseconds: 500)).then((value) {
+            final currentProgress = (progress / total);
+            EasyLoading.showProgress(
+                currentProgress,
+                status: '${(currentProgress * 100).toStringAsFixed(0)}%'
+            );
+            if (currentProgress >= 1) {
+              EasyLoading.dismiss();
+            }
+            print("总进度==$total===当前的进度===$progress====百分比===${(currentProgress * 100).toStringAsFixed(0)}%====$currentProgress");
+          });
+        }
+    );
     _dealResponseDataFroError(response);
     return response.data;
   } on DioError catch(e){
