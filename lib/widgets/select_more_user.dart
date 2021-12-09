@@ -11,14 +11,15 @@ import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
+import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
 ///多选人员列表
 class SelectMoreUser extends StatefulWidget {
-  final TimeSelectProvider timeSelectProvider;
+  final List<UserModel> selUser;
   final String title;
-  SelectMoreUser({Key key, this.title, this.timeSelectProvider}) : super(key: key);
+  SelectMoreUser({Key key, this.title, this.selUser}) : super(key: key);
 
   @override
   _SelectMoreUserState createState() => _SelectMoreUserState();
@@ -85,43 +86,27 @@ class _SelectMoreUserState extends State<SelectMoreUser> {
         child: SubmitBtn(
             title: '确定',
             onPressed: () {
-              List<UserModel> _selList = _userList.where((employee) => employee.isSelected).toList();
-
+              List<UserModel> _selList = _userList
+                  .where((employee) => employee.isSelected)
+                  .toList();
               if (_selList.isEmpty) {
-                Fluttertoast.showToast(msg: '选择抄送人不能为空', gravity: ToastGravity.CENTER);
+                Fluttertoast.showToast(
+                    msg: '选择抄送人不能为空', gravity: ToastGravity.CENTER);
                 return;
               }
-
-              List<String> idList = [];
-              List<String> nameList = [];
-              _selList.forEach((element) {
-                idList.add(element.id);
-                nameList.add(element.name);
-              });
-
-              Map addData = new Map();
-              addData['id'] = listToString(idList);
-              addData['name'] = listToString(nameList);
-
-              LogUtil.d('id value = ${listToString(idList)}');
-              LogUtil.d('name value = ${listToString(nameList)}');
-
-              Navigator.pop(context, addData);
+              Navigator.pop(context, _selList);
             }),
       )
     );
   }
 
+  ///搜索关键字
   _searchAction(String text) {
     if (text.isEmpty) {
+      name = '';
       _controller.callRefresh();
       return;
     }
-    // List<UserModel> tempList = [];
-    // tempList.addAll(_userList.where((element) => element.name.contains(text)));
-    // _userList.clear();
-    // _userList.addAll(tempList);
-    // setState(() {});
     name = text;
     _refresh();
   }
@@ -149,14 +134,14 @@ class _SelectMoreUserState extends State<SelectMoreUser> {
       if (_current == 1) _userList.clear();
       final List<dynamic> list = data['data']['records'];
       list.forEach((map) {
-        UserModel model = UserModel.fromJson((map as Map));
+        UserModel model = UserModel.fromJson(map);
         _userList.add(model);
       });
 
-      if (widget.timeSelectProvider.userList.isNotEmpty) {
+      if (widget.selUser.isNotEmpty) {
         _userList.forEach((goods) {
           goods.isSelected = false;
-          widget.timeSelectProvider.userList.forEach((selEmployee) {
+          widget.selUser.forEach((selEmployee) {
             if (selEmployee.id == goods.id) goods.isSelected = true;
           });
         });
@@ -256,13 +241,31 @@ class _UserGridCellState extends State<_UserGridCell> {
 }
 
 ///多选选择返回回调
-Future<Map> showMultiSelectList(BuildContext context, TimeSelectProvider timeSelectProvider, title) async {
-  Map result;
-  result = await Navigator.push(context, MaterialPageRoute(builder: (context) => SelectMoreUser(
-        title: title,
-        timeSelectProvider: timeSelectProvider
+Future<List<UserModel>> showMultiSelectList(BuildContext context, TimeSelectProvider timeSelectProvider, title) async {
+  List<UserModel> _selUserList = await Navigator.push(context, MaterialPageRoute(builder: (context) => SelectMoreUser(
+      title: title,
+      selUser: timeSelectProvider.userList
       )
     )
   );
-  return result ?? "";
+  if (_selUserList != null) {
+    timeSelectProvider.setArrays(
+        timeSelectProvider.userList, _selUserList);
+  }
+  return _selUserList;
+}
+
+///多选人员组件
+class MultiSelectUserList extends StatelessWidget {
+  final TimeSelectProvider timeSelectProvider;
+  MultiSelectUserList({Key key, this.timeSelectProvider}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+
+      ]
+    );
+  }
 }

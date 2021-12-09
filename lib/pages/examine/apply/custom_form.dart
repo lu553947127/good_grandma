@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
+import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
@@ -11,11 +12,12 @@ import 'package:good_grandma/pages/examine/children_form/travel_schedule_apply.d
 import 'package:good_grandma/pages/examine/children_form/zhifuduixiangxinxi.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
+import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
 import 'package:good_grandma/widgets/select_form.dart';
-import 'package:good_grandma/widgets/select_more_user.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 import 'package:good_grandma/widgets/time_select.dart';
 import 'package:provider/provider.dart';
@@ -40,17 +42,35 @@ class CustomFormView extends StatefulWidget {
 class _CustomFormViewState extends State<CustomFormView> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _editingController = TextEditingController();
+  bool isFirst = false;
+
+  _initCopyUser(TimeSelectProvider timeSelectProvider){
+    String copyUser = widget.process['copyUser'];
+    String copyUserName = widget.process['copyUserName'];
+
+    List<String> copyUserList = copyUser.split(',');
+    List<String> copyUserNameList = copyUserName.split(',');
+
+    if (copyUser.isNotEmpty){
+      Map addData = new Map();
+      copyUserList.forEach((element) {
+        addData['id'] = element;
+      });
+
+      copyUserNameList.forEach((element) {
+        addData['name'] = element;
+      });
+
+      timeSelectProvider.userMapList.add(addData);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
-
-    String copyUser = widget.process['copyUser'];
-    String copyUserName = widget.process['copyUserName'];
-
-    if (copyUser.isNotEmpty){
-      timeSelectProvider.addcopyUser(copyUser);
-      timeSelectProvider.addcopyUserName(copyUserName);
+    if (!isFirst){
+      isFirst = true;
+      _initCopyUser(timeSelectProvider);
     }
 
     DateTime now = new DateTime.now();
@@ -584,7 +604,11 @@ class _CustomFormViewState extends State<CustomFormView> {
         }
       }
 
-      addData['copyUser'] = timeSelectProvider.copyUser;
+      List<String> idList = [];
+      timeSelectProvider.userMapList.forEach((element) {
+        idList.add(element['id']);
+      });
+      addData['copyUser'] = listToString(idList);
 
       LogUtil.d('addData----$addData');
 
@@ -608,21 +632,42 @@ class _CustomFormViewState extends State<CustomFormView> {
               }, childCount: widget.list.length)
           ),
           SliverToBoxAdapter(
-            child: Container(
-              margin: EdgeInsets.only(top: 10.0),
-              child: PostAddInputCell(
-                  title: '抄送人',
-                  value: timeSelectProvider.copyUserName,
-                  hintText: '请选择抄送人',
-                  endWidget: Icon(Icons.chevron_right),
-                  onTap: () async {
-                    Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
-                    timeSelectProvider.addcopyUser(area['id']);
-                    timeSelectProvider.addcopyUserName(area['name']);
-                  }
+              child: Container(
+                  margin: EdgeInsets.only(top: 10.0),
+                  height: 60,
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Text('请选择抄送人', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                    trailing: IconButton(
+                        onPressed: () async {
+                          Map select = await showSelectSearchList(context, Api.sendSelectUser, '请选择抄送人', 'name');
+                          timeSelectProvider.addUserModel(select['id'], select['name']);
+                        },
+                        icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+                  )
               )
-            )
           ),
+          SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                Map userMap = timeSelectProvider.userMapList[index];
+                return Column(
+                    children: [
+                      SizedBox(height: 1),
+                      ActivityAddTextCell(
+                          title: userMap['name'],
+                          hintText: '',
+                          value: '',
+                          trailing: IconButton(
+                              onPressed: (){
+                                timeSelectProvider.deleteUserModelWith(index);
+                              },
+                              icon: Icon(Icons.delete, color: AppColors.FFDD0000)
+                          ),
+                          onTap: null
+                      )
+                    ]
+                );
+              }, childCount: timeSelectProvider.userMapList.length)),
           SliverToBoxAdapter(
               child: Padding(
                   padding: const EdgeInsets.only(top: 30, bottom: 30, left: 22, right: 22),

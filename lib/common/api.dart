@@ -144,7 +144,7 @@ class Api {
   /** 规章文件相关 **/
 
   ///规章文件
-  static const regularDocList = "/api/hap-app3/app/manage/list";
+  static const regularDocList = "/api/hap-app/app/manage/list";
 
   ///规章文件已读
   static const regularDocRead = "/api/hap-app/app/manage/read";

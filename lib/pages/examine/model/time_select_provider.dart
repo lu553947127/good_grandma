@@ -80,6 +80,7 @@ class TimeSelectProvider with ChangeNotifier{
     _chuchaimingxiList = [];
     chuchaimingxiMapList = [];
     _userList = [];
+    userMapList = [];
   }
 
   String get startTime => _startTime;
@@ -504,6 +505,58 @@ class TimeSelectProvider with ChangeNotifier{
 
   ///抄送用户列表
   List<UserModel> get userList => _userList;
+
+  List<Map> userMapList = [];
+
+  ///添加
+  addUserModel(String id, String name){
+    if(userMapList == null)
+      userMapList = [];
+    Map addData = new Map();
+    addData['id'] = id;
+    addData['name'] = name;
+    userMapList.add(addData);
+    notifyListeners();
+  }
+
+  ///编辑当前item
+  editUserModelWith(int index, String id, String name){
+    if(userMapList == null)
+      userMapList = [];
+    if(index >= userMapList.length) return;
+    Map addData = new Map();
+    addData['id'] = id;
+    addData['name'] = name;
+    userMapList.setAll(index, [addData]);
+    notifyListeners();
+  }
+
+  ///删除单个item
+  deleteUserModelWith(int index){
+    if(userMapList == null)
+      userMapList = [];
+    if(index >= userMapList.length) return;
+    userMapList.removeAt(index);
+    notifyListeners();
+  }
+
+
+  setArrays(
+      List<UserModel> array,
+      List<UserModel> values,
+      ) {
+    if (array == null) array = [];
+    array.clear();
+    array.addAll(values);
+    notifyListeners();
+  }
+
+  deleteArrayWith(List<UserModel> array, int index) {
+    if (array == null) array = [];
+    if (index >= array.length) return;
+    array.removeAt(index);
+    notifyListeners();
+  }
 }
 
 ///出差日程模型
@@ -616,19 +669,18 @@ class FormEvectionModel {
 
 ///用户模型
 class UserModel {
-
-  String image;
-
-  String name;
-
   String id;
 
+  String name;
+  
+  String image;
+  
   bool isSelected;
 
-  UserModel({
-    this.image = '',
-    this.name = '',
+  UserModel(ids, names, {
     this.id = '',
+    this.name = '',
+    this.image = '',
     this.isSelected = false
   });
 

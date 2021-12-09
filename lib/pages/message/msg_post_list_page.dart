@@ -40,43 +40,38 @@ class _Body extends State<MsgPostListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async{
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.noticeCategoryName),
-          leading:
-              BackButton(onPressed: () => Navigator.pop(context, true)),
-        ),
-        body: MyEasyRefreshSliverWidget(
-            controller: _controller,
-            scrollController: _scrollController,
-            dataCount: _dataArray.length,
-            onRefresh: _refresh,
-            onLoad: _onLoad,
-            slivers: [
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                MsgListModel model = _dataArray[index];
-                return ChangeNotifierProvider<MsgListModel>.value(
-                    value: model,
-                    child: MsgListCell(
-                      cellOnTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return ChangeNotifierProvider<MsgListModel>.value(
-                            value: model,
-                            child: MsgDetailPage(),
-                          );
-                        }));
-                      },
-                    ));
-              }, childCount: _dataArray.length)),
-              SliverSafeArea(sliver: SliverToBoxAdapter()),
-            ]),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.noticeCategoryName),
+        leading:
+        BackButton(onPressed: () => Navigator.pop(context, true)),
       ),
+      body: MyEasyRefreshSliverWidget(
+          controller: _controller,
+          scrollController: _scrollController,
+          dataCount: _dataArray.length,
+          onRefresh: _refresh,
+          onLoad: _onLoad,
+          slivers: [
+            SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  MsgListModel model = _dataArray[index];
+                  return ChangeNotifierProvider<MsgListModel>.value(
+                      value: model,
+                      child: MsgListCell(
+                        cellOnTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return ChangeNotifierProvider<MsgListModel>.value(
+                                  value: model,
+                                  child: MsgDetailPage(),
+                                );
+                              }));
+                        },
+                      ));
+                }, childCount: _dataArray.length)),
+            SliverSafeArea(sliver: SliverToBoxAdapter()),
+          ]),
     );
   }
 

@@ -24,6 +24,9 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   List<Map> _dataArray = [];
+  int _current = 1;
+  int _pageSize = 20;
+  String name = '';
 
   @override
   void initState() {
@@ -53,7 +56,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
                 scrollController: _scrollController,
                 dataCount: _dataArray.length,
                 onRefresh: _refresh,
-                onLoad: null,
+                onLoad: _onLoad,
                 slivers: [
                   //列表
                   SliverList(
@@ -79,30 +82,52 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
 
   _searchAction(String text) {
     if (text.isEmpty) {
+      name = '';
       _controller.callRefresh();
       return;
     }
-    List<Map> tempList = [];
-    tempList.addAll(_dataArray.where((element) => element[widget.name].contains(text)));
-    _dataArray.clear();
-    _dataArray.addAll(tempList);
-    setState(() {});
+    name = text;
+    _refresh();
   }
 
   Future<void> _refresh() async {
+    _current = 1;
+    _downloadData();
+  }
+
+  Future<void> _onLoad() async {
+    _current++;
+    _downloadData();
+  }
+
+  Future<void> _downloadData() async {
     try {
-      final val = await requestGet(widget.url);
+      Map<String, dynamic> map = {
+        'name': name,
+        'current': _current,
+        'size': _pageSize
+      };
+      final val = await requestGet(widget.url, param: map);
       LogUtil.d('customerList value = $val');
       var data = jsonDecode(val.toString());
-      final List<dynamic> list = data['data'];
-      _dataArray.clear();
+      if (_current == 1) _dataArray.clear();
+      List<dynamic> list;
+      if(widget.title == '请选择抄送人'){
+        list = data['data']['records'];
+      }else {
+        list = data['data'];
+      }
       list.forEach((map) {
         _dataArray.add(map);
       });
+      bool noMore = false;
+      if (list == null || list.isEmpty) noMore = true;
       _controller.finishRefresh(success: true);
+      _controller.finishLoad(success: true, noMore: noMore);
       if (mounted) setState(() {});
     } catch (error) {
       _controller.finishRefresh(success: false);
+      _controller.finishLoad(success: false, noMore: false);
     }
   }
 

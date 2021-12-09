@@ -81,7 +81,7 @@ class MsgListModel extends ChangeNotifier {
     enclosureViewURL = json['fileViewPath'] ?? '';
     enclosureSize = json['fileSize'] ?? '';
     enclosureName = json['fileName'] ?? '';
-    secrecy = json['secrecy'] ?? '';
+    secrecy = json['secrecy'] ?? 0;
     setRead(json['readStatus'] == '1');
     setSign(false);
     this.forRegularDoc = false;
