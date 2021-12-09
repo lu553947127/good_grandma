@@ -274,7 +274,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
                                                       ChangeNotifierProvider<TimeSelectProvider>.value(
                                                         value: timeSelectProvider,
-                                                        child: ExamineOperation(title: '转办', taskId: widget.taskId),
+                                                        child: ExamineOperation(title: '转办', process: process, taskId: widget.taskId),
                                                       )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }
@@ -294,7 +294,7 @@ class _ExamineDetailState extends State<ExamineDetail> {
                                               String refresh2 = await Navigator.push(context, MaterialPageRoute(builder: (_) =>
                                               ChangeNotifierProvider<TimeSelectProvider>.value(
                                                 value: timeSelectProvider,
-                                                child: ExamineOperation(title: '委托', taskId: widget.taskId),
+                                                child: ExamineOperation(title: '委托', process: process, taskId: widget.taskId),
                                               )));
                                               if(refresh2 != null) Navigator.pop(context,'refresh');
                                             }

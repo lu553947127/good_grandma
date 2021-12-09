@@ -72,6 +72,13 @@ class ExamineReject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+    String copyUserName = process['copyUserName'];
+
+    if (copyUserName.isNotEmpty){
+      copyUser = process['copyUser'];
+      timeSelectProvider.addcopyUserName(copyUserName);
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

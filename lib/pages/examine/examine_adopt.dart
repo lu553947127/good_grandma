@@ -66,6 +66,12 @@ class ExamineAdopt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+    String copyUserName = process['copyUserName'];
+
+    if (copyUserName.isNotEmpty){
+      copyUser = process['copyUser'];
+      timeSelectProvider.addcopyUserName2(copyUserName);
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -90,13 +96,13 @@ class ExamineAdopt extends StatelessWidget {
           SliverToBoxAdapter(
               child: PostAddInputCell(
                   title: '抄送人',
-                  value: timeSelectProvider.copyUserName,
+                  value: timeSelectProvider.copyUserName2,
                   hintText: '请选择抄送人',
                   endWidget: Icon(Icons.chevron_right),
                   onTap: () async {
                     Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
                     copyUser = area['id'];
-                    timeSelectProvider.addcopyUserName(area['name']);
+                    timeSelectProvider.addcopyUserName2(area['name']);
                   }
               )
           ),
@@ -127,8 +133,9 @@ class ExamineAdopt extends StatelessWidget {
 class ExamineOperation extends StatefulWidget {
   final String title;
   final String taskId;
+  final dynamic process;
 
-  const ExamineOperation({Key key, this.title, this.taskId}) : super(key: key);
+  const ExamineOperation({Key key, this.title, this.taskId, this.process}) : super(key: key);
 
   @override
   _ExamineOperationState createState() => _ExamineOperationState();
@@ -204,6 +211,12 @@ class _ExamineOperationState extends State<ExamineOperation> {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+    String copyUserName = widget.process['copyUserName'];
+
+    if (copyUserName.isNotEmpty){
+      copyUser = widget.process['copyUser'];
+      timeSelectProvider.addcopyUserName3(copyUserName);
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -231,13 +244,13 @@ class _ExamineOperationState extends State<ExamineOperation> {
           SizedBox(height: 15),
           PostAddInputCell(
               title: '抄送人',
-              value: timeSelectProvider.copyUserName,
+              value: timeSelectProvider.copyUserName3,
               hintText: '请选择抄送人',
               endWidget: Icon(Icons.chevron_right),
               onTap: () async {
                 Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
                 copyUser = area['id'];
-                timeSelectProvider.addcopyUserName(area['name']);
+                timeSelectProvider.addcopyUserName3(area['name']);
               }
           ),
           InputWidget(

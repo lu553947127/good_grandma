@@ -44,6 +44,7 @@ class _ExamineAddState extends State<ExamineAdd> {
             LogUtil.d('请求结果---getFormByProcessId----$data');
             var form = jsonDecode(data['data']['appForm']);
             LogUtil.d('form----$form');
+            dynamic process = data['data']['process'];
             List list = (form['column'] as List).cast();
             LogUtil.d('list----$list');
             return ChangeNotifierProvider<TimeSelectProvider>.value(
@@ -51,7 +52,8 @@ class _ExamineAddState extends State<ExamineAdd> {
                 child: CustomFormView(
                     name: widget.name,
                     processId: widget.processId,
-                    list: list
+                    list: list,
+                    process: process
                 )
             );
           }else {

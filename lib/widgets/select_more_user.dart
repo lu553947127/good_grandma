@@ -33,6 +33,7 @@ class _SelectMoreUserState extends State<SelectMoreUser> {
   List<UserModel> _userList = [];
   int _current = 1;
   int _pageSize = 20;
+  String name = '';
 
   @override
   void initState() {
@@ -116,11 +117,13 @@ class _SelectMoreUserState extends State<SelectMoreUser> {
       _controller.callRefresh();
       return;
     }
-    List<UserModel> tempList = [];
-    tempList.addAll(_userList.where((element) => element.name.contains(text)));
-    _userList.clear();
-    _userList.addAll(tempList);
-    setState(() {});
+    // List<UserModel> tempList = [];
+    // tempList.addAll(_userList.where((element) => element.name.contains(text)));
+    // _userList.clear();
+    // _userList.addAll(tempList);
+    // setState(() {});
+    name = text;
+    _refresh();
   }
 
   Future<void> _refresh() async {
@@ -135,7 +138,11 @@ class _SelectMoreUserState extends State<SelectMoreUser> {
 
   Future<void> _downloadData() async {
     try {
-      Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
+      Map<String, dynamic> map = {
+        'name': name,
+        'current': _current,
+        'size': _pageSize
+      };
       final val = await requestGet(Api.sendSelectUser, param: map);
       LogUtil.d('sendSelectUser value = $val');
       var data = jsonDecode(val.toString());

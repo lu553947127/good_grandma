@@ -29,7 +29,14 @@ class TimeSelectProvider with ChangeNotifier{
   String _jine;
   String _hexiaojine;
   String _reason;
+  String _copyUser;
   String _copyUserName;
+  String _copyUser2;
+  String _copyUserName2;
+  String _copyUser3;
+  String _copyUserName3;
+  String _copyUser4;
+  String _copyUserName4;
 
   TimeSelectProvider() {
     _startTime = '';
@@ -58,7 +65,14 @@ class TimeSelectProvider with ChangeNotifier{
     _jine = '';
     _hexiaojine = '';
     _reason = '';
+    _copyUser = '';
     _copyUserName = '';
+    _copyUser2 = '';
+    _copyUserName2 = '';
+    _copyUser3 = '';
+    _copyUserName3 = '';
+    _copyUser4 = '';
+    _copyUserName4 = '';
     _travelScheduleList = [];
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
@@ -94,7 +108,14 @@ class TimeSelectProvider with ChangeNotifier{
   String get jine => _jine;
   String get hexiaojine => _hexiaojine;
   String get reason => _reason;
+  String get copyUser => _copyUser;
   String get copyUserName => _copyUserName;
+  String get copyUser2 => _copyUser2;
+  String get copyUserName2 => _copyUserName2;
+  String get copyUser3 => _copyUser3;
+  String get copyUserName3 => _copyUserName3;
+  String get copyUser4 => _copyUser4;
+  String get copyUserName4 => _copyUserName4;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
@@ -211,8 +232,43 @@ class TimeSelectProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  addcopyUser(str){
+    _copyUser = str;
+    notifyListeners();
+  }
+
   addcopyUserName(str){
     _copyUserName  = str;
+    notifyListeners();
+  }
+
+  addcopyUser2(str){
+    _copyUser2 = str;
+    notifyListeners();
+  }
+
+  addcopyUserName2(str){
+    _copyUserName2  = str;
+    notifyListeners();
+  }
+
+  addcopyUser3(str){
+    _copyUser3 = str;
+    notifyListeners();
+  }
+
+  addcopyUserName3(str){
+    _copyUserName3  = str;
+    notifyListeners();
+  }
+
+  addcopyUser4(str){
+    _copyUser4 = str;
+    notifyListeners();
+  }
+
+  addcopyUserName4(str){
+    _copyUserName4  = str;
     notifyListeners();
   }
 

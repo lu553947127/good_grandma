@@ -25,10 +25,12 @@ class CustomFormView extends StatefulWidget {
   final String name;
   final String processId;
   final List list;
+  final dynamic process;
   CustomFormView({Key key,
     this.name,
     this.processId,
-    this.list
+    this.list,
+    this.process
   }) : super(key: key);
 
   @override
@@ -42,6 +44,14 @@ class _CustomFormViewState extends State<CustomFormView> {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+
+    String copyUser = widget.process['copyUser'];
+    String copyUserName = widget.process['copyUserName'];
+
+    if (copyUser.isNotEmpty){
+      timeSelectProvider.addcopyUser(copyUser);
+      timeSelectProvider.addcopyUserName(copyUserName);
+    }
 
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
@@ -574,6 +584,8 @@ class _CustomFormViewState extends State<CustomFormView> {
         }
       }
 
+      addData['copyUser'] = timeSelectProvider.copyUser;
+
       LogUtil.d('addData----$addData');
 
       requestPost(Api.startProcess, json: addData).then((val) async{
@@ -605,7 +617,7 @@ class _CustomFormViewState extends State<CustomFormView> {
                   endWidget: Icon(Icons.chevron_right),
                   onTap: () async {
                     Map area = await showMultiSelectList(context, timeSelectProvider, '请选择抄送人');
-                    addData['copyUser'] = area['id'];
+                    timeSelectProvider.addcopyUser(area['id']);
                     timeSelectProvider.addcopyUserName(area['name']);
                   }
               )
