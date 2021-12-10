@@ -46,18 +46,13 @@ class ExamineAdopt extends StatelessWidget {
 
     List<String> copyUserList = copyUser.split(',');
     List<String> copyUserNameList = copyUserName.split(',');
-
     if (copyUser.isNotEmpty){
-      Map addData = new Map();
-      copyUserList.forEach((element) {
-        addData['id'] = element;
-      });
-
-      copyUserNameList.forEach((element) {
-        addData['name'] = element;
-      });
-
-      timeSelectProvider.userMapList.add(addData);
+      for(int i = 0; i < copyUserList.length; i++){
+        Map addData = new Map();
+        addData['id'] = copyUserList[i];
+        addData['name'] = copyUserNameList[i];
+        timeSelectProvider.userMapList.add(addData);
+      }
     }
 
     ///通过
@@ -195,18 +190,13 @@ class _ExamineOperationState extends State<ExamineOperation> {
 
     List<String> copyUserList = copyUser.split(',');
     List<String> copyUserNameList = copyUserName.split(',');
-
     if (copyUser.isNotEmpty){
-      Map addData = new Map();
-      copyUserList.forEach((element) {
-        addData['id'] = element;
-      });
-
-      copyUserNameList.forEach((element) {
-        addData['name'] = element;
-      });
-
-      timeSelectProvider.userMapList.add(addData);
+      for(int i = 0; i < copyUserList.length; i++){
+        Map addData = new Map();
+        addData['id'] = copyUserList[i];
+        addData['name'] = copyUserNameList[i];
+        timeSelectProvider.userMapList.add(addData);
+      }
     }
 
     ///转办
