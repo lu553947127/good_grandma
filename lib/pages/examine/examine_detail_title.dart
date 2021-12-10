@@ -31,8 +31,14 @@ class ExamineDetailTitle extends StatelessWidget {
         case '审核中':
           return Color(0xFFDD0000);
           break;
+        case '已终止':
+          return Color(0xFFC08A3F);
+          break;
         case '已驳回':
           return Color(0xFFC08A3F);
+          break;
+        case '已撤回':
+          return Color(0xFF999999);
           break;
       }
     }
@@ -45,12 +51,17 @@ class ExamineDetailTitle extends StatelessWidget {
         case '审核中':
           return Color(0xFFF1E1E2);
           break;
+        case '已终止':
+          return Color(0xFFF1EEEA);
+          break;
         case '已驳回':
           return Color(0xFFF1EEEA);
           break;
+        case '已撤回':
+          return Color(0xFFEEEFF2);
+          break;
       }
     }
-
 
     return SliverToBoxAdapter(
       child: Container(
@@ -74,8 +85,8 @@ class ExamineDetailTitle extends StatelessWidget {
                     imageURL: avatar,
                     width: 50.0,
                     height: 50.0,
-                    errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 50.0, height: 50.0),
-                  ),
+                    errorWidgetChild: Image.asset('assets/images/icon_empty_user.png', width: 50.0, height: 50.0)
+                  )
                 ),
                 SizedBox(width: 10),
                 Column(
@@ -91,50 +102,42 @@ class ExamineDetailTitle extends StatelessWidget {
                         Image.asset('assets/images/icon_examine_time.png', width: 12, height: 12),
                         SizedBox(width: 3),
                         Text(time, style: TextStyle(fontSize: 12, color: Color(0XFFC1C8D7)))
-                      ],
+                      ]
                     ),
                     SizedBox(height: 3),
                     Visibility(
-                        visible: type == '知会我的' ? false : status == '审核中' || status == '已驳回' ? true : false,
+                        visible: type != '知会我的' && status == '审核中' ? true : false,
                         child: Row(
                           children: [
                             Image.asset('assets/images/icon_examine_wait.png', width: 12, height: 12),
                             SizedBox(width: 3),
                             Text(wait, style: TextStyle(fontSize: 12, color: Color(0XFFE45C26)))
-                          ],
+                          ]
                         )
                     )
-                  ],
+                  ]
                 )
-              ],
+              ]
             ),
             Offstage(
               offstage: type == '知会我的' ? true : false,
-              child: Row(
-                children: [
-                  Visibility(
-                    visible: status == '审核中' || status == '已驳回' ? true  : false,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: _setBgColor(status), borderRadius: BorderRadius.circular(3),
-                      ),
-                      child: Text(status, style: TextStyle(fontSize: 10, color: _setTextColor(status))),
-                    ),
+              child:
+              status == '已审核' ?
+              Container(
+                padding: EdgeInsets.all(5),
+                child: Image.asset('assets/images/icon_examine_complete.png', width: 50, height: 50),
+              ) :
+              Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: _setBgColor(status), borderRadius: BorderRadius.circular(3),
                   ),
-                  Visibility(
-                    visible: status == '审核中' || status == '已驳回' ? false : true,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      child: Image.asset('assets/images/icon_examine_complete.png', width: 50, height: 50),
-                    ),
-                  )
-                ],
+                  child: Text(status, style: TextStyle(fontSize: 10, color: _setTextColor(status)))
               )
             )
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
 }

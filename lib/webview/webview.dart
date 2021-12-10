@@ -9,13 +9,16 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 /// WebView页面
 class Webview extends StatefulWidget {
-  final String id;
+  final String type;
   final String title;
-
+  final String id;
+  final String taskId;
   Webview({
     Key key,
+    this.type,
+    this.title = '',
     this.id,
-    this.title = ''
+    this.taskId
   }) : super(key: key);
 
   @override
@@ -27,9 +30,18 @@ class WebViewState extends State<Webview> {
 
   @override
   Widget build(BuildContext context) {
-    String start = '/app/workflow/start?processDefId=' + widget.id;
-    var encoded = Uri.encodeFull(start);
-    String url = Api.baseUrl() + '/#/app/login?username=' +
+    String start = '';
+    if (widget.type == 'add'){
+      start = '/app/workflow/start?processDefId=' + widget.id;
+    }else {
+      start = '/app/workflow/detail?processInsId=' + widget.id + '&taskId=' + widget.taskId;
+    }
+
+    var encoded = Uri.encodeComponent(start);
+
+    LogUtil.d('encoded------------$encoded');
+
+    String url = Api.baseUrl() + '#/app/login?username=' +
         Store.readUserName() + '&password=' + passwordMD5(Store.readPassword()) + '&url=' + encoded;
 
     LogUtil.d('url------------$url');

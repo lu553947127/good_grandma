@@ -100,6 +100,12 @@ class _ShenPiPageState extends State<ShenPiPage> {
                             processIsFinished = '已审核';
                             break;
                           case 'reject':
+                            processIsFinished = '已终止';
+                            break;
+                          case 'withdraw':
+                            processIsFinished = '已撤回';
+                            break;
+                          case 'rollback':
                             processIsFinished = '已驳回';
                             break;
                         }
@@ -114,6 +120,13 @@ class _ShenPiPageState extends State<ShenPiPage> {
                                 processIsFinished: processIsFinished,
                                 status: examineList[index]['status']
                               )));
+
+                              // String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> Webview(
+                              //   type: 'detail',
+                              //   title: '审批详情',
+                              //   id: examineList[index]['processInstanceId'],
+                              //   taskId: examineList[index]['taskId'],
+                              // )));
                               if(refresh != null && refresh == 'refresh') _controller.callRefresh();
                             }
                         );
@@ -135,9 +148,12 @@ class _ShenPiPageState extends State<ShenPiPage> {
               name: result['name'],
               processId: result['id'],
             )));
+
             // String refresh = await Navigator.push(context, MaterialPageRoute(builder:(context)=> Webview(
+            //   type: 'add',
             //   title: result['name'],
             //   id: result['id'],
+            //   taskId: '',
             // )));
             if(refresh != null && refresh == 'refresh') _controller.callRefresh();
           }
