@@ -123,7 +123,7 @@ class ExamineReject extends StatelessWidget {
                     title: Text('请选择抄送人', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                     trailing: IconButton(
                         onPressed: () async {
-                          Map select = await showSelectSearchList(context, Api.sendSelectUser, '请选择抄送人', 'name');
+                          Map select = await showSelectUserList(context, Api.sendSelectUser, '请选择抄送人', 'name');
                           timeSelectProvider.addUserModel(select['id'], select['name']);
                         },
                         icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),

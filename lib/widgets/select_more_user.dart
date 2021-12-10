@@ -9,9 +9,7 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
-import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
@@ -253,19 +251,4 @@ Future<List<UserModel>> showMultiSelectList(BuildContext context, TimeSelectProv
         timeSelectProvider.userList, _selUserList);
   }
   return _selUserList;
-}
-
-///多选人员组件
-class MultiSelectUserList extends StatelessWidget {
-  final TimeSelectProvider timeSelectProvider;
-  MultiSelectUserList({Key key, this.timeSelectProvider}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-
-      ]
-    );
-  }
 }

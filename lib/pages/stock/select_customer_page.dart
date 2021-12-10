@@ -24,9 +24,6 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   List<Map> _dataArray = [];
-  int _current = 1;
-  int _pageSize = 20;
-  String name = '';
 
   @override
   void initState() {
@@ -56,7 +53,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
                 scrollController: _scrollController,
                 dataCount: _dataArray.length,
                 onRefresh: _refresh,
-                onLoad: _onLoad,
+                onLoad: null,
                 slivers: [
                   //列表
                   SliverList(
@@ -77,6 +74,134 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
           )
         ]
       )
+    );
+  }
+
+  _searchAction(String text) {
+    if (text.isEmpty) {
+      _controller.callRefresh();
+      return;
+    }
+    List<Map> tempList = [];
+    tempList.addAll(_dataArray.where((element) => element[widget.name].contains(text)));
+    _dataArray.clear();
+    _dataArray.addAll(tempList);
+    setState(() {});
+  }
+
+  Future<void> _refresh() async {
+    try {
+      final val = await requestGet(widget.url);
+      LogUtil.d('customerList value = $val');
+      var data = jsonDecode(val.toString());
+      final List<dynamic> list = data['data'];
+      _dataArray.clear();
+      list.forEach((map) {
+        _dataArray.add(map);
+      });
+      _controller.finishRefresh(success: true);
+      if (mounted) setState(() {});
+    } catch (error) {
+      _controller.finishRefresh(success: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode?.dispose();
+    _editingController?.dispose();
+    _controller?.dispose();
+    _scrollController?.dispose();
+  }
+}
+
+///选择返回回调
+Future<Map> showSelectSearchList(BuildContext context, url, title, name) async {
+  Map result;
+  result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SelectCustomerPage(
+              url: url,
+              title: title,
+              name: name
+          )
+      )
+  );
+  return result ?? "";
+}
+
+///选择抄送人
+class SelectUserPage extends StatefulWidget {
+  final String url;
+  final String title;
+  final String name;
+  const SelectUserPage({Key key, this.url, this.title, this.name}) : super(key: key);
+
+  @override
+  _SelectUserPageState createState() => _SelectUserPageState();
+}
+
+class _SelectUserPageState extends State<SelectUserPage> {
+  final EasyRefreshController _controller = EasyRefreshController();
+  final ScrollController _scrollController = ScrollController();
+  FocusNode _focusNode = FocusNode();
+  TextEditingController _editingController = TextEditingController();
+  List<Map> _dataArray = [];
+  int _current = 1;
+  int _pageSize = 20;
+  String name = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.callRefresh();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: Column(
+            children: [
+              //搜索
+              SearchTextWidget(
+                  hintText: '请输入搜索关键字',
+                  editingController: _editingController,
+                  focusNode: _focusNode,
+                  onSearch: _searchAction,
+                  onChanged: (text){
+                    _searchAction(text);
+                  }
+              ),
+              Expanded(
+                  child: MyEasyRefreshSliverWidget(
+                      controller: _controller,
+                      scrollController: _scrollController,
+                      dataCount: _dataArray.length,
+                      onRefresh: _refresh,
+                      onLoad: _onLoad,
+                      slivers: [
+                        //列表
+                        SliverList(
+                            delegate: SliverChildBuilderDelegate((context, index) {
+                              Map model = _dataArray[index];
+                              return Column(
+                                  children: [
+                                    ListTile(
+                                        title: Text(model[widget.name]),
+                                        onTap: () => Navigator.pop(context, model)
+                                    ),
+                                    const Divider(thickness: 1, height: 1),
+                                  ]
+                              );
+                            }, childCount: _dataArray.length)),
+                        SliverSafeArea(sliver: SliverToBoxAdapter()),
+                      ])
+              )
+            ]
+        )
     );
   }
 
@@ -111,12 +236,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
       LogUtil.d('customerList value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
-      List<dynamic> list;
-      if(widget.title == '请选择抄送人'){
-        list = data['data']['records'];
-      }else {
-        list = data['data'];
-      }
+      List<dynamic> list = data['data']['records'];
       list.forEach((map) {
         _dataArray.add(map);
       });
@@ -142,12 +262,12 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
 }
 
 ///选择返回回调
-Future<Map> showSelectSearchList(BuildContext context, url, title, name) async {
+Future<Map> showSelectUserList(BuildContext context, url, title, name) async {
   Map result;
   result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SelectCustomerPage(
+          builder: (context) => SelectUserPage(
               url: url,
               title: title,
               name: name
