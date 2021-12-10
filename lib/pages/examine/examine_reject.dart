@@ -13,8 +13,6 @@ import 'package:good_grandma/pages/login/loginBtn.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 import 'package:good_grandma/widgets/introduce_input.dart';
-import 'package:good_grandma/widgets/post_add_input_cell.dart';
-import 'package:good_grandma/widgets/select_more_user.dart';
 import 'package:provider/provider.dart';
 
 ///审核驳回页面
@@ -40,37 +38,6 @@ class ExamineReject extends StatelessWidget {
   }) : super(key: key);
 
   String comment = '';
-  String copyUser = '';
-
-  ///驳回
-  _completeTask(){
-    LogUtil.d('---comment----$comment');
-    if (comment == '') {
-      showToast("驳回原因不能为空");
-      return;
-    }
-
-    Map<String, dynamic> map = {
-      'pass': false,
-      'processInstanceId': processInsId,
-      'processDefinitionId': processDefinitionId,
-      'taskId': taskId,
-      'comment': comment,
-      'copyUser': copyUser
-    };
-
-    requestPost(Api.completeTask, json: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---completeTask----$data');
-
-      if (data['code'] == 200){
-        showToast("$title成功");
-        Navigator.of(Application.appContext).pop('refresh');
-      }else {
-        showToast(data['msg']);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +61,41 @@ class ExamineReject extends StatelessWidget {
       timeSelectProvider.userMapList.add(addData);
     }
 
+    ///驳回
+    _completeTask(){
+      LogUtil.d('---comment----$comment');
+      if (comment == '') {
+        showToast("驳回原因不能为空");
+        return;
+      }
+
+      List<String> idList = [];
+      timeSelectProvider.userMapList.forEach((element) {
+        idList.add(element['id']);
+      });
+
+      Map<String, dynamic> map = {
+        'pass': false,
+        'processInstanceId': processInsId,
+        'processDefinitionId': processDefinitionId,
+        'taskId': taskId,
+        'comment': comment,
+        'copyUser': listToString(idList)
+      };
+
+      requestPost(Api.completeTask, json: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---completeTask----$data');
+
+        if (data['code'] == 200){
+          showToast("$title成功");
+          Navigator.of(Application.appContext).pop('refresh');
+        }else {
+          showToast(data['msg']);
+        }
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -113,7 +115,15 @@ class ExamineReject extends StatelessWidget {
             type: type,
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 15),
+              child: InputWidget(
+                  placeholder: '请填写$title原因',
+                  onChanged: (String txt){
+                    comment = txt;
+                  }
+              )
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 10),
           ),
           SliverToBoxAdapter(
               child: Container(
@@ -151,14 +161,6 @@ class ExamineReject extends StatelessWidget {
                     ]
                 );
               }, childCount: timeSelectProvider.userMapList.length)),
-          SliverToBoxAdapter(
-            child: InputWidget(
-              placeholder: '请填写$title原因',
-              onChanged: (String txt){
-                comment = txt;
-              }
-            )
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(20),

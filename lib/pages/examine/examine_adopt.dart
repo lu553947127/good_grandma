@@ -15,8 +15,6 @@ import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/introduce_input.dart';
-import 'package:good_grandma/widgets/post_add_input_cell.dart';
-import 'package:good_grandma/widgets/select_more_user.dart';
 import 'package:provider/provider.dart';
 
 ///审核意见页面
@@ -39,31 +37,6 @@ class ExamineAdopt extends StatelessWidget {
   }) : super(key: key);
 
   String comment = '';
-  String copyUser = '';
-
-  ///通过
-  _completeTask(){
-
-    Map<String, dynamic> map = {
-      'pass': true,
-      'processInstanceId': processInsId,
-      'taskId': taskId,
-      'comment': comment,
-      'copyUser': copyUser
-    };
-
-    requestPost(Api.completeTask, json: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---completeTask----$data');
-
-      if (data['code'] == 200){
-        showToast("$title成功");
-        Navigator.of(Application.appContext).pop('refresh');
-      }else {
-        showToast(data['msg']);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +59,36 @@ class ExamineAdopt extends StatelessWidget {
 
       timeSelectProvider.userMapList.add(addData);
     }
+
+    ///通过
+    _completeTask(){
+
+      List<String> idList = [];
+      timeSelectProvider.userMapList.forEach((element) {
+        idList.add(element['id']);
+      });
+
+      Map<String, dynamic> map = {
+        'pass': true,
+        'processInstanceId': processInsId,
+        'taskId': taskId,
+        'comment': comment,
+        'copyUser': listToString(idList)
+      };
+
+      requestPost(Api.completeTask, json: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---completeTask----$data');
+
+        if (data['code'] == 200){
+          showToast("$title成功");
+          Navigator.of(Application.appContext).pop('refresh');
+        }else {
+          showToast(data['msg']);
+        }
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -105,7 +108,15 @@ class ExamineAdopt extends StatelessWidget {
             type: type
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 15),
+              child: InputWidget(
+                  placeholder: '请填写$title原因',
+                  onChanged: (String txt){
+                    comment = txt;
+                  }
+              )
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 10),
           ),
           SliverToBoxAdapter(
               child: Container(
@@ -143,14 +154,6 @@ class ExamineAdopt extends StatelessWidget {
                     ]
                 );
               }, childCount: timeSelectProvider.userMapList.length)),
-          SliverToBoxAdapter(
-            child: InputWidget(
-              placeholder: '请填写$title原因',
-              onChanged: (String txt){
-                comment = txt;
-              }
-            )
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(20),
@@ -184,78 +187,6 @@ class _ExamineOperationState extends State<ExamineOperation> {
   String customerName = '';
   String comment = '';
 
-  ///转办
-  _transferTask(TimeSelectProvider timeSelectProvider){
-    if (customerId == '') {
-      showToast("客户不能为空");
-      return;
-    }
-
-    if (comment == '') {
-      showToast("转办原因不能为空");
-      return;
-    }
-
-    List<String> idList = [];
-    timeSelectProvider.userMapList.forEach((element) {
-      idList.add(element['id']);
-    });
-
-    Map<String, dynamic> map = {
-      'assignee': customerId,
-      'taskId': widget.taskId,
-      'comment': comment,
-      'copyUser': listToString(idList)
-    };
-
-    requestPost(Api.transferTask, json: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---transferTask----$data');
-      if (data['code'] == 200){
-        showToast("${widget.title}成功");
-        Navigator.of(Application.appContext).pop('refresh');
-      }else {
-        showToast(data['msg']);
-      }
-    });
-  }
-
-  ///委托
-  _delegateTask(TimeSelectProvider timeSelectProvider){
-    if (customerId == '') {
-      showToast("客户不能为空");
-      return;
-    }
-
-    if (comment == '') {
-      showToast("委托原因不能为空");
-      return;
-    }
-
-    List<String> idList = [];
-    timeSelectProvider.userMapList.forEach((element) {
-      idList.add(element['id']);
-    });
-
-    Map<String, dynamic> map = {
-      'assignee': customerId,
-      'taskId': widget.taskId,
-      'comment': comment,
-      'copyUser': listToString(idList)
-    };
-
-    requestPost(Api.delegateTask, json: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---delegateTask----$data');
-      if (data['code'] == 200){
-        showToast("${widget.title}成功");
-        Navigator.of(Application.appContext).pop('refresh');
-      }else {
-        showToast(data['msg']);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
@@ -277,6 +208,79 @@ class _ExamineOperationState extends State<ExamineOperation> {
 
       timeSelectProvider.userMapList.add(addData);
     }
+
+    ///转办
+    _transferTask(){
+      if (customerId == '') {
+        showToast("客户不能为空");
+        return;
+      }
+
+      if (comment == '') {
+        showToast("转办原因不能为空");
+        return;
+      }
+
+      List<String> idList = [];
+      timeSelectProvider.userMapList.forEach((element) {
+        idList.add(element['id']);
+      });
+
+      Map<String, dynamic> map = {
+        'assignee': customerId,
+        'taskId': widget.taskId,
+        'comment': comment,
+        'copyUser': listToString(idList)
+      };
+
+      requestPost(Api.transferTask, json: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---transferTask----$data');
+        if (data['code'] == 200){
+          showToast("${widget.title}成功");
+          Navigator.of(Application.appContext).pop('refresh');
+        }else {
+          showToast(data['msg']);
+        }
+      });
+    }
+
+    ///委托
+    _delegateTask(){
+      if (customerId == '') {
+        showToast("客户不能为空");
+        return;
+      }
+
+      if (comment == '') {
+        showToast("委托原因不能为空");
+        return;
+      }
+
+      List<String> idList = [];
+      timeSelectProvider.userMapList.forEach((element) {
+        idList.add(element['id']);
+      });
+
+      Map<String, dynamic> map = {
+        'assignee': customerId,
+        'taskId': widget.taskId,
+        'comment': comment,
+        'copyUser': listToString(idList)
+      };
+
+      requestPost(Api.delegateTask, json: map).then((val) async{
+        var data = json.decode(val.toString());
+        LogUtil.d('请求结果---delegateTask----$data');
+        if (data['code'] == 200){
+          showToast("${widget.title}成功");
+          Navigator.of(Application.appContext).pop('refresh');
+        }else {
+          showToast(data['msg']);
+        }
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -304,7 +308,18 @@ class _ExamineOperationState extends State<ExamineOperation> {
             )
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 15)
+              child: SizedBox(height: 10)
+          ),
+          SliverToBoxAdapter(
+              child: InputWidget(
+                  placeholder: '请填写${widget.title}原因',
+                  onChanged: (String txt){
+                    comment = txt;
+                  }
+              )
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 10)
           ),
           SliverToBoxAdapter(
               child: Container(
@@ -343,19 +358,11 @@ class _ExamineOperationState extends State<ExamineOperation> {
                 );
               }, childCount: timeSelectProvider.userMapList.length)),
           SliverToBoxAdapter(
-            child: InputWidget(
-                placeholder: '请填写${widget.title}原因',
-                onChanged: (String txt){
-                  comment = txt;
-                }
-            )
-          ),
-          SliverToBoxAdapter(
             child: Padding(
                 padding: EdgeInsets.all(20),
                 child: LoginBtn(
                     title: '确定',
-                    onPressed: widget.title == '转办' ? _transferTask(timeSelectProvider) : _delegateTask
+                    onPressed: widget.title == '转办' ? _transferTask : _delegateTask
                 )
             )
           )
