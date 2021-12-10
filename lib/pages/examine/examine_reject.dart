@@ -38,7 +38,6 @@ class ExamineReject extends StatelessWidget {
   }) : super(key: key);
 
   String comment = '';
-  bool isFirst = false;
 
   _initCopyUser(TimeSelectProvider timeSelectProvider){
     String copyUser = process['copyUser'];
@@ -59,9 +58,8 @@ class ExamineReject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
-    LogUtil.d('---isFirst----$isFirst');
-    if (!isFirst && timeSelectProvider.userMapList.length == 0){
-      isFirst = true;
+    if (!timeSelectProvider.isCopyUser){
+      timeSelectProvider.addiscopyUser(true);
       _initCopyUser(timeSelectProvider);
     }
 

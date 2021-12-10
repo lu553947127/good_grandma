@@ -58,8 +58,8 @@ class ExamineAdopt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
-    if (!isFirst && timeSelectProvider.userMapList.length == 0){
-      isFirst = true;
+    if (!timeSelectProvider.isCopyUser){
+      timeSelectProvider.addiscopyUser(true);
       _initCopyUser(timeSelectProvider);
     }
 
@@ -210,8 +210,8 @@ class _ExamineOperationState extends State<ExamineOperation> {
   @override
   Widget build(BuildContext context) {
     TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
-    if (!isFirst && timeSelectProvider.userMapList.length == 0){
-      isFirst = true;
+    if (!timeSelectProvider.isCopyUser){
+      timeSelectProvider.addiscopyUser(true);
       _initCopyUser(timeSelectProvider);
     }
 
