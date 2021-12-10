@@ -38,10 +38,9 @@ class ExamineReject extends StatelessWidget {
   }) : super(key: key);
 
   String comment = '';
+  bool isFirst = false;
 
-  @override
-  Widget build(BuildContext context) {
-    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+  _initCopyUser(TimeSelectProvider timeSelectProvider){
     String copyUser = process['copyUser'];
     String copyUserName = process['copyUserName'];
 
@@ -54,6 +53,16 @@ class ExamineReject extends StatelessWidget {
         addData['name'] = copyUserNameList[i];
         timeSelectProvider.userMapList.add(addData);
       }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+    LogUtil.d('---isFirst----$isFirst');
+    if (!isFirst && timeSelectProvider.userMapList.length == 0){
+      isFirst = true;
+      _initCopyUser(timeSelectProvider);
     }
 
     ///驳回

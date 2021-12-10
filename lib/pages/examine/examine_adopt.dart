@@ -37,10 +37,9 @@ class ExamineAdopt extends StatelessWidget {
   }) : super(key: key);
 
   String comment = '';
+  bool isFirst = false;
 
-  @override
-  Widget build(BuildContext context) {
-    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+  _initCopyUser(TimeSelectProvider timeSelectProvider){
     String copyUser = process['copyUser'];
     String copyUserName = process['copyUserName'];
 
@@ -53,6 +52,15 @@ class ExamineAdopt extends StatelessWidget {
         addData['name'] = copyUserNameList[i];
         timeSelectProvider.userMapList.add(addData);
       }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+    if (!isFirst && timeSelectProvider.userMapList.length == 0){
+      isFirst = true;
+      _initCopyUser(timeSelectProvider);
     }
 
     ///通过
@@ -181,10 +189,9 @@ class _ExamineOperationState extends State<ExamineOperation> {
   String customerId = '';
   String customerName = '';
   String comment = '';
+  bool isFirst = false;
 
-  @override
-  Widget build(BuildContext context) {
-    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+  _initCopyUser(TimeSelectProvider timeSelectProvider){
     String copyUser = widget.process['copyUser'];
     String copyUserName = widget.process['copyUserName'];
 
@@ -197,6 +204,15 @@ class _ExamineOperationState extends State<ExamineOperation> {
         addData['name'] = copyUserNameList[i];
         timeSelectProvider.userMapList.add(addData);
       }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TimeSelectProvider timeSelectProvider = Provider.of<TimeSelectProvider>(context);
+    if (!isFirst && timeSelectProvider.userMapList.length == 0){
+      isFirst = true;
+      _initCopyUser(timeSelectProvider);
     }
 
     ///转办
