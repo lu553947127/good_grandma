@@ -20,7 +20,7 @@ Future requestPostLogin(url, {formData}) async{
     var headers = Map<String, String>();
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
     headers['Tenant-Id'] = '000000';
-    headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
+    headers['Authorization'] = 'Basic YXBwOmFwcF9oYW9hcG8=';
     BaseOptions options = new BaseOptions(
         connectTimeout: 1000 * 10,
         receiveTimeout: 1000 * 5,
@@ -37,9 +37,7 @@ Future requestPostLogin(url, {formData}) async{
         return true;
       };
     };
-
     response = await dio.post(Api.baseUrl() + url, data: formData);
-
     return response.data;
   } on DioError catch(e){
     LogUtil.d('ERROR:===$url===>$e');
@@ -61,7 +59,7 @@ Future requestPostSwitch(url, {formData}) async{
     var headers = Map<String, String>();
     headers['Content-Type'] = 'application/x-www-form-urlencoded';
     headers['Tenant-Id'] = '000000';
-    headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
+    headers['Authorization'] = 'Basic YXBwOmFwcF9oYW9hcG8=';
     headers['Blade-Auth'] = 'bearer ${Store.readToken()}';
     BaseOptions options = new BaseOptions(
         connectTimeout: 1000 * 10,
@@ -102,10 +100,9 @@ Future requestPost(url, {formData, json}) async{
     var headers = Map<String, String>();
     headers['Content-Type'] = 'application/json';
     headers['Tenant-Id'] = '000000';
-    headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
+    headers['Authorization'] = 'Basic YXBwOmFwcF9oYW9hcG8=';
     headers['Blade-Auth'] = 'bearer ${Store.readToken()}';
     Response response;
-    // LogUtil.d('Store.readToken() = ${Store.readToken()}');
     BaseOptions options = new BaseOptions(
         connectTimeout: 1000 * 10,
         receiveTimeout: 1000 * 5,
@@ -138,7 +135,6 @@ Future requestPost(url, {formData, json}) async{
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
-      // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
@@ -158,9 +154,8 @@ Future requestGet(url, {param})async{
     var headers = Map<String, String>();
     headers['Content-Type'] = 'application/json';
     headers['Tenant-Id'] = '000000';
-    headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
+    headers['Authorization'] = 'Basic YXBwOmFwcF9oYW9hcG8=';
     headers['Blade-Auth'] = 'bearer ${Store.readToken()}';
-    // LogUtil.d('Store.readToken() = ${Store.readToken()}');
     BaseOptions options = new BaseOptions(
       connectTimeout: 1000 * 10,
       receiveTimeout: 1000 * 5,
@@ -184,7 +179,6 @@ Future requestGet(url, {param})async{
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
-      // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
@@ -212,7 +206,7 @@ Future getPutFile(url, file) async{
     print('开始上传图片...............'+file);
     var headers = Map<String, String>();
     headers['Tenant-Id'] = '000000';
-    headers['Authorization'] = 'Basic c2FiZXI6c2FiZXJfc2VjcmV0';
+    headers['Authorization'] = 'Basic YXBwOmFwcF9oYW9hcG8=';
     headers['Blade-Auth'] = 'bearer ${Store.readToken()}';
     Response response;
     BaseOptions options = new BaseOptions(
@@ -251,7 +245,6 @@ Future getPutFile(url, file) async{
       showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
-      // Navigator.pushReplacement(Application.appContext, MaterialPageRoute(builder: (_) => LoginPage()));
       throw e;
     }else if (e.response.statusCode == 500){
       showToast('接口报500啦');
