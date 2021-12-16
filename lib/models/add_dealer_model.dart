@@ -86,6 +86,12 @@ class AddDealerModel extends ChangeNotifier {
   ///营业执照
   String _licenseImage;
 
+  ///业务类型
+  String _ywdbType;
+
+  ///业务类型
+  String _ywdbTypeName;
+
   AddDealerModel() {
     _deptId = '';
     _deptIdName = '';
@@ -115,6 +121,8 @@ class AddDealerModel extends ChangeNotifier {
     _pwd = '';
     _idCardImage = '';
     _licenseImage = '';
+    _ywdbType = '';
+    _ywdbTypeName = '';
   }
 
   ///经销商(城市经理)id
@@ -200,6 +208,12 @@ class AddDealerModel extends ChangeNotifier {
 
   ///营业执照
   String get licenseImage => _licenseImage;
+
+  ///业务类型
+  String get ywdbType => _ywdbType;
+
+  ///业务类型
+  String get ywdbTypeName => _ywdbTypeName;
 
   setDeptId(String deptId) {
     _deptId = deptId;
@@ -338,6 +352,16 @@ class AddDealerModel extends ChangeNotifier {
 
   setLicenseImage(String licenseImage) {
     _licenseImage = licenseImage;
+    notifyListeners();
+  }
+
+  setywdbType(String ywdbType){
+    _ywdbType = ywdbType;
+    notifyListeners();
+  }
+
+  setywdbTypeName(String ywdbTypeName){
+    _ywdbTypeName = ywdbTypeName;
     notifyListeners();
   }
 }

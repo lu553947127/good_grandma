@@ -59,6 +59,18 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
                             _model.setServiceCode(select['id']);
                             _model.setServiceCodeName(select['realName']);
                             break;
+                          case 2://业务类型
+                            String select = await showPicker(['公司代表', '经销商代表'], context);
+                            switch(select){
+                              case "公司代表":
+                                _model.setywdbType('1');
+                                break;
+                              case "经销商代表":
+                                _model.setywdbType('2');
+                                break;
+                            }
+                            _model.setywdbTypeName(select);
+                            break;
                           default: //输入框
                             AppUtil.showInputDialog(
                                 context: context,
@@ -68,10 +80,10 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
                                 hintText: hintText,
                                 callBack: (text) {
                                   switch (index) {
-                                    case 2: //手机
+                                    case 3: //手机
                                       _model.setPhone(text);
                                       break;
-                                    case 3: //姓名
+                                    case 4: //姓名
                                       _model.setJuridical(text);
                                       break;
                                   }
@@ -141,6 +153,13 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
         'end': '>'
       },
       {
+        'title': '业务类型',
+        'value': _model.ywdbTypeName,
+        'hintText': '请选择业务类型',
+        'keyBoardType': null,
+        'end': '>'
+      },
+      {
         'title': '手机',
         'value': _model.phone,
         'hintText': '请填写手机',
@@ -169,13 +188,18 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
   ///开通账户
   void _openCustomer(BuildContext context, AddDealerModel model) async {
 
+    if (model.role == ''){
+      showToast("所属角色不能为空");
+      return;
+    }
+
     if (model.serviceCode == ''){
       showToast("经销商不能为空");
       return;
     }
 
-    if (model.role == ''){
-      showToast("所属角色不能为空");
+    if (model.ywdbType == ''){
+      showToast("业务类型不能为空");
       return;
     }
 
@@ -202,6 +226,7 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
     Map<String, dynamic> map = {
       'postId': model.post,
       'serviceCode': model.serviceCode,
+      'ywdbType': model.ywdbType,
       'roleId': model.role,
       'phone': model.phone,
       'juridical': model.juridical,

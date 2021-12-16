@@ -43,6 +43,7 @@ class _MsgPageState extends State<MsgPage> {
               String noticeCategory = map['noticeCategory'];
               return Container(
                 color: Colors.white,
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: ListTile(
                   leading: Container(
                     width: 50.0,
@@ -79,8 +80,17 @@ class _MsgPageState extends State<MsgPage> {
                       ],
                     ),
                   ),
-                  title: Text(title),
-                  subtitle: Text(subtitle),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: TextStyle(color: Colors.black, fontSize: 18.0)),
+                      Visibility(
+                        visible: subtitle.isNotEmpty,
+                        child: Text(subtitle, style: TextStyle(color: Colors.grey, fontSize: 13.0))
+                      )
+                    ]
+                  ),
+                  // subtitle: Text(subtitle),
                   trailing: Text(time,
                       style: const TextStyle(color: AppColors.FFC1C8D7)),
                   onTap: () {

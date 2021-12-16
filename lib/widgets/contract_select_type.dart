@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/widgets/select_form.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 
 ///合同顶部筛选
@@ -92,7 +92,7 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                 ]
               ),
               onPressed: () async {
-                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
                 customerId = select['id'];
                 _btnName2 = select['realName'];
                 if (mounted) setState(() {});
@@ -127,7 +127,8 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
               onPressed: () async {
                 String result = await showPicker(
                     ['所有类型', '经销商合同', '分销商合同', '冷冻设备借用协议'
-                      , '冷冻设备借用协议（第三方）', '配送协议', '小型经销商合同', '特约经销商补充协议'], context);
+                      , '冷冻设备借用协议（第三方）', '配送协议', '小型经销商合同', '特约经销商补充协议'
+                      , '二级直营客户合同', '冰柜押金转货款'], context);
                 if (result != null && result.isNotEmpty) {
                   switch(result){
                     case '所有类型':
@@ -153,6 +154,12 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                       break;
                     case '特约经销商补充协议':
                       signType = '6';
+                      break;
+                    case '二级直营客户合同':
+                      signType = '7';
+                      break;
+                    case '冰柜押金转货款':
+                      signType = '8';
                       break;
                   }
                   _btnName3 = result;

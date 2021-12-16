@@ -87,6 +87,15 @@ class ContractCell extends StatelessWidget {
         case '6':
           return '特约经销商补充协议';
           break;
+        case '7':
+          return '二级直营客户合同';
+          break;
+        case '8':
+          return '冰柜押金转货款';
+          break;
+        default:
+          return '未知类型';
+          break;
       }
     }
     

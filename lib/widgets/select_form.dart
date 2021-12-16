@@ -23,6 +23,12 @@ class SelectFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // requestGet(url).then((val) async{
+    //   var data = json.decode(val.toString());
+    //   LogUtil.d('请求结果---url----$data');
+    // });
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
