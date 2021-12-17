@@ -61,12 +61,12 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text((widget.id.isNotEmpty ? '修改' : '新增') + typeName + '报'),
-          // actions: [
-          //   TextButton(
-          //       onPressed: () => _submitAction(context, model, 1),
-          //       child:
-          //           const Text('保存草稿', style: TextStyle(color: Colors.black))),
-          // ],
+          actions: [
+            TextButton(
+                onPressed: () => _submitAction(context, model, 1),
+                child:
+                    const Text('保存草稿', style: TextStyle(color: Colors.black))),
+          ],
         ),
         body: Scrollbar(
           child: CustomScrollView(
@@ -266,20 +266,20 @@ class _PostAddZNPageState extends State<PostAddZNPage> {
   ///提  交
   void _submitAction(
       BuildContext context, PostAddZNModel model, int status) async {
-    if (model.currentWorks.isEmpty) {
+    if (model.currentWorks.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写工作内容');
       return;
     }
     Map param = model.toJson();
     param['status'] = status;
-    // LogUtil.d('param = ${jsonEncode(param)}');
+    LogUtil.d('param = ${jsonEncode(param)}');
     String url = Api.reportMonthAdd;
     if (widget.isWeek) {
       url = Api.reportWeekAdd;
     }
     requestPost(url, json: param).then((value) {
       var data = jsonDecode(value.toString());
-      // print('data = $data');
+      print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
     });
   }

@@ -13,6 +13,7 @@ import 'package:good_grandma/models/home_report_model.dart';
 import 'package:good_grandma/models/month_post_add_new_model.dart';
 import 'package:good_grandma/models/post_add_zn_model.dart';
 import 'package:good_grandma/models/week_post_add_new_model.dart';
+import 'package:good_grandma/pages/draft/draft.dart';
 import 'package:good_grandma/pages/work/work_report/day_post_add_page.dart';
 import 'package:good_grandma/pages/work/work_report/month_post_add_page.dart';
 import 'package:good_grandma/pages/work/work_report/post_add_zn_page.dart';
@@ -61,7 +62,21 @@ class _WorkReportState extends State<WorkReport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("工作报告")),
+        appBar: AppBar(
+            title: Text("工作报告"),
+            actions: [
+              TextButton(
+                  child: Text("草稿", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
+                  onPressed: () async {
+                    bool needRefresh = await Navigator.push(context,
+                        MaterialPageRoute(builder:(context)=> DraftPage()));
+                    if(needRefresh != null && needRefresh){
+                      Navigator.pop(context, true);
+                    }
+                  }
+              )
+            ]
+        ),
         body: Column(
           children: [
             SwitchTypeTitleWidget(
@@ -207,48 +222,127 @@ class _WorkReportState extends State<WorkReport> {
         bool isZhiNeng = Store.readUserType() == 'zn';
         bool result;
         if (name == '日报') {
+          _reportDraft('1', isZhiNeng, result);
+        } else if (name == '周报') {
+          _reportDraft('2', isZhiNeng, result);
+        } else if (name == '月报') {
+          _reportDraft('3', isZhiNeng, result);
+        }
+        if (result != null && result) _controller.callRefresh();
+      },
+    );
+  }
+
+  ///获取草稿
+  _reportDraft(String type, bool isZhiNeng, bool result) async {
+    requestPost(Api.reportDraftList, json: jsonEncode({'type': type})).then((value) async {
+      LogUtil.d('reportDraftList value = $value');
+      var data = jsonDecode(value.toString());
+      List<Map> reportDraftList = [];
+      final List<dynamic> list = data['data'];
+      if (list.isNotEmpty) {
+        list.forEach((map) {
+          reportDraftList.add(map);
+        });
+        if(type == '1'){
+          HomeReportModel model = HomeReportModel.fromJson(reportDraftList[0]);
+          DayPostAddModel addModel = DayPostAddModel();
+          addModel.id = model.id;
+          addModel.setTarget(model.target.toString());
+          addModel.setActual(model.actual.toString());
+          addModel.setCumulative(model.cumulative.toString());
+          addModel.setAchievementRate();
+          addModel.setSummaries(model.summary);
+          addModel.setPlans(model.plans);
+          result = await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return ChangeNotifierProvider<DayPostAddModel>.value(
+                value: addModel, child: DayPostAddPage(id: model.id));
+          }));
+        }else if (type == '2'){
+          HomeReportModel model = HomeReportModel.fromJson(reportDraftList[0]);
+          if (model.isZN) {
+            //职能**
+            PostAddZNModel addModel = PostAddZNModel();
+            addModel.id = model.id;
+            result =
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return ChangeNotifierProvider<PostAddZNModel>.value(
+                  value: addModel, child: PostAddZNPage(id: model.id));
+            }));
+          } else {
+            WeekPostAddNewModel addModel = WeekPostAddNewModel();
+            addModel.id = model.id;
+            result =
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return ChangeNotifierProvider<WeekPostAddNewModel>.value(
+                  value: addModel, child: WeekPostAddPage(id: model.id));
+            }));
+          }
+        }else if (type == '3'){
+          HomeReportModel model = HomeReportModel.fromJson(reportDraftList[0]);
+          if (model.isZN) {
+            //职能**
+            PostAddZNModel addModel = PostAddZNModel();
+            addModel.id = model.id;
+            result =
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return ChangeNotifierProvider<PostAddZNModel>.value(
+                  value: addModel,
+                  child: PostAddZNPage(isWeek: false, id: model.id));
+            }));
+          } else {
+            MonthPostAddNewModel addModel = MonthPostAddNewModel();
+            addModel.id = model.id;
+            result =
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return ChangeNotifierProvider<MonthPostAddNewModel>.value(
+                  value: addModel, child: MonthPostAddPage(id: model.id));
+            }));
+          }
+        }
+      }else {
+        if(type == '1') {
           DayPostAddModel model = DayPostAddModel();
-          result =
-              await Navigator.push(context, MaterialPageRoute(builder: (_) {
+          result = await Navigator.push(context, MaterialPageRoute(builder: (_) {
             return ChangeNotifierProvider<DayPostAddModel>.value(
                 value: model, child: DayPostAddPage());
           }));
-        } else if (name == '周报') {
+        }else if (type == '2'){
           if (isZhiNeng) {
             PostAddZNModel model = PostAddZNModel();
             result =
-                await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
               return ChangeNotifierProvider<PostAddZNModel>.value(
                   value: model, child: PostAddZNPage());
             }));
           } else {
             WeekPostAddNewModel model = WeekPostAddNewModel();
             result =
-                await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
               return ChangeNotifierProvider<WeekPostAddNewModel>.value(
                   value: model, child: WeekPostAddPage());
             }));
           }
-        } else if (name == '月报') {
+        }else if (type == '3'){
           if (isZhiNeng) {
             PostAddZNModel model = PostAddZNModel();
             result =
-                await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
               return ChangeNotifierProvider<PostAddZNModel>.value(
                   value: model, child: PostAddZNPage(isWeek: false));
             }));
           } else {
             MonthPostAddNewModel model = MonthPostAddNewModel();
             result =
-                await Navigator.push(context, MaterialPageRoute(builder: (_) {
+            await Navigator.push(context, MaterialPageRoute(builder: (_) {
               return ChangeNotifierProvider<MonthPostAddNewModel>.value(
                   value: model, child: MonthPostAddPage());
             }));
           }
         }
-        if (result != null && result) _controller.callRefresh();
-      },
-    );
+      }
+      if (mounted) setState(() {});
+    });
   }
 
   @override

@@ -68,12 +68,12 @@ class _Body extends State<WeekPostAddPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.id.isNotEmpty ? '编辑周报' : '新增周报'),
-          // actions: [
-          //   TextButton(
-          //       onPressed: () => _submitAction(context, model, 1),
-          //       child:
-          //           const Text('保存草稿', style: TextStyle(color: Colors.black))),
-          // ],
+          actions: [
+            TextButton(
+                onPressed: () => _submitAction(context, model, 1),
+                child:
+                    const Text('保存草稿', style: TextStyle(color: Colors.black))),
+          ],
         ),
         body: Scrollbar(
           child: CustomScrollView(slivers: [
@@ -382,11 +382,11 @@ class _Body extends State<WeekPostAddPage> {
   ///提  交
   void _submitAction(
       BuildContext context, WeekPostAddNewModel model, int status) async {
-    if (model.time.isEmpty) {
+    if (model.time.isEmpty && status != 1) {
       AppUtil.showToastCenter('请选择时间');
       return;
     }
-    if (model.salesTrackingList.isEmpty) {
+    if (model.salesTrackingList.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写销量进度追踪');
       return;
     }
@@ -396,7 +396,7 @@ class _Body extends State<WeekPostAddPage> {
         needShow = true;
       }
     });
-    if (needShow) {
+    if (needShow && status != 1) {
       AppUtil.showToastCenter('请选择区域');
       return;
     }
@@ -435,17 +435,17 @@ class _Body extends State<WeekPostAddPage> {
     param['userName'] = Store.readNickName();
     param['postName'] = Store.readPostName();
     param['status'] = status;
-    // LogUtil.d('param = ${jsonEncode(param)}');
+    LogUtil.d('param = ${jsonEncode(param)}');
     requestPost(Api.reportWeekAdd, json: param).then((value) {
       var data = jsonDecode(value.toString());
-      // print('data = $data');
+      print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
     });
   }
 
   void _getRegionList() async {
     requestGet(Api.regionList).then((value) {
-      // LogUtil.d('value = $value');
+      LogUtil.d('value = $value');
       var data = jsonDecode(value.toString());
       final List<dynamic> list = data['data'];
       _provinces.clear();

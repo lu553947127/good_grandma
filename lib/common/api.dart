@@ -3,9 +3,9 @@ class Api {
   static String baseUrl() {
     /// 外网
     // return 'http://47.100.191.162';
-    return 'https://haoapo.haoapochn.cn/';
+    // return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    //   return 'http://172.167.40.141:1888';
+      return 'http://172.167.40.141:1888';
     ///宁哥服务器
     // return 'http://172.167.40.77:1888';
     ///周芾服务器
@@ -88,6 +88,9 @@ class Api {
 
   ///报告详情 参数 id  type：1日报2周报3月报
   static const reportDayDetail = "/api/hap-app/app/report/reportDayDetail";
+
+  ///工作报告草稿列表
+  static const reportDraftList = "/api/hap-app/app/report/reportDraft";
 
 
   /** 市场物料相关 **/

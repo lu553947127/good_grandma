@@ -42,12 +42,12 @@ class _Body extends State<MonthPostAddPage> {
   _requestDetail() async{
     requestPost(Api.reportDayDetail,
         json: jsonEncode({'id': widget.id, 'type': 3})).then((value) {
-      // LogUtil.d('reportDayDetail value = $value');
+      LogUtil.d('reportDayDetail value = $value');
       Map map = jsonDecode(value.toString())['data'];
       final MonthPostAddNewModel model = Provider.of<MonthPostAddNewModel>(this.context,listen: false);
       model.fromJson(map);
       model.id = widget.id;
-      // print('object');
+      print('object');
     });
   }
 
@@ -333,12 +333,12 @@ class _Body extends State<MonthPostAddPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.id.isNotEmpty?'编辑月报':'新增月报'),
-          // actions: [
-          //   TextButton(
-          //       onPressed: () => _submitAction(context, model, 1),
-          //       child:
-          //           const Text('保存草稿', style: TextStyle(color: Colors.black))),
-          // ],
+          actions: [
+            TextButton(
+                onPressed: () => _submitAction(context, model, 1),
+                child:
+                    const Text('保存草稿', style: TextStyle(color: Colors.black))),
+          ],
         ),
         body: Scrollbar(
           child: CustomScrollView(slivers: slivers),
@@ -350,11 +350,11 @@ class _Body extends State<MonthPostAddPage> {
   ///提  交
   void _submitAction(
       BuildContext context, MonthPostAddNewModel model, int status) async {
-    if (model.time.isEmpty) {
+    if (model.time.isEmpty && status != 1) {
       AppUtil.showToastCenter('请选择时间');
       return;
     }
-    if (model.salesTrackingList.isEmpty) {
+    if (model.salesTrackingList.isEmpty && status != 1) {
       AppUtil.showToastCenter('请填写销量进度追踪');
       return;
     }
@@ -364,7 +364,7 @@ class _Body extends State<MonthPostAddPage> {
         needShow = true;
       }
     });
-    if (needShow) {
+    if (needShow && status != 1) {
       AppUtil.showToastCenter('请选择区域');
       return;
     }
@@ -372,10 +372,10 @@ class _Body extends State<MonthPostAddPage> {
     param['userName'] = Store.readNickName();
     param['postName'] = Store.readPostName();
     param['status'] = status;
-    // LogUtil.d('param = ${jsonEncode(param)}');
+    LogUtil.d('param = ${jsonEncode(param)}');
     requestPost(Api.reportMonthAdd, json: param).then((value) {
       var data = jsonDecode(value.toString());
-      // print('data = $data');
+      print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
     });
   }
