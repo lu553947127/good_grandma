@@ -14,6 +14,7 @@ class DeclarationFormModel extends ChangeNotifier {
   String time;
   String reject;
   String _createUserId;
+  String _updateUser;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
@@ -30,6 +31,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _remark = '';
     _status = 1;
     _createUserId = '';
+    _updateUser = '';
   }
 
   DeclarationFormModel.fromJson(Map<String, dynamic> json) {
@@ -39,8 +41,8 @@ class DeclarationFormModel extends ChangeNotifier {
     String address = json['address'] ?? '';
     reject = json['reject'] ?? '';
     orderType = json['middleman'] ?? 1;
-    // _createUserId = json['createUser'].toString() ?? '';
-    _createUserId = json['updataUser'].toString() ?? '';
+    _createUserId = json['createUser'].toString() ?? '';
+    _updateUser = json['updateUser'].toString() ?? '';
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
     _goodsList = [];
     if (json['goodsList'] != null) {
@@ -76,6 +78,7 @@ class DeclarationFormModel extends ChangeNotifier {
     reject = model.reject;
     orderType = model.orderType;
     _createUserId = model.createUserId;
+    _updateUser = model.updateUser;
   }
 
   ///店铺
@@ -99,6 +102,7 @@ class DeclarationFormModel extends ChangeNotifier {
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int get status => _status;
   String get createUserId => _createUserId;
+  String get updateUser => _updateUser;
   ///订单状态名字
   String get statusName {
     switch(_status){

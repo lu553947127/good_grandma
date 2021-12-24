@@ -49,15 +49,15 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         actions: [
           Visibility(
             visible: _model.orderType == 1
-                ? (_model.status == 1 &&
-                        _model.createUserId == Store.readUserId()) ||
-                    (_model.status == 5 &&
-                        Store.readUserType() ==
-                            'xsb') //一级订单 审核阶段发布者可以编辑，驳回阶段只有城市经理可以编辑
+            //一级订单 审核阶段发布者可以编辑，驳回阶段只有城市经理可以编辑
+                ? (_model.status == 1 && _model.createUserId == Store.readUserId()) ||
+                    (_model.status == 5 && Store.readUserType() == 'xsb') ||
+                      (Store.readUserId() != _model.updateUser)
+            //二级订单 二级客户自己下的订单可以被驳回，驳回后可以自己编辑
                 : (_model.status == 5 &&
                     _model.createUserId == Store.readUserId() &&
                     Store.readUserType() ==
-                        'ejkh'), //二级订单 二级客户自己下的订单可以被驳回，驳回后可以自己编辑
+                        'ejkh'),
             child: TextButton(
                 onPressed: () async {
                   bool needRefresh = await Navigator.push(
@@ -177,82 +177,83 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Widget _btmView(BuildContext context) {
+    print('UserType = ${Store.readUserType()}');
+    print('status = ${_model.status}');
+    print('UserId = ${Store.readUserId()}');
+    print('updateUser = ${_model.updateUser}');
+    print('createUserId = ${_model.createUserId}');
     return (Store.readUserType() == 'ejkh' &&
-                (_model.status == 2 || _model.status == 5)) || //二级客户取消订单
-            (Store.readUserType() == 'xsb' &&
-                _model.status == 5 &&
-                _model.orderType == 1) //一级订单城市经理可以在订单驳回后取消订单
+        (_model.status == 2 || _model.status == 5)) || //二级客户取消订单
+        (Store.readUserType() == 'xsb' &&
+            _model.status == 5 &&
+            _model.orderType == 1) //一级订单城市经理可以在订单驳回后取消订单
     //取消订单按钮
         ? Container(
-            //二级订单这两个状态下有取消订单的功能
-            color: Colors.white,
-            padding: EdgeInsets.only(
-                left: 15.0,
-                right: 15.0,
-                top: 15.0,
-                bottom: 15.0 + MediaQuery.of(context).padding.bottom),
-            child: SizedBox(
+      //二级订单这两个状态下有取消订单的功能
+      color: Colors.white,
+      padding: EdgeInsets.only(
+          left: 15.0,
+          right: 15.0,
+          top: 15.0,
+          bottom: 15.0 + MediaQuery.of(context).padding.bottom),
+      child: SizedBox(
+        width: 150,
+        height: 44,
+        child: TextButton(
+            onPressed: () => _cancelAction(context),
+            style: TextButton.styleFrom(
+                backgroundColor: AppColors.FFC08A3F,
+                shape: StadiumBorder()),
+            child: const Text('取消订单',
+                style: TextStyle(color: Colors.white, fontSize: 15.0))),
+      ),
+    )
+    //审核订单按钮
+        : Visibility(
+      visible: _model.orderType == 1 //是否是一级订单
+          ? ((_model.status == 1 && (Store.readUserType() == 'yjkh'
+          || Store.readUserType() == 'xsb'
+          || Store.readUserId() != _model.updateUser)) || //一级订单待确认时一级客户、城市经理、修改人不等于当前登录人可以审核
+          (_model.status == 2 && Store.readUserType() == 'zn')) && Store.readUserId() != _model.updateUser//一级订单待发货时工厂可以审核
+          : (_model.status == 2 && Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.only(
+            left: 15.0,
+            right: 15.0,
+            top: 15.0,
+            bottom: 15.0 + MediaQuery.of(context).padding.bottom),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
               width: 150,
               height: 44,
               child: TextButton(
-                  onPressed: () => _cancelAction(context),
+                  onPressed: () => _rejectAction(context),
+                  style: TextButton.styleFrom(
+                      backgroundColor: AppColors.FF959EB1,
+                      shape: StadiumBorder()),
+                  child: const Text('驳回',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 15.0))),
+            ),
+            SizedBox(
+              width: 150,
+              height: 44,
+              child: TextButton(
+                  onPressed: () => _examineAction(context),
                   style: TextButton.styleFrom(
                       backgroundColor: AppColors.FFC08A3F,
                       shape: StadiumBorder()),
-                  child: const Text('取消订单',
-                      style: TextStyle(color: Colors.white, fontSize: 15.0))),
+                  child: const Text('确认审核',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 15.0))),
             ),
-          )
-    //审核订单按钮
-        : Visibility(
-            visible: _model.orderType == 1 //是否是一级订单
-                ? ((_model.status == 1 &&
-                            (Store.readUserType() == 'yjkh' ||
-                                Store.readUserType() ==
-                                    'xsb')) || //一级订单待确认时一级客户和城市经理可以审核
-                        (_model.status == 2 &&
-                            Store.readUserType() == 'zn')) && //一级订单待发货时工厂可以审核
-                    Store.readUserId() != _model.createUserId
-                : (_model.status == 2 &&
-                    Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(
-                  left: 15.0,
-                  right: 15.0,
-                  top: 15.0,
-                  bottom: 15.0 + MediaQuery.of(context).padding.bottom),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    height: 44,
-                    child: TextButton(
-                        onPressed: () => _rejectAction(context),
-                        style: TextButton.styleFrom(
-                            backgroundColor: AppColors.FF959EB1,
-                            shape: StadiumBorder()),
-                        child: const Text('驳回',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 15.0))),
-                  ),
-                  SizedBox(
-                    width: 150,
-                    height: 44,
-                    child: TextButton(
-                        onPressed: () => _examineAction(context),
-                        style: TextButton.styleFrom(
-                            backgroundColor: AppColors.FFC08A3F,
-                            shape: StadiumBorder()),
-                        child: const Text('确认审核',
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 15.0))),
-                  ),
-                ],
-              ),
-            ),
-          );
+          ],
+        ),
+      ),
+    );
   }
 
   //取消订单

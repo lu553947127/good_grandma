@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -288,6 +289,8 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
       return;
     }
 
+    EasyLoading.show();
+
     Map<String, dynamic> map = {
       'id': widget.id,
       'freezerOrderDetail': freezerOrderModel.freezerMapList,
@@ -302,6 +305,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
     requestPost(Api.freezerOrderSave, formData: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---freezerOrderSave----$data');
+      EasyLoading.dismiss();
       if (data['code'] == 200){
         showToast("成功");
         Navigator.pop(context, true);
