@@ -7,6 +7,7 @@ import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
@@ -187,9 +188,17 @@ class _MinePageState extends State<MinePage> {
         Navigator.push(context, MaterialPageRoute(builder: (_) => SetUpPage()));
         break;
       case -2://开通账号功能
+        if (Store.readUserType() == 'ywdb'){
+          AppUtil.showToastCenter('抱歉，您没有权限');
+          return;
+        }
         Navigator.push(context, MaterialPageRoute(builder: (_) => OpenAccountPage()));
         break;
       case -1://我的业绩
+        if (Store.readUserType() == 'ywdb'){
+          AppUtil.showToastCenter('抱歉，您没有权限');
+          return;
+        }
         Navigator.push(context, MaterialPageRoute(builder: (_) => PerformanceStatisticsPage()));
         break;
       // case 0://我要报单
@@ -205,9 +214,17 @@ class _MinePageState extends State<MinePage> {
       //   Navigator.push(context, MaterialPageRoute(builder: (_) => MyDeclarationFormPage()));
       //   break;
       case 0://我的订单
+        if (Store.readUserType() == 'ywdb'){
+          AppUtil.showToastCenter('抱歉，您没有权限');
+          return;
+        }
         Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 3)));
         break;
       case 1://我的合同
+        if (Store.readUserType() == 'ywdb'){
+          AppUtil.showToastCenter('抱歉，您没有权限');
+          return;
+        }
         Navigator.push(context, MaterialPageRoute(builder:(context)=> ContractPage()));
         break;
       case 2://意见反馈

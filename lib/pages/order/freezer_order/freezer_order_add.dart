@@ -34,7 +34,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
   ///编辑冰柜订单数据回显
   _freezerEdit(FreezerOrderModel freezerOrderModel){
     _isEdit = true;
-    title = '编辑冰柜订单';
+    title = '重新提交冰柜订单';
 
     List<Map> freezerOrderDetailList = (widget.data['freezerOrderDetail'] as List).cast();
     freezerOrderDetailList.forEach((element) {
@@ -216,14 +216,14 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
           ),
           SliverToBoxAdapter(
               child: ActivityAddTextCell(
-                  title: '客户名称',
-                  hintText: '请选择客户名称',
+                  title: '公司名称',
+                  hintText: '请选择公司名称',
                   value: freezerOrderModel.customerName,
                   trailing: Icon(Icons.chevron_right),
                   onTap: () async {
-                    Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                    Map select = await showSelectList(context, Api.customerList, '请选择公司名称', 'corporateName');
                     freezerOrderModel.setCustomerId(select['id']);
-                    freezerOrderModel.setCustomerName(select['realName']);
+                    freezerOrderModel.setCustomerName(select['corporateName']);
                   }
               )
           ),

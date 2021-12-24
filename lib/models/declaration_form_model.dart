@@ -39,7 +39,8 @@ class DeclarationFormModel extends ChangeNotifier {
     String address = json['address'] ?? '';
     reject = json['reject'] ?? '';
     orderType = json['middleman'] ?? 1;
-    _createUserId = json['createUser'].toString() ?? '';
+    // _createUserId = json['createUser'].toString() ?? '';
+    _createUserId = json['updataUser'].toString() ?? '';
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
     _goodsList = [];
     if (json['goodsList'] != null) {
@@ -83,7 +84,7 @@ class DeclarationFormModel extends ChangeNotifier {
   ///商品列表
   List<GoodsModel> get goodsList => _goodsList;
 
-  ///奖励商品列表
+  ///补货商品列表
   List<GoodsModel> get rewardGoodsList => _rewardGoodsList;
 
   ///电话
@@ -159,6 +160,15 @@ class DeclarationFormModel extends ChangeNotifier {
     double count = 0;
     _goodsList.forEach((goodsModel) {
       count += goodsModel.countMiddlemanPrice;
+    });
+    return count;
+  }
+
+  ///补货商品总额
+  double get goodsRewardPrice {
+    double count = 0;
+    _rewardGoodsList.forEach((goodsModel) {
+      count += goodsModel.countPrice;
     });
     return count;
   }

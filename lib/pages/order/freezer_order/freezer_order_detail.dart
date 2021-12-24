@@ -5,12 +5,14 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_add.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_model.dart';
+import 'package:good_grandma/pages/order/freezer_order/freezer_order_operation.dart';
 import 'package:good_grandma/widgets/marketing_activity_msg_cell.dart';
+import 'package:good_grandma/widgets/order_detail_bottom.dart';
 import 'package:good_grandma/widgets/post_detail_group_title.dart';
-import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
 ///冰柜订单详情
@@ -20,19 +22,38 @@ class FreezerOrderDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     List<Map> freezerOrderDetailList = (data['freezerOrderDetail'] as List).cast();
 
-    _setTextStatus(status){
+    _setTextAuth(auth){
+      switch(auth){
+        case 1:
+          return '省经理助理审批中';
+          break;
+        case 2:
+          return '大区经理助理审批中';
+          break;
+        case 3:
+          return '渠道主管审批中';
+          break;
+        case 4:
+          return '财务审批中';
+          break;
+        case 5:
+          return '海容审批中';
+          break;
+      }
+    }
+
+    _setTextStatus(status, auth){
       switch(status){
         case 0:
           return '驳回';
           break;
         case 1:
-          return '审批中';
+          return _setTextAuth(auth);
           break;
         case 2:
-          return '发货中';
+          return '海容发货中';
           break;
         case 3:
           return '收货完成';
@@ -49,7 +70,7 @@ class FreezerOrderDetail extends StatelessWidget {
           brightness: Brightness.light,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
-          title: Text("冰柜订单详细", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+          title: Text("冰柜订单详细", style: TextStyle(fontSize: 18, color: Colors.black)),
         ),
         body: CustomScrollView(
             slivers: [
@@ -86,7 +107,7 @@ class FreezerOrderDetail extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                                       ),
-                                      child: Text(_setTextStatus(data['status']),
+                                      child: Text(_setTextStatus(data['status'], data['auth']),
                                           style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                                   )
                                 ]
@@ -107,6 +128,16 @@ class FreezerOrderDetail extends StatelessWidget {
                                       Text('联系人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                                       SizedBox(width: 10),
                                       Text(data['linkName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                    ]
+                                )
+                            ),
+                            Container(
+                                margin: EdgeInsets.only(top: 2),
+                                child: Row(
+                                    children: [
+                                      Text('提单人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                      SizedBox(width: 10),
+                                      Text(data['createUserName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
                                     ]
                                 )
                             ),
@@ -155,71 +186,61 @@ class FreezerOrderDetail extends StatelessWidget {
                       )
                   );
                 }, childCount: freezerOrderDetailList.length),
-              ),
-              SliverSafeArea(
-                  sliver: SliverToBoxAdapter(
-                      child: Visibility(
-                          visible: data['status'] == 2 ? true : false,
-                          child: SubmitBtn(
-                              vertical: 5.0,
-                              title: '确认收货',
-                              onPressed: () {
-                                _freezerOrderOver(context);
-                              }
-                          )
-                      )
-                  )
-              ),
-              SliverSafeArea(
-                  sliver: SliverToBoxAdapter(
-                      child: Visibility(
-                          visible: data['status'] == 0 ? true : false,
-                          child: SubmitBtn(
-                              vertical: 5.0,
-                              title: '取消订单',
-                              onPressed: () {
-                                _freezerOrderCancel(context);
-                              }
-                          )
-                      )
-                  )
-              ),
-              SliverSafeArea(
-                  sliver: SliverToBoxAdapter(
-                      child: Visibility(
-                          visible: data['status'] == 0 ? true : false,
-                          child: SubmitBtn(
-                              vertical: 5.0,
-                              title: '编辑',
-                              onPressed: () async {
-                                FreezerOrderModel model = FreezerOrderModel();
-                                bool needRefresh = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                        ChangeNotifierProvider<FreezerOrderModel>.value(
-                                          value: model,
-                                          child: FreezerOrderAddPage(id: data['id'], data: data),
-                                        )));
-                                if(needRefresh != null && needRefresh){
-                                  Navigator.pop(context, true);
-                                }
-                              }
-                          )
-                      )
-                  )
               )
             ]
+        ),
+        bottomNavigationBar: OrderDetailBottom(
+          //审核
+            onTap1: () {
+              _onTap1(context);
+            },
+            isVisibility1: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
+                Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
+                Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
+                Store.readPostType() == 'cw' && data['auth'] == 4,
+            //驳回
+            onTap2: () {
+              _onTap2(context);
+            },
+            isVisibility2: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
+                Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
+                Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
+                Store.readPostType() == 'cw' && data['auth'] == 4,
+            //重新提交
+            onTap3: () {
+              _onTap3(context);
+            },
+            isVisibility3: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
+                Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
+                Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
+                Store.readPostType() == 'cw' && data['auth'] == 4,
+            //发货
+            onTap4: () {
+              _onTap4(context);
+            },
+            isVisibility4: Store.readPostType() == 'gc' && data['auth'] == 5 && !data['falg'],
+            //确认收货
+            onTap5: () {
+              _freezerOrderOver(context);
+            },
+            isVisibility5: Store.readUserType().contains('jkh') && data['auth'] == 2 && data['status'] == 2 ||
+                Store.readPostType() == 'csjl' && data['auth'] == 2 && data['status'] == 2,
+            //取消订单
+            onTap6: (){
+              _freezerOrderCancel(context);
+            },
+            isVisibility6: Store.readUserType().contains('jkh') && data['auth'] == 0 ||
+                Store.readPostType() == 'csjl' && data['auth'] == 0
         )
     );
   }
 
-  ///确认收货
-  void _freezerOrderOver(BuildContext context) async {
+  ///审批
+  void _onTap1(BuildContext context) async{
     Map<String, dynamic> map = {'id': data['id']};
-    requestGet(Api.freezerOrderOver, param: map).then((val) async{
+    requestGet(Api.freezerOrderApprove, param: map).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---freezerOrderOver----$data');
+      LogUtil.d('请求结果---freezerOrderApprove----$data');
       if (data['code'] == 200){
         showToast("成功");
         Navigator.pop(context, true);
@@ -227,6 +248,75 @@ class FreezerOrderDetail extends StatelessWidget {
         showToast(data['msg']);
       }
     });
+  }
+
+  ///驳回
+  void _onTap2(BuildContext context) async{
+    Map<String, dynamic> map = {'id': data['id']};
+    requestGet(Api.freezerOrderReject, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---freezerOrderReject----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
+  ///重新提交
+  void _onTap3(BuildContext context) async {
+    FreezerOrderModel model = FreezerOrderModel();
+    bool needRefresh = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) =>
+            ChangeNotifierProvider<FreezerOrderModel>.value(
+              value: model,
+              child: FreezerOrderAddPage(id: data['id'], data: data),
+            )));
+    if(needRefresh != null && needRefresh){
+      Navigator.pop(context, true);
+    }
+  }
+
+  ///发货
+  void _onTap4(BuildContext context) async{
+    FreezerOrderModel model = FreezerOrderModel();
+    bool needRefresh = await Navigator.push(context,
+        MaterialPageRoute(
+            builder: (_) =>
+            ChangeNotifierProvider<FreezerOrderModel>.value(
+              value: model,
+              child: FreezerOrderDetailOperation(
+                title: '发货',
+                id: data['id'],
+                type: '1'
+              ),
+            )));
+    if(needRefresh != null && needRefresh){
+      Navigator.pop(context, true);
+    }
+  }
+
+  ///确认收货
+  void _freezerOrderOver(BuildContext context) async {
+    FreezerOrderModel model = FreezerOrderModel();
+    bool needRefresh = await Navigator.push(context,
+        MaterialPageRoute(
+            builder: (_) =>
+            ChangeNotifierProvider<FreezerOrderModel>.value(
+              value: model,
+              child: FreezerOrderDetailOperation(
+                title: '收货',
+                id: data['id'],
+                type: '2'
+              ),
+            )));
+    if(needRefresh != null && needRefresh){
+      Navigator.pop(context, true);
+    }
   }
 
   ///取消订单

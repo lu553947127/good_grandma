@@ -38,16 +38,36 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
   @override
   Widget build(BuildContext context) {
 
-    _setTextStatus(status){
+    _setTextAuth(auth){
+      switch(auth){
+        case 1:
+          return '省经理助理审批中';
+          break;
+        case 2:
+          return '大区经理助理审批中';
+          break;
+        case 3:
+          return '渠道主管审批中';
+          break;
+        case 4:
+          return '财务审批中';
+          break;
+        case 5:
+          return '海容审批中';
+          break;
+      }
+    }
+
+    _setTextStatus(status, auth){
       switch(status){
         case 0:
           return '驳回';
           break;
         case 1:
-          return '审批中';
+          return _setTextAuth(auth);
           break;
         case 2:
-          return '发货中';
+          return '海容发货中';
           break;
         case 3:
           return '收货完成';
@@ -99,7 +119,10 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
                                         Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(freezerOrderList[index]['customerName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                              Container(
+                                                width: 160,
+                                                child: Text(freezerOrderList[index]['customerName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                              ),
                                               SizedBox(height: 10),
                                               Text(freezerOrderList[index]['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                                             ]
@@ -109,7 +132,7 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
                                             decoration: BoxDecoration(
                                               color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                                             ),
-                                            child: Text(_setTextStatus(freezerOrderList[index]['status']),
+                                            child: Text(_setTextStatus(freezerOrderList[index]['status'], freezerOrderList[index]['auth']),
                                                 style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                                         )
                                       ]
@@ -130,6 +153,16 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
                                             Text('联系人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                                             SizedBox(width: 10),
                                             Text(freezerOrderList[index]['linkName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                          ]
+                                      )
+                                  ),
+                                  Container(
+                                      margin: EdgeInsets.only(top: 2),
+                                      child: Row(
+                                          children: [
+                                            Text('提单人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                            SizedBox(width: 10),
+                                            Text(freezerOrderList[index]['createUserName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
                                           ]
                                       )
                                   ),

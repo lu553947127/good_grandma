@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/StoreModel.dart';
@@ -36,6 +37,10 @@ class AddOrderPage extends StatefulWidget {
 class _AddOrderPageState extends State<AddOrderPage> {
   final TextEditingController _editingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
+  ///账余
+  double orderAmount = 0;
+
   @override
   Widget build(BuildContext context) {
     final DeclarationFormModel addModel =
@@ -82,9 +87,27 @@ class _AddOrderPageState extends State<AddOrderPage> {
                   onTap: () async {
                     StoreModel result = await Navigator.push(context,
                         MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true,middleman: widget.middleman,)));
-                    if (result != null) addModel.setStoreModel(result);
-                  },
+                    if (result != null) {
+                      addModel.setStoreModel(result);
+                      if (Store.readPostType() == 'zy'){
+                        _orderAmount(result.id);
+                      }
+                    }
+                  }
                 ),
+              ),
+              //账余
+              SliverToBoxAdapter(
+                child: Visibility(
+                  visible: Store.readPostType() == 'zy' && addModel.storeModel.id.isNotEmpty,
+                  child: PostAddInputCell(
+                      title: '账余',
+                      value: '$orderAmount',
+                      hintText: '$orderAmount',
+                      endWidget: null,
+                      onTap: null
+                  )
+                )
               ),
               //请选择商品
               SliverToBoxAdapter(
@@ -141,40 +164,43 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       : addModel.goodsPrice,
                 ),
               ),
-              //奖励商品
+              //补货商品
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: const Text('奖励商品',
-                          style: TextStyle(
-                              color: AppColors.FF2F4058, fontSize: 14.0)),
-                      trailing: IconButton(
-                          onPressed: () async {
-                            if (addModel.storeModel.id.isEmpty) {
-                              AppUtil.showToastCenter('请先选择客户');
-                              return;
-                            }
-                            List<GoodsModel> _selGoodsList =
-                                await Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) {
-                              return SelectGoodsPage(
-                                  selGoods: addModel.rewardGoodsList,
-                                  customerId: addModel.storeModel.id,
-                                  forStock: false);
-                            }));
-                            if (_selGoodsList != null) {
-                              addModel.setArrays(
-                                  addModel.rewardGoodsList, _selGoodsList);
-                            }
-                          },
-                          icon: Icon(Icons.add_circle,
-                              color: AppColors.FFC68D3E)),
-                    ),
-                  ),
-                ),
+                child: Visibility(
+                  visible: Store.readPostType() == 'zy',
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Container(
+                      color: Colors.white,
+                      child: ListTile(
+                        title: const Text('补货商品',
+                            style: TextStyle(
+                                color: AppColors.FF2F4058, fontSize: 14.0)),
+                        trailing: IconButton(
+                            onPressed: () async {
+                              if (addModel.storeModel.id.isEmpty) {
+                                AppUtil.showToastCenter('请先选择客户');
+                                return;
+                              }
+                              List<GoodsModel> _selGoodsList =
+                              await Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                    return SelectGoodsPage(
+                                        selGoods: addModel.rewardGoodsList,
+                                        customerId: addModel.storeModel.id,
+                                        forStock: false);
+                                  }));
+                              if (_selGoodsList != null) {
+                                addModel.setArrays(
+                                    addModel.rewardGoodsList, _selGoodsList);
+                              }
+                            },
+                            icon: Icon(Icons.add_circle,
+                                color: AppColors.FFC68D3E))
+                      )
+                    )
+                  )
+                )
               ),
               SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
@@ -247,6 +273,12 @@ class _AddOrderPageState extends State<AddOrderPage> {
       AppUtil.showToastCenter('请选择商品');
       return;
     }
+    if (model.rewardGoodsList.isNotEmpty) {
+      if (model.goodsRewardPrice > orderAmount) {
+        AppUtil.showToastCenter('抱歉，总价不能超过帐余价格');
+        return;
+      }
+    }
     if (model.address.isEmpty) {
       AppUtil.showToastCenter('请填写收货地址');
       return;
@@ -269,6 +301,18 @@ class _AddOrderPageState extends State<AddOrderPage> {
       var data = jsonDecode(value.toString());
       // print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
+    });
+  }
+
+  ///获取账余
+  Future<void> _orderAmount(String userId) async{
+    LogUtil.d('请求结果---userId----$userId');
+    Map<String, dynamic> map = {'userId': userId};
+    requestGet(Api.orderAmount, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---orderAmount----$data');
+      orderAmount = double.parse(data['data']) ?? 0;
+      if (mounted) setState(() {});
     });
   }
 

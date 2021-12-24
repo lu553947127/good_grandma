@@ -24,6 +24,12 @@ class FreezerOrderModel extends ChangeNotifier {
   ///冰柜列表
   List<Map> freezerMapList;
 
+  ///订单详情列表
+  List<FreezerOModel> _freezerOrderDetailVOList;
+
+  ///订单详情列表
+  List<Map> freezerOrderMapList;
+
   FreezerOrderModel() {
     _linkName = '';
     _linkPhone = '';
@@ -32,6 +38,8 @@ class FreezerOrderModel extends ChangeNotifier {
     _address = '';
     _freezerList = [];
     freezerMapList = [];
+    _freezerOrderDetailVOList = [];
+    freezerOrderMapList = [];
   }
 
   ///联系人
@@ -51,6 +59,9 @@ class FreezerOrderModel extends ChangeNotifier {
 
   ///冰柜列表
   List<FreezerModel> get freezerList => _freezerList;
+
+  ///订单详情列表
+  List<FreezerOModel> get freezerOrderDetailVOList => _freezerOrderDetailVOList;
 
   setLinkName(String linkName) {
     _linkName = linkName;
@@ -115,6 +126,47 @@ class FreezerOrderModel extends ChangeNotifier {
     freezerMapList.removeAt(index);
     notifyListeners();
   }
+
+  ///添加item
+  addOrderModel(FreezerOModel model){
+    if(_freezerOrderDetailVOList == null)
+      _freezerOrderDetailVOList = [];
+    _freezerOrderDetailVOList.add(model);
+    Map addData = new Map();
+    addData['id'] = model.id;
+    addData['orderId'] = model.orderId;
+    addData['brand'] = model.brand;
+    addData['brandName'] = model.brandName;
+    addData['model'] = model.model;
+    addData['modelName'] = model.modelName;
+    addData['longCount'] = model.longCount;
+    addData['returnCount'] = model.returnCount;
+    addData['sendCount'] = model.sendCount;
+    addData['nowCount'] = model.nowCount;
+    freezerOrderMapList.add(addData);
+    notifyListeners();
+  }
+
+  ///编辑当前item
+  editOrderModelWith(int index, FreezerOModel model){
+    if(_freezerOrderDetailVOList == null)
+      _freezerOrderDetailVOList = [];
+    if(index >= _freezerOrderDetailVOList.length) return;
+    _freezerOrderDetailVOList.setAll(index, [model]);
+    Map addData = new Map();
+    addData['id'] = model.id;
+    addData['orderId'] = model.orderId;
+    addData['brand'] = model.brand;
+    addData['brandName'] = model.brandName;
+    addData['model'] = model.model;
+    addData['modelName'] = model.modelName;
+    addData['longCount'] = model.longCount;
+    addData['returnCount'] = model.returnCount;
+    addData['sendCount'] = model.sendCount;
+    addData['nowCount'] = model.nowCount;
+    freezerOrderMapList.setAll(index, [addData]);
+    notifyListeners();
+  }
 }
 
 ///冰柜模型数据
@@ -145,5 +197,52 @@ class FreezerModel {
     this.modelName = '',
     this.longCount = 0,
     this.returnCount = 0
+  });
+}
+
+///冰柜订单模型数据
+class FreezerOModel {
+
+  ///id
+  String id;
+
+  ///订单id
+  String orderId;
+
+  ///品牌id
+  String brand;
+
+  ///品牌名称
+  String brandName;
+
+  ///型号id
+  String model;
+
+  ///型号名称
+  String modelName;
+
+  ///长押数量
+  int longCount;
+
+  ///反押数量
+  int returnCount;
+
+  ///总发货数量
+  int sendCount;
+
+  ///本次发货数量
+  int nowCount;
+
+  FreezerOModel({
+    this.id = '',
+    this.orderId = '',
+    this.brand = '',
+    this.brandName = '',
+    this.model = '',
+    this.modelName = '',
+    this.longCount = 0,
+    this.returnCount = 0,
+    this.sendCount = 0,
+    this.nowCount = 0
   });
 }

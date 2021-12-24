@@ -128,7 +128,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 ),
               ),
             ),
-            //奖励商品
+            //补货商品
             SliverVisibility(
               visible: _model.rewardGoodsList.isNotEmpty,
               sliver: SliverPadding(
@@ -142,7 +142,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('奖励商品',
+                          Text('补货商品',
                               style: const TextStyle(
                                   color: AppColors.FF959EB1, fontSize: 14.0)),
                           ..._model.rewardGoodsList.map((goodsModel) =>
@@ -316,7 +316,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     try {
       Map<String, dynamic> param = {'id': widget.model.id};
       final val = await requestPost(Api.orderDetail, json: jsonEncode(param));
-      // LogUtil.d('${Api.orderDetail} value = $val');
+      LogUtil.d('${Api.orderDetail} value = $val');
       var data = jsonDecode(val.toString());
       Map<String, dynamic> map = data['data'];
       DeclarationFormModel model = DeclarationFormModel.fromJson(map);

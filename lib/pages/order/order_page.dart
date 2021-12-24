@@ -144,7 +144,7 @@ class _OrderPageState extends State<OrderPage> {
       String url = Api.orderList;
       if (widget.orderType == 3) url = Api.myOrderList;
       final val = await requestPost(url, json: jsonEncode(map));
-      // LogUtil.d('$url value = $val');
+      LogUtil.d('$url value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];

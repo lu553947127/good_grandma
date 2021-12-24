@@ -173,6 +173,9 @@ class Api {
   ///下单
   static const orderAdd = "/api/hap-app/app/order/orderAdd";
 
+  ///获取账余
+  static const orderAmount = "/api/hap-app/app/order/amount";
+
 
   /** 冰柜订单 **/
 
@@ -193,6 +196,18 @@ class Api {
 
   ///冰柜订单确认收货
   static const freezerOrderOver = "/api/hap-app/app/freezerOrder/over";
+
+  ///冰柜订单审核
+  static const freezerOrderApprove = "/api/hap-app/app/freezerOrder/approve";
+
+  ///冰柜订单驳回
+  static const freezerOrderReject = "/api/hap-app/app/freezerOrder/reject";
+
+  ///冰柜订单发货
+  static const freezerOrderSendCargo = "/api/hap-app/app/freezerOrder/sendCargo";
+
+  ///冰柜订单详情
+  static const freezerOrderGetOrderDetail = "/api/hap-app/app/freezerOrder/getOrderDetail";
 
 
   /** 物料订单 **/

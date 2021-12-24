@@ -257,7 +257,9 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
                   MyCacheImageView(
                       imageURL: widget.goodsModel.image,
                       width: 105.0,
-                      height: 96.0),
+                      height: 96.0,
+                      errorWidgetChild: Image.asset('assets/images/icon_empty_image.png', width: 105.0, height: 96.0),
+                  ),
                   Visibility(
                     visible: widget.goodsModel.isSelected,
                     child: Container(

@@ -48,6 +48,9 @@ class Store {
   ///当前登录人首页底部菜单权限
   static const _isExamine = "isExamine";
 
+  ///当前登录人岗位
+  static const _postType = "postType";
+
   static saveUserType(String userType) {
     _box.write(_userType, userType);
   }
@@ -160,6 +163,14 @@ class Store {
     return _box.read(_userAvatar);
   }
 
+  static savePostType(String postType) {
+    _box.write(_postType, postType);
+  }
+
+  static String readPostType() {
+    return _box.read(_postType);
+  }
+
   static removeToken() {
     _box.remove(_kToken);
     _box.remove(_userId);
@@ -168,6 +179,7 @@ class Store {
     _box.remove(_nickName);
     _box.remove(_userAvatar);
     _box.remove(_userType);
+    _box.remove(_postType);
   }
 
   static removeAccount() {
