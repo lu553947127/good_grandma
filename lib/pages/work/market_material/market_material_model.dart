@@ -59,6 +59,7 @@ class MarketMaterialModel extends ChangeNotifier {
       _warehousingList = [];
     _warehousingList.add(model);
     Map addData = new Map();
+    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
     addData['loss'] = model.loss;
     addData['surplus'] = model.surplus;
@@ -73,6 +74,7 @@ class MarketMaterialModel extends ChangeNotifier {
     if(index >= _warehousingList.length) return;
     _warehousingList.setAll(index, [model]);
     Map addData = new Map();
+    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
     addData['loss'] = model.loss;
     addData['surplus'] = model.surplus;
@@ -96,6 +98,7 @@ class MarketMaterialModel extends ChangeNotifier {
       _warehouseList = [];
     _warehouseList.add(model);
     Map addData = new Map();
+    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
     addData['exWarehouse'] = model.exWarehouse;
     warehouseMapList.add(addData);
@@ -109,6 +112,7 @@ class MarketMaterialModel extends ChangeNotifier {
     if(index >= _warehouseList.length) return;
     _warehouseList.setAll(index, [model]);
     Map addData = new Map();
+    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
     addData['exWarehouse'] = model.exWarehouse;
     warehouseMapList.setAll(index, [addData]);
@@ -129,6 +133,12 @@ class MarketMaterialModel extends ChangeNotifier {
 ///入库模型数据
 class WarehousingModel {
 
+  ///经销商id
+  String customerId;
+
+  ///经销商名称
+  String customerName;
+
   ///物料id
   String materialAreaId;
 
@@ -142,6 +152,8 @@ class WarehousingModel {
   String surplus;
 
   WarehousingModel({
+    this.customerId = '',
+    this.customerName = '',
     this.materialAreaId = '',
     this.materialAreName = '',
     this.loss = '',
@@ -151,6 +163,12 @@ class WarehousingModel {
 
 ///出库模型数据
 class WarehouseModel {
+
+  ///经销商id
+  String customerId;
+
+  ///经销商名称
+  String customerName;
 
   ///物料id
   String materialAreaId;
@@ -165,6 +183,8 @@ class WarehouseModel {
   String exWarehouse;
 
   WarehouseModel({
+    this.customerId = '',
+    this.customerName = '',
     this.materialAreaId = '',
     this.materialAreName = '',
     this.newQuantity = 0,

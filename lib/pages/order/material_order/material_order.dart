@@ -79,6 +79,12 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
           slivers: [
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
+                  Map map = materialList[index];
+                  String userName = map['userName'];
+                  String createTime = map['createTime'];
+                  int status = map['status'];
+                  String totalPrice = map['totalPrice'].toString();
+                  List<Map> materialDetailsVOS = (map['materialDetailsVOS'] as List).cast();
                   return Container(
                       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
                       padding: const EdgeInsets.all(5.0),
@@ -103,9 +109,9 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                       Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(materialList[index]['deptName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                            Text(userName, style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
                                             SizedBox(height: 10),
-                                            Text(materialList[index]['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                                            Text(createTime, style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                                           ]
                                       ),
                                       Container(
@@ -113,7 +119,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                           decoration: BoxDecoration(
                                             color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                                           ),
-                                          child: Text(_setTextStatus(materialList[index]['status']),
+                                          child: Text(_setTextStatus(status),
                                               style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                                       )
                                     ]
@@ -127,39 +133,57 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                     )
                                 ),
                                 SizedBox(height: 5),
-                                Container(
-                                    margin: EdgeInsets.only(top: 2),
-                                    child: Row(
-                                        children: [
-                                          Text('经销商名称: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                          SizedBox(width: 10),
-                                          Text(materialList[index]['customerName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                        ]
-                                    )
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(top: 2),
-                                    child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('物料地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                          SizedBox(width: 10),
-                                          Container(
-                                              width: 200,
-                                              child: Text(materialList[index]['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                Text('总价: $totalPrice',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
+                                ListView.builder(
+                                    shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                                    physics:NeverScrollableScrollPhysics(),//禁止滚动
+                                    itemCount: materialDetailsVOS.length,
+                                    itemBuilder: (content, index){
+                                      Map map = materialDetailsVOS[index];
+                                      return Container(
+                                          margin: EdgeInsets.only(top: 10),
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '物料名称：' + map['materialName'],
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                ),
+                                                Text(
+                                                  '数量：${map['quantity']}' ,
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                ),
+                                                Text(
+                                                  '单价：${map['unitPrice']}',
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                ),
+                                                Text(
+                                                  '是否随货：${map['withGoods'] == 1 ? '是' : '否'}',
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                ),
+                                                Text(
+                                                  '区域：' + map['deptName'],
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                ),
+                                                Text(
+                                                  '经销商名称：' + map['customerName'],
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                ),
+                                                Text(
+                                                  '物料地址：' + map['address'],
+                                                  style: const TextStyle(
+                                                      color: AppColors.FF959EB1, fontSize: 12.0),
+                                                )
+                                              ]
                                           )
-                                        ]
-                                    )
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(top: 2),
-                                    child: Row(
-                                        children: [
-                                          Text('是否随货: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                          SizedBox(width: 10),
-                                          Text(materialList[index]['withGoods'] == 1 ? '是' : '否', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                        ]
-                                    )
+                                      );
+                                    }
                                 )
                               ]
                           ),

@@ -28,13 +28,6 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
 
     List<Map> materialDetailsList = (widget.data['materialDetailsVOS'] as List).cast();
 
-    List<Map> _list1 = [
-      {'title': '总价', 'value': widget.data['totalPrice']},
-      {'title': '是否随货', 'value': widget.data['withGoods'] == 1 ? '是' : '否'},
-      {'title': '经销商名称', 'value': widget.data['customerName']},
-      {'title': '物料地址', 'value': widget.data['address']}
-    ];
-
     _setTextStatus(status){
       switch(status){
         case 1:
@@ -76,7 +69,7 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.data['deptName'],style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                          Text(widget.data['userName'],style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
                           SizedBox(height: 3),
                           Text(widget.data['createTime'],style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
                         ]
@@ -93,6 +86,9 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
               )
             )
           ),
+          SliverToBoxAdapter(
+            child: MarketingActivityMsgCell(title: '总价', value: '${widget.data['totalPrice']}'),
+          ),
           PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '物料'),
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
@@ -102,29 +98,22 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 5),
-                        MarketingActivityMsgCell(title: '物料', value: materialDetailsList[index]['materialName']),
+                        MarketingActivityMsgCell(title: '物料名称', value: materialDetailsList[index]['materialName']),
                         MarketingActivityMsgCell(title: '数量', value: materialDetailsList[index]['quantity'].toString()),
-                        MarketingActivityMsgCell(title: '单价', value: materialDetailsList[index]['unitPrice'].toString())
+                        MarketingActivityMsgCell(title: '单价', value: materialDetailsList[index]['unitPrice'].toString()),
+                        MarketingActivityMsgCell(title: '是否随货', value: materialDetailsList[index]['withGoods'] == 1 ? '是' : '否'),
+                        MarketingActivityMsgCell(title: '区域', value: materialDetailsList[index]['deptName']),
+                        MarketingActivityMsgCell(title: '经销商名称', value: materialDetailsList[index]['customerName']),
+                        MarketingActivityMsgCell(title: '物料地址', value: materialDetailsList[index]['address'])
                       ]
                   )
               );
             }, childCount: materialDetailsList.length),
           ),
-          SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  Map map = _list1[index];
-                  String title = map['title'];
-                  String value = map['value'];
-                  return MarketingActivityMsgCell(title: title, value: value);
-                }, childCount: _list1.length),
-              )
-          ),
           SliverSafeArea(
               sliver: SliverToBoxAdapter(
                   child: Visibility(
-                    visible: widget.data['status'] == 2 ? true : false,
+                    visible: widget.data['status'] == 6 ? true : false,
                     child: SubmitBtn(
                         title: '入库',
                         onPressed: () {

@@ -3,75 +3,19 @@ import 'package:flutter/cupertino.dart';
 ///物料订单模型
 class MarketingOrderModel extends ChangeNotifier {
 
-  ///区域id
-  String _deptId;
-  ///区域名称
-  String _deptName;
-  ///是否随货
-  String _withGoods;
-  ///经销商名称
-  String _customerName;
-  ///物料地址
-  String _address;
   ///物料列表
   List<MarketingModel> _materList;
 
   MarketingOrderModel() {
-    _deptId = '';
-    _deptName = '';
-    _withGoods = '2';
-    _customerName = '';
-    _address = '';
     _materList = [];
     mapList = [];
   }
-
-  ///区域id
-  String get deptId => _deptId;
-
-  ///区域名称
-  String get deptName => _deptName;
-
-  ///是否随货
-  String get withGoods => _withGoods;
-
-  ///经销商名称
-  String get customerName => _customerName;
-
-  ///物料地址
-  String get address => _address;
 
   ///物料列表
   List<Map> mapList;
 
   ///物料列表
   List<MarketingModel> get materList => _materList;
-
-
-  setDeptId(String deptId) {
-    _deptId = deptId;
-    notifyListeners();
-  }
-
-  setDeptName(String deptName) {
-    _deptName = deptName;
-    notifyListeners();
-  }
-
-  setWithGoods(String withGoods) {
-    _withGoods = withGoods;
-    notifyListeners();
-  }
-
-  setCustomerName(String customerName) {
-    _customerName = customerName;
-    notifyListeners();
-  }
-
-  setAddress(String address) {
-    _address = address;
-    notifyListeners();
-  }
 
   ///添加item
   addModel(MarketingModel model){
@@ -82,6 +26,10 @@ class MarketingOrderModel extends ChangeNotifier {
     addData['materialId'] = model.materialId;
     addData['quantity'] = model.quantity;
     addData['unitPrice'] = model.unitPrice;
+    addData['withGoods'] = model.withGoods;
+    addData['deptId'] = model.deptId;
+    addData['customerId'] = model.customerId;
+    addData['address'] = model.address;
     mapList.add(addData);
     print('mapList------------$mapList');
     notifyListeners();
@@ -97,6 +45,10 @@ class MarketingOrderModel extends ChangeNotifier {
     addData['materialId'] = model.materialId;
     addData['quantity'] = model.quantity;
     addData['unitPrice'] = model.unitPrice;
+    addData['withGoods'] = model.withGoods;
+    addData['deptId'] = model.deptId;
+    addData['customerId'] = model.customerId;
+    addData['address'] = model.address;
     mapList.setAll(index, [addData]);
     notifyListeners();
   }
@@ -130,11 +82,35 @@ class MarketingModel {
   ///单价
   String unitPrice;
 
+  ///是否随货
+  String withGoods;
+
+  ///区域id
+  String deptId;
+
+  ///区域名称
+  String deptName;
+
+  ///经销商名称
+  String customerId;
+
+  ///经销商名称
+  String customerName;
+
+  ///物料地址
+  String address;
+
   MarketingModel({
     this.materialId = '',
     this.materialName = '',
     this.quantity = '',
     this.newQuantity = 0,
-    this.unitPrice = ''
+    this.unitPrice = '',
+    this.deptId = '',
+    this.deptName = '',
+    this.withGoods = '2',
+    this.customerId = '',
+    this.customerName = '',
+    this.address = ''
   });
 }

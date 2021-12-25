@@ -42,10 +42,10 @@ Future requestPostLogin(url, {formData}) async{
   } on DioError catch(e){
     LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 500){
-      showToast('接口报500啦');
+      EasyLoading.showToast('接口报500啦');
       throw e;
     }else if (e.response.statusCode == 404){
-      showToast('接口报404啦');
+      EasyLoading.showToast('接口报404啦');
       throw e;
     }
     throw e;
@@ -84,10 +84,10 @@ Future requestPostSwitch(url, {formData}) async{
   } on DioError catch(e){
     LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 500){
-      showToast('接口报500啦');
+      EasyLoading.showToast('接口报500啦');
       throw e;
     }else if (e.response.statusCode == 404){
-      showToast('接口报404啦');
+      EasyLoading.showToast('接口报404啦');
       throw e;
     }
     throw e;
@@ -132,15 +132,15 @@ Future requestPost(url, {formData, json}) async{
   } on DioError catch(e){
     LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
-      showToast('登录token过期，请重新登录');
+      EasyLoading.showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
       throw e;
     }else if (e.response.statusCode == 500){
-      showToast('接口报500啦');
+      EasyLoading.showToast('接口报500啦');
       throw e;
     }else if (e.response.statusCode == 404){
-      showToast('接口报404啦');
+      EasyLoading.showToast('接口报404啦');
       throw e;
     }
     throw e;
@@ -176,15 +176,15 @@ Future requestGet(url, {param})async{
   } on DioError catch(e){
     LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
-      showToast('登录token过期，请重新登录');
+      EasyLoading.showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
       throw e;
     }else if (e.response.statusCode == 500){
-      showToast('接口报500啦');
+      EasyLoading.showToast('接口报500啦');
       throw e;
     }else if (e.response.statusCode == 404){
-      showToast('接口报404啦');
+      EasyLoading.showToast('接口报404啦');
       throw e;
     }
     throw e;
@@ -242,15 +242,15 @@ Future getPutFile(url, file) async{
   } on DioError catch(e){
     LogUtil.d('ERROR:===$url===>$e');
     if (e.response.statusCode == 401 || e.response.statusCode == 403){
-      showToast('登录token过期，请重新登录');
+      EasyLoading.showToast('登录token过期，请重新登录');
       Store.removeToken();
       Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
       throw e;
     }else if (e.response.statusCode == 500){
-      showToast('接口报500啦');
+      EasyLoading.showToast('接口报500啦');
       throw e;
     }else if (e.response.statusCode == 404){
-      showToast('接口报404啦');
+      EasyLoading.showToast('接口报404啦');
       throw e;
     }
     throw e;

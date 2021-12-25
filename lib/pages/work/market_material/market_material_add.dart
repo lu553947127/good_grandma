@@ -64,12 +64,30 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
                       children: [
                         SizedBox(height: index == 0 ? 1 : 10),
                         ActivityAddTextCell(
+                            title: '经销商',
+                            hintText: '请选择经销商',
+                            value: model.customerName,
+                            trailing: Icon(Icons.chevron_right),
+                            onTap: () async {
+                              Map<String, dynamic> map = {'type': 'material'};
+                              Map select = await showSelectListParameter(context, Api.deptIdUser, '请选择经销商', 'corporateName', map);
+                              model.customerId = select['id'];
+                              model.customerName = select['corporateName'];
+                              marketMaterialModel.editWarehousingModelWith(index, model);
+                            }
+                        ),
+                        ActivityAddTextCell(
                             title: '物料',
                             hintText: '请选择物料',
                             value: model.materialAreName,
                             trailing: Icon(Icons.chevron_right),
                             onTap: () async {
-                              Map select = await showSelectList(context, Api.materialNoPageList, '请选择物料', 'name');
+                              if(model.customerId == ''){
+                                showToast("请先选择经销商，再选择物料");
+                                return;
+                              }
+                              Map<String, dynamic> map = {'customerId': model.customerId};
+                              Map select = await showSelectListParameter(context, Api.areaMaterial, '请选择物料', 'name', map);
                               model.materialAreaId = select['id'];
                               model.materialAreName = select['name'];
                               marketMaterialModel.editWarehousingModelWith(index, model);
@@ -135,12 +153,30 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
                       children: [
                         SizedBox(height: index == 0 ? 1 : 10),
                         ActivityAddTextCell(
+                            title: '经销商',
+                            hintText: '请选择经销商',
+                            value: model.customerName,
+                            trailing: Icon(Icons.chevron_right),
+                            onTap: () async {
+                              Map<String, dynamic> map = {'type': 'material'};
+                              Map select = await showSelectListParameter(context, Api.deptIdUser, '请选择经销商', 'corporateName', map);
+                              model.customerId = select['id'];
+                              model.customerName = select['corporateName'];
+                              marketMaterialModel.editWarehouseModelWith(index, model);
+                            }
+                        ),
+                        ActivityAddTextCell(
                             title: '物料',
                             hintText: '请选择物料',
                             value: model.materialAreName,
                             trailing: Icon(Icons.chevron_right),
                             onTap: () async {
-                              Map select = await showSelectList(context, Api.materialNoPageList, '请选择物料', 'name');
+                              if(model.customerId == ''){
+                                showToast("请先选择经销商，再选择物料");
+                                return;
+                              }
+                              Map<String, dynamic> map = {'customerId': model.customerId};
+                              Map select = await showSelectListParameter(context, Api.areaMaterial, '请选择物料', 'name', map);
                               model.materialAreaId = select['id'];
                               model.materialAreName = select['name'];
                               model.newQuantity = select['stock'];
@@ -233,20 +269,58 @@ class _MarketMaterialAddState extends State<MarketMaterialAdd> {
   ///出入库
   void _submitAction(BuildContext context, MarketMaterialModel marketMaterialModel) async {
 
-    if (widget.title == '入库' && marketMaterialModel.warehousingMapList.length == 0){
-      showToast('请添加入库物料信息');
-      return;
+    if (widget.title == '入库'){
+      if (marketMaterialModel.warehousingMapList.length == 0){
+        showToast('请添加入库物料信息');
+        return;
+      }
+
+      for (WarehousingModel model in marketMaterialModel.warehousingList) {
+        if (model.customerId == ''){
+          showToast('经销商不能为空');
+          return;
+        }
+        if (model.materialAreaId == ''){
+          showToast('物料不能为空');
+          return;
+        }
+        if (model.surplus == ''){
+          showToast('数量不能为空');
+          return;
+        }
+        if (model.loss == ''){
+          showToast('损耗不能为空');
+          return;
+        }
+      }
     }
 
-    if (widget.title == '出库' && marketMaterialModel.warehouseMapList.length == 0){
-      showToast('请添加出库物料信息');
-      return;
+    if (widget.title == '出库'){
+      if (marketMaterialModel.warehouseMapList.length == 0){
+        showToast('请添加出库物料信息');
+        return;
+      }
+
+      for (WarehouseModel model in marketMaterialModel.warehouseList) {
+        if (model.customerId == ''){
+          showToast('经销商不能为空');
+          return;
+        }
+        if (model.materialAreaId == ''){
+          showToast('物料不能为空');
+          return;
+        }
+        if (model.exWarehouse == ''){
+          showToast('数量不能为空');
+          return;
+        }
+      }
     }
 
-    if (marketMaterialModel.remarks == ''){
-      showToast('备注不能为空');
-      return;
-    }
+    // if (marketMaterialModel.remarks == ''){
+    //   showToast('备注不能为空');
+    //   return;
+    // }
 
     Map<String, dynamic> map;
 

@@ -8,7 +8,6 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/order/material_order/material_order_model.dart';
 import 'package:good_grandma/widgets/activity_add_text_cell.dart';
-import 'package:good_grandma/widgets/add_text_select.dart';
 import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/select_tree.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
@@ -37,31 +36,21 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   _materialEdit(MarketingOrderModel marketingOrderModel){
     _isEdit = true;
     title = '编辑物料订单';
-    marketingOrderModel.setDeptId(widget.data['deptId']);
-    marketingOrderModel.setDeptName(widget.data['deptName']);
-
     List<Map> materialDetailsList = (widget.data['materialDetailsVOS'] as List).cast();
     materialDetailsList.forEach((element) {
       marketingOrderModel.addModel(MarketingModel(
-        materialId: element['materialId'],
-        materialName: element['materialName'],
-        quantity: element['quantity'].toString(),
-        unitPrice: element['unitPrice'].toString()
+          materialId: element['materialId'],
+          materialName: element['materialName'],
+          quantity: element['quantity'].toString(),
+          unitPrice: element['unitPrice'].toString(),
+          withGoods: element['withGoods'].toString(),
+          deptId: element['deptId'],
+          deptName: element['deptName'],
+          customerId: element['customerId'],
+          customerName: element['customerName'],
+          address: element['address']
       ));
     });
-
-    if (widget.data['withGoods'] == 1){
-      marketingOrderModel.setWithGoods('1');
-      _isWithGoods = true;
-    }else{
-      marketingOrderModel.setWithGoods('2');
-      _isWithGoods = false;
-    }
-
-    marketingOrderModel.setCustomerName(widget.data['customerName']);
-    marketingOrderModel.setAddress(widget.data['address']);
-
-    // setState(() {});
   }
 
   @override
@@ -74,28 +63,6 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
       appBar: AppBar(title: Text(title)),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-              child: TextSelectView(
-                  leftTitle: '区域',
-                  rightPlaceholder: '请选择区域',
-                  value: marketingOrderModel.deptName,
-                  onPressed: () async{
-                    Map area = await showSelectTreeList(context, '');
-                    marketingOrderModel.setDeptId(area['deptId']);
-                    marketingOrderModel.setDeptName(area['areaName']);
-                    return area['areaName'];
-                  }
-              )
-          ),
-          SliverToBoxAdapter(
-              child: SizedBox(
-                  width: double.infinity,
-                  height: 10,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                  )
-              )
-          ),
           SliverToBoxAdapter(
             child: Container(
               height: 60,
@@ -162,6 +129,75 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                         onTap: null
                     ),
                     Container(
+                        height: 60,
+                        color: Colors.white,
+                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('是否随货',style: TextStyle(fontSize: 14,color: Color(0XFF333333))),
+                              Checkbox(
+                                  value: model.withGoods == '1',
+                                  activeColor: Color(0xFFC68D3E),
+                                  onChanged: (value){
+                                    if (value){
+                                      model.withGoods = '1';
+                                    }else{
+                                      model.withGoods = '2';
+                                    }
+                                    marketingOrderModel.editModelWith(index, model);
+                                  }
+                              )
+                            ]
+                        )
+                    ),
+                    ActivityAddTextCell(
+                        title: '区域',
+                        hintText: '请选择区域',
+                        value: model.deptName,
+                        trailing: Icon(Icons.chevron_right),
+                        onTap: () async {
+                          Map area = await showSelectTreeList(context, '');
+                          model.deptId = area['deptId'];
+                          model.deptName = area['areaName'];
+                          marketingOrderModel.editModelWith(index, model);
+                        }
+                    ),
+                    ActivityAddTextCell(
+                        title: '经销商',
+                        hintText: '请选择经销商',
+                        value: model.customerName,
+                        trailing: Icon(Icons.chevron_right),
+                        onTap: () async {
+                          if(model.deptId == ''){
+                            showToast("请先选择区域，再选择经销商");
+                            return;
+                          }
+                          Map<String, dynamic> map = {'deptId': model.deptId, 'type': 'material'};
+                          Map select = await showSelectListParameter(context, Api.deptIdUser, '请选择经销商', 'corporateName', map);
+                          model.customerId = select['id'];
+                          model.customerName = select['corporateName'];
+                          marketingOrderModel.editModelWith(index, model);
+                        }
+                    ),
+                    ActivityAddTextCell(
+                        title: '物料地址',
+                        hintText: '请输入物料地址',
+                        value: model.address,
+                        trailing: null,
+                        onTap: () => AppUtil.showInputDialog(
+                            context: context,
+                            editingController: _editingController,
+                            focusNode: _focusNode,
+                            text: model.address,
+                            hintText: '请输入物料地址',
+                            keyboardType: TextInputType.text,
+                            callBack: (text) {
+                              model.address = text;
+                              marketingOrderModel.editModelWith(index, model);
+                            })
+                    ),
+                    Container(
                         width: double.infinity,
                         color: Colors.white,
                         alignment: Alignment.centerRight,
@@ -175,87 +211,6 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                   ]
                 );
               }, childCount: marketingOrderModel.materList.length)),
-          SliverToBoxAdapter(
-            child: SizedBox(
-                width: double.infinity,
-                height: 10,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                )
-            )
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-                height: 60,
-                color: Colors.white,
-              padding: EdgeInsets.only(left: 15.0, right: 15.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('是否随货',style: TextStyle(fontSize: 14,color: Color(0XFF333333))),
-                    Checkbox(
-                        value: _isWithGoods,
-                        activeColor: Color(0xFFC68D3E),
-                        onChanged: (value){
-                          if (value){
-                            marketingOrderModel.setWithGoods('1');
-                          }else{
-                            marketingOrderModel.setWithGoods('2');
-                          }
-                          setState(() {
-                            _isWithGoods = value;
-                          });
-                        }
-                    )
-                  ]
-              )
-            )
-          ),
-          SliverToBoxAdapter(
-              child: SizedBox(
-                  width: double.infinity,
-                  height: 1,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(color: Color(0xFFF5F5F8)),
-                  )
-              )
-          ),
-          SliverToBoxAdapter(
-              child: ActivityAddTextCell(
-                  title: '经销商名称',
-                  hintText: '请输入经销商名称',
-                  value: marketingOrderModel.customerName,
-                  trailing: null,
-                  onTap: () => AppUtil.showInputDialog(
-                      context: context,
-                      editingController: _editingController,
-                      focusNode: _focusNode,
-                      text: marketingOrderModel.customerName,
-                      hintText: '请输入经销商名称',
-                      keyboardType: TextInputType.text,
-                      callBack: (text) {
-                        marketingOrderModel.setCustomerName(text);
-                      })
-              )
-          ),
-          SliverToBoxAdapter(
-              child: ActivityAddTextCell(
-                  title: '物料地址',
-                  hintText: '请输入物料地址',
-                  value: marketingOrderModel.address,
-                  trailing: null,
-                  onTap: () => AppUtil.showInputDialog(
-                      context: context,
-                      editingController: _editingController,
-                      focusNode: _focusNode,
-                      text: marketingOrderModel.address,
-                      hintText: '请输入物料地址',
-                      keyboardType: TextInputType.text,
-                      callBack: (text) {
-                        marketingOrderModel.setAddress(text);
-                      })
-              )
-          ),
           SliverSafeArea(
               sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
@@ -274,34 +229,38 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   ///新增/编辑物料订单
   void _submitAction(BuildContext context, MarketingOrderModel marketingOrderModel) async {
 
-    if (marketingOrderModel.deptId == ''){
-      showToast('区域不能为空');
-      return;
-    }
-
     if (marketingOrderModel.materList.length == 0){
       showToast('请添加物料信息');
       return;
     }
 
-    if (marketingOrderModel.customerName == ''){
-      showToast('经销商名称不能为空');
-      return;
-    }
-
-    if (marketingOrderModel.address == ''){
-      showToast('地址不能为空');
-      return;
+    for (MarketingModel model in marketingOrderModel.materList) {
+      if (model.materialId == ''){
+        showToast('物料不能为空');
+        return;
+      }
+      if (model.quantity == ''){
+        showToast('数量不能为空');
+        return;
+      }
+      if (model.deptId == ''){
+        showToast('区域不能为空');
+        return;
+      }
+      if (model.customerId == ''){
+        showToast('经销商不能为空');
+        return;
+      }
+      if (model.address == ''){
+        showToast('物料地址不能为空');
+        return;
+      }
     }
 
     Map<String, dynamic> map = {
       'id': widget.id,
       'key': widget.newKey,
-      'deptId': marketingOrderModel.deptId,
-      'materialDetails': marketingOrderModel.mapList,
-      'withGoods': marketingOrderModel.withGoods,
-      'customerName': marketingOrderModel.customerName,
-      'address': marketingOrderModel.address
+      'materialDetails': marketingOrderModel.mapList
     };
 
     String url = '';

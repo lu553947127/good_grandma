@@ -95,6 +95,9 @@ class Api {
 
   /** 市场物料相关 **/
 
+  ///区域物料列表
+  static const materialAreaList = "/api/hap-app//app/materialArea/areasumMaterial";
+
   ///市场物料列表
   static const materialList = "/api/hap-app/app/materialArea/list";
 
@@ -109,6 +112,9 @@ class Api {
 
   ///市场物料详情
   static const materialDetail = "/api/hap-app/app/material/detail";
+
+  ///市场物料出入库选择物料接口
+  static const areaMaterial = "/api/hap-app/app/materialArea/areaMaterial";
 
 
   /** 市场活动相关 **/
@@ -226,6 +232,9 @@ class Api {
 
   ///物料订单编辑
   static const materialOrderEdit = "/api/hap-app/app/materialRequisition/edit";
+
+  ///选择经销商带参数
+  static const deptIdUser = "/api/hap-app/app/user/deptIdUser";
 
 
   /** 审批申请 **/

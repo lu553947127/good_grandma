@@ -89,7 +89,9 @@ class _AddOrderPageState extends State<AddOrderPage> {
                         MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true,middleman: widget.middleman,)));
                     if (result != null) {
                       addModel.setStoreModel(result);
-                      if (Store.readPostType() == 'zy'){
+                      if (widget.middleman && Store.readPostType() == 'zy'){
+                        _orderAmount(result.id);
+                      }else {
                         _orderAmount(result.id);
                       }
                     }
@@ -99,7 +101,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
               //账余
               SliverToBoxAdapter(
                 child: Visibility(
-                  visible: Store.readPostType() == 'zy' && addModel.storeModel.id.isNotEmpty,
+                  visible: widget.middleman ? Store.readPostType() == 'zy' && addModel.storeModel.id.isNotEmpty :
+                  addModel.storeModel.id.isNotEmpty,
                   child: PostAddInputCell(
                       title: '账余',
                       value: '$orderAmount',
@@ -167,7 +170,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
               //补货商品
               SliverToBoxAdapter(
                 child: Visibility(
-                  visible: Store.readPostType() == 'zy',
+                  visible: widget.middleman ? Store.readPostType() == 'zy' : true,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Container(

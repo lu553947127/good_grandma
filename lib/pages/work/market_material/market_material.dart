@@ -7,7 +7,7 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_add.dart';
-import 'package:good_grandma/pages/work/market_material/market_material_detail.dart';
+import 'package:good_grandma/pages/work/market_material/market_material_area.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_model.dart';
 import 'package:good_grandma/widgets/custom_progress_circle.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
             brightness: Brightness.light,
             backgroundColor: Colors.white,
             iconTheme: IconThemeData(color: Colors.black),
-            title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+            title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black)),
             actions: [
               new PopupMenuButton<String>(
                   child: Center(
@@ -101,9 +101,18 @@ class _MarketMaterialState extends State<MarketMaterial> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                width: 200,
-                                child: Text(materialList[index]['materialName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                              Column(
+                                children: [
+                                  Container(
+                                    width: 200,
+                                    child: Text(materialList[index]['areaName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    width: 200,
+                                    child: Text(materialList[index]['materialName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                                  )
+                                ]
                               ),
                               Row(
                                   children: [
@@ -163,8 +172,9 @@ class _MarketMaterialState extends State<MarketMaterial> {
                         )
                     ),
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialDetail(
-                        materialAreaId: materialList[index]['id'],
+                      Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialArea(
+                        areaId: materialList[index]['areaId'],
+                        areaName: materialList[index]['areaName'],
                       )));
                     }
                 );
@@ -188,9 +198,9 @@ class _MarketMaterialState extends State<MarketMaterial> {
   Future<void> _downloadData() async {
     try {
       Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
-      final val = await requestGet(Api.materialList, param: map);
+      final val = await requestGet(Api.materialAreaList, param: map);
       var data = jsonDecode(val.toString());
-      LogUtil.d('请求结果---materialList----$data');
+      LogUtil.d('请求结果---materialAreaList----$data');
       if (_current == 1) materialList.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
