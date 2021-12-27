@@ -236,6 +236,9 @@ class Api {
   ///选择经销商带参数
   static const deptIdUser = "/api/hap-app/app/user/deptIdUser";
 
+  ///选择公司
+  static const materialCompany = "/api/hap-app/app/subsidiarycorporation/allList";
+
 
   /** 审批申请 **/
 

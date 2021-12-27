@@ -89,6 +89,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                         MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true,middleman: widget.middleman,)));
                     if (result != null) {
                       addModel.setStoreModel(result);
+                      addModel.setPhone(result.phone);
                       if (widget.middleman && Store.readPostType() == 'zy'){
                         _orderAmount(result.id);
                       }else {
@@ -96,7 +97,28 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       }
                     }
                   }
-                ),
+                )
+              ),
+              //客户电话
+              SliverToBoxAdapter(
+                  child: Visibility(
+                    visible: addModel.storeModel.id.isNotEmpty,
+                    child: PostAddInputCell(
+                        title: '客户电话',
+                        value: '${addModel.phone}',
+                        hintText: '${addModel.phone}',
+                        endWidget: Icon(Icons.chevron_right),
+                        onTap: () => AppUtil.showInputDialog(
+                            context: context,
+                            editingController: _editingController,
+                            focusNode: _focusNode,
+                            text: '${addModel.phone}',
+                            hintText: '${addModel.phone}',
+                            callBack: (text) {
+                              addModel.setPhone(text);
+                            })
+                    )
+                  )
               ),
               //账余
               SliverToBoxAdapter(
@@ -288,6 +310,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
     }
     Map param = {
       'customerId': model.storeModel.id,
+      'cusPhone': model.phone,
       'address': model.address,
       'remark': model.remark,
       'totalPrice':

@@ -28,19 +28,33 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
 
     List<Map> materialDetailsList = (widget.data['materialDetailsVOS'] as List).cast();
 
+    int count = 0;
+    materialDetailsList.forEach((map) {
+      count += map['nowCount'];
+    });
+
     _setTextStatus(status){
       switch(status){
         case 1:
-          return '未审核';
+          return '审核中';
           break;
         case 2:
           return '审核通过';
           break;
         case 3:
-          return '已入库';
+          return '入库';
           break;
         case 4:
           return '驳回';
+          break;
+        case 5:
+          return '终止';
+          break;
+        case 6:
+          return '发货';
+          break;
+        default:
+          return '无';
           break;
       }
     }
@@ -87,6 +101,9 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
             )
           ),
           SliverToBoxAdapter(
+            child: MarketingActivityMsgCell(title: '公司', value: '${widget.data['company']}'),
+          ),
+          SliverToBoxAdapter(
             child: MarketingActivityMsgCell(title: '总价', value: '${widget.data['totalPrice']}'),
           ),
           PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '物料'),
@@ -113,7 +130,7 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           SliverSafeArea(
               sliver: SliverToBoxAdapter(
                   child: Visibility(
-                    visible: widget.data['status'] == 6 ? true : false,
+                    visible: widget.data['status'] == 6 && count != 0 ? true : false,
                     child: SubmitBtn(
                         title: '入库',
                         onPressed: () {

@@ -159,7 +159,7 @@ class _FreezerOrderDetailOperationState extends State<FreezerOrderDetailOperatio
       Future.delayed(Duration(milliseconds: 500)).then((e) {
         orderDetailList.forEach((element) {
           freezerOrderModel.addOrderModel(FreezerOModel(
-              id: element['brand'],
+              id: element['id'],
               orderId: element['orderId'],
               brand: element['brand'],
               brandName: element['brandName'],

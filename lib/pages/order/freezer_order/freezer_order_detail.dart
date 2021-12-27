@@ -229,8 +229,8 @@ class FreezerOrderDetail extends StatelessWidget {
             onTap6: (){
               _freezerOrderCancel(context);
             },
-            isVisibility6: Store.readUserType().contains('jkh') && data['auth'] == 0 ||
-                Store.readPostType() == 'csjl' && data['auth'] == 0
+            isVisibility6: Store.readUserType().contains('jkh') && data['auth'] == 0 && data['status'] == 4 ||
+                Store.readPostType() == 'csjl' && data['auth'] == 0 && data['status'] == 4
         )
     );
   }

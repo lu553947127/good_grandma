@@ -47,7 +47,7 @@ class _Body extends State<MonthPostAddPage> {
       final MonthPostAddNewModel model = Provider.of<MonthPostAddNewModel>(this.context,listen: false);
       model.fromJson(map);
       model.id = widget.id;
-      print('object');
+      print('map $map');
     });
   }
 

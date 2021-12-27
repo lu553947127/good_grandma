@@ -3,13 +3,20 @@ import 'package:flutter/cupertino.dart';
 ///物料订单模型
 class MarketingOrderModel extends ChangeNotifier {
 
+  ///公司
+  String _company;
+
   ///物料列表
   List<MarketingModel> _materList;
 
   MarketingOrderModel() {
+    this._company = '';
     _materList = [];
     mapList = [];
   }
+
+  ///公司
+  String get company => _company;
 
   ///物料列表
   List<Map> mapList;
@@ -60,6 +67,11 @@ class MarketingOrderModel extends ChangeNotifier {
     if(index >= _materList.length) return;
     _materList.removeAt(index);
     mapList.removeAt(index);
+    notifyListeners();
+  }
+
+  setCompany(str){
+    _company = str;
     notifyListeners();
   }
 }

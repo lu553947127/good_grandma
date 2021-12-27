@@ -27,7 +27,6 @@ class MaterialOrderAddPage extends StatefulWidget {
 class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   final TextEditingController _editingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  bool _isWithGoods = false;//是否随货
   bool _isEdit = false;
 
   String title = '新增物料订单';
@@ -36,6 +35,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   _materialEdit(MarketingOrderModel marketingOrderModel){
     _isEdit = true;
     title = '编辑物料订单';
+    marketingOrderModel.setCompany(widget.data['company']);
     List<Map> materialDetailsList = (widget.data['materialDetailsVOS'] as List).cast();
     materialDetailsList.forEach((element) {
       marketingOrderModel.addModel(MarketingModel(
@@ -63,6 +63,18 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
       appBar: AppBar(title: Text(title)),
       body: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(
+            child: ActivityAddTextCell(
+                title: '公司',
+                hintText: '请选择公司',
+                value: marketingOrderModel.company,
+                trailing: Icon(Icons.chevron_right),
+                onTap: () async {
+                  Map select = await showSelectList(context, Api.materialCompany, '请选择公司', 'name');
+                  marketingOrderModel.setCompany(select['name']);
+                }
+            )
+          ),
           SliverToBoxAdapter(
             child: Container(
               height: 60,
@@ -177,6 +189,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                           Map select = await showSelectListParameter(context, Api.deptIdUser, '请选择经销商', 'corporateName', map);
                           model.customerId = select['id'];
                           model.customerName = select['corporateName'];
+                          model.address = select['address'];
                           marketingOrderModel.editModelWith(index, model);
                         }
                     ),
@@ -229,6 +242,11 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   ///新增/编辑物料订单
   void _submitAction(BuildContext context, MarketingOrderModel marketingOrderModel) async {
 
+    if (marketingOrderModel.company == ''){
+      showToast('请选择公司');
+      return;
+    }
+
     if (marketingOrderModel.materList.length == 0){
       showToast('请添加物料信息');
       return;
@@ -260,6 +278,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
     Map<String, dynamic> map = {
       'id': widget.id,
       'key': widget.newKey,
+      'company': marketingOrderModel.company,
       'materialDetails': marketingOrderModel.mapList
     };
 

@@ -54,7 +54,7 @@ class _Body extends State<WeekPostAddPage> {
           Provider.of<WeekPostAddNewModel>(this.context, listen: false);
       model.fromJson(map);
       model.id = widget.id;
-      // print('object');
+      print('map $map');
     });
   }
 

@@ -35,7 +35,7 @@ class MonthPostAddNewModel extends ChangeNotifier {
       itinerariesS.forEach((element) {
         String title = element['title'] ?? '';
         List<String> works = [];
-        String summaries1 = map['works'] ?? '';
+        String summaries1 = element['work'] ?? '';
         works = AppUtil.getListFromString(summaries1);
         ItineraryModel model = ItineraryModel(title: title);
         model.works = works;

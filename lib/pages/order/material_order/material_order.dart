@@ -31,7 +31,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
   List<Map> materialList = [];
   ///是否有添加权限
   bool isJurisdiction = false;
-  String key = '';
+  String newKey = '';
 
   @override
   void initState() {
@@ -45,16 +45,22 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
     _setTextStatus(status){
       switch(status){
         case 1:
-          return '未审核';
+          return '审核中';
           break;
         case 2:
           return '审核通过';
           break;
         case 3:
-          return '已入库';
+          return '入库';
           break;
         case 4:
           return '驳回';
+          break;
+        case 5:
+          return '终止';
+          break;
+        case 6:
+          return '发货';
           break;
         default:
           return '无';
@@ -84,6 +90,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                   String createTime = map['createTime'];
                   int status = map['status'];
                   String totalPrice = map['totalPrice'].toString();
+                  String company = map['company'];
                   List<Map> materialDetailsVOS = (map['materialDetailsVOS'] as List).cast();
                   return Container(
                       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
@@ -132,6 +139,8 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                       decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
                                     )
                                 ),
+                                SizedBox(height: 5),
+                                Text('公司: $company',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
                                 SizedBox(height: 5),
                                 Text('总价: $totalPrice',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
                                 ListView.builder(
@@ -211,7 +220,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                         builder: (_) =>
                         ChangeNotifierProvider<MarketingOrderModel>.value(
                           value: model,
-                          child: MaterialOrderAddPage(id: '', data: null, newKey: key),
+                          child: MaterialOrderAddPage(id: '', data: null, newKey: newKey),
                         )));
                 if(needRefresh != null && needRefresh){
                   _controller.callRefresh();
@@ -266,9 +275,10 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
       LogUtil.d('请求结果---processList----$data');
       List<Map> processList = (data['data']['records'] as List).cast();
       processList.forEach((element) {
-        key = element['key'];
+        String key = element['key'];
         String key2 = 'fysq-scfy-';
         if (key.contains(key2)){
+          newKey = element['key'];
           isJurisdiction = true;
         }
       });
