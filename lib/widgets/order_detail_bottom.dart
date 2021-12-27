@@ -65,7 +65,7 @@ class OrderDetailBottom extends StatelessWidget {
                 ),
                 _OrderBtn(
                     isVisibility: isVisibility3,
-                    title: '重新提交',
+                    title: '编辑',
                     onTap: onTap3
                 ),
                 _OrderBtn(

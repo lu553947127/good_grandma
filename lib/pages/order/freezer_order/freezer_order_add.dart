@@ -34,7 +34,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
   ///编辑冰柜订单数据回显
   _freezerEdit(FreezerOrderModel freezerOrderModel){
     _isEdit = true;
-    title = '重新提交冰柜订单';
+    title = '编辑冰柜订单';
 
     List<Map> freezerOrderDetailList = (widget.data['freezerOrderDetail'] as List).cast();
     freezerOrderDetailList.forEach((element) {
@@ -62,7 +62,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
       _freezerEdit(freezerOrderModel);
     }
     return Scaffold(
-      appBar: AppBar(title: Text('新增冰柜订单')),
+      appBar: AppBar(title: Text(title)),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(

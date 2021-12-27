@@ -206,14 +206,15 @@ class FreezerOrderDetail extends StatelessWidget {
                 Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
                 Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
                 Store.readPostType() == 'cw' && data['auth'] == 4,
-            //重新提交
+            //编辑
             onTap3: () {
               _onTap3(context);
             },
             isVisibility3: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
                 Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
                 Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
-                Store.readPostType() == 'cw' && data['auth'] == 4,
+                Store.readPostType() == 'cw' && data['auth'] == 4 ||
+                (Store.readPostType() == 'csjl' || (Store.readPostType().contains('jkh'))) && data['auth'] == 0,
             //发货
             onTap4: () {
               _onTap4(context);
@@ -265,7 +266,7 @@ class FreezerOrderDetail extends StatelessWidget {
     });
   }
 
-  ///重新提交
+  ///编辑
   void _onTap3(BuildContext context) async {
     FreezerOrderModel model = FreezerOrderModel();
     bool needRefresh = await Navigator.push(
