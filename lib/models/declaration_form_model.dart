@@ -109,7 +109,7 @@ class DeclarationFormModel extends ChangeNotifier {
       case 1:
         return '待确认';
       case 2:
-        return '待审核';
+        return '待发货';
       case 3:
         return '待收货';
       case 4:

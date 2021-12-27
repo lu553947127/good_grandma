@@ -4,6 +4,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
@@ -139,15 +140,15 @@ class _SelectStorePageState extends State<SelectStorePage> {
       final val = widget.forOrder
           ? await requestPost(Api.cusList,json: jsonEncode({'middleman':widget.middleman?2:1}))
           : await requestGet(Api.customerList);
-      // LogUtil.d('${widget.forOrder?Api.cusList:Api.customerList} value = $val');
+      LogUtil.d('${widget.forOrder?Api.cusList:Api.customerList} value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       _stores.clear();
       list.forEach((map) {
         StoreModel model = StoreModel(
-          name: map['name'] ?? '',
-          id: map['id'] ?? '',
-          phone: map['phone'] ?? '',
+          name: map['corporate'] ?? '',
+          id: map['userId'] ?? '',
+          phone: map['juridicalPhone'] ?? '',
           address: map['address'] ?? '',
         );
         _stores.add(model);

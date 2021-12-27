@@ -157,10 +157,10 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
               actions: [
                 TextButton(
                     onPressed: () => Navigator.pop(context, false),
-                    child: Text('取消')),
+                    child: Text('取消', style: TextStyle(color: Color(0xFF999999)))),
                 TextButton(
                     onPressed: () => Navigator.pop(context, true),
-                    child: Text('确定')),
+                    child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
               ],
             );
           });

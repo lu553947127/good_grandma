@@ -191,8 +191,10 @@ class _InFolderPageState extends State<InFolderPage> {
         title: const Text('警告'),
         content: const Text('确定要删除吗？'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context,false), child: const Text('取消')),
-          TextButton(onPressed: () => _fileDelete(model), child: const Text('确定')),
+          TextButton(onPressed: () => Navigator.pop(context,false),
+              child: Text('取消', style: TextStyle(color: Color(0xFF999999)))),
+          TextButton(onPressed: () => _fileDelete(model),
+              child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
         ],
       );
     });
