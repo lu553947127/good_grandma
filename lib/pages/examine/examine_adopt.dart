@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
@@ -84,10 +85,10 @@ class ExamineAdopt extends StatelessWidget {
         LogUtil.d('请求结果---completeTask----$data');
 
         if (data['code'] == 200){
-          showToast("$title成功");
+          EasyLoading.showToast("$title成功");
           Navigator.of(Application.appContext).pop('refresh');
         }else {
-          showToast(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }
@@ -218,12 +219,12 @@ class _ExamineOperationState extends State<ExamineOperation> {
     ///转办
     _transferTask(){
       if (customerId == '') {
-        showToast("客户不能为空");
+        EasyLoading.showToast("客户不能为空");
         return;
       }
 
       if (comment == '') {
-        showToast("转办原因不能为空");
+        EasyLoading.showToast("转办原因不能为空");
         return;
       }
 
@@ -243,10 +244,10 @@ class _ExamineOperationState extends State<ExamineOperation> {
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---transferTask----$data');
         if (data['code'] == 200){
-          showToast("${widget.title}成功");
+          EasyLoading.showToast("${widget.title}成功");
           Navigator.of(Application.appContext).pop('refresh');
         }else {
-          showToast(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }
@@ -254,12 +255,12 @@ class _ExamineOperationState extends State<ExamineOperation> {
     ///委托
     _delegateTask(){
       if (customerId == '') {
-        showToast("客户不能为空");
+        EasyLoading.showToast("客户不能为空");
         return;
       }
 
       if (comment == '') {
-        showToast("委托原因不能为空");
+        EasyLoading.showToast("委托原因不能为空");
         return;
       }
 
@@ -279,10 +280,10 @@ class _ExamineOperationState extends State<ExamineOperation> {
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---delegateTask----$data');
         if (data['code'] == 200){
-          showToast("${widget.title}成功");
+          EasyLoading.showToast("${widget.title}成功");
           Navigator.of(Application.appContext).pop('refresh');
         }else {
-          showToast(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }

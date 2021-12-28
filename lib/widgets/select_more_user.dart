@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -88,8 +88,7 @@ class _SelectMoreUserState extends State<SelectMoreUser> {
                   .where((employee) => employee.isSelected)
                   .toList();
               if (_selList.isEmpty) {
-                Fluttertoast.showToast(
-                    msg: '选择抄送人不能为空', gravity: ToastGravity.CENTER);
+                EasyLoading.showToast('选择抄送人不能为空');
                 return;
               }
               Navigator.pop(context, _selList);

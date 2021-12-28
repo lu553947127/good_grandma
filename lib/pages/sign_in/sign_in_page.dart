@@ -7,11 +7,10 @@ import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
-import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
@@ -50,8 +49,7 @@ class _Body extends State<SignInPage> {
       String longitude, String deviceCode) async {
 
     if (address.isEmpty || latitude.isEmpty || longitude.isEmpty) {
-      Fluttertoast.showToast(
-          msg: '未获取到定位信息，无法打卡', gravity: ToastGravity.CENTER);
+      EasyLoading.showToast('未获取到定位信息，无法打卡');
       return;
     }
     Map param = {
@@ -69,7 +67,7 @@ class _Body extends State<SignInPage> {
       // LogUtil.d('value = $value');
       Map map = jsonDecode(value);
       final msg = map['msg']??'';
-      Fluttertoast.showToast(msg: msg??'', gravity: ToastGravity.CENTER);
+      EasyLoading.showToast(msg??'');
     });
   }
 }
@@ -521,7 +519,7 @@ class _SignInButtonState extends State<_SignInButton> {
       }
       return;
     }
-    Fluttertoast.showToast(msg: msg);
+    EasyLoading.showToast(msg);
   }
 
   ///开始计时器

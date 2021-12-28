@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -27,9 +28,12 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
   final TextEditingController _editingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  ///是否是编辑
   bool _isEdit = false;
-
+  ///标题
   String title = '新增冰柜订单';
+  ///防止点击记录时间
+  DateTime lastPopTime;
 
   ///编辑冰柜订单数据回显
   _freezerEdit(FreezerOrderModel freezerOrderModel){
@@ -106,7 +110,7 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
                           trailing: Icon(Icons.chevron_right),
                           onTap: () async {
                             if (model.brand == ''){
-                              showToast('请先选择品牌哦');
+                              EasyLoading.showToast('请先选择品牌哦');
                               return;
                             }
                             Map select = await showSelectList(context, Api.freezer_model + model.brand, '请选择规格', 'dictValue');
@@ -262,29 +266,40 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
 
   ///新增物料订单
   void _submitAction(BuildContext context, FreezerOrderModel freezerOrderModel) async {
+    // 防重复提交
+    if(lastPopTime == null || DateTime.now().difference(lastPopTime) > Duration(seconds: 3)){
+      lastPopTime = DateTime.now();
+      freezerOrderSave(context, freezerOrderModel);
+    }else{
+      lastPopTime = DateTime.now();
+      EasyLoading.showToast('请勿重复点击');
+    }
+  }
 
+  ///添加方法
+  void freezerOrderSave(BuildContext context, FreezerOrderModel freezerOrderModel){
     if (freezerOrderModel.freezerList.length == 0){
-      showToast('请添加冰柜信息');
+      EasyLoading.showToast('请添加冰柜信息');
       return;
     }
 
     if (freezerOrderModel.linkName == ''){
-      showToast('联系人不能为空');
+      EasyLoading.showToast('联系人不能为空');
       return;
     }
 
     if (freezerOrderModel.linkPhone == ''){
-      showToast('联系电话不能为空');
+      EasyLoading.showToast('联系电话不能为空');
       return;
     }
 
     if (freezerOrderModel.customerId == ''){
-      showToast('客户不能为空');
+      EasyLoading.showToast('客户不能为空');
       return;
     }
 
     if (freezerOrderModel.address == ''){
-      showToast('收货地址不能为空');
+      EasyLoading.showToast('收货地址不能为空');
       return;
     }
 
@@ -303,10 +318,10 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---freezerOrderSave----$data');
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context, true);
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }

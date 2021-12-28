@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -57,7 +58,7 @@ class _Body extends State<MsgDetailPage> {
                         if (model.enclosureViewURL.isNotEmpty)
                           AppUtil.launchURL(model.enclosureViewURL);
                         else
-                          AppUtil.showToastCenter('预览地址为空');
+                          EasyLoading.showToast('预览地址为空');
                       }
                     )
                   )
@@ -86,7 +87,7 @@ class _Body extends State<MsgDetailPage> {
       LogUtil.d('settingRead value = $value');
       model.setRead(true);
       Navigator.pop(context, true);
-      showToast('签收完成');
+      EasyLoading.showToast('签收完成');
     });
   }
 }

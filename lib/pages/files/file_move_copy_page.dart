@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/file_model.dart';
 import 'package:good_grandma/pages/files/add_folder_page.dart';
 
@@ -64,10 +64,10 @@ class _FileMoveCopyPageState extends State<FileMoveCopyPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---fileCopy----$data');
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context, true);
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }

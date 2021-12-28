@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
@@ -359,8 +359,7 @@ class _Body extends State<HomePage> {
       requestGet(Api.analysisCode, param: map).then((val) {
         var data = json.decode(val.toString());
         print('请求结果---analysisCode----$data');
-        Fluttertoast.showToast(
-            msg: '扫描成功: $qrcode', gravity: ToastGravity.CENTER);
+        EasyLoading.showToast('扫描成功');
       });
     }
   }
@@ -413,7 +412,7 @@ class _Body extends State<HomePage> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
+      EasyLoading.showToast('Could not launch $url');
     }
   }
 

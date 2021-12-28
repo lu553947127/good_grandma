@@ -9,43 +9,19 @@ import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'application.dart';
 
 /// 使用 DefaultCacheManager 类（可能无法自动引入，需要手动引入）
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 void showToast(String text) {
-  FToast fToast = FToast()..init(Application.appContext);
-  Widget toast = Container(
-    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(25.0),
-      color: Colors.black87,
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        )
-      ],
-    ),
-  );
-  fToast.showToast(
-    child: toast,
-    gravity: ToastGravity.CENTER,
-    toastDuration: Duration(seconds: 2),
-  );
+  EasyLoading.showToast(text);
 }
 
 Future<String> showPicker(List options, BuildContext context) async {
@@ -308,7 +284,7 @@ class AppUtil {
       final result = await ImageGallerySaver.saveImage(imageBytes);
 
       if (result == null || result == '') throw '图片保存失败';
-      Fluttertoast.showToast(msg: '保存成功');
+      EasyLoading.showToast('保存成功');
     } catch (e) {
       if (e == '无法存储图片，请先授权！'){
         bool result = await showDialog(
@@ -331,7 +307,7 @@ class AppUtil {
           AppSettings.openAppSettings();
         }
       }
-      if (e != null) Fluttertoast.showToast(msg: e.toString());
+      if (e != null) EasyLoading.showToast(e.toString());
     }
   }
   ///新增页面pop前的弹框提示
@@ -453,12 +429,7 @@ class AppUtil {
     if (msg == null || msg.length == 0) {
       return;
     }
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-    );
+    EasyLoading.showToast(msg);
   }
   ///请求权限,返回暂时储存路径
   static Future<String> _requestStoragePermission({String url,String fileName}) async {

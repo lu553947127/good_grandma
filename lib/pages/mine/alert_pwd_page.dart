@@ -1,12 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
 ///修改密码
@@ -37,10 +36,10 @@ class _AlertPWDPAgeState extends State<AlertPWDPAge> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---restPassword----$data');
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context);
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }
@@ -126,19 +125,19 @@ class _AlertPWDPAgeState extends State<AlertPWDPAge> {
           ),
           SubmitBtn(title: '确认', onPressed: () {
             if(_editingController.text.isEmpty){
-              Fluttertoast.showToast(msg: '旧密码不能为空',gravity: ToastGravity.CENTER);
+              EasyLoading.showToast('旧密码不能为空');
               return;
             }
             if(_editingController1.text.isEmpty){
-              Fluttertoast.showToast(msg: '新密码不能为空',gravity: ToastGravity.CENTER);
+              EasyLoading.showToast('新密码不能为空');
               return;
             }
             if(_editingController.text == _editingController1.text){
-              Fluttertoast.showToast(msg: '新密码与旧密码相同',gravity: ToastGravity.CENTER);
+              EasyLoading.showToast('新密码与旧密码相同');
               return;
             }
             if(_editingController2.text != _editingController1.text){
-              Fluttertoast.showToast(msg: '两次输入的新密码不一致',gravity: ToastGravity.CENTER);
+              EasyLoading.showToast('两次输入的新密码不一致');
               return;
             }
             _restPassword(context);

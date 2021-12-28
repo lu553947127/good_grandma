@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -234,7 +234,7 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
               child: Text("确定", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
               onPressed: () {
                 if (id == ''){
-                  Fluttertoast.showToast(msg: '选择不能为空哦', gravity: ToastGravity.CENTER);
+                  EasyLoading.showToast('选择不能为空哦');
                   return;
                 }
 
@@ -315,7 +315,7 @@ class _SelectListFilePageState extends State<SelectListFilePage> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
+      EasyLoading.showToast('Could not launch $url');
     }
   }
 }

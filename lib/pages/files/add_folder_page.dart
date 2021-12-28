@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/file_model.dart';
 
 ///新建文件夹
@@ -30,8 +29,7 @@ class AddFolderPage extends StatelessWidget {
           TextButton(
               onPressed: () {
                 if (_editingController.text.isEmpty) {
-                  Fluttertoast.showToast(
-                      msg: '名称不能为空', gravity: ToastGravity.CENTER);
+                  EasyLoading.showToast('名称不能为空');
                   return;
                 }
                 if(model == null){
@@ -109,10 +107,10 @@ class AddFolderPage extends StatelessWidget {
       LogUtil.d('请求结果---fileAdd----$data');
 
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context, '');
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }
@@ -130,10 +128,10 @@ class AddFolderPage extends StatelessWidget {
       LogUtil.d('请求结果---fileChangeName----$data');
 
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context, _editingController.text);
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }

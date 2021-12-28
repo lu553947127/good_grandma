@@ -224,8 +224,8 @@ class FreezerOrderDetail extends StatelessWidget {
             onTap5: () {
               _freezerOrderOver(context);
             },
-            isVisibility5: Store.readUserType().contains('jkh') && data['auth'] == 2 && data['status'] == 2 ||
-                Store.readPostType() == 'csjl' && data['auth'] == 2 && data['status'] == 2,
+            isVisibility5: Store.readUserType().contains('jkh')  && data['status'] == 2 ||
+                Store.readPostType() == 'csjl'  && data['status'] == 2,
             //取消订单
             onTap6: (){
               _freezerOrderCancel(context);

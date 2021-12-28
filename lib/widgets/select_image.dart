@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_luban/flutter_luban.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
@@ -274,7 +273,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
+      EasyLoading.showToast('Could not launch $url');
     }
   }
 }
@@ -361,7 +360,7 @@ class _OaSelectImagesViewState extends State<OaSelectImagesView> {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: 'Could not launch $url', gravity: ToastGravity.CENTER);
+      EasyLoading.showToast('Could not launch $url');
     }
   }
 }

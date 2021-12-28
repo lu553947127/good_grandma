@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -223,7 +224,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                             hintText: '请输入试吃品(箱)/数量',
                             value: sampleModel.sample.toString(),
                             trailing: null,
-                            onTap: () => sampleModel.newQuantity == 0 ? showToast('请先选择物料后再输入哦') :
+                            onTap: () => sampleModel.newQuantity == 0 ? EasyLoading.showToast('请先选择物料后再输入哦') :
                             AppUtil.showInputDialog(
                                 context: context,
                                 editingController: _editingController,
@@ -236,7 +237,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                                 ],
                                 callBack: (text) {
                                   if (int.parse(text) > sampleModel.newQuantity){
-                                    showToast('输入数量超出限制了哦');
+                                    EasyLoading.showToast('输入数量超出限制了哦');
                                     return;
                                   }
                                   sampleModel.sample = int.parse(text);
@@ -407,51 +408,51 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
   void _submitAction(BuildContext context, MarketingActivityModel activityModel) async {
 
     if (activityModel.name == ''){
-      showToast('活动名称不能为空');
+      EasyLoading.showToast('活动名称不能为空');
       return;
     }
 
     if (activityModel.startTime == ''){
-      showToast('开始时间不能为空');
+      EasyLoading.showToast('开始时间不能为空');
       return;
     }
 
     if (activityModel.endTime == ''){
-      showToast('结束时间不能为空');
+      EasyLoading.showToast('结束时间不能为空');
       return;
     }
 
     if (activityModel.customerName == ''){
-      showToast('上级通路客户不能为空');
+      EasyLoading.showToast('上级通路客户不能为空');
       return;
     }
 
     if (activityModel.sketch == ''){
-      showToast('活动简述不能为空');
+      EasyLoading.showToast('活动简述不能为空');
       return;
     }
 
     if (activityModel.sampleList.length == 0){
-      showToast('试吃品不能为空');
+      EasyLoading.showToast('试吃品不能为空');
       return;
     }
 
     activityModel.sampleList.forEach((element) {
       if (element.materialAreaId == ''){
-        showToast('试吃品物料名称不能为空');
+        EasyLoading.showToast('试吃品物料名称不能为空');
         return;
       }
     });
 
     activityModel.costList.forEach((element) {
       if (element.costCash == ''){
-        showToast('费用信息${element.costTypeName}现金不能为空');
+        EasyLoading.showToast('费用信息${element.costTypeName}现金不能为空');
         return;
       }
     });
 
     if (activityModel.purchaseMoney == ''){
-      showToast('预计进货额不能为空');
+      EasyLoading.showToast('预计进货额不能为空');
       return;
     }
 
@@ -480,7 +481,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---$url----$data');
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context, true);
       }
     });

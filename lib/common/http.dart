@@ -9,7 +9,6 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/login.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -196,7 +195,7 @@ void _dealResponseDataFroError(Response response){
   if(data['code'] == 200) return;
   String msg = data['msg'];
   if(msg != null && msg.isNotEmpty)
-    AppUtil.showToastCenter(msg);
+  EasyLoading.showToast(msg);
   throw DioError(requestOptions: response.requestOptions,error: response.data);
 }
 

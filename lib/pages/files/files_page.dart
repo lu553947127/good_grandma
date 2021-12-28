@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
@@ -7,7 +8,6 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/file_model.dart';
 import 'package:good_grandma/pages/files/add_folder_page.dart';
 import 'package:good_grandma/pages/files/file_move_copy_page.dart';
@@ -171,7 +171,7 @@ class _FilesPageState extends State<FilesPage> {
     if(parentId == '2' || parentId == '3'){
       if (model.userId != Store.readUserId()){
         Navigator.pop(context, false);
-        showToast("不能删除其他人的文件哦");
+        EasyLoading.showToast("不能删除其他人的文件哦");
         return;
       }
     }
@@ -181,10 +181,10 @@ class _FilesPageState extends State<FilesPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---fileDelete----$data');
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         Navigator.pop(context, true);
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }
@@ -202,10 +202,10 @@ class _FilesPageState extends State<FilesPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---fileAddFile----$data');
       if (data['code'] == 200){
-        showToast("成功");
+        EasyLoading.showToast("成功");
         _controller.callRefresh();
       }else {
-        showToast(data['msg']);
+        EasyLoading.showToast(data['msg']);
       }
     });
   }
@@ -214,7 +214,7 @@ class _FilesPageState extends State<FilesPage> {
   void _cellEditName(BuildContext context, FileModel model) async{
     if(parentId == '2' || parentId == '3'){
       if (model.userId != Store.readUserId()){
-        showToast("不能操作其他人的文件哦");
+        EasyLoading.showToast("不能操作其他人的文件哦");
         return;
       }
     }

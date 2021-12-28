@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/http.dart';
@@ -82,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
       final password = _password.text;
 
       if (username.isEmpty || password.isEmpty) {
-        showToast("用户名和密码不能为空");
+        EasyLoading.showToast("用户名和密码不能为空");
         return;
       }
 
@@ -108,8 +109,8 @@ class _LoginPageState extends State<LoginPage> {
         LogUtil.d('请求结果---loginPassword----$data');
         if (data['error_description'] != null){
           Navigator.pop(context);
-          // showToast(data['error_description']);
-          showToast('登录失败');
+          // EasyLoading.showToast(data['error_description']);
+          EasyLoading.showToast('登录失败');
         }else {
           if (_isAccount){
             Store.saveAccount(_username.text);
@@ -144,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
       final code = _code.text;
 
       if (account.isEmpty || code.isEmpty) {
-        showToast("手机号和验证码不能为空");
+        EasyLoading.showToast("手机号和验证码不能为空");
         return;
       }
 
@@ -170,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
         LogUtil.d('请求结果---loginPassword----$data');
         if (data['error_description'] != null){
           Navigator.pop(context);
-          showToast(data['error_description']);
+          EasyLoading.showToast(data['error_description']);
         }else {
           if (_isPhone){
             Store.savePhone(_account.text);
@@ -219,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
         if (data['code'] == 200){
           startCountdownTimer();
         }else {
-          AppUtil.showToastCenter(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }
@@ -284,7 +285,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: (){
                         final account = _account.text;
                         if (account.isEmpty) {
-                          showToast("手机号不能为空");
+                          EasyLoading.showToast("手机号不能为空");
                           return;
                         }
                         _getCode();

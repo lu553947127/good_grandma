@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/home/index_page.dart';
 
 ///切换身份页面
@@ -38,7 +38,7 @@ class _SwitchAccountPageState extends State<SwitchAccountPage> {
       LogUtil.d('请求结果---loginPasswordSwitch----$data');
       if (data['error_description'] != null){
         Navigator.pop(context);
-        showToast(data['error_description']);
+        EasyLoading.showToast(data['error_description']);
       }else {
         Store.saveToken(data['access_token']);
         Store.saveUserId(data['user_id']);

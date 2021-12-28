@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
@@ -67,7 +68,7 @@ class ExamineReject extends StatelessWidget {
     _completeTask(){
       LogUtil.d('---comment----$comment');
       if (comment == '') {
-        showToast("驳回原因不能为空");
+        EasyLoading.showToast("驳回原因不能为空");
         return;
       }
 
@@ -90,10 +91,10 @@ class ExamineReject extends StatelessWidget {
         LogUtil.d('请求结果---completeTask----$data');
 
         if (data['code'] == 200){
-          showToast("$title成功");
+          EasyLoading.showToast("$title成功");
           Navigator.of(Application.appContext).pop('refresh');
         }else {
-          showToast(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }

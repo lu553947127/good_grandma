@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/application.dart';
 import 'package:good_grandma/common/colors.dart';
@@ -400,20 +401,20 @@ class _CustomFormViewState extends State<CustomFormView> {
         if ('upload' == map['type']){
           if ('图片' == map['label']){
             if (timeSelectProvider.imagePath.length == 0){
-              showToast('${map['label']}不能为空');
+              EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             addData[map['prop']] = timeSelectProvider.imagePath;
           }else {
             if (timeSelectProvider.filePath.length == 0){
-              showToast('${map['label']}不能为空');
+              EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             addData[map['prop']] = timeSelectProvider.filePath;
           }
         }else if ('date' == map['type']){
           if (timeSelectProvider.select == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.select;
@@ -423,7 +424,7 @@ class _CustomFormViewState extends State<CustomFormView> {
           timeList.add(timeSelectProvider.endTime + ':00');
 
           if (timeSelectProvider.startTime == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData['yujichuchairiqi'] = timeList;
@@ -431,45 +432,45 @@ class _CustomFormViewState extends State<CustomFormView> {
         }else if ('dynamic' == map['type']){
           if ('chuchairicheng' == map['prop']){
             if (timeSelectProvider.travelScheduleMapList.length == 0){
-              showToast('${map['label']}不能为空');
+              EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             addData[map['prop']] = timeSelectProvider.travelScheduleMapList;
           }else if ('zhifuduixiangxinxi' == map['prop']){
             if (timeSelectProvider.zhifuduixiangxinxiMapList.length == 0){
-              showToast('${map['label']}不能为空');
+              EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             for (Map map in timeSelectProvider.zhifuduixiangxinxiMapList) {
               if (map['danweimingcheng'] == ''){
-                showToast('单位名称不能为空');
+                EasyLoading.showToast('单位名称不能为空');
                 return;
               }
               if (map['zhanghao'] == ''){
-                showToast('账号不能为空');
+                EasyLoading.showToast('账号不能为空');
                 return;
               }
               if (map['kaihuhangmingcheng'] == ''){
-                showToast('开户行名称不能为空');
+                EasyLoading.showToast('开户行名称不能为空');
                 return;
               }
               if (map['jine'] == ''){
-                showToast('金额不能为空');
+                EasyLoading.showToast('金额不能为空');
                 return;
               }
               if (map['zhifufangshi'] == ''){
-                showToast('支付方式不能为空');
+                EasyLoading.showToast('支付方式不能为空');
                 return;
               }
               if (map['beizhu'] == ''){
-                showToast('备注不能为空');
+                EasyLoading.showToast('备注不能为空');
                 return;
               }
             }
             addData[map['prop']] = timeSelectProvider.zhifuduixiangxinxiMapList;
           }else if ('chuchaimingxi' == map['prop']){
             if (timeSelectProvider.chuchaimingxiMapList.length == 0){
-              showToast('${map['label']}不能为空');
+              EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             addData[map['prop']] = timeSelectProvider.chuchaimingxiMapList;
@@ -480,31 +481,31 @@ class _CustomFormViewState extends State<CustomFormView> {
 
         if ('chufadi' == map['prop']){
           if (timeSelectProvider.chufadi == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.chufadi;
         }else if ('mudidi' == map['prop']){
           if (timeSelectProvider.mudidi == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.mudidi;
         }else if ('chuchaishiyou' == map['prop']){
           if (timeSelectProvider.chuchaishiyou == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.chuchaishiyou;
         }else if ('xingchenganpai' == map['prop']){
           if (timeSelectProvider.xingchenganpai == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.xingchenganpai;
         }else if ('yujidachengxiaoguo' == map['prop']){
           if (timeSelectProvider.yujidachengxiaoguo == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.yujidachengxiaoguo;
@@ -512,85 +513,85 @@ class _CustomFormViewState extends State<CustomFormView> {
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }else if ('bumen' == map['prop']){
           if (timeSelectProvider.bumenName == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.bumenName;
         }else if ('shuoming' == map['prop']){
           if (timeSelectProvider.shuoming == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.shuoming;
         }else if ('zhuzhi' == map['prop']){
           if (timeSelectProvider.zhuzhi == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.zhuzhi;
         }else if ('purpose' == map['prop']){
           if (timeSelectProvider.purpose == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.purpose;
         }else if ('desc' == map['prop']){
           if (timeSelectProvider.desc == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.desc;
         }else if ('money' == map['prop']){
           if (timeSelectProvider.money == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.money;
         }else if ('feiyongshenqing' == map['prop']){
           if (timeSelectProvider.feiyongshenqing == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.feiyongshenqing;
         }else if ('fylb' == map['prop']){
           if (timeSelectProvider.fylb == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.fylb;
         }else if ('nianduyusuan' == map['prop']){
           if (timeSelectProvider.nianduyusuan == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.nianduyusuan;
         }else if ('type' == map['prop']){
           if (timeSelectProvider.type == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.type;
         }else if ('jine' == map['prop']){
           if (timeSelectProvider.jine == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.jine;
         }else if ('gongsi' == map['prop']){
           if (timeSelectProvider.gongsi == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.gongsi;
         }else if ('hexiaojine' == map['prop']){
           if (timeSelectProvider.hexiaojine == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.hexiaojine;
         }else if ('reason' == map['prop']){
           if (timeSelectProvider.reason == ''){
-            showToast('${map['label']}不能为空');
+            EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.reason;
@@ -611,10 +612,10 @@ class _CustomFormViewState extends State<CustomFormView> {
         var data = json.decode(val.toString());
         LogUtil.d('请求结果---startProcess----$data');
         if (data['code'] == 200){
-          showToast("添加成功");
+          EasyLoading.showToast("添加成功");
           Navigator.of(Application.appContext).pop('refresh');
         }else {
-          showToast(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }

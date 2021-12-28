@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
-import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/login/loginEditText.dart';
 import 'loginBackground.dart';
 import 'loginBtn.dart';
@@ -65,7 +64,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         if (data['code'] == 200){
           startCountdownTimer();
         }else {
-          AppUtil.showToastCenter(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }
@@ -74,19 +73,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     void _restPassword(){
 
       if(_phone.text.isEmpty){
-        Fluttertoast.showToast(msg: '手机号不能为空',gravity: ToastGravity.CENTER);
+        EasyLoading.showToast('手机号不能为空');
         return;
       }
       if(_code.text.isEmpty){
-        Fluttertoast.showToast(msg: '验证码不能为空',gravity: ToastGravity.CENTER);
+        EasyLoading.showToast('验证码不能为空');
         return;
       }
       if(_password.text.isEmpty){
-        Fluttertoast.showToast(msg: '新密码不能为空',gravity: ToastGravity.CENTER);
+        EasyLoading.showToast('新密码不能为空');
         return;
       }
       if(_password.text != _password2.text){
-        Fluttertoast.showToast(msg: '两次输入的新密码不一致',gravity: ToastGravity.CENTER);
+        EasyLoading.showToast('两次输入的新密码不一致');
         return;
       }
 
@@ -101,9 +100,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         LogUtil.d('请求结果---forgetPassword----$data');
         if (data['code'] == 200){
           Navigator.pop(context);
-          showToast('重置密码成功');
+          EasyLoading.showToast('重置密码成功');
         }else {
-          AppUtil.showToastCenter(data['msg']);
+          EasyLoading.showToast(data['msg']);
         }
       });
     }
@@ -146,7 +145,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         onPressed: (){
                           final account = _phone.text;
                           if (account.isEmpty) {
-                            showToast("手机号不能为空");
+                            EasyLoading.showToast("手机号不能为空");
                             return;
                           }
                           _getCode();

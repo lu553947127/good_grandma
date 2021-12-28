@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -112,7 +112,7 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
               List<EmployeeModel> _selList =
                   _employees.where((employee) => employee.isSelected).toList();
               if (_selList.isEmpty) {
-                Fluttertoast.showToast(msg: '至少选择一个员工',gravity: ToastGravity.CENTER);
+                EasyLoading.showToast('至少选择一个员工');
                 return;
               }
               Navigator.pop(context, _selList);

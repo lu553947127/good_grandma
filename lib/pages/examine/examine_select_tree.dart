@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
@@ -61,7 +62,7 @@ class _ExamineSelectTreeState extends State<ExamineSelectTree> {
                 child: Text("确定", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
                 onPressed: () {
                   if (selectTreeProvider.horizontalList.length == 1){
-                    showToast('选择审批类型不能为空');
+                    EasyLoading.showToast('选择审批类型不能为空');
                     return;
                   }
                   Map addData = new Map();
