@@ -126,6 +126,27 @@ class DeclarationFormModel extends ChangeNotifier {
   }
   ///状态文字颜色是否显示灰色
   bool showGray() => (status == 4 || status == 6);
+  ///状态颜色
+  Color get statusColor {
+    switch(_status){
+      case 1://待确认
+        return Color(0xFFDD0000);
+      case 2://待发货
+        return Color(0xFF05A8C6);
+      case 3://待收货
+        return Color(0xFFC08A3F);
+      case 4://已完成
+        return Color(0xFF12BD95);
+      case 5://驳回
+        return Color(0xFF999999);
+      case 6://已取消
+        return Color(0xFFE45C26);
+      case 7://待发货
+        return Color(0xFFE5A800);
+      default://未知状态
+        return Color(0xFFEFEFF4);
+    }
+  }
 
   setCreateUserId(String createUserId){
     _createUserId = createUserId;

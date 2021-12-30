@@ -71,7 +71,8 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
                 scrollController: _scrollController,
                 dataCount: _goodsList.length,
                 onRefresh: _refresh,
-                onLoad: _onLoad,
+                // onLoad: _onLoad,
+                onLoad: null,
                 slivers: [
                   //列表
                   SliverGrid(
@@ -142,8 +143,10 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
     }
     try {
       Map<String, dynamic> map = {
-        'current': _current,
-        'size': _pageSize,
+        'current': '1',
+        'size': '-1',
+        // 'current': _current,
+        // 'size': _pageSize,
         'customerId': widget.customerId
       };
       // print('map = $map');

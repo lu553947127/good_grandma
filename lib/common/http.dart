@@ -193,6 +193,12 @@ Future requestGet(url, {param})async{
 void _dealResponseDataFroError(Response response){
   var data = jsonDecode(response.data.toString());
   if(data['code'] == 200) return;
+  if (data['code'] == 401 || data['code'] == 403){
+    EasyLoading.showToast('登录token过期，请重新登录');
+    Store.removeToken();
+    Navigator.pushAndRemoveUntil(Application.appContext, MaterialPageRoute(builder:(context)=> LoginPage()), (route) => false);
+    return;
+  }
   String msg = data['msg'];
   if(msg != null && msg.isNotEmpty)
   EasyLoading.showToast(msg);

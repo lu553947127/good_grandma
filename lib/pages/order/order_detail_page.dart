@@ -177,11 +177,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Widget _btmView(BuildContext context) {
-    print('UserType = ${Store.readUserType()}');
-    print('status = ${_model.status}');
-    print('UserId = ${Store.readUserId()}');
-    print('updateUser = ${_model.updateUser}');
-    print('createUserId = ${_model.createUserId}');
     return (Store.readUserType() == 'ejkh' &&
         (_model.status == 2 || _model.status == 5)) || //二级客户取消订单
         (Store.readUserType() == 'xsb' &&
@@ -215,7 +210,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           || Store.readUserType() == 'xsb'
           || Store.readUserId() != _model.updateUser)) || //一级订单待确认时一级客户、城市经理、修改人不等于当前登录人可以审核
           (_model.status == 2 && Store.readUserType() == 'zn')) && Store.readUserId() != _model.updateUser//一级订单待发货时工厂可以审核
-          : (_model.status == 2 && Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
+          : (_model.status == 1 && Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
       child: Container(
         color: Colors.white,
         padding: EdgeInsets.only(
@@ -406,9 +401,7 @@ class _Header extends StatelessWidget {
                                     : AppColors.FFE45C26,
                                 fontSize: 14.0))),
                     Card(
-                      color: _model.showGray()
-                          ? AppColors.FFEFEFF4
-                          : AppColors.FFE45C26.withOpacity(0.1),
+                      color: _model.statusColor.withOpacity(0.1),
                       shadowColor: Colors.transparent,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -416,9 +409,7 @@ class _Header extends StatelessWidget {
                         child: Text(
                           _model.statusName,
                           style: TextStyle(
-                              color: _model.showGray()
-                                  ? AppColors.FF959EB1
-                                  : AppColors.FFE45C26,
+                              color: _model.statusColor,
                               fontSize: 14.0),
                         ),
                       ),

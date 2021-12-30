@@ -44,6 +44,7 @@ class _SelectStorePageState extends State<SelectStorePage> {
         indent: 15,
         endIndent: 15.0);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(title: Text('选择商户')),
       body: Column(
         children: [
@@ -111,7 +112,7 @@ class _SelectStorePageState extends State<SelectStorePage> {
                               ),
                               onTap: () => Navigator.pop(context, model),
                             ),
-                            divider
+                            // divider
                           ],
                         );
                       }, childCount: _stores.length)),
@@ -144,6 +145,7 @@ class _SelectStorePageState extends State<SelectStorePage> {
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       _stores.clear();
+
       list.forEach((map) {
         StoreModel model = StoreModel(
           name: map['corporate'] ?? '',
@@ -153,6 +155,7 @@ class _SelectStorePageState extends State<SelectStorePage> {
         );
         _stores.add(model);
       });
+      _stores.removeWhere((map) => map.name.isEmpty);
       _controller.finishRefresh(success: true);
       if (mounted) setState(() {});
     } catch (error) {
