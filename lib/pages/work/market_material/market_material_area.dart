@@ -6,14 +6,18 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/work/market_material/market_material_detail.dart';
+import 'package:good_grandma/pages/work/market_material/market_material_model.dart';
+import 'package:good_grandma/pages/work/market_material/market_material_warehouse.dart';
 import 'package:good_grandma/widgets/custom_progress_circle.dart';
+import 'package:provider/provider.dart';
 
 ///区域物料列表
 class MarketMaterialArea extends StatefulWidget {
-  final String areaId;
+  final String customerId;
   final String areaName;
-  const MarketMaterialArea({Key key, this.areaId, this.areaName}) : super(key: key);
+  const MarketMaterialArea({Key key, this.customerId, this.areaName}) : super(key: key);
 
   @override
   _MarketMaterialAreaState createState() => _MarketMaterialAreaState();
@@ -36,7 +40,30 @@ class _MarketMaterialAreaState extends State<MarketMaterialArea> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.areaName}物料')),
+      appBar: AppBar(
+          title: Text('${widget.areaName}物料'),
+          actions: [
+            TextButton(
+                child: Text('出库', style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
+                onPressed: () async {
+                  if (materialList.isEmpty){
+                    showToast('暂无出库数据');
+                    return;
+                  }
+
+                  MarketMaterialModel model = MarketMaterialModel();
+                  bool needRefresh = await Navigator.push(context,
+                      MaterialPageRoute(builder: (_) =>
+                      ChangeNotifierProvider<MarketMaterialModel>.value(
+                          value: model,
+                          child: MarketMaterialWarehouse(materialList: materialList))));
+                  if(needRefresh != null && needRefresh){
+                    _controller.callRefresh();
+                  }
+                }
+            )
+          ]
+      ),
       body: MyEasyRefreshSliverWidget(
           controller: _controller,
           scrollController: _scrollController,
@@ -158,7 +185,7 @@ class _MarketMaterialAreaState extends State<MarketMaterialArea> {
   ///市场物料列表
   Future<void> _downloadData() async {
     try {
-      Map<String, dynamic> map = {'areaId': widget.areaId, 'current': _current, 'size': _pageSize};
+      Map<String, dynamic> map = {'customerId': widget.customerId, 'current': _current, 'size': _pageSize};
       final val = await requestGet(Api.materialList, param: map);
       var data = jsonDecode(val.toString());
       LogUtil.d('请求结果---materialList----$data');

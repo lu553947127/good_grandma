@@ -96,7 +96,7 @@ class Api {
   /** 市场物料相关 **/
 
   ///区域物料列表
-  static const materialAreaList = "/api/hap-app//app/materialArea/areasumMaterial";
+  static const materialAreaList = "/api/hap-app/app/materialArea/areasumMaterial";
 
   ///市场物料列表
   static const materialList = "/api/hap-app/app/materialArea/list";
@@ -238,6 +238,9 @@ class Api {
 
   ///选择公司
   static const materialCompany = "/api/hap-app/app/subsidiarycorporation/allList";
+
+  ///获取预算
+  static const materialBudget = "/api/hap-app/app/materialbudget/detail";
 
 
   /** 审批申请 **/

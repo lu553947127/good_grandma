@@ -51,7 +51,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
           return '审核通过';
           break;
         case 3:
-          return '入库';
+          return '已入库';
           break;
         case 4:
           return '驳回';
@@ -91,7 +91,6 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                   int status = map['status'];
                   String totalPrice = map['totalPrice'].toString();
                   String company = map['company'];
-                  List<Map> materialDetailsVOS = (map['materialDetailsVOS'] as List).cast();
                   return Container(
                       margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
                       padding: const EdgeInsets.all(5.0),
@@ -140,60 +139,9 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                     )
                                 ),
                                 SizedBox(height: 5),
-                                Text('公司: $company',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
+                                Text('公司: $company',style: TextStyle(fontSize: 12,color: AppColors.FF959EB1)),
                                 SizedBox(height: 5),
-                                Text('总价: $totalPrice',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
-                                ListView.builder(
-                                    shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
-                                    physics:NeverScrollableScrollPhysics(),//禁止滚动
-                                    itemCount: materialDetailsVOS.length,
-                                    itemBuilder: (content, index){
-                                      Map map = materialDetailsVOS[index];
-                                      return Container(
-                                          margin: EdgeInsets.only(top: 10),
-                                          child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '物料名称：' + map['materialName'],
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                ),
-                                                Text(
-                                                  '数量：${map['quantity']}' ,
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                ),
-                                                Text(
-                                                  '单价：${map['unitPrice']}',
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                ),
-                                                Text(
-                                                  '是否随货：${map['withGoods'] == 1 ? '是' : '否'}',
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                ),
-                                                Text(
-                                                  '区域：' + map['deptName'],
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                ),
-                                                Text(
-                                                  '经销商名称：' + map['customerName'],
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                ),
-                                                Text(
-                                                  '物料地址：' + map['address'],
-                                                  style: const TextStyle(
-                                                      color: AppColors.FF959EB1, fontSize: 12.0),
-                                                )
-                                              ]
-                                          )
-                                      );
-                                    }
-                                )
+                                Text('总价: $totalPrice',style: TextStyle(fontSize: 12,color: AppColors.FF959EB1))
                               ]
                           ),
                           onTap: () async {

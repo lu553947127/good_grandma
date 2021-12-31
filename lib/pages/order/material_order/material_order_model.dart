@@ -6,73 +6,163 @@ class MarketingOrderModel extends ChangeNotifier {
   ///公司
   String _company;
 
-  ///物料列表
-  List<MarketingModel> _materList;
+  ///经销商列表
+  List<CustomerModel> _customerList;
 
   MarketingOrderModel() {
     this._company = '';
-    _materList = [];
-    mapList = [];
+    _customerList = [];
+    customerMapList = [];
   }
 
   ///公司
   String get company => _company;
 
-  ///物料列表
-  List<Map> mapList;
+  ///经销商列表
+  List<Map> customerMapList;
 
-  ///物料列表
-  List<MarketingModel> get materList => _materList;
+  ///经销商列表
+  List<CustomerModel> get customerList => _customerList;
 
   ///添加item
-  addModel(MarketingModel model){
-    if(_materList == null)
-      _materList = [];
-    _materList.add(model);
+  addCustomerModel(CustomerModel model, List<Map> materMapList){
+    if(_customerList == null)
+      _customerList = [];
+    _customerList.add(model);
     Map addData = new Map();
-    addData['materialId'] = model.materialId;
-    addData['quantity'] = model.quantity;
-    addData['unitPrice'] = model.unitPrice;
     addData['withGoods'] = model.withGoods;
     addData['deptId'] = model.deptId;
     addData['customerId'] = model.customerId;
     addData['address'] = model.address;
-    mapList.add(addData);
-    print('mapList------------$mapList');
+    addData['phone'] = model.phone;
+    addData['materialDetails'] = model.materMapList;
+
+    if (materMapList != null && materMapList.isNotEmpty){
+      materMapList.forEach((element) {
+        model.addModel(MarketingModel(
+          materialId: element['materialId'],
+          materialName: element['materialName'],
+          quantity: element['quantity'].toString(),
+          unitPrice: element['unitPrice'].toString(),
+        ));
+      });
+    }
+    customerMapList.add(addData);
     notifyListeners();
   }
 
   ///编辑当前item
-  editModelWith(int index, MarketingModel model){
-    if(_materList == null)
-      _materList = [];
-    if(index >= _materList.length) return;
-    _materList.setAll(index, [model]);
+  editCustomerModelWith(int index, CustomerModel model){
+    if(_customerList == null)
+      _customerList = [];
+    if(index >= _customerList.length) return;
+    _customerList.setAll(index, [model]);
     Map addData = new Map();
-    addData['materialId'] = model.materialId;
-    addData['quantity'] = model.quantity;
-    addData['unitPrice'] = model.unitPrice;
     addData['withGoods'] = model.withGoods;
     addData['deptId'] = model.deptId;
     addData['customerId'] = model.customerId;
     addData['address'] = model.address;
-    mapList.setAll(index, [addData]);
+    addData['phone'] = model.phone;
+    addData['materialDetails'] = model.materMapList;
+    customerMapList.setAll(index, [addData]);
     notifyListeners();
   }
 
   ///删除单个item
-  deleteModelWith(int index){
-    if(_materList == null)
-      _materList = [];
-    if(index >= _materList.length) return;
-    _materList.removeAt(index);
-    mapList.removeAt(index);
+  deleteCustomerModelWith(int index){
+    if(_customerList == null)
+      _customerList = [];
+    if(index >= _customerList.length) return;
+    _customerList.removeAt(index);
+    customerMapList.removeAt(index);
     notifyListeners();
   }
 
   setCompany(str){
     _company = str;
     notifyListeners();
+  }
+}
+
+///经销商模型数据
+class CustomerModel {
+
+  ///是否随货
+  String withGoods;
+
+  ///区域id
+  String deptId;
+
+  ///区域名称
+  String deptName;
+
+  ///经销商名称
+  String customerId;
+
+  ///经销商名称
+  String customerName;
+
+  ///物料地址
+  String address;
+
+  ///联系电话
+  String phone;
+
+  ///物料列表
+  List<MarketingModel> materList;
+
+  ///物料列表
+  List<Map> materMapList;
+
+  ///预算
+  double surplus;
+
+  CustomerModel({
+    this.deptId = '',
+    this.deptName = '',
+    this.withGoods = '2',
+    this.customerId = '',
+    this.customerName = '',
+    this.address = '',
+    this.phone = '',
+    this.surplus = 0
+  }){
+    materList = [];
+    materMapList = [];
+  }
+
+  ///添加item
+  addModel(MarketingModel model){
+    if(materList == null)
+      materList = [];
+    materList.add(model);
+    Map addData = new Map();
+    addData['materialId'] = model.materialId;
+    addData['quantity'] = model.quantity;
+    addData['unitPrice'] = model.unitPrice;
+    materMapList.add(addData);
+  }
+
+  ///编辑当前item
+  editModelWith(int index, MarketingModel model){
+    if(materList == null)
+      materList = [];
+    if(index >= materList.length) return;
+    materList.setAll(index, [model]);
+    Map addData = new Map();
+    addData['materialId'] = model.materialId;
+    addData['quantity'] = model.quantity;
+    addData['unitPrice'] = model.unitPrice;
+    materMapList.setAll(index, [addData]);
+  }
+
+  ///删除单个item
+  deleteModelWith(int index){
+    if(materList == null)
+      materList = [];
+    if(index >= materList.length) return;
+    materList.removeAt(index);
+    materMapList.removeAt(index);
   }
 }
 
@@ -94,35 +184,11 @@ class MarketingModel {
   ///单价
   String unitPrice;
 
-  ///是否随货
-  String withGoods;
-
-  ///区域id
-  String deptId;
-
-  ///区域名称
-  String deptName;
-
-  ///经销商名称
-  String customerId;
-
-  ///经销商名称
-  String customerName;
-
-  ///物料地址
-  String address;
-
   MarketingModel({
     this.materialId = '',
     this.materialName = '',
     this.quantity = '',
     this.newQuantity = 0,
-    this.unitPrice = '',
-    this.deptId = '',
-    this.deptName = '',
-    this.withGoods = '2',
-    this.customerId = '',
-    this.customerName = '',
-    this.address = ''
+    this.unitPrice = ''
   });
 }

@@ -18,8 +18,11 @@ class MarketMaterialModel extends ChangeNotifier {
   ///出库列表
   List<Map> warehouseMapList;
 
-  ///备注
-  String _remarks;
+  ///经销商id
+  String _customerId;
+
+  ///经销商名称
+  String _customerName;
 
   MarketMaterialModel() {
     _state = '';
@@ -27,14 +30,18 @@ class MarketMaterialModel extends ChangeNotifier {
     warehousingMapList = [];
     _warehouseList = [];
     warehouseMapList = [];
-    _remarks = '';
+    _customerId = '';
+    _customerName = '';
   }
 
   ///出入库状态
   String get state => _state;
 
-  ///备注
-  String get remarks => _remarks;
+  ///经销商id
+  String get customerId => _customerId;
+
+  ///经销商名称
+  String get customerName => _customerName;
 
   ///入库列表
   List<WarehousingModel> get warehousingList => _warehousingList;
@@ -48,8 +55,13 @@ class MarketMaterialModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setRemarks(String remarks) {
-    _remarks = remarks;
+  setCustomerId(String customerId) {
+    _customerId = customerId;
+    notifyListeners();
+  }
+
+  setCustomerName(String customerName) {
+    _customerName = customerName;
     notifyListeners();
   }
 
@@ -59,10 +71,10 @@ class MarketMaterialModel extends ChangeNotifier {
       _warehousingList = [];
     _warehousingList.add(model);
     Map addData = new Map();
-    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
     addData['loss'] = model.loss;
     addData['surplus'] = model.surplus;
+    addData['remarks'] = model.remarks;
     warehousingMapList.add(addData);
     notifyListeners();
   }
@@ -74,10 +86,10 @@ class MarketMaterialModel extends ChangeNotifier {
     if(index >= _warehousingList.length) return;
     _warehousingList.setAll(index, [model]);
     Map addData = new Map();
-    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
     addData['loss'] = model.loss;
     addData['surplus'] = model.surplus;
+    addData['remarks'] = model.remarks;
     warehousingMapList.setAll(index, [addData]);
     notifyListeners();
   }
@@ -98,9 +110,11 @@ class MarketMaterialModel extends ChangeNotifier {
       _warehouseList = [];
     _warehouseList.add(model);
     Map addData = new Map();
-    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
+    addData['materialName'] = model.materialAreName;
+    addData['stock'] = model.stock;
     addData['exWarehouse'] = model.exWarehouse;
+    addData['remarks'] = model.remarks;
     warehouseMapList.add(addData);
     notifyListeners();
   }
@@ -112,32 +126,18 @@ class MarketMaterialModel extends ChangeNotifier {
     if(index >= _warehouseList.length) return;
     _warehouseList.setAll(index, [model]);
     Map addData = new Map();
-    addData['customerId'] = model.customerId;
     addData['materialAreaId'] = model.materialAreaId;
+    addData['materialName'] = model.materialAreName;
+    addData['stock'] = model.stock;
     addData['exWarehouse'] = model.exWarehouse;
+    addData['remarks'] = model.remarks;
     warehouseMapList.setAll(index, [addData]);
-    notifyListeners();
-  }
-
-  ///删除单个item
-  deleteWarehouseModelWith(int index){
-    if(_warehouseList == null)
-      _warehouseList = [];
-    if(index >= _warehouseList.length) return;
-    _warehouseList.removeAt(index);
-    warehouseMapList.removeAt(index);
     notifyListeners();
   }
 }
 
 ///入库模型数据
 class WarehousingModel {
-
-  ///经销商id
-  String customerId;
-
-  ///经销商名称
-  String customerName;
 
   ///物料id
   String materialAreaId;
@@ -148,27 +148,23 @@ class WarehousingModel {
   ///损耗
   String loss;
 
-  ///数量
+  ///入库数量
   String surplus;
 
+  ///备注
+  String remarks;
+
   WarehousingModel({
-    this.customerId = '',
-    this.customerName = '',
     this.materialAreaId = '',
     this.materialAreName = '',
     this.loss = '',
-    this.surplus = ''
+    this.surplus = '',
+    this.remarks = '',
   });
 }
 
 ///出库模型数据
 class WarehouseModel {
-
-  ///经销商id
-  String customerId;
-
-  ///经销商名称
-  String customerName;
 
   ///物料id
   String materialAreaId;
@@ -176,18 +172,20 @@ class WarehouseModel {
   ///物料名称
   String materialAreName;
 
-  ///现有数量
-  int newQuantity;
+  ///可用数量
+  int stock;
 
-  ///数量
+  ///出库数量
   String exWarehouse;
 
+  ///备注
+  String remarks;
+
   WarehouseModel({
-    this.customerId = '',
-    this.customerName = '',
     this.materialAreaId = '',
     this.materialAreName = '',
-    this.newQuantity = 0,
-    this.exWarehouse = ''
+    this.stock = 0,
+    this.exWarehouse = '',
+    this.remarks = ''
   });
 }

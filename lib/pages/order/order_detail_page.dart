@@ -85,6 +85,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           onLoad: null,
           slivers: [
             _Header(model: _model),
+            //是否自提
+            SliverVisibility(
+              visible: _model.selfMentionName != null && _model.selfMentionName.isNotEmpty,
+              sliver: _TextCell(value: _model.selfMentionName, title: '是否自提'),
+            ),
             //驳回理由
             SliverVisibility(
               visible: _model.status == 5 &&

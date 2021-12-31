@@ -31,10 +31,10 @@ class _OrderPageState extends State<OrderPage> {
   final ScrollController _scrollController = ScrollController();
   List<Map> _listTitle = [
     {'name': '全部'},
-    {'name': '待确认'},
-    {'name': '待发货'},
-    {'name': '待收货'},
-    {'name': '已完成'},
+    {'name': '确认中'},
+    {'name': '审核中'},
+    {'name': '已发货'},
+    {'name': '已收货'},
     {'name': '驳回'},
   ];
   List<DeclarationFormModel> _dataArray = [];

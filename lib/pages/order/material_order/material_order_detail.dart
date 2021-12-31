@@ -42,7 +42,7 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           return '审核通过';
           break;
         case 3:
-          return '入库';
+          return '已入库';
           break;
         case 4:
           return '驳回';
@@ -106,22 +106,41 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           SliverToBoxAdapter(
             child: MarketingActivityMsgCell(title: '总价', value: '${widget.data['totalPrice']}'),
           ),
-          PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '物料'),
+          PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '客户信息'),
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
+              List<Map> materialDetails= (materialDetailsList[index]['materialDetails'] as List).cast();
               return Container(
                   margin: EdgeInsets.only(left: 15.0, right: 15.0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 5),
-                        MarketingActivityMsgCell(title: '物料名称', value: materialDetailsList[index]['materialName']),
-                        MarketingActivityMsgCell(title: '数量', value: materialDetailsList[index]['quantity'].toString()),
-                        MarketingActivityMsgCell(title: '单价', value: materialDetailsList[index]['unitPrice'].toString()),
                         MarketingActivityMsgCell(title: '是否随货', value: materialDetailsList[index]['withGoods'] == 1 ? '是' : '否'),
                         MarketingActivityMsgCell(title: '区域', value: materialDetailsList[index]['deptName']),
                         MarketingActivityMsgCell(title: '经销商名称', value: materialDetailsList[index]['customerName']),
-                        MarketingActivityMsgCell(title: '物料地址', value: materialDetailsList[index]['address'])
+                        MarketingActivityMsgCell(title: '物料地址', value: materialDetailsList[index]['address']),
+                        MarketingActivityMsgCell(title: '联系电话', value: materialDetailsList[index]['phone']),
+                        DetailGroupTitle(color: AppColors.FFC08A3F, name: '物料信息'),
+                        ListView.builder(
+                            shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                            physics:NeverScrollableScrollPhysics(),//禁止滚动
+                            itemCount: materialDetails.length,
+                            itemBuilder: (content, index){
+                              return Container(
+                                  margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                                  child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 5),
+                                        MarketingActivityMsgCell(title: '物料名称', value: materialDetails[index]['materialName']),
+                                        MarketingActivityMsgCell(title: '数量', value: materialDetails[index]['quantity'].toString()),
+                                        MarketingActivityMsgCell(title: '单价', value: materialDetails[index]['unitPrice'].toString())
+                                      ]
+                                  )
+                              );
+                            }
+                        )
                       ]
                   )
               );

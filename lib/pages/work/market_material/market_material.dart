@@ -45,34 +45,20 @@ class _MarketMaterialState extends State<MarketMaterial> {
             iconTheme: IconThemeData(color: Colors.black),
             title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black)),
             actions: [
-              new PopupMenuButton<String>(
-                  child: Center(
-                      child: Container(
-                          margin: EdgeInsets.only(right: 10.0),
-                          child: Text("出入库", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))
-                          )
-                      )
-                  ),
-                  itemBuilder: (context) {
-                    return <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                          value: '出库',
-                          child: Text('出库')
-                      ),
-                      PopupMenuItem<String>(
-                          value: '入库',
-                          child: Text('入库')
-                      )
-                    ];
-                  },
-                  onSelected: (name){
+              TextButton(
+                  child: Text('入库', style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
+                  onPressed: () async {
                     MarketMaterialModel model = MarketMaterialModel();
-                    Navigator.push(context,
+                    bool needRefresh = await Navigator.push(context,
                         MaterialPageRoute(builder: (_) =>
-                            ChangeNotifierProvider<MarketMaterialModel>.value(
-                              value: model,
-                              child: MarketMaterialAdd(title: name))));
-                  })
+                        ChangeNotifierProvider<MarketMaterialModel>.value(
+                            value: model,
+                            child: MarketMaterialAdd())));
+                    if(needRefresh != null && needRefresh){
+                      _controller.callRefresh();
+                    }
+                  }
+              )
             ]
         ),
       body: MyEasyRefreshSliverWidget(
@@ -110,7 +96,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                                   SizedBox(height: 5),
                                   Container(
                                     width: 200,
-                                    child: Text(materialList[index]['materialName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
+                                    child: Text(materialList[index]['customerName'], style: TextStyle(fontSize: 14, color: Color(0XFF2F4058))),
                                   )
                                 ]
                               ),
@@ -173,7 +159,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
                     ),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder:(context)=> MarketMaterialArea(
-                        areaId: materialList[index]['areaId'],
+                        customerId: materialList[index]['customerId'],
                         areaName: materialList[index]['areaName'],
                       )));
                     }

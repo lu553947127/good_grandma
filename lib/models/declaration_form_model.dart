@@ -15,6 +15,8 @@ class DeclarationFormModel extends ChangeNotifier {
   String reject;
   String _createUserId;
   String _updateUser;
+  int _selfMention;
+  String _selfMentionName;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
@@ -32,6 +34,8 @@ class DeclarationFormModel extends ChangeNotifier {
     _status = 1;
     _createUserId = '';
     _updateUser = '';
+    _selfMention = 0;
+    _selfMentionName = '';
   }
 
   DeclarationFormModel.fromJson(Map<String, dynamic> json) {
@@ -61,8 +65,8 @@ class DeclarationFormModel extends ChangeNotifier {
     _remark = json['remark'] ?? '';
     _phone = json['phone'] ?? '';
     _address = json['address'] ?? '';
-
     _status = json['status'] ?? 1;
+    _selfMention = json['selfMention'] ?? 1;
   }
 
   setModelWithModel(DeclarationFormModel model) {
@@ -79,6 +83,10 @@ class DeclarationFormModel extends ChangeNotifier {
     orderType = model.orderType;
     _createUserId = model.createUserId;
     _updateUser = model.updateUser;
+    _selfMention = model.selfMention;
+    if (model.selfMention == 1)
+      _selfMentionName = '自提';
+    else _selfMentionName = '物流';
   }
 
   ///店铺
@@ -99,6 +107,12 @@ class DeclarationFormModel extends ChangeNotifier {
   ///备注
   String get remark => _remark;
 
+  ///是否自提
+  int get selfMention => _selfMention;
+
+  ///是否自提
+  String get selfMentionName => _selfMentionName;
+
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int get status => _status;
   String get createUserId => _createUserId;
@@ -107,19 +121,19 @@ class DeclarationFormModel extends ChangeNotifier {
   String get statusName {
     switch(_status){
       case 1:
-        return '待确认';
+        return '确认中';
       case 2:
-        return '待发货';
+        return '审核中';
       case 3:
-        return '待收货';
+        return '已发货';
       case 4:
-        return '已完成';
+        return '已收货';
       case 5:
         return '驳回';
       case 6:
-        return '已取消';
+        return '取消';
       case 7:
-        return '待发货';
+        return '备货中';
       default:
         return '未知状态';
     }
@@ -129,21 +143,21 @@ class DeclarationFormModel extends ChangeNotifier {
   ///状态颜色
   Color get statusColor {
     switch(_status){
-      case 1://待确认
+      case 1:
         return Color(0xFFDD0000);
-      case 2://待发货
+      case 2:
         return Color(0xFF05A8C6);
-      case 3://待收货
+      case 3:
         return Color(0xFFC08A3F);
-      case 4://已完成
+      case 4:
         return Color(0xFF12BD95);
-      case 5://驳回
+      case 5:
         return Color(0xFF999999);
-      case 6://已取消
+      case 6:
         return Color(0xFFE45C26);
-      case 7://待发货
+      case 7:
         return Color(0xFFE5A800);
-      default://未知状态
+      default:
         return Color(0xFFEFEFF4);
     }
   }
@@ -228,6 +242,16 @@ class DeclarationFormModel extends ChangeNotifier {
 
   setRemark(String remark) {
     _remark = remark;
+    notifyListeners();
+  }
+
+  setSelfMention(int selfMention){
+    _selfMention = selfMention;
+    notifyListeners();
+  }
+
+  setSelfMentionName(String selfMentionName){
+    _selfMentionName = selfMentionName;
     notifyListeners();
   }
 

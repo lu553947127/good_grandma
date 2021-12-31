@@ -126,13 +126,37 @@ class _AddOrderPageState extends State<AddOrderPage> {
                   visible: widget.middleman ? Store.readPostType() == 'zy' && addModel.storeModel.id.isNotEmpty :
                   addModel.storeModel.id.isNotEmpty,
                   child: PostAddInputCell(
-                      title: '账余',
+                      title: 'OA账余',
                       value: '$orderAmount',
                       hintText: '$orderAmount',
                       endWidget: null,
                       onTap: null
                   )
                 )
+              ),
+              //是否自提
+              SliverToBoxAdapter(
+                  child: Visibility(
+                      visible: !widget.middleman,
+                      child: PostAddInputCell(
+                          title: '是否自提',
+                          value: '${addModel.selfMentionName}',
+                          hintText: '是否自提',
+                          endWidget: Icon(Icons.chevron_right),
+                          onTap: () async {
+                            String select = await showPicker(['自提', '物流'], context);
+                            switch(select){
+                              case "自提":
+                                addModel.setSelfMention(1);
+                                break;
+                              case "物流":
+                                addModel.setSelfMention(2);
+                                break;
+                            }
+                            addModel.setSelfMentionName(select);
+                          }
+                      )
+                  )
               ),
               //请选择商品
               SliverToBoxAdapter(
@@ -294,13 +318,17 @@ class _AddOrderPageState extends State<AddOrderPage> {
       AppUtil.showToastCenter('请选择客户');
       return;
     }
+    if (model.selfMention == 0) {
+      AppUtil.showToastCenter('是否自提不能为空');
+      return;
+    }
     if (model.goodsList.isEmpty) {
       AppUtil.showToastCenter('请选择商品');
       return;
     }
     if (model.rewardGoodsList.isNotEmpty) {
       if (model.goodsRewardPrice > orderAmount) {
-        AppUtil.showToastCenter('抱歉，总价不能超过帐余价格');
+        AppUtil.showToastCenter('抱歉，总价不能超过OA账余价格');
         return;
       }
     }
@@ -313,6 +341,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
       'cusPhone': model.phone,
       'address': model.address,
       'remark': model.remark,
+      'selfMention': model.selfMention,
       'totalPrice':
           widget.middleman ? model.goodsMiddlemanPrice : model.goodsPrice,
       'totalWeight': model.goodsWeight,

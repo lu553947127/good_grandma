@@ -400,20 +400,20 @@ class _CustomFormViewState extends State<CustomFormView> {
       for (Map map in widget.list) {
         if ('upload' == map['type']){
           if ('图片' == map['label']){
-            if (timeSelectProvider.imagePath.length == 0){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.imagePath.length == 0){
               EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             addData[map['prop']] = timeSelectProvider.imagePath;
           }else {
-            if (timeSelectProvider.filePath.length == 0){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.filePath.length == 0){
               EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             addData[map['prop']] = timeSelectProvider.filePath;
           }
         }else if ('date' == map['type']){
-          if (timeSelectProvider.select == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.select == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
@@ -423,7 +423,7 @@ class _CustomFormViewState extends State<CustomFormView> {
           timeList.add(timeSelectProvider.startTime + ':00');
           timeList.add(timeSelectProvider.endTime + ':00');
 
-          if (timeSelectProvider.startTime == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.startTime == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
@@ -431,47 +431,99 @@ class _CustomFormViewState extends State<CustomFormView> {
           addData['days'] = timeSelectProvider.dayNumber;
         }else if ('dynamic' == map['type']){
           if ('chuchairicheng' == map['prop']){
-            if (timeSelectProvider.travelScheduleMapList.length == 0){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.travelScheduleMapList.length == 0){
               EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
+            for (Map map in timeSelectProvider.travelScheduleMapList) {
+              if ((map['rules'] != null && map['rules'].length > 0) && map['chufadi'] == ''){
+                EasyLoading.showToast('出发地不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['mudidi'] == ''){
+                EasyLoading.showToast('目的地不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['yujichuchairiqi'] == ''){
+                EasyLoading.showToast('预计出差日期不能为空');
+                return;
+              }
+            }
             addData[map['prop']] = timeSelectProvider.travelScheduleMapList;
           }else if ('zhifuduixiangxinxi' == map['prop']){
-            if (timeSelectProvider.zhifuduixiangxinxiMapList.length == 0){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.zhifuduixiangxinxiMapList.length == 0){
               EasyLoading.showToast('${map['label']}不能为空');
               return;
             }
             for (Map map in timeSelectProvider.zhifuduixiangxinxiMapList) {
-              if (map['danweimingcheng'] == ''){
+              if ((map['rules'] != null && map['rules'].length > 0) && map['danweimingcheng'] == ''){
                 EasyLoading.showToast('单位名称不能为空');
                 return;
               }
-              if (map['zhanghao'] == ''){
+              if ((map['rules'] != null && map['rules'].length > 0) && map['zhanghao'] == ''){
                 EasyLoading.showToast('账号不能为空');
                 return;
               }
-              if (map['kaihuhangmingcheng'] == ''){
+              if ((map['rules'] != null && map['rules'].length > 0) && map['kaihuhangmingcheng'] == ''){
                 EasyLoading.showToast('开户行名称不能为空');
                 return;
               }
-              if (map['jine'] == ''){
+              if ((map['rules'] != null && map['rules'].length > 0) && map['jine'] == ''){
                 EasyLoading.showToast('金额不能为空');
                 return;
               }
-              if (map['zhifufangshi'] == ''){
+              if ((map['rules'] != null && map['rules'].length > 0) && map['zhifufangshi'] == ''){
                 EasyLoading.showToast('支付方式不能为空');
                 return;
               }
-              if (map['beizhu'] == ''){
+              if ((map['rules'] != null && map['rules'].length > 0) && map['beizhu'] == ''){
                 EasyLoading.showToast('备注不能为空');
                 return;
               }
             }
             addData[map['prop']] = timeSelectProvider.zhifuduixiangxinxiMapList;
           }else if ('chuchaimingxi' == map['prop']){
-            if (timeSelectProvider.chuchaimingxiMapList.length == 0){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.chuchaimingxiMapList.length == 0){
               EasyLoading.showToast('${map['label']}不能为空');
               return;
+            }
+            for (Map map in timeSelectProvider.chuchaimingxiMapList) {
+              if ((map['rules'] != null && map['rules'].length > 0) && map['qizhishijian'] == ''){
+                EasyLoading.showToast('起止时间不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['qizhididian'] == ''){
+                EasyLoading.showToast('起止地点不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['chuchaimudi'] == ''){
+                EasyLoading.showToast('出差目的地不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['jiaotongjine'] == ''){
+                EasyLoading.showToast('交通金额不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['shineijiaotong'] == ''){
+                EasyLoading.showToast('市内交通不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['zhusujine'] == ''){
+                EasyLoading.showToast('住宿金额不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['buzhujine'] == ''){
+                EasyLoading.showToast('备注金额不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['qitajine'] == ''){
+                EasyLoading.showToast('其他金额不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['beizhu'] == ''){
+                EasyLoading.showToast('备注不能为空');
+                return;
+              }
             }
             addData[map['prop']] = timeSelectProvider.chuchaimingxiMapList;
           }
@@ -480,31 +532,31 @@ class _CustomFormViewState extends State<CustomFormView> {
         }
 
         if ('chufadi' == map['prop']){
-          if (timeSelectProvider.chufadi == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.chufadi == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.chufadi;
         }else if ('mudidi' == map['prop']){
-          if (timeSelectProvider.mudidi == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.mudidi == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.mudidi;
         }else if ('chuchaishiyou' == map['prop']){
-          if (timeSelectProvider.chuchaishiyou == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.chuchaishiyou == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.chuchaishiyou;
         }else if ('xingchenganpai' == map['prop']){
-          if (timeSelectProvider.xingchenganpai == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.xingchenganpai == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.xingchenganpai;
         }else if ('yujidachengxiaoguo' == map['prop']){
-          if (timeSelectProvider.yujidachengxiaoguo == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.yujidachengxiaoguo == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
@@ -512,85 +564,85 @@ class _CustomFormViewState extends State<CustomFormView> {
         }else if ('shenqingren' == map['prop']){
           addData[map['prop']] = '${Store.readPostName()}${Store.readNickName()}';
         }else if ('bumen' == map['prop']){
-          if (timeSelectProvider.bumenName == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.bumenName == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.bumenName;
         }else if ('shuoming' == map['prop']){
-          if (timeSelectProvider.shuoming == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.shuoming == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.shuoming;
         }else if ('zhuzhi' == map['prop']){
-          if (timeSelectProvider.zhuzhi == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.zhuzhi == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.zhuzhi;
         }else if ('purpose' == map['prop']){
-          if (timeSelectProvider.purpose == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.purpose == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.purpose;
         }else if ('desc' == map['prop']){
-          if (timeSelectProvider.desc == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.desc == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.desc;
         }else if ('money' == map['prop']){
-          if (timeSelectProvider.money == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.money == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.money;
         }else if ('feiyongshenqing' == map['prop']){
-          if (timeSelectProvider.feiyongshenqing == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.feiyongshenqing == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.feiyongshenqing;
         }else if ('fylb' == map['prop']){
-          if (timeSelectProvider.fylb == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.fylb == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.fylb;
         }else if ('nianduyusuan' == map['prop']){
-          if (timeSelectProvider.nianduyusuan == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.nianduyusuan == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.nianduyusuan;
         }else if ('type' == map['prop']){
-          if (timeSelectProvider.type == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.type == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.type;
         }else if ('jine' == map['prop']){
-          if (timeSelectProvider.jine == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.jine == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.jine;
         }else if ('gongsi' == map['prop']){
-          if (timeSelectProvider.gongsi == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.gongsi == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.gongsi;
         }else if ('hexiaojine' == map['prop']){
-          if (timeSelectProvider.hexiaojine == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.hexiaojine == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
           addData[map['prop']] = timeSelectProvider.hexiaojine;
         }else if ('reason' == map['prop']){
-          if (timeSelectProvider.reason == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.reason == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
