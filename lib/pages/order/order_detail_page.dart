@@ -52,7 +52,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             //一级订单 审核阶段发布者可以编辑，驳回阶段只有城市经理可以编辑
                 ? (_model.status == 1 && _model.createUserId == Store.readUserId()) ||
                     (_model.status == 5 && Store.readUserType() == 'xsb') ||
-                      (Store.readUserId() != _model.updateUser)
+                      (_model.status == 1 && Store.readUserId() != _model.updateUser)
             //二级订单 二级客户自己下的订单可以被驳回，驳回后可以自己编辑
                 : (_model.status == 5 &&
                     _model.createUserId == Store.readUserId() &&
@@ -87,7 +87,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _Header(model: _model),
             //是否自提
             SliverVisibility(
-              visible: _model.selfMentionName != null && _model.selfMentionName.isNotEmpty,
+              visible: _model.orderType == 1 && _model.selfMentionName != null && _model.selfMentionName.isNotEmpty,
               sliver: _TextCell(value: _model.selfMentionName, title: '是否自提'),
             ),
             //驳回理由
