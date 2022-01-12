@@ -67,6 +67,9 @@ class DeclarationFormModel extends ChangeNotifier {
     _address = json['address'] ?? '';
     _status = json['status'] ?? 1;
     _selfMention = json['selfMention'] ?? 1;
+    if (_selfMention == 1)
+      _selfMentionName = '自提';
+    else _selfMentionName = '物流';
   }
 
   setModelWithModel(DeclarationFormModel model) {

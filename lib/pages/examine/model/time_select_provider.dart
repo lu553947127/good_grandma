@@ -30,6 +30,19 @@ class TimeSelectProvider with ChangeNotifier{
   String _hexiaojine;
   String _reason;
   bool _isCopyUser;
+  String _name;
+  String _deptId;
+  String _deptName;
+  String _customerId;
+  String _customerName;
+  String _address;
+  String _starttime;
+  String _endtime;
+  String _phone;
+  String _sketch;
+  String _costtotal;
+  String _purchasemoney;
+  String _purchaseratio;
 
   TimeSelectProvider() {
     _startTime = '';
@@ -59,6 +72,19 @@ class TimeSelectProvider with ChangeNotifier{
     _hexiaojine = '';
     _reason = '';
     _isCopyUser = false;
+    _name = '';
+    _deptId = '';
+    _deptName = '';
+    _customerId = '';
+    _customerName = '';
+    _address = '';
+    _starttime = '';
+    _endtime = '';
+    _phone = '';
+    _sketch = '';
+    _costtotal = '';
+    _purchasemoney = '';
+    _purchaseratio = '';
     _travelScheduleList = [];
     travelScheduleMapList = [];
     _zhifuduixiangxinxiList = [];
@@ -67,6 +93,10 @@ class TimeSelectProvider with ChangeNotifier{
     chuchaimingxiMapList = [];
     _userList = [];
     userMapList = [];
+    _sampleList = [];
+    sampleMapList = [];
+    _costList = [];
+    costMapList = [];
   }
 
   String get startTime => _startTime;
@@ -96,6 +126,19 @@ class TimeSelectProvider with ChangeNotifier{
   String get hexiaojine => _hexiaojine;
   String get reason => _reason;
   bool get isCopyUser => _isCopyUser;
+  String get name => _name;
+  String get deptId => _deptId;
+  String get deptName => _deptName;
+  String get customerId => _customerId;
+  String get customerName => _customerName;
+  String get address => _address;
+  String get starttime => _starttime;
+  String get endtime => _endtime;
+  String get phone => _phone;
+  String get sketch => _sketch;
+  String get costtotal => _costtotal;
+  String get purchasemoney => _purchasemoney;
+  String get purchaseratio => _purchaseratio;
 
   ///添加
   addStartTime(start_time, end_time, day_number) {
@@ -214,6 +257,71 @@ class TimeSelectProvider with ChangeNotifier{
 
   addiscopyUser(str){
     _isCopyUser = str;
+    notifyListeners();
+  }
+
+  addName(str){
+    _name = str;
+    notifyListeners();
+  }
+
+  addDeptId(str){
+    _deptId = str;
+    notifyListeners();
+  }
+
+  addDeptName(str){
+    _deptName = str;
+    notifyListeners();
+  }
+
+  addCustomerId(str){
+    _customerId = str;
+    notifyListeners();
+  }
+
+  addCustomerName(str){
+    _customerName = str;
+    notifyListeners();
+  }
+
+  addAddress(str){
+    _address = str;
+    notifyListeners();
+  }
+
+  addStarttime(str){
+    _starttime = str;
+    notifyListeners();
+  }
+
+  addEndtime(str){
+    _endtime = str;
+    notifyListeners();
+  }
+
+  addPhone(str){
+    _phone = str;
+    notifyListeners();
+  }
+
+  addSketch(str){
+    _sketch = str;
+    notifyListeners();
+  }
+
+  addCosttotal(str){
+    _costtotal = str;
+    notifyListeners();
+  }
+
+  addPurchasemoney(str){
+    _purchasemoney = str;
+    notifyListeners();
+  }
+
+  addPurchaseratio(str){
+    _purchaseratio = str;
     notifyListeners();
   }
 
@@ -484,7 +592,7 @@ class TimeSelectProvider with ChangeNotifier{
     notifyListeners();
   }
 
-
+  ///多选人员添加数据
   setArrays(
       List<UserModel> array,
       List<UserModel> values,
@@ -495,10 +603,129 @@ class TimeSelectProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  ///多选人员删除数据
   deleteArrayWith(List<UserModel> array, int index) {
     if (array == null) array = [];
     if (index >= array.length) return;
     array.removeAt(index);
+    notifyListeners();
+  }
+
+  ///试吃品列表
+  List<SampleModel> _sampleList;
+
+  ///试吃品列表
+  List<SampleModel> get sampleList => _sampleList;
+
+  ///试吃品列表
+  List<Map> sampleMapList;
+
+  ///试吃品现金总和
+  double get sampleAllPrice {
+    double count = 0;
+    _sampleList.forEach((model) {
+      count += model.costCash;
+    });
+    return count;
+  }
+
+  ///添加试吃品
+  addSampleModel(SampleModel model){
+    if(_sampleList == null)
+      _sampleList = [];
+    _sampleList.add(model);
+    Map addData = new Map();
+    addData['materialId'] = model.materialId;
+    addData['materialName'] = model.materialName;
+    addData['sample'] = model.sample;
+    addData['costCash'] = model.costCash;
+    addData['unitPrice'] = model.unitPrice;
+    addData['withGoods'] = model.withGoods;
+    sampleMapList.add(addData);
+    notifyListeners();
+  }
+
+  ///编辑当前item
+  editSampleModelWith(int index, SampleModel model){
+    if(_sampleList == null)
+      _sampleList = [];
+    if(index >= _sampleList.length) return;
+    _sampleList.setAll(index, [model]);
+    Map addData = new Map();
+    addData['materialId'] = model.materialId;
+    addData['materialName'] = model.materialName;
+    addData['sample'] = model.sample;
+    addData['costCash'] = model.costCash;
+    addData['unitPrice'] = model.unitPrice;
+    addData['withGoods'] = model.withGoods;
+    sampleMapList.setAll(index, [addData]);
+    notifyListeners();
+  }
+
+  ///删除单个item
+  deleteSampleModelWith(int index){
+    if(_sampleList == null)
+      _sampleList = [];
+    if(index >= _sampleList.length) return;
+    _sampleList.removeAt(index);
+    sampleMapList.removeAt(index);
+    notifyListeners();
+  }
+
+  ///费用信息列表
+  List<CostModel> _costList;
+
+  ///费用信息列表
+  List<CostModel> get costList => _costList;
+
+  ///费用信息列表
+  List<Map> costMapList;
+
+  ///费用现金总和
+  double get costAllPrice {
+    double count = 0;
+    _costList.forEach((model) {
+      count += double.parse(model.costCash);
+    });
+    return count;
+  }
+
+  ///添加item
+  addCostModel(CostModel model){
+    if(_costList == null)
+      _costList = [];
+    _costList.add(model);
+    Map addData = new Map();
+    addData['costType'] = model.costType;
+    addData['costTypeName'] = model.costTypeName;
+    addData['costCash'] = model.costCash;
+    addData['costDescribe'] = model.costDescribe;
+    costMapList.add(addData);
+    notifyListeners();
+  }
+
+  ///编辑当前item
+  editCostModelWith(int index, CostModel model){
+    if(_costList == null)
+      _costList = [];
+    if(index >= _costList.length) return;
+    _costList.setAll(index, [model]);
+    Map addData = new Map();
+    addData['costType'] = model.costType;
+    addData['costTypeName'] = model.costTypeName;
+    addData['costCash'] = model.costCash;
+    addData['costDescribe'] = model.costDescribe;
+    costMapList.setAll(index, [addData]);
+    notifyListeners();
+  }
+
+  ///删除单个item
+  deleteCostModelWith(int index){
+    if(_costList == null)
+      _costList = [];
+    if(index >= _costList.length) return;
+    _costList.removeAt(index);
+    costMapList.removeAt(index);
     notifyListeners();
   }
 }
@@ -634,4 +861,62 @@ class UserModel {
     image = json['avatar'] ?? '';
     isSelected = false;
   }
+}
+
+///试吃品模型数据
+class SampleModel {
+
+  ///物料id
+  String materialId;
+
+  ///物料名称
+  String materialName;
+
+  ///试吃品数量数量
+  double sample;
+
+  ///现金
+  double costCash;
+
+  ///单价
+  double unitPrice;
+
+  ///是否随货
+  int withGoods;
+
+  ///是否随货名称
+  String withGoodsName;
+
+  SampleModel({
+    this.materialId = '',
+    this.materialName = '',
+    this.sample = 0,
+    this.costCash = 0,
+    this.unitPrice = 0,
+    this.withGoods = 0,
+    this.withGoodsName = ''
+  });
+}
+
+///费用模型数据
+class CostModel {
+
+  ///费用类别
+  String costType;
+
+  ///费用类别名称
+  String costTypeName;
+
+  ///现金
+  String costCash;
+
+  ///费用描述
+  String costDescribe;
+
+  CostModel({
+    this.costType = '',
+    this.costTypeName = '',
+    this.costCash = '',
+    this.costDescribe = ''
+  });
 }

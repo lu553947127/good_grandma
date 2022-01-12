@@ -18,26 +18,27 @@ class MarketingActivityCell extends StatelessWidget {
     String statusName = '';
     switch(model.statusId){
       case 1:
-        statusName = '未进行';
+        statusName = '已核销';
         stateColor = AppColors.FFE45C26;
         break;
       case 2:
-        statusName = '进行中';
+        statusName = '未核销';
         stateColor = AppColors.FF05A8C6;
         break;
-      case 3:
-        statusName = '已完结';
-        stateColor = AppColors.FF959EB1;
-        break;
-      case 4:
-        statusName = '驳回';
-        stateColor = AppColors.FFC68D3E;
-        break;
+      // case 3:
+      //   statusName = '已完结';
+      //   stateColor = AppColors.FF959EB1;
+      //   break;
+      // case 4:
+      //   statusName = '驳回';
+      //   stateColor = AppColors.FFC68D3E;
+      //   break;
     }
 
     List<Widget> views1 = [];
-    List<String> titles = ['活动时间：', '上级通路客户：', '申请资源费用合计(元)：', '预计进货额(元)：', '预计进货投入产出比(%)：'];
+    List<String> titles = ['区域: ', '活动时间：', '上级通路客户：', '申请资源费用合计(元)：', '预计进货额(元)：', '预计进货投入产出比(%)：'];
     List<String> values = [
+      model.deptName,
       model.startTime + ' - ' + model.endTime,
       model.customerName,
       model.costTotal,

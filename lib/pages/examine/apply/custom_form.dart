@@ -8,7 +8,9 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/pages/examine/children_form/activity_feiyong.dart';
 import 'package:good_grandma/pages/examine/children_form/chuchaimingxi.dart';
+import 'package:good_grandma/pages/examine/children_form/activity_shichipin.dart';
 import 'package:good_grandma/pages/examine/children_form/travel_schedule_apply.dart';
 import 'package:good_grandma/pages/examine/children_form/zhifuduixiangxinxi.dart';
 import 'package:good_grandma/pages/login/loginBtn.dart';
@@ -28,11 +30,13 @@ class CustomFormView extends StatefulWidget {
   final String name;
   final String processId;
   final List list;
+  final List group;
   final dynamic process;
   CustomFormView({Key key,
     this.name,
     this.processId,
     this.list,
+    this.group,
     this.process
   }) : super(key: key);
 
@@ -72,14 +76,10 @@ class _CustomFormViewState extends State<CustomFormView> {
     DateTime now = new DateTime.now();
     String nowTime = '${now.year}-${now.month}-${now.day}';
 
-    List<String> dataList = [];
     Map addData = new Map();
     addData['processId'] = widget.processId;
 
-    for (Map map in widget.list) {
-      dataList.add(map['prop']);
-    }
-
+    ///自定义表单控件显示
     _childWidget(data){
       switch(data['type']){
         case 'date':
@@ -142,40 +142,18 @@ class _CustomFormViewState extends State<CustomFormView> {
                     text: value,
                     hintText: '请输入${data['label']}',
                     callBack: (text) {
-                      for (String prop in dataList) {
-                        if (data['prop'] == prop){
-                          addData[prop] = text;
-                        }
-
-                        if (data['prop'] == 'chufadi'){
-                          addData[prop] = text;
-                          timeSelectProvider.addchufadi(text);
-                        }
-
-                        if (data['prop'] == 'mudidi'){
-                          addData[prop] = text;
-                          timeSelectProvider.addmudidi(text);
-                        }
-
-                        if (data['prop'] == 'chuchaishiyou'){
-                          addData[prop] = text;
-                          timeSelectProvider.addchuchaishiyou(text);
-                        }
-
-                        if (data['prop'] == 'money'){
-                          addData[prop] = text;
-                          timeSelectProvider.addmoney(text);
-                        }
-
-                        if (data['prop'] == 'nianduyusuan'){
-                          addData[prop] = text;
-                          timeSelectProvider.addnianduyusuan(text);
-                        }
-
-                        if (data['prop'] == 'hexiaojine'){
-                          addData[prop] = text;
-                          timeSelectProvider.addhexiaojine(text);
-                        }
+                      if (data['prop'] == 'chufadi'){
+                        timeSelectProvider.addchufadi(text);
+                      } else if (data['prop'] == 'mudidi'){
+                        timeSelectProvider.addmudidi(text);
+                      } else if (data['prop'] == 'chuchaishiyou'){
+                        timeSelectProvider.addchuchaishiyou(text);
+                      } else if (data['prop'] == 'money'){
+                        timeSelectProvider.addmoney(text);
+                      } else if (data['prop'] == 'nianduyusuan'){
+                        timeSelectProvider.addnianduyusuan(text);
+                      } else if (data['prop'] == 'hexiaojine'){
+                        timeSelectProvider.addhexiaojine(text);
                       }
                     })
             );
@@ -194,7 +172,6 @@ class _CustomFormViewState extends State<CustomFormView> {
           }else {
             value = timeSelectProvider.value;
           }
-
           return PostAddInputCell(
             title: data['label'],
             value: value,
@@ -213,22 +190,16 @@ class _CustomFormViewState extends State<CustomFormView> {
                 select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
               }
 
-              for (String prop in dataList) {
-                if (data['prop'] == prop){
-                  addData[prop] = select;
-                }
-
-                if (data['prop'] == 'gongsi'){
-                  timeSelectProvider.addgongsi(select);
-                }else if (data['prop'] == 'feiyongshenqing'){
-                  timeSelectProvider.addfeiyongshenqing(select);
-                }else if (data['prop'] == 'fylb'){
-                  timeSelectProvider.addfylb(select);
-                }else if (data['prop'] == 'type'){
-                  timeSelectProvider.addtype(select);
-                }else {
-                  timeSelectProvider.addValue2(select);
-                }
+              if (data['prop'] == 'gongsi'){
+                timeSelectProvider.addgongsi(select);
+              }else if (data['prop'] == 'feiyongshenqing'){
+                timeSelectProvider.addfeiyongshenqing(select);
+              }else if (data['prop'] == 'fylb'){
+                timeSelectProvider.addfylb(select);
+              }else if (data['prop'] == 'type'){
+                timeSelectProvider.addtype(select);
+              }else {
+                timeSelectProvider.addValue2(select);
               }
             }
           );
@@ -257,14 +228,6 @@ class _CustomFormViewState extends State<CustomFormView> {
               isDays: true,
               onPressed: (param) {
                 timeSelectProvider.addStartTime(param['startTime'], param['endTime'], param['days']);
-                List<String> timeList = [];
-                timeList.add(param['startTime']);
-                timeList.add(param['endTime']);
-                for (String prop in dataList) {
-                  if (data['prop'] == prop){
-                    addData[prop] = timeList;
-                  }
-                }
               }
           );
           break;
@@ -291,15 +254,8 @@ class _CustomFormViewState extends State<CustomFormView> {
                     hintText: '请输入${data['label']}',
                     keyboardType: TextInputType.number,
                     callBack: (text) {
-                      for (String prop in dataList) {
-                        if (data['prop'] == prop){
-                          addData[prop] = text;
-                        }
-
-                        if (data['prop'] == 'jine'){
-                          addData[prop] = text;
-                          timeSelectProvider.addjine(text);
-                        }
+                      if (data['prop'] == 'jine'){
+                        timeSelectProvider.addjine(text);
                       }
                     })
             );
@@ -312,45 +268,20 @@ class _CustomFormViewState extends State<CustomFormView> {
             rightPlaceholder: '请输入${data['label']}',
             sizeHeight: 10,
             onChanged: (tex){
-              for (String prop in dataList) {
-                if (data['prop'] == prop){
-                  addData[prop] = tex;
-                }
-
-                if (data['prop'] == 'xingchenganpai'){
-                  addData[prop] = tex;
-                  timeSelectProvider.addxingchenganpai(tex);
-                }
-
-                if (data['prop'] == 'yujidachengxiaoguo'){
-                  addData[prop] = tex;
-                  timeSelectProvider.addyujidachengxiaoguo(tex);
-                }
-
-                if (data['prop'] == 'zhuzhi'){
-                  addData[prop] = tex;
-                  timeSelectProvider.addzhuzhi(tex);
-                }
-
-                if (data['prop'] == 'shuoming'){
-                  addData[prop] = tex;
-                  timeSelectProvider.addshuoming(tex);
-                }
-
-                if (data['prop'] == 'purpose'){
-                  addData[prop] = tex;
-                  timeSelectProvider.addpurpose(tex);
-                }
-
-                if (data['prop'] == 'desc'){
-                  addData[prop] = tex;
-                  timeSelectProvider.adddesc(tex);
-                }
-
-                if (data['prop'] == 'reason'){
-                  addData[prop] = tex;
-                  timeSelectProvider.addreason(tex);
-                }
+              if (data['prop'] == 'xingchenganpai'){
+                timeSelectProvider.addxingchenganpai(tex);
+              } else if (data['prop'] == 'yujidachengxiaoguo'){
+                timeSelectProvider.addyujidachengxiaoguo(tex);
+              } else if (data['prop'] == 'zhuzhi'){
+                timeSelectProvider.addzhuzhi(tex);
+              } else if (data['prop'] == 'shuoming'){
+                timeSelectProvider.addshuoming(tex);
+              } else if (data['prop'] == 'purpose'){
+                timeSelectProvider.addpurpose(tex);
+              } else if (data['prop'] == 'desc'){
+                timeSelectProvider.adddesc(tex);
+              } else if (data['prop'] == 'reason'){
+                timeSelectProvider.addreason(tex);
               }
             }
           );
@@ -393,10 +324,156 @@ class _CustomFormViewState extends State<CustomFormView> {
       }
     }
 
+    ///市场活动自定义表单控件显示
+    _activityChildWidget(data){
+      switch(data['type']){
+        case 'input':
+          String value = '';
+          TextInputType keyboardType;
+          if (data['prop'] == 'name'){
+            value = timeSelectProvider.name;
+            keyboardType = TextInputType.text;
+          }else if(data['prop'] == 'address'){
+            value = timeSelectProvider.address;
+            keyboardType = TextInputType.text;
+          }else if(data['prop'] == 'phone'){
+            value = timeSelectProvider.phone;
+            keyboardType = TextInputType.number;
+          }else if(data['prop'] == 'sketch'){
+            value = timeSelectProvider.sketch;
+            keyboardType = TextInputType.text;
+          }else if(data['prop'] == 'costtotal'){
+            value = timeSelectProvider.costtotal;
+            keyboardType = TextInputType.number;
+          }else if(data['prop'] == 'purchasemoney'){
+            value = timeSelectProvider.purchasemoney;
+            keyboardType = TextInputType.number;
+          }else if(data['prop'] == 'purchaseratio'){
+            value = timeSelectProvider.purchaseratio;
+            keyboardType = TextInputType.number;
+          }
+          if (data['prop'] == 'deptName'){
+            return Container();
+          }else if (data['prop'] == 'customerName'){
+            return Container();
+          }else {
+            return PostAddInputCell(
+                title: data['label'],
+                value: value,
+                hintText: '请输入${data['label']}',
+                endWidget: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: value,
+                    keyboardType: keyboardType,
+                    hintText: '请输入${data['label']}',
+                    callBack: (text) {
+                      if (data['prop'] == 'name') {
+                        timeSelectProvider.addName(text);
+                      } else if (data['prop'] == 'address') {
+                        timeSelectProvider.addAddress(text);
+                      } else if (data['prop'] == 'phone') {
+                        timeSelectProvider.addPhone(text);
+                      } else if (data['prop'] == 'sketch') {
+                        timeSelectProvider.addSketch(text);
+                      } else if (data['prop'] == 'costtotal') {
+                        timeSelectProvider.addCosttotal(text);
+                      } else if (data['prop'] == 'purchasemoney') {
+                        timeSelectProvider.addPurchasemoney(text);
+                        timeSelectProvider.addPurchaseratio('${formatNum(((double.parse(timeSelectProvider.costtotal) / double.parse(text) * 100)), 2)}');
+                      } else if (data['prop'] == 'purchaseratio') {
+                        timeSelectProvider.addPurchaseratio(text);
+                      }
+                    })
+            );
+          }
+          break;
+        case 'tree':
+          String value = '';
+          if (data['prop'] == 'deptId'){
+            value = timeSelectProvider.deptName;
+          }else if (data['prop'] == 'customerId'){
+            value = timeSelectProvider.customerName;
+          }
+          return PostAddInputCell(
+              title: data['label'],
+              value: value,
+              hintText: '请选择${data['label']}',
+              endWidget: Icon(Icons.chevron_right),
+              onTap: () async {
+                if (data['prop'] == 'deptId'){
+                  Map area = await showSelectTreeList(context, '');
+                  timeSelectProvider.addDeptId(area['deptId']);
+                  timeSelectProvider.addDeptName(area['areaName']);
+                }else if(data['prop'] == 'customerId'){
+                  if(timeSelectProvider.deptId == ''){
+                    showToast("请先选择区域，再选择客户");
+                    return;
+                  }
+                  Map<String, dynamic> map = {'deptId': timeSelectProvider.deptId};
+                  Map select = await showSelectListParameter(context, Api.deptIdUser, '请选择客户', 'corporateName', map);
+                  timeSelectProvider.addCustomerId(select['id']);
+                  timeSelectProvider.addCustomerName(select['corporateName']);
+                  timeSelectProvider.addAddress(select['address']);
+                }
+              }
+          );
+          break;
+        case 'datetime':
+          String value = '';
+          if (data['prop'] == 'starttime'){
+            value = timeSelectProvider.starttime;
+          }else if (data['prop'] == 'endtime'){
+            value = timeSelectProvider.endtime;
+          }
+          return PostAddInputCell(
+              title: data['label'],
+              value: value,
+              hintText: '请选择${data['label']}',
+              endWidget: Icon(Icons.chevron_right),
+              onTap: () async {
+                String select = await showPickerDate(context);
+                if (data['prop'] == 'starttime'){
+                  timeSelectProvider.addStarttime(select);
+                }else if(data['prop'] == 'endtime'){
+                  timeSelectProvider.addEndtime(select);
+                }
+              }
+          );
+          break;
+        case 'dynamic':
+          if (data['prop'] == 'activityCosts'){
+            return shichipinFrom(
+                data: data,
+                timeSelectProvider: timeSelectProvider
+            );
+          }else if (data['prop'] == 'activityCostList'){
+            return feiyongFrom(
+                data: data,
+                timeSelectProvider: timeSelectProvider
+            );
+          }else {
+            return Container(
+                child: Text('无法显示未知子表单')
+            );
+          }
+          break;
+        default:
+          return Container(
+              child: Text('无法显示未知动态组件')
+          );
+          break;
+      }
+    }
+
     ///发起流程
     _startProcess(){
+      ///日期
       timeSelectProvider.addValue(nowTime);
 
+      ///基本数据
       for (Map map in widget.list) {
         if ('upload' == map['type']){
           if ('图片' == map['label']){
@@ -419,14 +496,13 @@ class _CustomFormViewState extends State<CustomFormView> {
           }
           addData[map['prop']] = timeSelectProvider.select;
         }else if ('datetimerange' == map['type']){
-          List<String> timeList = [];
-          timeList.add(timeSelectProvider.startTime + ':00');
-          timeList.add(timeSelectProvider.endTime + ':00');
-
           if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.startTime == ''){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
+          List<String> timeList = [];
+          timeList.add(timeSelectProvider.startTime + ':00');
+          timeList.add(timeSelectProvider.endTime + ':00');
           addData['yujichuchairiqi'] = timeList;
           addData['days'] = timeSelectProvider.dayNumber;
         }else if ('dynamic' == map['type']){
@@ -652,6 +728,122 @@ class _CustomFormViewState extends State<CustomFormView> {
         }
       }
 
+      ///活动数据保存
+      if (timeSelectProvider.type == '活动申请费用'){
+        for (Map map in widget.group) {
+          if (map['prop'] == 'name'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.name == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.name;
+          }else if (map['prop'] == 'deptId'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.deptId == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.deptId;
+            addData['deptName'] = timeSelectProvider.deptName;
+          }else if (map['prop'] == 'customerId'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.customerId == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.customerId;
+            addData['customerName'] = timeSelectProvider.customerName;
+          }else if (map['prop'] == 'address'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.address == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.address;
+          }else if (map['prop'] == 'starttime'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.starttime == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.starttime;
+          }else if (map['prop'] == 'endtime'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.endtime == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.endtime;
+          }else if (map['prop'] == 'phone'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.phone == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.phone;
+          }else if (map['prop'] == 'sketch'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.sketch == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.sketch;
+          }else if (map['prop'] == 'activityCosts'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.sampleMapList.length == 0){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            for (Map map in timeSelectProvider.sampleMapList) {
+              if ((map['rules'] != null && map['rules'].length > 0) && map['materialId'] == ''){
+                EasyLoading.showToast('${map['label']}不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['sample'] == 0){
+                EasyLoading.showToast('${map['label']}不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['withGoods'] == 0){
+                EasyLoading.showToast('${map['label']}不能为空');
+                return;
+              }
+            }
+            addData[map['prop']] = timeSelectProvider.sampleMapList;
+          }else if (map['prop'] == 'activityCostList'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.costMapList.length == 0){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            for (Map map in timeSelectProvider.costMapList) {
+              if ((map['rules'] != null && map['rules'].length > 0) && map['costType'] == ''){
+                EasyLoading.showToast('${map['label']}不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['costDescribe'] == ''){
+                EasyLoading.showToast('${map['label']}不能为空');
+                return;
+              }
+              if ((map['rules'] != null && map['rules'].length > 0) && map['costCash'] == 0){
+                EasyLoading.showToast('${map['label']}不能为空');
+                return;
+              }
+            }
+            addData[map['prop']] = timeSelectProvider.costMapList;
+          }else if (map['prop'] == 'costtotal'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.costtotal == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.costtotal;
+          }else if (map['prop'] == 'purchasemoney'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.purchasemoney == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.purchasemoney;
+          }else if (map['prop'] == 'purchaseratio'){
+            if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.purchaseratio == ''){
+              EasyLoading.showToast('${map['label']}不能为空');
+              return;
+            }
+            addData[map['prop']] = timeSelectProvider.purchaseratio;
+          }
+        }
+      }
+
+      ///抄送人数据添加
       List<String> idList = [];
       timeSelectProvider.userMapList.forEach((element) {
         idList.add(element['id']);
@@ -678,6 +870,32 @@ class _CustomFormViewState extends State<CustomFormView> {
               delegate: SliverChildBuilderDelegate((context, index) {
                 return _childWidget(widget.list[index]);
               }, childCount: widget.list.length)
+          ),
+          SliverVisibility(
+            visible: timeSelectProvider.type == '活动申请费用',
+            sliver: SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.only(top: 10.0),
+                child: PostAddInputCellCore(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 6),
+                  title: '活动',
+                  value: '',
+                  hintText: '',
+                  endWidget: null,
+                  end: '',
+                  fontSize: 18.0,
+                  titleColor: AppColors.FF070E28,
+                )
+              )
+            )
+          ),
+          SliverVisibility(
+            visible: timeSelectProvider.type == '活动申请费用',
+            sliver: SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return _activityChildWidget(widget.group[index]);
+                }, childCount: widget.group.length)
+            )
           ),
           SliverToBoxAdapter(
               child: Container(

@@ -47,12 +47,18 @@ class _ExamineAddState extends State<ExamineAdd> {
             dynamic process = data['data']['process'];
             List list = (form['column'] as List).cast();
             LogUtil.d('list----$list');
+            List group = [];
+            if (form['group'] != null){
+              group = (form['group'][0]['column']as List).cast();
+              LogUtil.d('group----$group');
+            }
             return ChangeNotifierProvider<TimeSelectProvider>.value(
                 value: timeSelectProvider,
                 child: CustomFormView(
                     name: widget.name,
                     processId: widget.processId,
                     list: list,
+                    group: group,
                     process: process
                 )
             );

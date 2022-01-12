@@ -1,15 +1,10 @@
 ///服务service
 class Api {
   static String baseUrl() {
-    /// 外网
-    // return 'http://47.100.191.162';
+    /// 正式服
     // return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-      return 'http://172.167.40.141:1888';
-    ///宁哥服务器
-    // return 'http://172.167.40.77:1888';
-    ///周芾服务器
-    // return 'http://172.167.40.110:1888';
+    return 'http://172.167.40.141';
   }
 
   /** 登录相关 **/

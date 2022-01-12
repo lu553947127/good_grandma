@@ -40,6 +40,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
 
   ///账余
   double orderAmount = 0;
+  ///是否是编辑
+  bool _isEdit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,12 @@ class _AddOrderPageState extends State<AddOrderPage> {
     ];
 
     String userName = Store.readNickName();
+
+    if (_isEdit == false && widget.editing){
+      _isEdit = true;
+      _orderAmount(addModel.storeModel.id, addModel);
+    }
+
     return WillPopScope(
       onWillPop: () => AppUtil.onWillPop(context),
       child: Scaffold(
@@ -91,9 +99,9 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       addModel.setStoreModel(result);
                       addModel.setPhone(result.phone);
                       if (widget.middleman && Store.readPostType() == 'zy'){
-                        _orderAmount(result.id);
+                        _orderAmount(result.id, addModel);
                       }else {
-                        _orderAmount(result.id);
+                        _orderAmount(result.id, addModel);
                       }
                     }
                   }
@@ -126,7 +134,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                   visible: widget.middleman ? Store.readPostType() == 'zy' && addModel.storeModel.id.isNotEmpty :
                   addModel.storeModel.id.isNotEmpty,
                   child: PostAddInputCell(
-                      title: 'OA账余',
+                      title: '补货金额',
                       value: '$orderAmount',
                       hintText: '$orderAmount',
                       endWidget: null,
@@ -318,7 +326,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
       AppUtil.showToastCenter('请选择客户');
       return;
     }
-    if (model.selfMention == 0) {
+    if (!widget.middleman && model.selfMention == 0) {
       AppUtil.showToastCenter('是否自提不能为空');
       return;
     }
@@ -328,7 +336,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
     }
     if (model.rewardGoodsList.isNotEmpty) {
       if (model.goodsRewardPrice > orderAmount) {
-        AppUtil.showToastCenter('抱歉，总价不能超过OA账余价格');
+        AppUtil.showToastCenter('抱歉，总价不能超过补货金额');
         return;
       }
     }
@@ -360,9 +368,9 @@ class _AddOrderPageState extends State<AddOrderPage> {
   }
 
   ///获取账余
-  Future<void> _orderAmount(String userId) async{
-    LogUtil.d('请求结果---userId----$userId');
-    Map<String, dynamic> map = {'userId': userId};
+  Future<void> _orderAmount(String userId, DeclarationFormModel model) async{
+    Map<String, dynamic> map = {'userId': userId, 'orderId': widget.editing ? model.id : ''};
+    LogUtil.d('请求结果---map----$map');
     requestGet(Api.orderAmount, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---orderAmount----$data');

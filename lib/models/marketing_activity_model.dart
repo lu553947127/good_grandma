@@ -5,6 +5,9 @@ class MarketingActivityModel extends ChangeNotifier {
   String id;
   String status;
   int statusId;
+  String deptName;
+  String address;
+  String phone;
 
   ///发布时间
   String _name;
@@ -103,6 +106,12 @@ class MarketingActivityModel extends ChangeNotifier {
   ///试吃品
   String materialName = '';
 
+  ///是否拥有附件
+  bool get haveEnclosure => (enclosureList.isNotEmpty);
+
+  ///附件列表
+  List<dynamic> enclosureList = [];
+
   MarketingActivityModel.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? '';
     _name = json['name'] ?? '';
@@ -118,6 +127,10 @@ class MarketingActivityModel extends ChangeNotifier {
     activityCosts = json['activityCosts'] ?? '';
     materialName = json['materialName'] ?? '';
     statusId = json['status'] ?? '';
+    deptName = json['deptName'] ?? '';
+    address = json['address'] ?? '';
+    phone = json['phone'] ?? '';
+    enclosureList = json['list'] ?? '';
   }
 
   setName(String name) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/marketing_activity_model.dart';
 import 'package:good_grandma/pages/marketing_activity/add_marketing_activity_page.dart';
 import 'package:good_grandma/widgets/marketing_activity_detail_title.dart';
@@ -30,9 +32,12 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
   @override
   Widget build(BuildContext context) {
     List<Map> _list1 = [
+      {'title': '区域', 'value': widget.model.deptName},
+      {'title': '地址', 'value': widget.model.address},
       {'title': '开始时间', 'value': widget.model.startTime},
       {'title': '结束时间', 'value': widget.model.endTime},
       {'title': '上级通路客户', 'value': widget.model.customerName},
+      {'title': '客户联系电话', 'value': widget.model.phone},
       {'title': '活动简述', 'value': widget.model.sketch}
     ];
 
@@ -76,7 +81,7 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
                           SizedBox(height: 5),
                           MarketingActivityMsgCell(title: '物料名称', value: widget.model.activityCosts[index]['materialName']),
                           MarketingActivityMsgCell(title: '试吃品(箱)/数量', value: widget.model.activityCosts[index]['sample'].toString() + '箱'),
-                          MarketingActivityMsgCell(title: '费用描述', value: widget.model.activityCosts[index]['costDescribe']),
+                          // MarketingActivityMsgCell(title: '费用描述', value: widget.model.activityCosts[index]['costDescribe']),
                           MarketingActivityMsgCell(title: '现金', value: widget.model.activityCosts[index]['costCash'].toString())
                         ]
                     )
@@ -92,14 +97,10 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 15.0, bottom: 5.0),
-                        child: Text(widget.model.activityCostList[index]['costTypeName'],
-                            style: const TextStyle(fontSize: 14.0)),
-                      ),
                       SizedBox(height: 5),
+                      MarketingActivityMsgCell(title: '费用类别', value: widget.model.activityCostList[index]['costTypeName']),
                       MarketingActivityMsgCell(title: '现金', value: widget.model.activityCostList[index]['costCash']),
-                      MarketingActivityMsgCell(title: '费用描述', value: widget.model.activityCostList[index]['costDescribe'])
+                      MarketingActivityMsgCell(title: '使用描述', value: widget.model.activityCostList[index]['costDescribe'])
                     ]
                   )
                 );
@@ -117,6 +118,38 @@ class _MarketingActivityDetailPageState extends State<MarketingActivityDetailPag
                   return MarketingActivityMsgCell(title: title, value: value);
                 }, childCount: _list2.length),
               )
+            ),
+            //附件
+            PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '附件'),
+            //附件信息
+            SliverVisibility(
+                visible: widget.model.haveEnclosure,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return Container(
+                        margin: EdgeInsets.all(15.0),
+                        color: Colors.white,
+                        child: ListTile(
+                            leading: Image.asset('assets/images/msg_enclosure.png',
+                                width: 30, height: 30),
+                            title: Text(
+                                widget.model.enclosureList[index]['enclosureName'].isEmpty
+                                    ? '附件'
+                                    : widget.model.enclosureList[index]['enclosureName'],
+                                style: const TextStyle(
+                                    color: AppColors.FF2F4058, fontSize: 14.0)),
+                            trailing: Image.asset('assets/images/msg_book.png',
+                                width: 24, height: 24),
+                            onTap: () {
+                              if (widget.model.enclosureList[index]['enclosurePath'].isNotEmpty)
+                                AppUtil.launchURL(widget.model.enclosureList[index]['enclosurePath']);
+                              else
+                                EasyLoading.showToast('预览地址为空');
+                            }
+                        )
+                    );
+                  }, childCount: widget.model.enclosureList.length),
+                )
             ),
             SliverSafeArea(
                 sliver: SliverToBoxAdapter(

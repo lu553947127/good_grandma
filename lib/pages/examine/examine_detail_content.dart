@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
@@ -26,6 +30,10 @@ class ExamineDetailContent extends StatelessWidget {
   List<Map> chuchaiList = [];
   ///出差日程表单集合
   List<Map> chuchairichengList = [];
+  ///试吃品列表集合
+  List<Map> sampleList = [];
+  ///费用列表集合
+  List<Map> costList = [];
 
   double numRowWidth = 100.0;//单个表宽
   double numRowHeight = 48.0;//表格高
@@ -452,6 +460,63 @@ class ExamineDetailContent extends StatelessWidget {
       LogUtil.d('taskFormList----$taskFormList');
     }
 
+    if(variables['activityCosts'] != null){
+      sampleList = (variables['activityCosts'] as List).cast();
+
+      LogUtil.d('sampleList----$sampleList');
+
+      for(int i=0; i < taskFormList.length; i++) {
+
+        if (taskFormList[i]['name'] == '试吃品'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '试吃品(箱)/数量'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '现金(元)'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '是否随货'){
+          taskFormList.removeAt(i);
+        }
+      }
+    }
+
+    if(variables['activityCostList'] != null){
+      costList = (variables['activityCostList'] as List).cast();
+
+      LogUtil.d('costList----$costList');
+
+      for(int i=0; i < taskFormList.length; i++) {
+
+        if (taskFormList[i]['name'] == '费用类别'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '使用描述'){
+          taskFormList.removeAt(i);
+        }
+        if (taskFormList[i]['name'] == '现金(元)'){
+          taskFormList.removeAt(i);
+        }
+      }
+    }
+
+    if(variables['deptId'] != null){
+      for(int i=0; i < taskFormList.length; i++) {
+        if (taskFormList[i]['name'] == '区域'){
+          taskFormList.removeAt(i);
+        }
+      }
+    }
+
+    if(variables['customerId'] != null){
+      for(int i=0; i < taskFormList.length; i++) {
+        if (taskFormList[i]['name'] == '客户'){
+          taskFormList.removeAt(i);
+        }
+      }
+    }
+
     return SliverToBoxAdapter(
         child: Container(
             margin: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -486,7 +551,9 @@ class ExamineDetailContent extends StatelessWidget {
                                               taskFormList[index]['name'] == '系统附件' ||
                                               taskFormList[index]['name'] == '出差明细' ||
                                               taskFormList[index]['name'] == '图片' ||
-                                              taskFormList[index]['name'] == '出差日程'?
+                                              taskFormList[index]['name'] == '出差日程' ||
+                                              taskFormList[index]['name'] == '试吃品' ||
+                                              taskFormList[index]['name'] == '费用'?
                                           true : false,
                                           child: Text.rich(TextSpan(
                                               text: '${taskFormList[index]['name']}   ',
@@ -533,6 +600,65 @@ class ExamineDetailContent extends StatelessWidget {
                                                 SizedBox(width: 5),
                                                 chuchairichengList.length != 0 ?
                                                 Expanded(child: _buildChart(chuchairichengList, taskFormList[index]['name'])) :
+                                                Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
+                                              ]
+                                          )
+                                      ),
+                                      Offstage(
+                                          offstage: taskFormList[index]['name'] == '试吃品' ? false : true,
+                                          child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                                SizedBox(width: 5),
+                                                sampleList.length != 0 ?
+                                                Expanded(
+                                                    child: ListView.builder(
+                                                        shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                                                        physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                                                        itemCount: sampleList.length,
+                                                        itemBuilder: (content, index){
+                                                          return Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text.rich(TextSpan(text: '试吃品   ', children: [TextSpan(text: '${sampleList[index]['materialName']}')])),
+                                                              Text.rich(TextSpan(text: '试吃品(箱)/数量   ', children: [TextSpan(text: '${sampleList[index]['sample']}')])),
+                                                              Text.rich(TextSpan(text: '现金(元)   ', children: [TextSpan(text: '${sampleList[index]['costCash']}')])),
+                                                              Text.rich(TextSpan(text: '是否随货   ', children: [TextSpan(text: sampleList[index]['withGoods'] == 1 ? '是' : '否')])),
+                                                            ]
+                                                          );
+                                                        }
+                                                    )
+                                                ) :
+                                                Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
+                                              ]
+                                          )
+                                      ),
+                                      Offstage(
+                                          offstage: taskFormList[index]['name'] == '费用' ? false : true,
+                                          child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                                SizedBox(width: 5),
+                                                costList.length != 0 ?
+                                                Expanded(
+                                                    child: ListView.builder(
+                                                        shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                                                        physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                                                        itemCount: costList.length,
+                                                        itemBuilder: (content, index){
+                                                          return Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text.rich(TextSpan(text: '费用类别   ', children: [TextSpan(text: '${costList[index]['costTypeName']}')])),
+                                                                Text.rich(TextSpan(text: '使用描述   ', children: [TextSpan(text: '${costList[index]['costDescribe']}')])),
+                                                                Text.rich(TextSpan(text: '现金(元)   ', children: [TextSpan(text: '${costList[index]['costCash']}')]))
+                                                              ]
+                                                          );
+                                                        }
+                                                    )
+                                                ) :
                                                 Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                               ]
                                           )
