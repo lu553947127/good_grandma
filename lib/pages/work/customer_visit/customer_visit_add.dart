@@ -406,7 +406,8 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
                           title: '拜访图片',
                           length: 3,
                           sizeHeight: 10,
-                          url: Api.putFile
+                          url: Api.putFile,
+                          address: address
                       )
                   ),
                   Container(

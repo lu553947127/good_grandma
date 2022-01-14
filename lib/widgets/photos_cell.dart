@@ -22,6 +22,7 @@ class CustomPhotoWidget extends StatelessWidget {
     this.url,
     this.sizeHeight,
     this.bgColor = Colors.white,
+    this.address = '未知位置'
   }) : super(key: key);
 
   final String title;
@@ -33,6 +34,7 @@ class CustomPhotoWidget extends StatelessWidget {
 
   ///分割线间距
   double sizeHeight = 0;
+  final String address;
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +77,20 @@ class CustomPhotoWidget extends StatelessWidget {
                           crossAxisSpacing: 8
                       ),
                       itemBuilder: (BuildContext content, int index){
-                        return SelectImagesView(
-                          title: title,
-                          index: index,
-                          imagesProvider: imagesProvider,
-                          url: url
-                        );
+                        if (title == '拜访图片'){
+                          return WatermarkImage(
+                              index: index,
+                              imagesProvider: imagesProvider,
+                              url: url,
+                              address: address
+                          );
+                        }else {
+                          return SelectImagesView(
+                              index: index,
+                              imagesProvider: imagesProvider,
+                              url: url
+                          );
+                        }
                       }
                   )
                 )

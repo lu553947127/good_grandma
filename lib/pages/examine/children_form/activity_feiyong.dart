@@ -68,7 +68,8 @@ class _feiyongFromState extends State<feiyongFrom> {
                           widget.timeSelectProvider.costAllPrice)}');
                     }
                     widget.timeSelectProvider.editCostModelWith(index, costModel);
-                  })
+                  }
+              )
           );
           break;
         default:

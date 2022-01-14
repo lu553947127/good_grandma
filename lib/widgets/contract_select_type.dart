@@ -92,9 +92,9 @@ class _ContractSelectTypeState extends State<ContractSelectType> {
                 ]
               ),
               onPressed: () async {
-                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'corporateName');
                 customerId = select['id'];
-                _btnName2 = select['realName'];
+                _btnName2 = select['corporateName'];
                 if (mounted) setState(() {});
                 if (widget.onSelect != null)
                   widget.onSelect(areaId, customerId, signType, status);

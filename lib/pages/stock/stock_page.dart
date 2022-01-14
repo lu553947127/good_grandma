@@ -83,7 +83,7 @@ class _StockPageState extends State<StockPage> {
                       delegate: SliverChildBuilderDelegate((context, index) {
                         Map map = _dataArray[index];
                         String avatar = map['avatar'] ?? '';
-                        String shopName = map['realName'] ?? '商户名称';
+                        String shopName = map['corporate'] ?? '商户名称';
                         String name = map['juridical'] ?? '';
                         String juridicalPhone = map['juridicalPhone'] ?? '';
                         String address = map['address'] ?? '';
@@ -119,7 +119,7 @@ class _StockPageState extends State<StockPage> {
       return;
     }
     List<Map> tempList = [];
-    tempList.addAll(_dataArray.where((element) => (element['realName'] as String).contains(text)));
+    tempList.addAll(_dataArray.where((element) => (element['corporate'] as String).contains(text)));
     _dataArray.clear();
     _dataArray.addAll(tempList);
     setState(() {});
@@ -139,7 +139,7 @@ class _StockPageState extends State<StockPage> {
     try {
       Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
       final val = await requestGet(Api.customerStockList, param: map);
-      // LogUtil.d('customerStockList value = $val');
+      LogUtil.d('customerStockList value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];

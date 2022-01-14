@@ -55,9 +55,9 @@ class _OpenBusinessRepresentativeState extends State<OpenBusinessRepresentative>
                             _model.setRoleName(select['roleName']);
                             break;
                           case 1: //选择经销商
-                            Map select = await showSelectList(context, Api.customerList, '请选择经销商名称', 'realName');
+                            Map select = await showSelectList(context, Api.customerList, '请选择经销商名称', 'corporateName');
                             _model.setServiceCode(select['id']);
-                            _model.setServiceCodeName(select['realName']);
+                            _model.setServiceCodeName(select['corporateName']);
                             break;
                           case 2://业务类型
                             String select = await showPicker(['公司代表', '经销商代表'], context);

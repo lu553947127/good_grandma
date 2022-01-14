@@ -45,7 +45,7 @@ class _shichipinFromState extends State<shichipinFrom> {
               onTap: () async {
                 if (data['prop'] == 'materialId'){
                   Map<String, dynamic> map = {'type': '1'};
-                  Map select = await showSelectListParameter(context, Api.materialNoPageList, '请选择物料名称', 'name', map);
+                  Map select = await showSelectListParameter(context, Api.materialSelectList, '请选择物料名称', 'name', map);
                   sampleModel.materialId = select['id'];
                   sampleModel.materialName = select['name'];
                   sampleModel.unitPrice = double.parse(select['unitPrice']);
@@ -97,11 +97,12 @@ class _shichipinFromState extends State<shichipinFrom> {
                     }
                     sampleModel.costCash = (double.parse(text) * sampleModel.unitPrice);
                     sampleModel.sample = double.parse(text);
+                    widget.timeSelectProvider.editSampleModelWith(index, sampleModel);
 
                     widget.timeSelectProvider.addCosttotal('${(widget.timeSelectProvider.sampleAllPrice +
                         widget.timeSelectProvider.costAllPrice)}');
-                    widget.timeSelectProvider.editSampleModelWith(index, sampleModel);
-                  })
+                  }
+              )
           );
           break;
         default:

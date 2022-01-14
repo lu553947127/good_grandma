@@ -116,13 +116,13 @@ class _VisitPlanAddState extends State<VisitPlanAdd> {
               rightPlaceholder: '请选择客户',
               value: userName,
               onPressed: () async{
-                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectList(context, Api.customerList, '请选择客户名称', 'corporateName');
                 LogUtil.d('请求结果---select----$select');
                 setState(() {
-                  userName = select['realName'];
+                  userName = select['corporateName'];
                   userId = select['id'];
                 });
-                return select['realName'];
+                return select['corporateName'];
               }
             ),
             TextInputView(

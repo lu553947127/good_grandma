@@ -65,9 +65,9 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
                 _controller.callRefresh();
               },
               onPressed2: () async{
-                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'realName');
+                Map select = await showSelectSearchList(context, Api.customerList, '请选择客户名称', 'corporateName');
                 customerId = select['id'];
-                customerName = select['realName'];
+                customerName = select['corporateName'];
                 _controller.callRefresh();
               },
               onPressed3: () async {

@@ -107,10 +107,10 @@ class _VisitStatisticsState extends State<VisitStatistics> {
                   context,
                   typeId == '1' ? Api.userList : Api.customerList,
                   typeId == '1' ? '请选择员工' : '请选择客户',
-                  'realName'
+                  'corporateName'
               );
               typeId == '1' ? userId = select['id'] : customerId = select['id'];
-              customerName = select['realName'];
+              customerName = select['corporateName'];
               _controller.callRefresh();
             },
             onPressed2: () async {
