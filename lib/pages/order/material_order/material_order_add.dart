@@ -225,7 +225,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                                           trailing: Icon(Icons.chevron_right),
                                           onTap: () async {
                                             Map select = await showSelectList(context, Api.materialSelectList, '请选择物料', 'name');
-                                            marketingModel.materialId = select['id'];
+                                            marketingModel.materialId = select['id'].toString();
                                             marketingModel.materialName = select['name'];
                                             marketingModel.newQuantity = select['quantity'];
                                             marketingModel.unitPrice = select['unitPrice'];

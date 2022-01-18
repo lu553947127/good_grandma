@@ -27,6 +27,7 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
   TextEditingController controller = new TextEditingController();
   String visitContent = '';
   String images = '';
+  String address = '';
 
   ///编辑
   _customerVisitEdit(){
@@ -71,6 +72,7 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
     super.initState();
     controller.text = widget.data['visitContent'];
     visitContent = widget.data['visitContent'];
+    address = widget.data['address'];
     List<String> ipictures = (widget.data['ipictures'] as List).cast();
     ipictures.forEach((element) {
       imagesProvider.fileList(element, 'png', '');
@@ -116,7 +118,8 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
                           title: '拜访图片',
                           length: 3,
                           sizeHeight: 10,
-                          url: Api.putFile
+                          url: Api.putFile,
+                          address: address
                       )
                   ),
                   Container(
