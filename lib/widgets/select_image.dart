@@ -395,7 +395,6 @@ class _WatermarkImageState extends State<WatermarkImage> {
   }
 }
 
-
 ///oa多图片上传
 class OaSelectImagesView extends StatefulWidget {
   final String title;

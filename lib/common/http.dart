@@ -229,7 +229,7 @@ Future getPutFile(url, file) async{
         Api.baseUrl() + url,
         data: formData,
         onSendProgress: (progress, total){
-          Future.delayed(Duration(milliseconds: 500)).then((value) {
+          Future.delayed(Duration(milliseconds: 50)).then((value) {
             final currentProgress = (progress / total);
             EasyLoading.showProgress(
                 currentProgress,

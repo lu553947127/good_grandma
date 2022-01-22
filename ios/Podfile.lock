@@ -16,6 +16,8 @@ PODS:
     - Flutter
     - MTBBarcodeScanner
     - SwiftProtobuf
+  - camera (0.0.1):
+    - Flutter
   - device_info (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -57,6 +59,7 @@ DEPENDENCIES:
   - amap_flutter_map (from `.symlinks/plugins/amap_flutter_map/ios`)
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
+  - camera (from `.symlinks/plugins/camera/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
   - flutter_filereader (from `.symlinks/plugins/flutter_filereader/ios`)
@@ -91,6 +94,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_settings/ios"
   barcode_scan:
     :path: ".symlinks/plugins/barcode_scan/ios"
+  camera:
+    :path: ".symlinks/plugins/camera/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   Flutter:
@@ -128,6 +133,7 @@ SPEC CHECKSUMS:
   AMapLocation: dad27669c4ca68e395ce7532ff614b7d4d45f7b7
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
   barcode_scan: a5c27959edfafaa0c771905bad0b29d6d39e4479
+  camera: fe33292aff715a981eb34d7ce7b35b54337ff34c
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_filereader: 0caefb23b8c96deca7c3679d3e61bfd8111a7d11
