@@ -62,13 +62,13 @@ class _StockAddPageState extends State<StockAddPage> {
             ),
             //商品名称
             SliverToBoxAdapter(
-              child: ListTile(
-                title: const Text('商品名称',
-                    style:
-                        TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
-                trailing: IconButton(
-                    onPressed: () => _pickGoodsAction(context, _model),
-                    icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+              child: Visibility(
+                visible: _model.stockList.length > 0,
+                child: ListTile(
+                  title: const Text('商品名称',
+                      style:
+                      TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
+                ),
               ),
             ),
             //list
@@ -95,6 +95,16 @@ class _StockAddPageState extends State<StockAddPage> {
                 deleteAction: () => _model.deleteStockListWith(index),
               );
             }, childCount: _model.stockList.length)),
+            SliverToBoxAdapter(
+              child: ListTile(
+                title: const Text('添加商品',
+                    style:
+                    TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
+                trailing: IconButton(
+                    onPressed: () => _pickGoodsAction(context, _model),
+                    icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+              ),
+            ),
             //submit button
             SliverToBoxAdapter(
                 child: SubmitBtn(
