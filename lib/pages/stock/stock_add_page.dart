@@ -79,20 +79,11 @@ class _StockAddPageState extends State<StockAddPage> {
               return StockAddGoodsCell(
                 key: UniqueKey(),
                 goodsNames: goodsNames,
+                stockAddModel: _model,
                 stockModel: stockModel,
                 editingController: _editingController,
                 focusNode: _focusNode,
-                numberChangeAction: (SpecModel specModel) {
-                  _model.editStockListWith(index, stockModel);
-                },
-                pickTimeAction: () async {
-                  String time = await showPickerDate(context);
-                  if (time != null) {
-                    stockModel.time = time;
-                    _model.editStockListWith(index, stockModel);
-                  }
-                },
-                deleteAction: () => _model.deleteStockListWith(index),
+                index: index
               );
             }, childCount: _model.stockList.length)),
             SliverToBoxAdapter(
@@ -126,56 +117,43 @@ class _StockAddPageState extends State<StockAddPage> {
       AppUtil.showToastCenter('请选择商品');
       return;
     }
-    bool needPickTime = false;
-    bool needNumber = false;
-    _model.stockList.forEach((stockModel) {
-      if (stockModel.time == null || stockModel.time.isEmpty) {
-        needPickTime = true;
+    for (StockModel stockModel in _model.stockList) {
+      if (stockModel.oneToThree == null || stockModel.oneToThree.isEmpty) {
+        AppUtil.showToastCenter('请输入1-3月存量');
         return;
       }
-      stockModel.goodsModel.specs.forEach((specModel) {
-        if (specModel.number == null || specModel.number.isEmpty) {
-          needNumber = true;
-          return;
-        }
-      });
-    });
-    if (needPickTime) {
-      AppUtil.showToastCenter('请选择生产日期');
-      return;
-    }
-    if (needNumber) {
-      AppUtil.showToastCenter('请填写数量');
-      return;
+      if (stockModel.fourToSix == null || stockModel.fourToSix.isEmpty) {
+        AppUtil.showToastCenter('请输入4-6月存量');
+        return;
+      }
+      if (stockModel.sevenToTwelve == null || stockModel.sevenToTwelve.isEmpty) {
+        AppUtil.showToastCenter('请输入7-9月存量');
+        return;
+      }
+      if (stockModel.eighteenToUp == null || stockModel.eighteenToUp.isEmpty) {
+        AppUtil.showToastCenter('请输入9月以上存量');
+        return;
+      }
     }
     Map param = {
       'customerId': _model.customer.id,
       'checkList': _model.stockList
           .map((stockModel) => {
-                'makeTime': stockModel.time,
+                'goodsId': stockModel.goodsModel.id,
                 'goodsName': stockModel.goodsModel.name,
-                'spec20': _getSpecModelWith(stockModel, '20') != null
-                    ? _getSpecModelWith(stockModel, '20').number
-                    : '0',
-                'spec40': _getSpecModelWith(stockModel, '40') != null
-                    ? _getSpecModelWith(stockModel, '40').number
-                    : '0',
+                'oneToThree': stockModel.oneToThree,
+                'fourToSix': stockModel.fourToSix,
+                'sevenToTwelve': stockModel.sevenToTwelve,
+                'eighteenToUp': stockModel.eighteenToUp
               })
           .toList(),
     };
-    // print('param = ${jsonEncode(param)}');
+    print('param = ${jsonEncode(param)}');
     requestPost(Api.customerStockAdd, json: jsonEncode(param)).then((value) {
       var data = jsonDecode(value.toString());
-      // print('data = $data');
+      print('data = $data');
       if (data['code'] == 200) Navigator.pop(context, true);
     });
-  }
-
-  SpecModel _getSpecModelWith(StockModel stockModel, String key) {
-    List<SpecModel> list = stockModel.goodsModel.specs
-        .where((specModel) => specModel.spec.contains(key))
-        .toList();
-    return list.isNotEmpty ? list.first : null;
   }
 
   ///选择商品
@@ -189,13 +167,15 @@ class _StockAddPageState extends State<StockAddPage> {
       return SelectGoodsPage(
         selGoods: [],
         customerId: _model.customer.id,
-        selectSingle: true,
+        selectSingle: false,
       );
     }));
     if (_selGoodsList != null && _selGoodsList.isNotEmpty) {
-      StockModel stockModel = StockModel(key: UniqueKey());
-      stockModel.goodsModel = _selGoodsList.first;
-      _model.addToStockList(stockModel);
+      _selGoodsList.forEach((element) {
+        StockModel stockModel = StockModel(key: UniqueKey());
+        stockModel.goodsModel = element;
+        _model.addToStockList(stockModel);
+      });
     }
   }
 

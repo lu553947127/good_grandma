@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/stock_add_model.dart';
+import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 
 ///新增库存商品cell
 class StockAddGoodsCell extends StatelessWidget {
   const StockAddGoodsCell({
     Key key,
     @required this.goodsNames,
+    @required this.stockAddModel,
     @required this.stockModel,
     @required TextEditingController editingController,
     @required FocusNode focusNode,
-    @required this.pickTimeAction,
-    @required this.deleteAction,
-    @required this.numberChangeAction,
+    @required this.index
   })  : _editingController = editingController,
         _focusNode = focusNode,
         super(key: key);
 
   final String goodsNames;
+  final StockAddModel stockAddModel;
   final StockModel stockModel;
   final TextEditingController _editingController;
   final FocusNode _focusNode;
-  final VoidCallback pickTimeAction;
-  final VoidCallback deleteAction;
-  final Function(SpecModel specModel) numberChangeAction;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -45,106 +43,113 @@ class StockAddGoodsCell extends StatelessWidget {
                           ? AppColors.FF2F4058
                           : AppColors.FFC1C8D7,
                       fontSize: 14.0)),
-              trailing: Icon(Icons.chevron_right, color: AppColors.FF2F4058),
+              trailing: null,
               contentPadding: const EdgeInsets.all(0),
             ),
             const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children:
-                List.generate(stockModel.goodsModel.specs.length, (index) {
-                  SpecModel specModel = stockModel.goodsModel.specs[index];
-                  return Expanded(
-                    child: _NumberCell(
-                      key: UniqueKey(),
-                      title: '整箱(${specModel.spec})',
-                      value: specModel.number,
-                      onTap: () => AppUtil.showInputDialog(
-                          context: context,
-                          editingController: _editingController,
-                          focusNode: _focusNode,
-                          text: specModel.number,
-                          hintText: '请输入数量',
-                          keyboardType: TextInputType.number,
-                          callBack: (text) {
-                            if(text.contains('.') || int.tryParse(text) == null){
-                              AppUtil.showToastCenter('请输入整数数量');
-                              return;
-                            }
-                            specModel.number = text;
-                            if(numberChangeAction != null)
-                              numberChangeAction(specModel);
-                          }),
-                    ),
-                  );
-                }),
-              ),
+            ActivityAddTextCell(
+                title: '1-3月存量（箱）',
+                hintText: '请输入数量',
+                value: stockModel.oneToThree,
+                trailing: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: stockModel.oneToThree,
+                    hintText: '请输入数量',
+                    keyboardType: TextInputType.number,
+                    callBack: (text) {
+                      if(text.contains('.') || int.tryParse(text) == null){
+                        AppUtil.showToastCenter('请输入整数数量');
+                        return;
+                      }
+                      stockModel.oneToThree = text;
+                      stockAddModel.editStockListWith(index, stockModel);
+                    })
             ),
             const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            //生产日期
-            ListTile(
-              leading: Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text('生产日期',
-                    style: const TextStyle(
-                        color: AppColors.FF2F4058, fontSize: 12.0)),
-              ),
-              title: Text(
-                  stockModel.time.isNotEmpty ? stockModel.time : '请选择生产日期',
-                  style: TextStyle(
-                      color: stockModel.time.isNotEmpty
-                          ? AppColors.FF2F4058
-                          : AppColors.FFC1C8D7,
-                      fontSize: 12.0)),
-              trailing: IconButton(
-                  onPressed: deleteAction,
-                  icon:
-                  Icon(Icons.delete_forever_outlined, color: Colors.black)),
-              contentPadding: const EdgeInsets.all(0),
-              onTap: pickTimeAction,
+            ActivityAddTextCell(
+                title: '4-6月存量（箱）',
+                hintText: '请输入数量',
+                value: stockModel.fourToSix,
+                trailing: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: stockModel.fourToSix,
+                    hintText: '请输入数量',
+                    keyboardType: TextInputType.number,
+                    callBack: (text) {
+                      if(text.contains('.') || int.tryParse(text) == null){
+                        AppUtil.showToastCenter('请输入整数数量');
+                        return;
+                      }
+                      stockModel.fourToSix = text;
+                      stockAddModel.editStockListWith(index, stockModel);
+                    })
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NumberCell extends StatelessWidget {
-  const _NumberCell({
-    Key key,
-    @required this.title,
-    @required this.value,
-    @required this.onTap,
-  }) : super(key: key);
-
-  final String title;
-  final String value;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text(title,
-                style:
-                const TextStyle(color: AppColors.FF2F4058, fontSize: 12.0)),
-          ),
-          Text(value.isNotEmpty ? value : '请输入数量',
-              style: TextStyle(
-                  color: value.isNotEmpty
-                      ? AppColors.FF2F4058
-                      : AppColors.FFC1C8D7,
-                  fontSize: 12.0)),
-        ],
-      ),
+            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
+            ActivityAddTextCell(
+                title: '7-9月存量（箱）',
+                hintText: '请输入数量',
+                value: stockModel.sevenToTwelve,
+                trailing: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: stockModel.sevenToTwelve,
+                    hintText: '请输入数量',
+                    keyboardType: TextInputType.number,
+                    callBack: (text) {
+                      if(text.contains('.') || int.tryParse(text) == null){
+                        AppUtil.showToastCenter('请输入整数数量');
+                        return;
+                      }
+                      stockModel.sevenToTwelve = text;
+                      stockAddModel.editStockListWith(index, stockModel);
+                    })
+            ),
+            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
+            ActivityAddTextCell(
+                title: '9月以上存量（箱）',
+                hintText: '请输入数量',
+                value: stockModel.eighteenToUp,
+                trailing: null,
+                onTap: () => AppUtil.showInputDialog(
+                    context: context,
+                    editingController: _editingController,
+                    focusNode: _focusNode,
+                    text: stockModel.eighteenToUp,
+                    hintText: '请输入数量',
+                    keyboardType: TextInputType.number,
+                    callBack: (text) {
+                      if(text.contains('.') || int.tryParse(text) == null){
+                        AppUtil.showToastCenter('请输入整数数量');
+                        return;
+                      }
+                      stockModel.eighteenToUp = text;
+                      stockAddModel.editStockListWith(index, stockModel);
+                    })
+            ),
+            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
+            //删除
+            Container(
+                width: double.infinity,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                    onPressed: (){
+                      stockAddModel.deleteStockListWith(index);
+                    },
+                    icon: Icon(Icons.delete_forever_outlined, color: AppColors.FFDD0000)
+                )
+            )
+          ]
+        )
+      )
     );
   }
 }

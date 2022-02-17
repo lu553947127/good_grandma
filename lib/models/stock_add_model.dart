@@ -57,12 +57,22 @@ class StockAddModel extends ChangeNotifier {
 class StockModel {
   GoodsModel goodsModel;
 
-  ///生产时间
-  String time;
+  ///1-3月存量
+  String oneToThree;
+  ///4-6月存量
+  String fourToSix;
+  ///7-9月存量
+  String sevenToTwelve;
+  ///9月以上存量
+  String eighteenToUp;
+
   StockModel({
     ///key必须传，否则修改数目会出错
     @required Key key,
-    this.time = '',
+    this.oneToThree = '',
+    this.fourToSix = '',
+    this.sevenToTwelve = '',
+    this.eighteenToUp = ''
   }) {
     goodsModel = GoodsModel();
   }

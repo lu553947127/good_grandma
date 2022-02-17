@@ -143,7 +143,7 @@ class _StockPageState extends State<StockPage> {
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
-      // print(list.toString());
+      print(list.toString());
       list.forEach((map) {
         _dataArray.add(map as Map);
       });

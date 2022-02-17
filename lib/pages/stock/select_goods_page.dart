@@ -6,6 +6,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
@@ -153,7 +154,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
       String url = Api.customerStockGoodsList;
       if (!widget.forStock) url = Api.goodsList;
       final val = await requestGet(url, param: map);
-      // LogUtil.d('customerStockGoodsList value = $val');
+      LogUtil.d('$url value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _goodsList.clear();
       final List<dynamic> list = data['data'];
@@ -162,7 +163,6 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
         GoodsModel model;
         if (widget.forStock) {
           model = GoodsModel.fromJson((map as Map));
-          model.id = i.toString();
         } else {
           double invoice = double.parse(map['invoice']) ?? 0;
           double middleman = double.parse(map['middleman']) ?? 0;
