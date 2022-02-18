@@ -96,8 +96,7 @@ class _StockCell extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(flex: 1,child: Text(_transforTime(model.typeName),style: const TextStyle(color: AppColors.FFC68D3E))),
-          Expanded(flex: 2,child: _RedCountText(title: '整箱(1*40)：' ,value: model.spec40)),
-          Expanded(flex: 2,child: _RedCountText(title: '整箱(1*20)：' ,value: model.spec20)),
+          Expanded(flex: 2,child: _RedCountText(title: '数量(箱)：' ,value: _number(model.typeName)))
         ],
       ),
     );
@@ -112,13 +111,29 @@ class _StockCell extends StatelessWidget {
         str = '4-6月';
         break;
       case 'sevenToTwelve':
-        str = '7-12月';
-        break;
-      case 'thirteenToEighteen':
-        str = '13-18月';
+        str = '7-9月';
         break;
       case 'eighteenToUp':
-        str = '18月以上';
+        str = '9月以上';
+        break;
+    }
+    return str;
+  }
+
+  String _number(String time){
+    String str = '';
+    switch(time){
+      case 'oneToThree':
+        str = model.oneToThree;
+        break;
+      case 'fourToSix':
+        str = model.fourToSix;
+        break;
+      case 'sevenToTwelve':
+        str = model.sevenToTwelve;
+        break;
+      case 'eighteenToUp':
+        str = model.eighteenToUp;
         break;
     }
     return str;

@@ -43,6 +43,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
   List<GoodsModel> _goodsList = [];
   int _current = 1;
   int _pageSize = 20;
+  String selectName = '全选';
 
   @override
   void initState() {
@@ -53,7 +54,34 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('选择产品')),
+      appBar: AppBar(
+          title: Text('选择产品'),
+          actions: [
+            TextButton(
+                child: Text(selectName, style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
+                onPressed: () async {
+                  if (selectName == '全选'){
+                    selectName = '取消全选';
+                    _goodsList.forEach((goods) {
+                      goods.isSelected = true;
+                      widget.selGoods.forEach((selEmployee) {
+                        if (selEmployee.id == goods.id) goods.isSelected = true;
+                      });
+                    });
+                  }else {
+                    selectName = '全选';
+                    _goodsList.forEach((goods) {
+                      goods.isSelected = false;
+                      widget.selGoods.forEach((selEmployee) {
+                        if (selEmployee.id == goods.id) goods.isSelected = true;
+                      });
+                    });
+                  }
+                  setState(() {});
+                }
+            )
+          ]
+      ),
       body: Column(
         children: [
           //搜索

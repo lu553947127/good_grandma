@@ -31,17 +31,26 @@ class StockDetailModel extends ChangeNotifier {
         'oneToThree',
         'fourToSix',
         'sevenToTwelve',
-        'thirteenToEighteen',
         'eighteenToUp'
       ];
       keys.forEach((key) {
         StackGoodsListModel model = StackGoodsListModel();
         model.typeName = key;
         json['appCustomerCheckData'].forEach((v) {
-          String spec = v['spec'];
-          if (spec.contains('20'))
-            model.spec20 = v[key].toString() ?? '';
-          else if (spec.contains('40')) model.spec40 = v[key].toString() ?? '';
+          switch(key){
+            case 'oneToThree':
+              model.oneToThree = v['oneToThree'].toString();
+              break;
+            case 'fourToSix':
+              model.fourToSix = v['fourToSix'].toString();
+              break;
+            case 'sevenToTwelve':
+              model.sevenToTwelve = v['sevenToTwelve'].toString();
+              break;
+            case 'eighteenToUp':
+              model.eighteenToUp = v['eighteenToUp'].toString();
+              break;
+          }
         });
         goodsList.add(model);
       });
@@ -61,22 +70,28 @@ class StockDetailModel extends ChangeNotifier {
 
 class StackGoodsListModel {
   String typeName;
-  String spec20;
-  String spec40;
+  String oneToThree;
+  String fourToSix;
+  String sevenToTwelve;
+  String eighteenToUp;
 
-  StackGoodsListModel({this.typeName = '', this.spec20 = '', this.spec40 = ''});
+  StackGoodsListModel({this.typeName = ''});
 
   StackGoodsListModel.fromJson(Map<String, dynamic> json) {
     typeName = json['typeName'] ?? '';
-    spec20 = json['spec20'].toString() ?? '';
-    spec40 = json['spec40'].toString() ?? '';
+    oneToThree = json['oneToThree'].toString() ?? '';
+    fourToSix = json['fourToSix'].toString() ?? '';
+    sevenToTwelve = json['sevenToTwelve'].toString() ?? '';
+    eighteenToUp = json['eighteenToUp'].toString() ?? '';
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['typeName'] = this.typeName;
-    data['spec20'] = this.spec20;
-    data['spec40'] = this.spec40;
+    data['oneToThree'] = this.oneToThree;
+    data['fourToSix'] = this.fourToSix;
+    data['sevenToTwelve'] = this.sevenToTwelve;
+    data['eighteenToUp'] = this.eighteenToUp;
     return data;
   }
 }
