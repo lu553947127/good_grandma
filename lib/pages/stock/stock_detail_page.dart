@@ -107,6 +107,7 @@ class _StockDetailPageState extends State<StockDetailPage> {
       final val = await requestGet(Api.customerStockDetail, param: map);
       LogUtil.d('customerStockDetail value = ${jsonEncode(val)}');
       var data = jsonDecode(val.toString());
+      if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
       list.forEach((map) {
         _dataArray.add(map as Map);

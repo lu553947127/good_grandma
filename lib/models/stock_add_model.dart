@@ -64,6 +64,7 @@ class StockAddModel extends ChangeNotifier {
     if (_stockList == null) _stockList = [];
     if (index >= _stockList.length) return;
     _stockList.removeAt(index);
+    _goodsList.removeAt(index);
     notifyListeners();
   }
 

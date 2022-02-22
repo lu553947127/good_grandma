@@ -171,9 +171,16 @@ class _StockAddPageState extends State<StockAddPage> {
       );
     }));
     if (_selGoodsList != null && _selGoodsList.isNotEmpty) {
-      _selGoodsList.forEach((element) {
+      _selGoodsList.forEach((goodsModel) {
+        //防止商品重复选择
+        for (StockModel stockModel in _model.stockList) {
+          if (goodsModel.id == stockModel.goodsModel.id){
+            return;
+          }
+        }
+
         StockModel stockModel = StockModel(key: UniqueKey());
-        stockModel.goodsModel = element;
+        stockModel.goodsModel = goodsModel;
         _model.addToStockList(stockModel);
       });
 
