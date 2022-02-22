@@ -165,7 +165,7 @@ class _StockAddPageState extends State<StockAddPage> {
     List<GoodsModel> _selGoodsList =
         await Navigator.push(context, MaterialPageRoute(builder: (_) {
       return SelectGoodsPage(
-        selGoods: [],
+        selGoods: _model.goodsList,
         customerId: _model.customer.id,
         selectSingle: false,
       );
@@ -176,6 +176,8 @@ class _StockAddPageState extends State<StockAddPage> {
         stockModel.goodsModel = element;
         _model.addToStockList(stockModel);
       });
+
+      _model.setArrays(_model.goodsList, _selGoodsList);
     }
   }
 

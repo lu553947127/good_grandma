@@ -10,14 +10,20 @@ class StockAddModel extends ChangeNotifier {
   ///商品列表
   List<StockModel> _stockList;
 
+  List<GoodsModel> _goodsList;
+
   ///客户
   EmployeeModel get customer => _customer;
 
   ///商品列表
   List<StockModel> get stockList => _stockList;
+
+  ///商品列表
+  List<GoodsModel> get goodsList => _goodsList;
   StockAddModel() {
     _customer = EmployeeModel();
     _stockList = [];
+    _goodsList = [];
   }
   setCustomer(EmployeeModel customer) {
     _customer = customer;
@@ -34,6 +40,16 @@ class StockAddModel extends ChangeNotifier {
   addToStockList(StockModel stockModel) {
     if (_stockList == null) _stockList = [];
     _stockList.add(stockModel);
+    notifyListeners();
+  }
+
+  setArrays(
+      List<GoodsModel> array,
+      List<GoodsModel> values,
+      ) {
+    if (array == null) array = [];
+    array.clear();
+    array.addAll(values);
     notifyListeners();
   }
 
