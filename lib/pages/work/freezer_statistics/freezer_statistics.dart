@@ -72,6 +72,7 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
               },
               onPressed3: () async {
                 String result = await showPicker(['所有状态', '未开柜', '已开柜'], context);
+                if (result.isEmpty) return;
                 switch(result){
                   case '所有状态':
                     status = '';

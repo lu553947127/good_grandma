@@ -23,6 +23,7 @@ import 'package:good_grandma/pages/repor_statistics/report_statistics_page.dart'
 import 'package:good_grandma/pages/stock/stock_page.dart';
 import 'package:good_grandma/pages/track/track_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
+import 'package:good_grandma/pages/work/customer_visit/customer_visit_edit.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
 import 'package:good_grandma/pages/work/market_material/market_material.dart';
@@ -98,6 +99,20 @@ class _AppPageState extends State<AppPage> {
     });
   }
 
+  ///判断是否有拜访记录
+  isCustomerVisitAdd(){
+    requestPost(Api.isCustomerVisit).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---isCustomerVisit----$data');
+      String id = data['data']['id'].toString();
+      if (id != '-1'){
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitEdit(data: data['data'])));
+      }else {
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitAdd()));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -108,7 +123,7 @@ class _AppPageState extends State<AppPage> {
           Navigator.push(context, MaterialPageRoute(builder:(context)=> VisitPlan()));
           break;
         case 'customerVisit'://客户拜访
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitAdd()));
+          isCustomerVisitAdd();
           break;
         case 'workReport'://工作报告
           Navigator.push(context, MaterialPageRoute(builder:(context)=> WorkReport()));

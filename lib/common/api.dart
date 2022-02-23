@@ -66,6 +66,9 @@ class Api {
   ///客户拜访编辑
   static const customerVisitEdit = "/api/hap-app/app/visitplan/customerVisitEdit";
 
+  ///判断是否有拜访
+  static const isCustomerVisit = "/api/hap-app/app/visitplan/inProgressVisit";
+
 
   /** 工作报告相关 **/
 
