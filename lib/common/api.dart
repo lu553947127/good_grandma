@@ -4,7 +4,7 @@ class Api {
     /// 正式服
     // return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    return 'http://172.167.40.141';
+    return 'http://172.167.40.141:1888';
   }
 
   /** 登录相关 **/

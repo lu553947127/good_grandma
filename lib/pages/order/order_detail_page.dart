@@ -287,7 +287,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   void _examineAction(BuildContext context) async {
     bool result = await AppUtil.bottomConformSheet(context, '是否确认审核？');
     if (result != null && result)
-      _examineRequest(context, {'id': _model.id, 'status': 0});
+      _examineRequest(context, {'id': _model.id, 'status': 2});
   }
 
   //审核驳回网络请求

@@ -127,6 +127,16 @@ class ExamineView extends StatelessWidget {
             ),
             SizedBox(height: 5),
             Container(
+                margin: EdgeInsets.only(top: 2),
+                child: Row(
+                    children: [
+                      Text('流水号: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                      SizedBox(width: 10),
+                      Text('${data['variables']['serialNumber']}',style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                    ]
+                )
+            ),
+            Container(
               margin: EdgeInsets.only(top: 2),
               child: Row(
                 children: [

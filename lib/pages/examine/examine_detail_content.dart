@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
-import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
@@ -567,41 +563,38 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '支付对象信息' ? false : true,
-                                          child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
-                                                SizedBox(width: 5),
-                                                zhifuList.length != 0 ?
-                                                Expanded(child: _buildChart(zhifuList, taskFormList[index]['name'])) :
-                                                Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
-                                              ]
+                                          child: Expanded(
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                                  _buildChart(zhifuList, taskFormList[index]['name'])
+                                                ]
+                                            )
                                           )
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差明细' ? false : true,
-                                          child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
-                                                SizedBox(width: 5),
-                                                chuchaiList.length != 0 ?
-                                                Expanded(child: _buildChart(chuchaiList, taskFormList[index]['name'])) :
-                                                Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
-                                              ]
+                                          child: Expanded(
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                                  _buildChart(chuchaiList, taskFormList[index]['name'])
+                                                ]
+                                            )
                                           )
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差日程' ? false : true,
-                                          child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
-                                                SizedBox(width: 5),
-                                                chuchairichengList.length != 0 ?
-                                                Expanded(child: _buildChart(chuchairichengList, taskFormList[index]['name'])) :
-                                                Text('暂无', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
-                                              ]
+                                          child: Expanded(
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
+                                                  _buildChart(chuchairichengList, taskFormList[index]['name'])
+                                                ]
+                                            )
                                           )
                                       ),
                                       Offstage(
