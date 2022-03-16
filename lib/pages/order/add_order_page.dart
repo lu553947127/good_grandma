@@ -12,6 +12,7 @@ import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
+import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/stock/select_goods_page.dart';
 import 'package:good_grandma/widgets/order_add_page_goods_cell.dart';
 import 'package:good_grandma/widgets/order_goods_count_view.dart';
@@ -166,6 +167,88 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       )
                   )
               ),
+              //发票类型
+              SliverToBoxAdapter(
+                  child: Visibility(
+                      visible: !widget.middleman,
+                      child: PostAddInputCell(
+                          title: '发票类型',
+                          value: '${addModel.invoiceTypeName}',
+                          hintText: '请选择发票类型',
+                          endWidget: Icon(Icons.chevron_right),
+                          onTap: () async {
+                            String select = await showPicker(['普票', '专票'], context);
+                            switch(select){
+                              case "普票":
+                                addModel.setInvoiceType(1);
+                                break;
+                              case "专票":
+                                addModel.setInvoiceType(2);
+                                break;
+                            }
+                            addModel.setInvoiceTypeName(select);
+                          }
+                      )
+                  )
+              ),
+              //是否渠道客户
+              SliverToBoxAdapter(
+                  child: Visibility(
+                      visible: !widget.middleman && addModel.invoiceType == 2,
+                      child: PostAddInputCell(
+                          title: '是否渠道客户',
+                          value: '${addModel.orderTypeIsName}',
+                          hintText: '是否渠道客户',
+                          endWidget: Icon(Icons.chevron_right),
+                          onTap: () async {
+                            String select = await showPicker(['普通订单', '渠道客户订单'], context);
+                            switch(select){
+                              case "普通订单":
+                                addModel.setOrderTypeIs(1);
+                                break;
+                              case "渠道客户订单":
+                                addModel.setOrderTypeIs(2);
+                                break;
+                            }
+                            addModel.setOrderTypeIsName(select);
+                          }
+                      )
+                  )
+              ),
+              //结算客户
+              SliverToBoxAdapter(
+                  child: Visibility(
+                      visible: !widget.middleman && addModel.orderTypeIs == 2,
+                      child: PostAddInputCell(
+                          title: '结算客户',
+                          value: '${addModel.settlementCusName}',
+                          hintText: '请选择结算客户',
+                          endWidget: Icon(Icons.chevron_right),
+                          onTap: () async {
+                            Map select = await showSelectSearchList(context, Api.settlementCus, '请选择结算客户', 'corporate');
+                            addModel.setSettlementCus(select['userId']);
+                            addModel.setSettlementCusName(select['corporate']);
+                          }
+                      )
+                  )
+              ),
+              //仓库
+              SliverToBoxAdapter(
+                  child: Visibility(
+                      visible: !widget.middleman,
+                      child: PostAddInputCell(
+                          title: '仓库',
+                          value: '${addModel.warehouseName}',
+                          hintText: '请选择仓库',
+                          endWidget: Icon(Icons.chevron_right),
+                          onTap: () async {
+                            Map select = await showSelectSearchList(context, Api.warehouse, '请选择仓库', 'title');
+                            addModel.setWarehouseCode(select['code']);
+                            addModel.setWarehouseName(select['title']);
+                          }
+                      )
+                  )
+              ),
               //请选择商品
               SliverToBoxAdapter(
                 child: Container(
@@ -221,10 +304,10 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       : addModel.goodsPrice,
                 ),
               ),
-              //补货商品
+              //补货商品(去掉了)
               SliverToBoxAdapter(
                 child: Visibility(
-                  visible: widget.middleman ? Store.readPostType() == 'zy' : true,
+                  visible: false,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Container(
@@ -330,6 +413,22 @@ class _AddOrderPageState extends State<AddOrderPage> {
       AppUtil.showToastCenter('是否自提不能为空');
       return;
     }
+    if (!widget.middleman && model.invoiceType == 0) {
+      AppUtil.showToastCenter('发票类型不能为空');
+      return;
+    }
+    if (!widget.middleman && model.invoiceType == 2 && model.orderTypeIs == 0) {
+      AppUtil.showToastCenter('是否渠道客户不能为空');
+      return;
+    }
+    if (!widget.middleman && model.invoiceType == 2 && model.orderTypeIs == 2 && model.settlementCus.isEmpty) {
+      AppUtil.showToastCenter('结算客户不能为空');
+      return;
+    }
+    if (!widget.middleman && model.warehouseCode.isEmpty) {
+      AppUtil.showToastCenter('仓库不能为空');
+      return;
+    }
     if (model.goodsList.isEmpty) {
       AppUtil.showToastCenter('请选择商品');
       return;
@@ -357,7 +456,11 @@ class _AddOrderPageState extends State<AddOrderPage> {
       'goodsList': model.goodsListToString,
       'gifts': model.rewardGoodsListToString,
       'middleman': widget.middleman ? 2 : 1,
-      'id':model.id
+      'id':model.id,
+      'invoiceType': model.invoiceType,
+      'orderType': model.orderTypeIs,
+      'settlementCus': model.settlementCus,
+      'warehouseCode': model.warehouseCode
     };
     print('param = ${jsonEncode(param)}');
     requestPost(Api.orderAdd, json: jsonEncode(param)).then((value) {

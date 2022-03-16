@@ -180,6 +180,12 @@ class Api {
   ///获取账余
   static const orderAmount = "/api/hap-app/app/order/amount";
 
+  ///获取结算客户
+  static const settlementCus = "/api/hap-app/app/order/settlementCus";
+
+  ///获取仓库
+  static const warehouse = "/api/hap-app/app/order/warehouse";
+
 
   /** 冰柜订单 **/
 
@@ -284,6 +290,9 @@ class Api {
 
   ///抄送多选人员列表
   static const sendSelectUser = "/api/hap-user/search/user";
+
+  ///费用申请列表
+  static const feeApplyPage = "/api/hap-workflow/process/business/feeApplyPage";
 
 
   /** 商品销量统计 **/

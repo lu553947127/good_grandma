@@ -163,8 +163,6 @@ class _CustomFormViewState extends State<CustomFormView> {
           String value = '';
           if (data['prop'] == 'gongsi'){
             value = timeSelectProvider.gongsi;
-          }else if(data['prop'] == 'feiyongshenqing'){
-            value = timeSelectProvider.feiyongshenqing;
           }else if(data['prop'] == 'fylb'){
             value = timeSelectProvider.fylb;
           }else if(data['prop'] == 'type'){
@@ -192,8 +190,6 @@ class _CustomFormViewState extends State<CustomFormView> {
 
               if (data['prop'] == 'gongsi'){
                 timeSelectProvider.addgongsi(select);
-              }else if (data['prop'] == 'feiyongshenqing'){
-                timeSelectProvider.addfeiyongshenqing(select);
               }else if (data['prop'] == 'fylb'){
                 timeSelectProvider.addfylb(select);
               }else if (data['prop'] == 'type'){
@@ -317,9 +313,56 @@ class _CustomFormViewState extends State<CustomFormView> {
           );
           break;
         default:
-          return Container(
-              child: Text('无法显示未知动态组件')
-          );
+          LogUtil.d('addData----${data['prop']}');
+          if(data['prop'] == 'feiyongshenqing'){
+            return Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    height: 60,
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text('请选择费用申请', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                      trailing: IconButton(
+                          onPressed: () async {
+                            Map select = await showSelectCostList(context, Api.feeApplyPage, '请选择费用申请', 'id', data['params']['type']);
+                            timeSelectProvider.addCostStringModel(select['id']);
+                          },
+                          icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+                    )
+                ),
+                ListView.builder(
+                    shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                    physics:NeverScrollableScrollPhysics(),//禁用滑动事件
+                    itemCount: timeSelectProvider.costStringList.length,
+                    itemBuilder: (context, index){
+                      String str = timeSelectProvider.costStringList[index];
+                      return Column(
+                          children: [
+                            SizedBox(height: 1),
+                            ActivityAddTextCell(
+                                title: str,
+                                hintText: '',
+                                value: '',
+                                trailing: IconButton(
+                                    onPressed: (){
+                                      timeSelectProvider.deleteCostStringModelWith(index);
+                                    },
+                                    icon: Icon(Icons.delete, color: AppColors.FFDD0000)
+                                ),
+                                onTap: null
+                            )
+                          ]
+                      );
+                    }
+                )
+              ]
+            );
+          }else{
+            return Container(
+                child: Text('无法显示未知动态组件')
+            );
+          }
           break;
       }
     }
@@ -676,11 +719,11 @@ class _CustomFormViewState extends State<CustomFormView> {
           }
           addData[map['prop']] = timeSelectProvider.money;
         }else if ('feiyongshenqing' == map['prop']){
-          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.feiyongshenqing == ''){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.costStringList.isEmpty){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
           }
-          addData[map['prop']] = timeSelectProvider.feiyongshenqing;
+          addData[map['prop']] = listToString(timeSelectProvider.costStringList);
         }else if ('fylb' == map['prop']){
           if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.fylb == ''){
             EasyLoading.showToast('${map['label']}不能为空');

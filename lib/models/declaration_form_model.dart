@@ -17,6 +17,14 @@ class DeclarationFormModel extends ChangeNotifier {
   String _updateUser;
   int _selfMention;
   String _selfMentionName;
+  int _invoiceType;
+  String _invoiceTypeName;
+  int _orderTypeIs;
+  String _orderTypeIsName;
+  String _settlementCus;
+  String _settlementCusName;
+  String _warehouseCode;
+  String _warehouseName;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
@@ -36,6 +44,14 @@ class DeclarationFormModel extends ChangeNotifier {
     _updateUser = '';
     _selfMention = 0;
     _selfMentionName = '';
+    _invoiceType = 0;
+    _invoiceTypeName = '';
+    _orderTypeIs = 0;
+    _orderTypeIsName = '';
+    _settlementCus = '';
+    _settlementCusName = '';
+    _warehouseCode = '';
+    _warehouseName = '';
   }
 
   DeclarationFormModel.fromJson(Map<String, dynamic> json) {
@@ -70,6 +86,18 @@ class DeclarationFormModel extends ChangeNotifier {
     if (_selfMention == 1)
       _selfMentionName = '自提';
     else _selfMentionName = '物流';
+    _invoiceType = json['invoiceType'] ?? 1;
+    if (_invoiceType == 1)
+      _invoiceTypeName = '普票';
+    else _invoiceTypeName = '专票';
+    _orderTypeIs = json['orderType'] ?? 1;
+    if (_orderTypeIs == 1)
+      _orderTypeIsName = '普通订单';
+    else _orderTypeIsName = '渠道客户订单';
+    _settlementCus = json['settlementCus'] ?? '';
+    _settlementCusName = json['settlementCusName'] ?? '';
+    _warehouseCode = json['warehouseCode'] ?? '';
+    _warehouseName = json['warehouseTitle'] ?? '';
   }
 
   setModelWithModel(DeclarationFormModel model) {
@@ -90,6 +118,18 @@ class DeclarationFormModel extends ChangeNotifier {
     if (model.selfMention == 1)
       _selfMentionName = '自提';
     else _selfMentionName = '物流';
+    _invoiceType = model.invoiceType;
+    if (model.invoiceType == 1)
+      _invoiceTypeName = '普票';
+    else _invoiceTypeName = '专票';
+    _orderTypeIs = model.orderTypeIs;
+    if (model.orderTypeIs == 1)
+      _orderTypeIsName = '普通订单';
+    else _orderTypeIsName = '渠道客户订单';
+    _settlementCus = model.settlementCus;
+    _settlementCusName = model.settlementCusName;
+    _warehouseCode = model.warehouseCode;
+    _warehouseName = model.warehouseName;
   }
 
   ///店铺
@@ -115,6 +155,30 @@ class DeclarationFormModel extends ChangeNotifier {
 
   ///是否自提
   String get selfMentionName => _selfMentionName;
+
+  ///发票类型
+  int get invoiceType => _invoiceType;
+
+  ///发票类型
+  String get invoiceTypeName => _invoiceTypeName;
+
+  ///是否渠道客户
+  int get orderTypeIs => _orderTypeIs;
+
+  ///是否渠道客户
+  String get orderTypeIsName => _orderTypeIsName;
+
+  ///结算客户
+  String get settlementCus => _settlementCus;
+
+  ///结算客户
+  String get settlementCusName => _settlementCusName;
+
+  ///仓库
+  String get warehouseCode => _warehouseCode;
+
+  ///仓库
+  String get warehouseName => _warehouseName;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int get status => _status;
@@ -255,6 +319,46 @@ class DeclarationFormModel extends ChangeNotifier {
 
   setSelfMentionName(String selfMentionName){
     _selfMentionName = selfMentionName;
+    notifyListeners();
+  }
+
+  setInvoiceType(int invoiceType){
+    _invoiceType = invoiceType;
+    notifyListeners();
+  }
+
+  setInvoiceTypeName(String invoiceTypeName){
+    _invoiceTypeName = invoiceTypeName;
+    notifyListeners();
+  }
+
+  setOrderTypeIs(int orderTypeIs){
+    _orderTypeIs = orderTypeIs;
+    notifyListeners();
+  }
+
+  setOrderTypeIsName(String orderTypeIsName){
+    _orderTypeIsName = orderTypeIsName;
+    notifyListeners();
+  }
+
+  setSettlementCus(String settlementCus){
+    _settlementCus = settlementCus;
+    notifyListeners();
+  }
+
+  setSettlementCusName(String settlementCusName){
+    _settlementCusName = settlementCusName;
+    notifyListeners();
+  }
+
+  setWarehouseCode(String warehouseCode){
+    _warehouseCode = warehouseCode;
+    notifyListeners();
+  }
+
+  setWarehouseName(String warehouseName){
+    _warehouseName = warehouseName;
     notifyListeners();
   }
 

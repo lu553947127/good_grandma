@@ -90,6 +90,26 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               visible: _model.orderType == 1 && _model.selfMentionName != null && _model.selfMentionName.isNotEmpty,
               sliver: _TextCell(value: _model.selfMentionName, title: '是否自提'),
             ),
+            //发票类型
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.invoiceTypeName != null && _model.invoiceTypeName.isNotEmpty,
+              sliver: _TextCell(value: _model.invoiceTypeName, title: '发票类型'),
+            ),
+            //是否渠道客户
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.orderTypeIsName != null && _model.orderTypeIsName.isNotEmpty,
+              sliver: _TextCell(value: _model.orderTypeIsName, title: '是否渠道客户'),
+            ),
+            //结算客户
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.settlementCusName != null && _model.settlementCusName.isNotEmpty,
+              sliver: _TextCell(value: _model.settlementCusName, title: '结算客户'),
+            ),
+            //仓库
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.warehouseName != null && _model.warehouseName.isNotEmpty,
+              sliver: _TextCell(value: _model.warehouseName, title: '仓库'),
+            ),
             //驳回理由
             SliverVisibility(
               visible: _model.status == 5 &&
@@ -266,12 +286,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   //驳回
   void _rejectAction(BuildContext context) {
-    if (_model.orderType == 1 &&
-        (Store.readUserType() == 'xsb' || Store.readUserType() == 'yjkh')) {
-      //一级订单：工厂可以审核,可以驳回，城市经理、一级客户只能确认,不能驳回。如果订单被驳回，就一定是驳回到城市经理那，城市经理可以编辑重新提交，也可以取消订单
-      AppUtil.showToastCenter('您没有驳回权限');
-      return;
-    }
+    // if (_model.orderType == 1 &&
+    //     (Store.readUserType() == 'xsb' || Store.readUserType() == 'yjkh')) {
+    //   //一级订单：工厂可以审核,可以驳回，城市经理、一级客户只能确认,不能驳回。如果订单被驳回，就一定是驳回到城市经理那，城市经理可以编辑重新提交，也可以取消订单
+    //   AppUtil.showToastCenter('您没有驳回权限');
+    //   return;
+    // }
     AppUtil.showInputDialog(
       context: context,
       editingController: TextEditingController(),
@@ -352,12 +372,12 @@ class _TextCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 1.0),
       sliver: SliverToBoxAdapter(
         child: Card(
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -387,7 +407,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 3.0),
       sliver: SliverToBoxAdapter(
         child: Card(
           child: Container(

@@ -563,39 +563,27 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '支付对象信息' ? false : true,
-                                          child: Expanded(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
-                                                  _buildChart(zhifuList, taskFormList[index]['name'])
-                                                ]
-                                            )
-                                          )
+                                          child: Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1))
+                                      ),
+                                      Offstage(
+                                          offstage: taskFormList[index]['name'] == '支付对象信息' ? false : true,
+                                          child: _buildChart(zhifuList, taskFormList[index]['name'])
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差明细' ? false : true,
-                                          child: Expanded(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
-                                                  _buildChart(chuchaiList, taskFormList[index]['name'])
-                                                ]
-                                            )
-                                          )
+                                          child: Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1))
+                                      ),
+                                      Offstage(
+                                          offstage: taskFormList[index]['name'] == '出差明细' ? false : true,
+                                          child: _buildChart(chuchaiList, taskFormList[index]['name'])
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差日程' ? false : true,
-                                          child: Expanded(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
-                                                  _buildChart(chuchairichengList, taskFormList[index]['name'])
-                                                ]
-                                            )
-                                          )
+                                          child: Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1))
+                                      ),
+                                      Offstage(
+                                          offstage: taskFormList[index]['name'] == '出差日程' ? false : true,
+                                          child: _buildChart(chuchairichengList, taskFormList[index]['name'])
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '试吃品' ? false : true,

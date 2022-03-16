@@ -22,7 +22,6 @@ class TimeSelectProvider with ChangeNotifier{
   String _purpose;
   String _desc;
   String _money;
-  String _feiyongshenqing;
   String _fylb;
   String _nianduyusuan;
   String _type;
@@ -64,7 +63,6 @@ class TimeSelectProvider with ChangeNotifier{
     _purpose = '';
     _desc = '';
     _money = '';
-    _feiyongshenqing = '';
     _fylb = '';
     _nianduyusuan = '';
     _type = '';
@@ -93,6 +91,7 @@ class TimeSelectProvider with ChangeNotifier{
     chuchaimingxiMapList = [];
     _userList = [];
     userMapList = [];
+    _costStringList = [];
     _sampleList = [];
     sampleMapList = [];
     _costList = [];
@@ -118,7 +117,6 @@ class TimeSelectProvider with ChangeNotifier{
   String get purpose => _purpose;
   String get desc => _desc;
   String get money => _money;
-  String get feiyongshenqing => _feiyongshenqing;
   String get fylb => _fylb;
   String get nianduyusuan => _nianduyusuan;
   String get type => _type;
@@ -217,11 +215,6 @@ class TimeSelectProvider with ChangeNotifier{
 
   addmoney(str){
     _money = str;
-    notifyListeners();
-  }
-
-  addfeiyongshenqing(str){
-    _feiyongshenqing = str;
     notifyListeners();
   }
 
@@ -589,6 +582,29 @@ class TimeSelectProvider with ChangeNotifier{
       userMapList = [];
     if(index >= userMapList.length) return;
     userMapList.removeAt(index);
+    notifyListeners();
+  }
+
+  ///费用申请列表
+  List<String> _costStringList = [];
+
+  ///费用申请列表
+  List<String> get costStringList => _costStringList;
+
+  ///添加
+  addCostStringModel(String id){
+    if(_costStringList == null)
+      _costStringList = [];
+    _costStringList.add(id);
+    notifyListeners();
+  }
+
+  ///删除单个item
+  deleteCostStringModelWith(int index){
+    if(_costStringList == null)
+      _costStringList = [];
+    if(index >= _costStringList.length) return;
+    _costStringList.removeAt(index);
     notifyListeners();
   }
 
