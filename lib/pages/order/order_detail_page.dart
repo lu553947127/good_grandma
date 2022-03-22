@@ -142,6 +142,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               ],
                             )),
                         OrderGoodsCountView(
+                          totalCount: _model.totalCount,
+                          giftCount: _model.giftCount,
                           count: _model.goodsCount,
                           countWeight: countWeight,
                           countPrice: _model.goodsPrice,
@@ -153,9 +155,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 ),
               ),
             ),
-            //补货商品
+            //补货商品(去掉了)
             SliverVisibility(
-              visible: _model.rewardGoodsList.isNotEmpty,
+              // visible: _model.rewardGoodsList.isNotEmpty,
+              visible: false,
               sliver: SliverPadding(
                 padding:
                     const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),

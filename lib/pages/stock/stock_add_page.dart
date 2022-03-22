@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/stock_add_model.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
-import 'package:good_grandma/pages/stock/select_goods_page.dart';
 import 'package:good_grandma/widgets/stock_add_goods_cell.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
@@ -86,16 +86,6 @@ class _StockAddPageState extends State<StockAddPage> {
                 index: index
               );
             }, childCount: _model.stockList.length)),
-            SliverToBoxAdapter(
-              child: ListTile(
-                title: const Text('添加商品',
-                    style:
-                    TextStyle(color: AppColors.FF959EB1, fontSize: 12.0)),
-                trailing: IconButton(
-                    onPressed: () => _pickGoodsAction(context, _model),
-                    icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
-              ),
-            ),
             //submit button
             SliverToBoxAdapter(
                 child: SubmitBtn(
@@ -114,26 +104,8 @@ class _StockAddPageState extends State<StockAddPage> {
       return;
     }
     if (_model.stockList.isEmpty) {
-      AppUtil.showToastCenter('请选择商品');
+      AppUtil.showToastCenter('商品不能为空');
       return;
-    }
-    for (StockModel stockModel in _model.stockList) {
-      if (stockModel.oneToThree == null || stockModel.oneToThree.isEmpty) {
-        AppUtil.showToastCenter('请输入1-3月存量');
-        return;
-      }
-      if (stockModel.fourToSix == null || stockModel.fourToSix.isEmpty) {
-        AppUtil.showToastCenter('请输入4-6月存量');
-        return;
-      }
-      if (stockModel.sevenToTwelve == null || stockModel.sevenToTwelve.isEmpty) {
-        AppUtil.showToastCenter('请输入7-9月存量');
-        return;
-      }
-      if (stockModel.eighteenToUp == null || stockModel.eighteenToUp.isEmpty) {
-        AppUtil.showToastCenter('请输入9月以上存量');
-        return;
-      }
     }
     Map param = {
       'customerId': _model.customer.id,
@@ -142,9 +114,7 @@ class _StockAddPageState extends State<StockAddPage> {
                 'goodsId': stockModel.goodsModel.id,
                 'goodsName': stockModel.goodsModel.name,
                 'oneToThree': stockModel.oneToThree,
-                'fourToSix': stockModel.fourToSix,
-                'sevenToTwelve': stockModel.sevenToTwelve,
-                'eighteenToUp': stockModel.eighteenToUp
+                'fourToSix': stockModel.fourToSix
               })
           .toList(),
     };
@@ -157,34 +127,38 @@ class _StockAddPageState extends State<StockAddPage> {
   }
 
   ///选择商品
-  _pickGoodsAction(BuildContext context, StockAddModel _model) async {
-    if (_model.customer == null || _model.customer.id.isEmpty) {
-      AppUtil.showToastCenter('请先选择客户');
-      return;
-    }
-    List<GoodsModel> _selGoodsList =
-        await Navigator.push(context, MaterialPageRoute(builder: (_) {
-      return SelectGoodsPage(
-        selGoods: _model.goodsList,
-        customerId: _model.customer.id,
-        selectSingle: false,
-      );
-    }));
-    if (_selGoodsList != null && _selGoodsList.isNotEmpty) {
-      _selGoodsList.forEach((goodsModel) {
+  _pickGoodsAction(String customerId, StockAddModel _model) async {
+    Map<String, dynamic> map = {
+      'current': '1',
+      'size': '-1',
+      'customerId': customerId
+    };
+    final val = await requestGet(Api.goodsList, param: map);
+    LogUtil.d('${Api.goodsList} value = $val');
+    var data = jsonDecode(val.toString());
+    final List<dynamic> list = data['data'];
+    if (list != null && list.isNotEmpty) {
+      list.forEach((element) {
+
         //防止商品重复选择
         for (StockModel stockModel in _model.stockList) {
-          if (goodsModel.id == stockModel.goodsModel.id){
+          if (element['id'] == stockModel.goodsModel.id){
             return;
           }
         }
 
         StockModel stockModel = StockModel(key: UniqueKey());
-        stockModel.goodsModel = goodsModel;
+        stockModel.goodsModel = GoodsModel(
+            name: element['name'],
+            id: element['id'],
+            image: element['pic'],
+            count: element['count'],
+            invoice: double.parse(element['invoice'].toString()),
+            middleman: double.parse(element['middleman'].toString()),
+            weight: double.parse(element['weight'].toString())
+        );
         _model.addToStockList(stockModel);
       });
-
-      _model.setArrays(_model.goodsList, _selGoodsList);
     }
   }
 
@@ -195,6 +169,7 @@ class _StockAddPageState extends State<StockAddPage> {
     if (model != null) {
       _model.setStockList([]);
       _model.setCustomer(model);
+      _pickGoodsAction(model.id, _model);
     }
   }
 

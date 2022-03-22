@@ -12,6 +12,7 @@ import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
+import 'package:good_grandma/pages/order/amount_details.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/stock/select_goods_page.dart';
 import 'package:good_grandma/widgets/order_add_page_goods_cell.dart';
@@ -129,7 +130,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                     )
                   )
               ),
-              //账余
+              //补货金额
               SliverToBoxAdapter(
                 child: Visibility(
                   visible: widget.middleman ? Store.readPostType() == 'zy' && addModel.storeModel.id.isNotEmpty :
@@ -138,7 +139,12 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       title: '补货金额',
                       value: '$orderAmount',
                       hintText: '$orderAmount',
-                      endWidget: null,
+                      endWidget: TextButton(
+                        child: Text('明细', style: TextStyle(color: AppColors.FFC08A3F)),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AmountDetails(userId: addModel.storeModel.id)));
+                        }
+                      ),
                       onTap: null
                   )
                 )
@@ -307,6 +313,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
               //补货商品(去掉了)
               SliverToBoxAdapter(
                 child: Visibility(
+                    // visible: widget.middleman ? Store.readPostType() == 'zy' : true,
                   visible: false,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 10.0),

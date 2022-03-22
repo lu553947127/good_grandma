@@ -29,9 +29,7 @@ class StockDetailModel extends ChangeNotifier {
     if (json['appCustomerCheckData'] != null) {
       List<String> keys = [
         'oneToThree',
-        'fourToSix',
-        'sevenToTwelve',
-        'eighteenToUp'
+        'fourToSix'
       ];
       keys.forEach((key) {
         StackGoodsListModel model = StackGoodsListModel();
@@ -43,12 +41,6 @@ class StockDetailModel extends ChangeNotifier {
               break;
             case 'fourToSix':
               model.fourToSix = v['fourToSix'].toString();
-              break;
-            case 'sevenToTwelve':
-              model.sevenToTwelve = v['sevenToTwelve'].toString();
-              break;
-            case 'eighteenToUp':
-              model.eighteenToUp = v['eighteenToUp'].toString();
               break;
           }
         });
@@ -72,8 +64,6 @@ class StackGoodsListModel {
   String typeName;
   String oneToThree;
   String fourToSix;
-  String sevenToTwelve;
-  String eighteenToUp;
 
   StackGoodsListModel({this.typeName = ''});
 
@@ -81,8 +71,6 @@ class StackGoodsListModel {
     typeName = json['typeName'] ?? '';
     oneToThree = json['oneToThree'].toString() ?? '';
     fourToSix = json['fourToSix'].toString() ?? '';
-    sevenToTwelve = json['sevenToTwelve'].toString() ?? '';
-    eighteenToUp = json['eighteenToUp'].toString() ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -90,8 +78,6 @@ class StackGoodsListModel {
     data['typeName'] = this.typeName;
     data['oneToThree'] = this.oneToThree;
     data['fourToSix'] = this.fourToSix;
-    data['sevenToTwelve'] = this.sevenToTwelve;
-    data['eighteenToUp'] = this.eighteenToUp;
     return data;
   }
 }

@@ -105,16 +105,10 @@ class _StockCell extends StatelessWidget {
     String str = '';
     switch(time){
       case 'oneToThree':
-        str = '1-3月';
+        str = '≤6个月';
         break;
       case 'fourToSix':
-        str = '4-6月';
-        break;
-      case 'sevenToTwelve':
-        str = '7-9月';
-        break;
-      case 'eighteenToUp':
-        str = '9月以上';
+        str = '>6个月';
         break;
     }
     return str;
@@ -128,12 +122,6 @@ class _StockCell extends StatelessWidget {
         break;
       case 'fourToSix':
         str = model.fourToSix;
-        break;
-      case 'sevenToTwelve':
-        str = model.sevenToTwelve;
-        break;
-      case 'eighteenToUp':
-        str = model.eighteenToUp;
         break;
     }
     return str;

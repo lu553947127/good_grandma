@@ -186,6 +186,9 @@ class Api {
   ///获取仓库
   static const warehouse = "/api/hap-app/app/order/warehouse";
 
+  ///获取补货金额明细
+  static const amountDetails = "/api/hap-app/app/order/amountDetails";
+
 
   /** 冰柜订单 **/
 
@@ -479,4 +482,7 @@ class Api {
 
   ///反馈类别词典
   static const feedbackType = "/api/hap-system/dict/dictionary?code=feedback_type";
+
+  ///根据经纬度查询当前地址
+  static const findAddress = "/api/hap-app/app/sign/findAddress";
 }

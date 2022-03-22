@@ -25,6 +25,8 @@ class DeclarationFormModel extends ChangeNotifier {
   String _settlementCusName;
   String _warehouseCode;
   String _warehouseName;
+  int _totalCount;
+  int _giftCount;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
@@ -52,6 +54,8 @@ class DeclarationFormModel extends ChangeNotifier {
     _settlementCusName = '';
     _warehouseCode = '';
     _warehouseName = '';
+    _totalCount = 0;
+    _giftCount = 0;
   }
 
   DeclarationFormModel.fromJson(Map<String, dynamic> json) {
@@ -98,6 +102,8 @@ class DeclarationFormModel extends ChangeNotifier {
     _settlementCusName = json['settlementCusName'] ?? '';
     _warehouseCode = json['warehouseCode'] ?? '';
     _warehouseName = json['warehouseTitle'] ?? '';
+    _totalCount = json['totalCount'] ?? 0;
+    _giftCount = json['giftCount'] ?? 0;
   }
 
   setModelWithModel(DeclarationFormModel model) {
@@ -130,6 +136,8 @@ class DeclarationFormModel extends ChangeNotifier {
     _settlementCusName = model.settlementCusName;
     _warehouseCode = model.warehouseCode;
     _warehouseName = model.warehouseName;
+    _totalCount = model.totalCount;
+    _giftCount = model.giftCount;
   }
 
   ///店铺
@@ -179,6 +187,12 @@ class DeclarationFormModel extends ChangeNotifier {
 
   ///仓库
   String get warehouseName => _warehouseName;
+
+  ///实际数量
+  int get totalCount => _totalCount;
+
+  ///搭赠数量
+  int get giftCount => _giftCount;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int get status => _status;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/stock_add_model.dart';
-import 'package:good_grandma/widgets/activity_add_text_cell.dart';
 
 ///新增库存商品cell
 class StockAddGoodsCell extends StatelessWidget {
@@ -46,107 +45,70 @@ class StockAddGoodsCell extends StatelessWidget {
               trailing: null,
               contentPadding: const EdgeInsets.all(0),
             ),
-            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            ActivityAddTextCell(
-                title: '1-3月存量（箱）',
-                hintText: '请输入数量',
-                value: stockModel.oneToThree,
-                trailing: null,
-                onTap: () => AppUtil.showInputDialog(
-                    context: context,
-                    editingController: _editingController,
-                    focusNode: _focusNode,
-                    text: stockModel.oneToThree,
-                    hintText: '请输入数量',
-                    keyboardType: TextInputType.number,
-                    callBack: (text) {
-                      if(text.contains('.') || int.tryParse(text) == null){
-                        AppUtil.showToastCenter('请输入整数数量');
-                        return;
-                      }
-                      stockModel.oneToThree = text;
-                      stockAddModel.editStockListWith(index, stockModel);
-                    })
-            ),
-            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            ActivityAddTextCell(
-                title: '4-6月存量（箱）',
-                hintText: '请输入数量',
-                value: stockModel.fourToSix,
-                trailing: null,
-                onTap: () => AppUtil.showInputDialog(
-                    context: context,
-                    editingController: _editingController,
-                    focusNode: _focusNode,
-                    text: stockModel.fourToSix,
-                    hintText: '请输入数量',
-                    keyboardType: TextInputType.number,
-                    callBack: (text) {
-                      if(text.contains('.') || int.tryParse(text) == null){
-                        AppUtil.showToastCenter('请输入整数数量');
-                        return;
-                      }
-                      stockModel.fourToSix = text;
-                      stockAddModel.editStockListWith(index, stockModel);
-                    })
-            ),
-            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            ActivityAddTextCell(
-                title: '7-9月存量（箱）',
-                hintText: '请输入数量',
-                value: stockModel.sevenToTwelve,
-                trailing: null,
-                onTap: () => AppUtil.showInputDialog(
-                    context: context,
-                    editingController: _editingController,
-                    focusNode: _focusNode,
-                    text: stockModel.sevenToTwelve,
-                    hintText: '请输入数量',
-                    keyboardType: TextInputType.number,
-                    callBack: (text) {
-                      if(text.contains('.') || int.tryParse(text) == null){
-                        AppUtil.showToastCenter('请输入整数数量');
-                        return;
-                      }
-                      stockModel.sevenToTwelve = text;
-                      stockAddModel.editStockListWith(index, stockModel);
-                    })
-            ),
-            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            ActivityAddTextCell(
-                title: '9月以上存量（箱）',
-                hintText: '请输入数量',
-                value: stockModel.eighteenToUp,
-                trailing: null,
-                onTap: () => AppUtil.showInputDialog(
-                    context: context,
-                    editingController: _editingController,
-                    focusNode: _focusNode,
-                    text: stockModel.eighteenToUp,
-                    hintText: '请输入数量',
-                    keyboardType: TextInputType.number,
-                    callBack: (text) {
-                      if(text.contains('.') || int.tryParse(text) == null){
-                        AppUtil.showToastCenter('请输入整数数量');
-                        return;
-                      }
-                      stockModel.eighteenToUp = text;
-                      stockAddModel.editStockListWith(index, stockModel);
-                    })
-            ),
-            const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
-            //删除
-            Container(
-                width: double.infinity,
-                color: Colors.white,
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                    onPressed: (){
-                      stockAddModel.deleteStockListWith(index);
-                    },
-                    icon: Icon(Icons.delete_forever_outlined, color: AppColors.FFDD0000)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                    child: Row(
+                      children: [
+                        Text('≤6',
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(fontSize: 14.0)),
+                        SizedBox(width: 5),
+                        Text(stockModel.oneToThree.isEmpty ? '请输入' : stockModel.oneToThree,
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                color: stockModel.oneToThree.isEmpty ? AppColors.FFC1C8D7 : AppColors.FF2F4058, fontSize: 14.0))
+                      ]
+                    ),
+                    onTap: () => AppUtil.showInputDialog(
+                        context: context,
+                        editingController: _editingController,
+                        focusNode: _focusNode,
+                        text: stockModel.oneToThree,
+                        hintText: '请输入数量',
+                        keyboardType: TextInputType.number,
+                        callBack: (text) {
+                          if(text.contains('.') || int.tryParse(text) == null){
+                            AppUtil.showToastCenter('请输入整数数量');
+                            return;
+                          }
+                          stockModel.oneToThree = text;
+                          stockAddModel.editStockListWith(index, stockModel);
+                        })
+                ),
+                InkWell(
+                    child: Row(
+                      children: [
+                        Text('>6',
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(fontSize: 14.0)),
+                        SizedBox(width: 5),
+                        Text(stockModel.fourToSix.isEmpty ? '请输入' : stockModel.fourToSix,
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                color: stockModel.fourToSix.isEmpty ? AppColors.FFC1C8D7 : AppColors.FF2F4058, fontSize: 14.0))
+                      ]
+                    ),
+                    onTap: () => AppUtil.showInputDialog(
+                        context: context,
+                        editingController: _editingController,
+                        focusNode: _focusNode,
+                        text: stockModel.fourToSix,
+                        hintText: '请输入数量',
+                        keyboardType: TextInputType.number,
+                        callBack: (text) {
+                          if(text.contains('.') || int.tryParse(text) == null){
+                            AppUtil.showToastCenter('请输入整数数量');
+                            return;
+                          }
+                          stockModel.fourToSix = text;
+                          stockAddModel.editStockListWith(index, stockModel);
+                        })
                 )
-            )
+              ]
+            ),
+            SizedBox(height: 5)
           ]
         )
       )

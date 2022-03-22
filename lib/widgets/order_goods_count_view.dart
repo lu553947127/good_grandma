@@ -6,6 +6,8 @@ import 'package:good_grandma/common/colors.dart';
 class OrderGoodsCountView extends StatelessWidget {
   const OrderGoodsCountView({
     Key key,
+    @required this.totalCount,
+    @required this.giftCount,
     @required this.count,
     @required this.countWeight,
     @required this.countPrice,
@@ -13,6 +15,8 @@ class OrderGoodsCountView extends StatelessWidget {
     this.padding = const EdgeInsets.all(15.0),
   }) : super(key: key);
 
+  final int totalCount;
+  final int giftCount;
   final int count;
   final double countWeight;
   final double countPrice;
@@ -30,23 +34,29 @@ class OrderGoodsCountView extends StatelessWidget {
           children: [
             Column(
               children: [
+                Visibility(visible: totalCount != null, child: Text('实际数量')),
+                Visibility(visible: totalCount != null, child: SizedBox(height: 8)),
+                Visibility(visible: totalCount != null, child: Text('搭赠数量')),
+                Visibility(visible: totalCount != null, child: SizedBox(height: 8)),
                 Text('商品总数'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text('商品总重'),
-                ),
+                SizedBox(height: 8),
+                Text('商品总重'),
+                SizedBox(height: 8),
                 Text('商品总额'),
-              ],
+              ]
             ),
             Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                Visibility(visible: totalCount != null, child: Text(totalCount.toString())),
+                Visibility(visible: totalCount != null, child: SizedBox(height: 8)),
+                Visibility(visible: totalCount != null, child: Text(giftCount.toString())),
+                Visibility(visible: totalCount != null, child: SizedBox(height: 8)),
                 Text(count.toString()),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(countWeight.toStringAsFixed(2) + 'kg'),
-                ),
+                SizedBox(height: 8),
+                Text(countWeight.toStringAsFixed(2) + 'kg'),
+                SizedBox(height: 8),
                 Text.rich(TextSpan(
                     text: '¥',
                     style: const TextStyle(
@@ -57,11 +67,11 @@ class OrderGoodsCountView extends StatelessWidget {
                         style: const TextStyle(fontSize: 18.0),
                       )
                     ])),
-              ],
-            ),
-          ],
-        ),
-      ),
+              ]
+            )
+          ]
+        )
+      )
     );
   }
 }

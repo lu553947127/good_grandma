@@ -23,6 +23,7 @@ import 'package:good_grandma/pages/performance/performance_statistics_page.dart'
 import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
 import 'package:good_grandma/pages/repor_statistics/report_statistics_page.dart';
 import 'package:good_grandma/pages/sales_statistics/sales_statistics_page.dart';
+import 'package:good_grandma/pages/scan/scan_detail.dart';
 import 'package:good_grandma/pages/sign_in/sign_in_page.dart';
 import 'package:good_grandma/pages/stock/stock_page.dart';
 import 'package:good_grandma/pages/track/track_page.dart';
@@ -355,11 +356,11 @@ class _Body extends State<HomePage> {
 
     if (qrcode.isNotEmpty){
       Map<String, dynamic> map = {'code': qrcode};
-      ///扫码上传
+      ///扫码识别冰柜信息
       requestGet(Api.analysisCode, param: map).then((val) {
         var data = json.decode(val.toString());
-        print('请求结果---analysisCode----$data');
-        EasyLoading.showToast('扫描成功');
+        LogUtil.d('请求结果---analysisCode----$data');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ScanDetail(data: data['data'])));
       });
     }
   }

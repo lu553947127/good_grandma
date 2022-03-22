@@ -44,7 +44,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
   String visitContent = '';
   double latitude = 0.0;
   double longitude = 0.0;
-  String address = '定位获取失败，请检查定位权限是否开启';
+  String address = Platform.isAndroid ? '定位获取失败，请检查定位权限是否开启' : '正在定位中，请耐心等待';
   String images = '';
 
   ///新增
@@ -145,27 +145,31 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
   void _requestPermission() async {
     // 申请权限
     bool hasLocationPermission = await _requestLocationPermission();
-    if (hasLocationPermission) {
+    if (Platform.isIOS){
       _startLocation();
-    } else {
-      bool result = await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('未获取到定位权限'),
-              content: Text('无法签到打卡，是否打开定位设置？'),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text('取消', style: TextStyle(color: Color(0xFF999999)))),
-                TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
-              ],
-            );
-          });
-      if (result != null && result) {
-        AppSettings.openAppSettings();
+    }else {
+      if (hasLocationPermission) {
+        _startLocation();
+      } else {
+        bool result = await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('未获取到定位权限'),
+                content: Text('无法签到打卡，是否打开定位设置？'),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('取消', style: TextStyle(color: Color(0xFF999999)))),
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
+                ],
+              );
+            });
+        if (result != null && result) {
+          AppSettings.openAppSettings();
+        }
       }
     }
   }
@@ -206,12 +210,25 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
 
   ///处理定位结果
   void _locationResultDeal(Map<String, Object> result) async {
-    print('address${result['address']}');
-    address = result['address'];
-    // final streetNumber = result['streetNumber'];
-    latitude = result['latitude'];
-    longitude = result['longitude'];
-    setState(() {});
+    latitude = double.parse(result['latitude'].toString());
+    longitude = double.parse(result['longitude'].toString());
+    if (Platform.isAndroid) {
+      address = result['address'] == null ? '暂无获取到定位地址' : result['address'].toString();
+      setState(() {});
+    }else {
+      findAddress(longitude, latitude);
+    }
+  }
+
+  ///ios通过经纬度获取地址信息
+  findAddress(longitude, latitude){
+    Map<String, dynamic> map = {'location': '$longitude,$latitude'};
+    requestPost(Api.findAddress, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---findAddress----$data');
+      address = data['data'];
+      setState(() {});
+    });
   }
 
   ///设置定位参数
@@ -219,7 +236,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
     AMapLocationOption locationOption = new AMapLocationOption();
 
     ///是否单次定位
-    locationOption.onceLocation = false;
+    locationOption.onceLocation = true;
 
     ///是否需要返回逆地理信息
     locationOption.needAddress = true;

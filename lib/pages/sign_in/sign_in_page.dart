@@ -11,6 +11,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
@@ -86,7 +87,7 @@ class _SignInButton extends StatefulWidget {
 class _SignInButtonState extends State<_SignInButton> {
   Timer _timer;
   String _currentTime = '';
-  String _locationStr = '未获取到位置信息，点击获取';
+  String _locationStr = Platform.isAndroid ? '未获取到位置信息，点击获取' : '正在定位中，请耐心等待';
 
   String _latitude = '';
   String _longitude = '';
@@ -252,7 +253,7 @@ class _SignInButtonState extends State<_SignInButton> {
     AMapLocationOption locationOption = new AMapLocationOption();
 
     ///是否单次定位
-    locationOption.onceLocation = false;
+    locationOption.onceLocation = true;
 
     ///是否需要返回逆地理信息
     locationOption.needAddress = true;
@@ -324,24 +325,27 @@ class _SignInButtonState extends State<_SignInButton> {
         setState(() {
           _canSignIn = false;
         });
-      bool result = await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('未获取到定位权限'),
-              content: Text('无法签到打卡，是否打开定位设置？'),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text('取消', style: TextStyle(color: Color(0xFF999999)))),
-                TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
-              ],
-            );
-          });
-      if (result != null && result) {
-        AppSettings.openAppSettings();
+
+      if (Platform.isAndroid){
+        bool result = await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('未获取到定位权限'),
+                content: Text('无法签到打卡，是否打开定位设置？'),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('取消', style: TextStyle(color: Color(0xFF999999)))),
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
+                ],
+              );
+            });
+        if (result != null && result) {
+          AppSettings.openAppSettings();
+        }
       }
     }
   }
@@ -379,16 +383,20 @@ class _SignInButtonState extends State<_SignInButton> {
     // //海拔高度 Android: 定位类型为非GPS时，返回0
     // final altitude = result['altitude'];
     final int errorCode = result['errorCode'];
-    // print('result = ${result.toString()}');
+    print('result = ${result.toString()}');
 
     if (errorCode == null || errorCode == 0) {
-      setState(() {
-        _canSignIn = true;
-        _locationStr = address ?? '未获取到位置信息，点击获取';
-        _latitude = latitude.toString();
-        _longitude = longitude.toString();
-        _address = address ?? '';
-      });
+      _latitude = latitude.toString();
+      _longitude = longitude.toString();
+      _canSignIn = true;
+      if (Platform.isAndroid) {
+        setState(() {
+          _locationStr = address ?? '未获取到位置信息，点击获取';
+          _address = address ?? '';
+        });
+      }else{
+        findAddress(longitude, latitude);
+      }
       return;
     }
     String msg = '定位失败，原因未知。errorCode = $errorCode';
@@ -520,6 +528,18 @@ class _SignInButtonState extends State<_SignInButton> {
       return;
     }
     EasyLoading.showToast(msg);
+  }
+
+  ///ios通过经纬度获取地址信息
+  findAddress(longitude, latitude){
+    Map<String, dynamic> map = {'location': '$longitude,$latitude'};
+    requestPost(Api.findAddress, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---findAddress----$data');
+      _locationStr = data['data'] ?? '未获取到位置信息，点击获取';
+      _address = data['data'] ?? '';
+      setState(() {});
+    });
   }
 
   ///开始计时器
