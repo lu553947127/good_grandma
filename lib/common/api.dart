@@ -189,6 +189,14 @@ class Api {
   ///获取补货金额明细
   static const amountDetails = "/api/hap-app/app/order/amountDetails";
 
+  ///收货地址列表
+  static const findCustomerAddress = "/api/hap-app/app/order/findCustomerAddress";
+
+  ///新增收货地址
+  static const addCustomerAddress = "/api/hap-app/app/order/addCustomerAddress";
+
+  ///修改收货地址
+  static const editCustomerAddress = "/api/hap-app/app/order/editCustomerAddress";
 
   /** 冰柜订单 **/
 

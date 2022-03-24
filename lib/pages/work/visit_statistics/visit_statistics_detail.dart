@@ -48,10 +48,6 @@ class VisitStatisticsDetail extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-            centerTitle: true,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.black),
             title: Text("拜访统计详细", style: TextStyle(fontSize: 18, color: Colors.black)),
             actions: [
               Visibility(

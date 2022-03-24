@@ -12,6 +12,7 @@ import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
+import 'package:good_grandma/pages/mine/receiving_address.dart';
 import 'package:good_grandma/pages/order/amount_details.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
 import 'package:good_grandma/pages/stock/select_goods_page.dart';
@@ -54,7 +55,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
 
     List<Map> list = [
       {'title': '备注', 'hintText': '请输入备注', 'value': addModel.remark},
-      {'title': '收货地址', 'hintText': '请输入收货地址', 'value': addModel.address},
+      {'title': '收货地址', 'hintText': '请选择收货地址', 'value': addModel.address},
     ];
 
     String userName = Store.readNickName();
@@ -255,6 +256,41 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       )
                   )
               ),
+              //备注/收货地址
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    Map map = list[index];
+                    String title = map['title'];
+                    String hintText = map['hintText'];
+                    String value = map['value'];
+                    return Column(
+                      children: [
+                        SizedBox(height: 10.0),
+                        Container(
+                          color: Colors.white,
+                          child: ListTile(
+                            onTap: () => _onTap(
+                                context: context,
+                                index: index,
+                                hintText: hintText,
+                                value: value),
+                            title: Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(title,
+                                  style: const TextStyle(
+                                      color: AppColors.FF2F4058, fontSize: 14.0)),
+                            ),
+                            subtitle: value.isNotEmpty
+                                ? Text(value)
+                                : Text(hintText,
+                                style: const TextStyle(
+                                    color: AppColors.FFC1C8D7, fontSize: 14.0)),
+                          )
+                        )
+                      ]
+                    );
+                  }, childCount: list.length)),
+              SliverToBoxAdapter(child: SizedBox(height: 10.0)),
               //请选择商品
               SliverToBoxAdapter(
                 child: Container(
@@ -363,51 +399,15 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       addModel.rewardGoodsList, index, model),
                 );
               }, childCount: addModel.rewardGoodsList.length)),
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                Map map = list[index];
-                String title = map['title'];
-                String hintText = map['hintText'];
-                String value = map['value'];
-                return Column(
-                  children: [
-                    SizedBox(height: 10.0),
-                    Container(
-                      color: Colors.white,
-                      child: ListTile(
-                        onTap: () => _onTap(
-                            context: context,
-                            index: index,
-                            hintText: hintText,
-                            value: value),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(title,
-                              style: const TextStyle(
-                                  color: AppColors.FF2F4058, fontSize: 14.0)),
-                        ),
-                        subtitle: value.isNotEmpty
-                            ? Text(value)
-                            : Text(hintText,
-                                style: const TextStyle(
-                                    color: AppColors.FFC1C8D7, fontSize: 14.0)),
-                      ),
-                    ),
-                  ],
-                );
-              }, childCount: list.length)),
               SliverSafeArea(
                 sliver: SliverToBoxAdapter(
-                  child: SubmitBtn(
-                    title: '提  交',
-                    onPressed: () => _submitAction(context, addModel),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                  child: SubmitBtn(title: '提  交', onPressed: () => _submitAction(context, addModel))
+                )
+              )
+            ]
+          )
+        )
+      )
     );
   }
 
@@ -489,6 +489,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
     });
   }
 
+  ///备注/收货地址
   void _onTap({
     BuildContext context,
     int index,
@@ -497,23 +498,31 @@ class _AddOrderPageState extends State<AddOrderPage> {
   }) async {
     final DeclarationFormModel addModel =
         Provider.of<DeclarationFormModel>(context, listen: false);
-    AppUtil.showInputDialog(
-        context: context,
-        editingController: _editingController,
-        focusNode: _focusNode,
-        text: value,
-        hintText: hintText,
-        keyboardType: TextInputType.text,
-        callBack: (text) {
-          switch (index) {
-            case 0:
+    switch (index) {
+      case 0:
+        AppUtil.showInputDialog(
+            context: context,
+            editingController: _editingController,
+            focusNode: _focusNode,
+            text: value,
+            hintText: hintText,
+            keyboardType: TextInputType.text,
+            callBack: (text) {
               addModel.setRemark(text);
-              break;
-            case 1:
-              addModel.setAddress(text);
-              break;
-          }
-        });
+            });
+        break;
+      case 1:
+        if (addModel.storeModel.id.isEmpty) {
+          AppUtil.showToastCenter('请先选择客户');
+          return;
+        }
+
+        Map addressModel = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ReceivingAddress(userId: addModel.storeModel.id)));
+        addModel.setAddress(addressModel['address']);
+        break;
+    }
+
   }
 
   @override

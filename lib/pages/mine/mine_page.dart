@@ -10,6 +10,7 @@ import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
+import 'package:good_grandma/pages/mine/receiving_address.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
 import 'package:good_grandma/pages/order/order_page.dart';
@@ -27,10 +28,11 @@ class _MinePageState extends State<MinePage> {
   final ScrollController _scrollController = ScrollController();
   final List<Map> _list = [
     // {'image': 'assets/images/mine_form_add.png', 'name': '我要报单'},
-    // {'image': 'assets/images/mine_form.png', 'name': '我的报单'},
+
     {'image': 'assets/images/mine_order.png', 'name': '我的订单'},
     {'image': 'assets/images/mine_contract.png', 'name': '我的合同'},
     {'image': 'assets/images/mine_feedback.png', 'name': '意见反馈'},
+    {'image': 'assets/images/mine_address.png', 'name': '收货地址'},
   ];
   String _local = '';
   String _type = '';
@@ -51,107 +53,110 @@ class _MinePageState extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyEasyRefreshSliverWidget(
-          controller: _controller,
-          scrollController: _scrollController,
-          dataCount: _list.length,
-          onRefresh: _refresh,
-          onLoad: null,
-          slivers: [
-            //用户信息
-            MineHeaderView(
-              avatar: _avatar,
-              userName: _userName,
-              local: _local,
-              type: _type,
-              phone: _phone,
-              setBtnOnTap: () => _cellOnTap(context, -3),
-              functionBtnOnTap: () => _cellOnTap(context, -2),
-            ),
-            //我的业绩
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: TextButton(
-                    onPressed: () {
-                      _cellOnTap(context, -1);
-                    },
-                    child: Row(
-                      children: [
-                        Image.asset('assets/images/mine_achievement.png',
-                            width: 30, height: 30.0),
-                        Expanded(
-                            child: const Text(
-                              '  我的业绩',
-                              style: TextStyle(
-                                  fontSize: 16.0, color: AppColors.FF070E28),
-                            )),
-                        Icon(Icons.chevron_right,
-                            size: 24, color: AppColors.FFC1C8D7),
-                      ],
-                    ),
-                  ),
-                ),
+        body: MyEasyRefreshSliverWidget(
+            controller: _controller,
+            scrollController: _scrollController,
+            dataCount: _list.length,
+            onRefresh: _refresh,
+            onLoad: null,
+            slivers: [
+              //用户信息
+              MineHeaderView(
+                avatar: _avatar,
+                userName: _userName,
+                local: _local,
+                type: _type,
+                phone: _phone,
+                setBtnOnTap: () => _cellOnTap(context, -3),
+                functionBtnOnTap: () => _cellOnTap(context, -2),
               ),
-            ),
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  Map map = _list[index];
-                  String image = map['image'];
-                  String name = map['name'];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
+              //我的业绩
+              SliverToBoxAdapter(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(5)),
                           child: TextButton(
-                            onPressed: () {
-                              _cellOnTap(context, index);
-                            },
-                            child: Row(
-                              children: [
-                                Image.asset(image, width: 30, height: 30.0),
-                                Expanded(
-                                    child: Text(
-                                      '  ' + name,
-                                      style: const TextStyle(
-                                          fontSize: 16.0, color: AppColors.FF070E28),
-                                    )),
-                                Icon(Icons.chevron_right,
-                                    size: 24, color: AppColors.FFC1C8D7),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                            color: AppColors.FFE7E7E7,
-                            height: 1,
-                            thickness: 1,
-                            indent: 10,
-                            endIndent: 10)
-                      ],
-                    ),
-                  );
-                }, childCount: _list.length)),
-            //logo
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(38.0),
-                child: Image.asset('assets/images/mine_logo.png',
-                    width: 35.5, height: 55.5),
+                              onPressed: () {
+                                _cellOnTap(context, -1);
+                              },
+                              child: Row(
+                                  children: [
+                                    Image.asset('assets/images/mine_achievement.png',
+                                        width: 30, height: 30.0),
+                                    Expanded(
+                                        child: const Text(
+                                          '  我的业绩',
+                                          style: TextStyle(
+                                              fontSize: 16.0, color: AppColors.FF070E28),
+                                        )),
+                                    Icon(Icons.chevron_right,
+                                        size: 24, color: AppColors.FFC1C8D7)
+                                  ]
+                              )
+                          )
+                      )
+                  )
               ),
-            ),
-          ]),
+              SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    Map map = _list[index];
+                    String image = map['image'];
+                    String name = map['name'];
+                    return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Column(
+                            children: [
+                              Container(
+                                  padding:
+                                  const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: TextButton(
+                                      onPressed: () {
+                                        _cellOnTap(context, index);
+                                      },
+                                      child: Row(
+                                          children: [
+                                            Image.asset(image, width: 30, height: 30.0),
+                                            Expanded(
+                                                child: Text(
+                                                  '  ' + name,
+                                                  style: const TextStyle(
+                                                      fontSize: 16.0, color: AppColors.FF070E28),
+                                                )),
+                                            Icon(Icons.chevron_right,
+                                                size: 24, color: AppColors.FFC1C8D7),
+                                          ]
+                                      )
+                                  )
+                              ),
+                              Visibility(
+                                  visible: index != _list.length - 1,
+                                  child: Divider(
+                                      color: AppColors.FFE7E7E7,
+                                      height: 1,
+                                      thickness: 1,
+                                      indent: 10,
+                                      endIndent: 10)
+                              )
+                            ]
+                        )
+                    );
+                  }, childCount: _list.length)),
+              //logo
+              SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(38.0),
+                    child: Image.asset('assets/images/mine_logo.png',
+                        width: 35.5, height: 55.5),
+                  )
+              )
+            ])
     );
   }
 
@@ -201,18 +206,6 @@ class _MinePageState extends State<MinePage> {
         }
         Navigator.push(context, MaterialPageRoute(builder: (_) => PerformanceStatisticsPage()));
         break;
-      // case 0://我要报单
-      //   DeclarationFormModel model = DeclarationFormModel();
-      //   Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //           builder: (_) =>
-      //           ChangeNotifierProvider<DeclarationFormModel>.value(
-      //               value: model, child: AddDeclarationFormPage())));
-      //   break;
-      // case 0://我的报单
-      //   Navigator.push(context, MaterialPageRoute(builder: (_) => MyDeclarationFormPage()));
-      //   break;
       case 0://我的订单
         if (Store.readUserType() == 'ywdb'){
           AppUtil.showToastCenter('抱歉，您没有权限');
@@ -229,6 +222,10 @@ class _MinePageState extends State<MinePage> {
         break;
       case 2://意见反馈
         Navigator.push(context, MaterialPageRoute(builder: (_) => FeedbackPage()));
+        break;
+      case 3://收货地址
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ReceivingAddress(userId: Store.readUserId())));
         break;
     }
   }
