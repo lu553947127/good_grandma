@@ -46,7 +46,7 @@ class StockAddGoodsCell extends StatelessWidget {
               contentPadding: const EdgeInsets.all(0),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 InkWell(
                     child: Row(
@@ -77,6 +77,7 @@ class StockAddGoodsCell extends StatelessWidget {
                           stockAddModel.editStockListWith(index, stockModel);
                         })
                 ),
+                SizedBox(width: 95),
                 InkWell(
                     child: Row(
                       children: [

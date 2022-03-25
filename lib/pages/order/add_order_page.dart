@@ -100,7 +100,6 @@ class _AddOrderPageState extends State<AddOrderPage> {
                         MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true,middleman: widget.middleman,)));
                     if (result != null) {
                       addModel.setStoreModel(result);
-                      addModel.setPhone(result.phone);
                       if (widget.middleman && Store.readPostType() == 'zy'){
                         _orderAmount(result.id, addModel);
                       }else {
@@ -117,12 +116,13 @@ class _AddOrderPageState extends State<AddOrderPage> {
                     child: PostAddInputCell(
                         title: '客户电话',
                         value: '${addModel.phone}',
-                        hintText: '${addModel.phone}',
+                        hintText: '请输入客户电话',
                         endWidget: Icon(Icons.chevron_right),
                         onTap: () => AppUtil.showInputDialog(
                             context: context,
                             editingController: _editingController,
                             focusNode: _focusNode,
+                            keyboardType: TextInputType.phone,
                             text: '${addModel.phone}',
                             hintText: '${addModel.phone}',
                             callBack: (text) {
@@ -194,6 +194,10 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                 break;
                             }
                             addModel.setInvoiceTypeName(select);
+                            addModel.setOrderTypeIs(0);
+                            addModel.setOrderTypeIsName('');
+                            addModel.setSettlementCus('');
+                            addModel.setSettlementCusName('');
                           }
                       )
                   )
@@ -218,6 +222,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                 break;
                             }
                             addModel.setOrderTypeIsName(select);
+                            addModel.setSettlementCus('');
+                            addModel.setSettlementCusName('');
                           }
                       )
                   )

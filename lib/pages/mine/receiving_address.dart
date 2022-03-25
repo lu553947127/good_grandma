@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/models/StoreModel.dart';
+import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
 import 'package:good_grandma/pages/mine/receiving_address_add.dart';
+import 'package:good_grandma/widgets/post_add_input_cell.dart';
 
 ///收货地址
 class ReceivingAddress extends StatefulWidget {
@@ -18,6 +22,8 @@ class ReceivingAddress extends StatefulWidget {
 class _ReceivingAddressState extends State<ReceivingAddress> {
 
   List<dynamic> findCustomerAddressList = [];
+  String userId = '';
+  String userName = '';
 
   @override
   void initState() {
@@ -34,6 +40,10 @@ class _ReceivingAddressState extends State<ReceivingAddress> {
               TextButton(
                   child: Text("添加", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
                   onPressed: () async {
+                    if (widget.userId.isEmpty && userId.isEmpty){
+                      showToast('请先选择客户，再添加');
+                      return;
+                    }
                     bool needRefresh = await Navigator.push(context,
                         MaterialPageRoute(builder:(context)=> ReceivingAddressAdd(userId: widget.userId, data: null)));
                     if(needRefresh != null && needRefresh){
@@ -45,6 +55,24 @@ class _ReceivingAddressState extends State<ReceivingAddress> {
         ),
         body: CustomScrollView(
           slivers: [
+            SliverToBoxAdapter(
+                child: Visibility(
+                  visible: widget.userId.isEmpty,
+                  child: PostAddInputCell(
+                      title: '客户',
+                      value: userName,
+                      hintText: '请选择客户',
+                      endWidget: Icon(Icons.chevron_right),
+                      onTap: () async {
+                        StoreModel result = await Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true, middleman: false)));
+                        userId = result.id;
+                        userName = result.name;
+                        _findCustomerAddress();
+                      }
+                  )
+                )
+            ),
             findCustomerAddressList.length != 0 ?
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
@@ -83,6 +111,10 @@ class _ReceivingAddressState extends State<ReceivingAddress> {
               child: Center(
                 child: GestureDetector(
                   onTap: () async {
+                    if (widget.userId.isEmpty && userId.isEmpty){
+                      showToast('请先选择客户，再添加');
+                      return;
+                    }
                     bool needRefresh = await Navigator.push(context,
                         MaterialPageRoute(builder:(context)=> ReceivingAddressAdd(userId: widget.userId, data: null)));
                     if(needRefresh != null && needRefresh){
@@ -109,7 +141,7 @@ class _ReceivingAddressState extends State<ReceivingAddress> {
 
   ///收货地址列表
   Future<void> _findCustomerAddress() async {
-    Map<String, dynamic> map = {'userId': widget.userId};
+    Map<String, dynamic> map = {'userId': widget.userId.isEmpty ? userId : widget.userId};
     final val = await requestPost(Api.findCustomerAddress, formData: map);
     var data = jsonDecode(val.toString());
     LogUtil.d('请求结果---findCustomerAddress----$data');

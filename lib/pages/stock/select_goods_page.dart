@@ -219,7 +219,10 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
         _goodsList.forEach((goods) {
           goods.isSelected = false;
           widget.selGoods.forEach((selEmployee) {
-            if (selEmployee.id == goods.id) goods.isSelected = true;
+            if (selEmployee.id == goods.id) {
+              goods.isSelected = true;
+              goods.count = selEmployee.count;
+            }
           });
         });
       }

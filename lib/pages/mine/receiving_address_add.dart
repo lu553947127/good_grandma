@@ -117,6 +117,7 @@ class _ReceivingAddressAddState extends State<ReceivingAddressAdd> {
     }
 
     Map<String, dynamic> map = {
+      'id': widget.data == null ? '' : widget.data['id'],
       'userId': widget.userId,
       'linkMain': linkMain,
       'phone': phone,

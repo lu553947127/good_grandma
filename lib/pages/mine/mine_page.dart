@@ -225,7 +225,7 @@ class _MinePageState extends State<MinePage> {
         break;
       case 3://收货地址
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ReceivingAddress(userId: Store.readUserId())));
+            MaterialPageRoute(builder: (context) => ReceivingAddress(userId: '')));
         break;
     }
   }
