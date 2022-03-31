@@ -185,7 +185,7 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Text(file['label']),
+            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
             onTap: (){
               _launchURL(file['value']);
             },
@@ -232,7 +232,7 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Text(file['label']),
+            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
             onTap: (){
               _launchURL(file['value']);
             },
@@ -279,7 +279,7 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Text(file['label']),
+            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
             onTap: (){
               _launchURL(file['value']);
             },
@@ -326,7 +326,7 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Text(file['label']),
+            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
             onTap: (){
               _launchURL(file['value']);
             },
@@ -652,7 +652,7 @@ class ExamineDetailContent extends StatelessWidget {
                                                 Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
                                                 SizedBox(width: 10),
                                                 fileList.length != 0 ?
-                                                Column(children: _views) :
+                                                Column(crossAxisAlignment: CrossAxisAlignment.start, children: _views) :
                                                 Text('暂无附件', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                               ]
                                           )
@@ -665,7 +665,7 @@ class ExamineDetailContent extends StatelessWidget {
                                                 Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
                                                 SizedBox(width: 10),
                                                 imagesList.length != 0 ?
-                                                Column(children: _views2) :
+                                                Column(crossAxisAlignment: CrossAxisAlignment.start, children: _views2) :
                                                 Text('暂无附件', style: TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                               ]
                                           )
