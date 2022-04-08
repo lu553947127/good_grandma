@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
@@ -28,6 +29,7 @@ class _SelectStorePageState extends State<SelectStorePage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   List<StoreModel> _stores = [];
+  String keyword = '';
 
   @override
   void initState() {
@@ -125,23 +127,31 @@ class _SelectStorePageState extends State<SelectStorePage> {
   }
 
   _searchAction(String text) {
-    if (text.isEmpty) {
-      _controller.callRefresh();
-      return;
+    if (Platform.isAndroid){
+      if (text.isEmpty) {
+        _controller.callRefresh();
+        return;
+      }
+      List<StoreModel> tempList = [];
+      tempList.addAll(_stores.where((element) => element.name.contains(text)));
+      _stores.clear();
+      _stores.addAll(tempList);
+      setState(() {});
+    }else {
+      if (text.isEmpty) {
+        keyword = '';
+        _controller.callRefresh();
+        return;
+      }
+      keyword = text;
+      _refresh();
     }
-    List<StoreModel> tempList = [];
-    tempList.addAll(_stores.where((element) => element.name.contains(text)));
-    _stores.clear();
-    _stores.addAll(tempList);
-    setState(() {});
   }
 
   Future<void> _refresh() async {
     try {
-      final val = widget.forOrder
-          ? await requestPost(Api.cusList,json: jsonEncode({'middleman':widget.middleman?2:1}))
-          : await requestGet(Api.customerList);
-      LogUtil.d('${widget.forOrder?Api.cusList:Api.customerList} value = $val');
+      final val = await requestPost(Api.cusList, json: jsonEncode({'middleman':widget.middleman ? 2 : 1, 'corporate': keyword}));
+      LogUtil.d('${Api.cusList} value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       _stores.clear();

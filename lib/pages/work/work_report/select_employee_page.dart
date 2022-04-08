@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -24,6 +25,7 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
   TextEditingController _editingController = TextEditingController();
   List<EmployeeModel> _employees = [];
   bool _selectedAll = true;
+  String keyword = '';
 
   @override
   void initState() {
@@ -122,20 +124,31 @@ class _SelectEmployeePageState extends State<SelectEmployeePage> {
   }
 
   _searchAction(String text) {
-    if (text.isEmpty) {
+    if (Platform.isAndroid){
+      if (text.isEmpty) {
+        _refresh();
+        return;
+      }
+      List<EmployeeModel> tempList = [];
+      tempList.addAll(_employees.where((element) => element.name.contains(text)));
+      _employees.clear();
+      _employees.addAll(tempList);
+      setState(() {});
+    }else {
+      if (text.isEmpty) {
+        keyword = '';
+        _refresh();
+        return;
+      }
+      keyword = text;
       _refresh();
-      return;
     }
-    List<EmployeeModel> tempList = [];
-    tempList.addAll(_employees.where((element) => element.name.contains(text)));
-    _employees.clear();
-    _employees.addAll(tempList);
-    setState(() {});
   }
 
   Future<void> _refresh() async {
     try{
-      final val = await requestPost(Api.reportUserList);
+      Map<String, dynamic> map = {'name': keyword};
+      final val = await requestPost(Api.reportUserList, json: jsonEncode(map));
       // LogUtil.d('reportUserList value = $val');
       var data = jsonDecode(val.toString());
       _employees.clear();

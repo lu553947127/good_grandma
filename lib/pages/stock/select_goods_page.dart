@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -44,6 +45,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
   int _current = 1;
   int _pageSize = 20;
   String selectName = '全选';
+  String keyword = '';
 
   @override
   void initState() {
@@ -142,15 +144,25 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
   }
 
   _searchAction(String text) {
-    if (text.isEmpty) {
-      _controller.callRefresh();
-      return;
+    if (Platform.isAndroid){
+      if (text.isEmpty) {
+        _controller.callRefresh();
+        return;
+      }
+      List<GoodsModel> tempList = [];
+      tempList.addAll(_goodsList.where((element) => element.name.contains(text)));
+      _goodsList.clear();
+      _goodsList.addAll(tempList);
+      setState(() {});
+    }else {
+      if (text.isEmpty) {
+        keyword = '';
+        _controller.callRefresh();
+        return;
+      }
+      keyword = text;
+      _refresh();
     }
-    List<GoodsModel> tempList = [];
-    tempList.addAll(_goodsList.where((element) => element.name.contains(text)));
-    _goodsList.clear();
-    _goodsList.addAll(tempList);
-    setState(() {});
   }
 
   Future<void> _refresh() async {
@@ -172,6 +184,7 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
     }
     try {
       Map<String, dynamic> map = {
+        'name': keyword,
         'current': '1',
         'size': '-1',
         // 'current': _current,

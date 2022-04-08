@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/utils.dart';
-import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
-import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
-import 'package:good_grandma/pages/stock/select_goods_page.dart';
 import 'package:good_grandma/widgets/order_add_page_goods_cell.dart';
 import 'package:good_grandma/widgets/order_goods_count_view.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
@@ -53,9 +50,9 @@ class _AddDeclarationFormPageState extends State<AddDeclarationFormPage> {
                   hintText: '请选择店铺',
                   endWidget: Icon(Icons.chevron_right),
                   onTap: () async {
-                    StoreModel result = await Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => SelectStorePage()));
-                    if (result != null) addModel.setStoreModel(result);
+                    // StoreModel result = await Navigator.push(context,
+                    //     MaterialPageRoute(builder: (_) => SelectStorePage()));
+                    // if (result != null) addModel.setStoreModel(result);
                   },
                 ),
               ),
@@ -69,15 +66,15 @@ class _AddDeclarationFormPageState extends State<AddDeclarationFormPage> {
                             color: AppColors.FF2F4058, fontSize: 14.0)),
                     trailing: IconButton(
                         onPressed: () async {
-                          List<GoodsModel> _selGoodsList = await Navigator.push(
-                              context, MaterialPageRoute(builder: (_) {
-                            return SelectGoodsPage(
-                                selGoods: addModel.goodsList,customerId: addModel.storeModel.id);
-                          }));
-                          if (_selGoodsList != null) {
-                            addModel.setArrays(
-                                addModel.goodsList, _selGoodsList);
-                          }
+                          // List<GoodsModel> _selGoodsList = await Navigator.push(
+                          //     context, MaterialPageRoute(builder: (_) {
+                          //   return SelectGoodsPage(
+                          //       selGoods: addModel.goodsList,customerId: addModel.storeModel.id);
+                          // }));
+                          // if (_selGoodsList != null) {
+                          //   addModel.setArrays(
+                          //       addModel.goodsList, _selGoodsList);
+                          // }
                         },
                         icon:
                             Icon(Icons.add_circle, color: AppColors.FFC68D3E)),

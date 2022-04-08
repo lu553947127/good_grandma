@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/http.dart';
@@ -24,6 +25,7 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _editingController = TextEditingController();
   List<Map> _dataArray = [];
+  String keyword = '';
 
   @override
   void initState() {
@@ -78,20 +80,31 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   }
 
   _searchAction(String text) {
-    if (text.isEmpty) {
-      _controller.callRefresh();
-      return;
+    if (Platform.isAndroid){
+      if (text.isEmpty) {
+        _controller.callRefresh();
+        return;
+      }
+      List<Map> tempList = [];
+      tempList.addAll(_dataArray.where((element) => element[widget.name].contains(text)));
+      _dataArray.clear();
+      _dataArray.addAll(tempList);
+      setState(() {});
+    }else {
+      if (text.isEmpty) {
+        keyword = '';
+        _controller.callRefresh();
+        return;
+      }
+      keyword = text;
+      _refresh();
     }
-    List<Map> tempList = [];
-    tempList.addAll(_dataArray.where((element) => element[widget.name].contains(text)));
-    _dataArray.clear();
-    _dataArray.addAll(tempList);
-    setState(() {});
   }
 
   Future<void> _refresh() async {
     try {
-      final val = await requestGet(widget.url);
+      Map<String, dynamic> map = {'${widget.name}': keyword};
+      final val = await requestGet(widget.url, param: map);
       LogUtil.d('customerList value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];

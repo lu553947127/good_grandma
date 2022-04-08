@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
@@ -30,6 +30,7 @@ class _StockPageState extends State<StockPage> {
   List<Map> _dataArray = [];
   int _current = 1;
   int _pageSize = 15;
+  String keyword = '';
 
   @override
   void initState() {
@@ -114,15 +115,25 @@ class _StockPageState extends State<StockPage> {
   }
 
   _searchAction(String text){
-    if(text.isEmpty) {
-      _controller.callRefresh();
-      return;
+    if (Platform.isAndroid){
+      if(text.isEmpty) {
+        _controller.callRefresh();
+        return;
+      }
+      List<Map> tempList = [];
+      tempList.addAll(_dataArray.where((element) => (element['corporate'] as String).contains(text)));
+      _dataArray.clear();
+      _dataArray.addAll(tempList);
+      setState(() {});
+    }else {
+      if (text.isEmpty) {
+        keyword = '';
+        _controller.callRefresh();
+        return;
+      }
+      keyword = text;
+      _refresh();
     }
-    List<Map> tempList = [];
-    tempList.addAll(_dataArray.where((element) => (element['corporate'] as String).contains(text)));
-    _dataArray.clear();
-    _dataArray.addAll(tempList);
-    setState(() {});
   }
 
   Future<void> _refresh() async {
@@ -137,7 +148,7 @@ class _StockPageState extends State<StockPage> {
 
   Future<void> _downloadData() async {
     try {
-      Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
+      Map<String, dynamic> map = {'corporate': keyword, 'current': _current, 'size': _pageSize};
       final val = await requestGet(Api.customerStockList, param: map);
       LogUtil.d('customerStockList value = $val');
       var data = jsonDecode(val.toString());

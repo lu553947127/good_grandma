@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
   List<Map> _dataArray = [];
   int _current = 1;
   int _pageSize = 15;
+  String keyword = '';
 
   @override
   void initState() {
@@ -106,6 +108,7 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
   Future<void> _downloadData() async {
     try {
       Map<String, dynamic> map = {
+        'name': keyword,
         'current': _current,
         'size': _pageSize,
       };
@@ -143,16 +146,26 @@ class _ReportStatisticsPageState extends State<ReportStatisticsPage> {
   }
 
   _searchAction(String text) {
-    if (text.isEmpty) {
-      _controller.callRefresh();
-      return;
+    if (Platform.isAndroid){
+      if (text.isEmpty) {
+        _controller.callRefresh();
+        return;
+      }
+      List<Map> tempList = [];
+      tempList.addAll(_dataArray
+          .where((element) => (element['name'] as String).contains(text)));
+      _dataArray.clear();
+      _dataArray.addAll(tempList);
+      setState(() {});
+    }else {
+      if (text.isEmpty) {
+        keyword = '';
+        _controller.callRefresh();
+        return;
+      }
+      keyword = text;
+      _refresh();
     }
-    List<Map> tempList = [];
-    tempList.addAll(_dataArray
-        .where((element) => (element['name'] as String).contains(text)));
-    _dataArray.clear();
-    _dataArray.addAll(tempList);
-    setState(() {});
   }
 
   @override

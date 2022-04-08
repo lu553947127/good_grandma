@@ -47,19 +47,13 @@ class _ExamineDetailState extends State<ExamineDetail> {
     bool wf_cancel = false;//取消申请
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text('审批详情', style: TextStyle(fontSize: 18, color: Colors.black)),
-      ),
+      appBar: AppBar(title: Text('审批详情')),
       body: FutureBuilder(
           future: requestGet(Api.processDetail, param: map),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.hasData) {
               var data = jsonDecode(snapshot.data.toString());
-              // LogUtil.d('请求结果---processDetail----$data');
+              LogUtil.d('请求结果---processDetail----$data');
 
               ///获取审核按钮显示列表
               List<Map> buttonList = (data['data']['button'] as List).cast();
