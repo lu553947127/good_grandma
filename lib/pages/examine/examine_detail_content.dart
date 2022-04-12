@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/pages/examine/examine_detail_content_form.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,112 +31,6 @@ class ExamineDetailContent extends StatelessWidget {
   List<Map> sampleList = [];
   ///费用列表集合
   List<Map> costList = [];
-
-  double numRowWidth = 100.0;//单个表宽
-  double numRowHeight = 48.0;//表格高
-
-  ///创建一个表单
-  Widget _buildChart(List<Map> goodsList, name) {
-    switch(name){
-      case '支付对象信息':
-        numRowWidth = 100.0;
-        break;
-      case '出差明细':
-        numRowWidth = 140.0;
-        break;
-      case '出差日程':
-        numRowWidth = 40.0;
-        break;
-    }
-
-    return Container(
-      child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            child: Table(children: _buildTableRow(goodsList, name)),
-            width: numRowWidth * 10,
-          )
-      ),
-    );
-  }
-
-  ///创建tableRows
-  List<TableRow> _buildTableRow(List<Map> goodsList, name) {
-    List<TableRow> returnList = new List();
-    if (name == '支付对象信息'){
-      returnList.add(_buildSingleRow2(-1, goodsList));
-      for (int i = 0; i < goodsList.length; i++) {
-        returnList.add(_buildSingleRow2(i, goodsList));
-      }
-    }else if (name == '出差明细'){
-      returnList.add(_buildSingleRow(-1, goodsList));
-      for (int i = 0; i < goodsList.length; i++) {
-        returnList.add(_buildSingleRow(i, goodsList));
-      }
-    }else if (name == '出差日程'){
-      returnList.add(_buildSingleRow3(-1, goodsList));
-      for (int i = 0; i < goodsList.length; i++) {
-        returnList.add(_buildSingleRow3(i, goodsList));
-      }
-    }
-    return returnList;
-  }
-
-  ///创建一行tableRow
-  TableRow _buildSingleRow(int index, List<Map> goodsList) {
-    return TableRow(
-      //第一行样式 添加背景色
-        children: [
-          _buildSideBox(index == -1 ? '起止时间' : goodsList[index]['qizhishijian'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '合计天数' : goodsList[index]['days'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '起止地点' : goodsList[index]['qizhididian'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '出差目的' : goodsList[index]['chuchaimudi'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '交通金额' : goodsList[index]['jiaotongjine'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '市内交通' : goodsList[index]['shineijiaotong'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '住宿金额' : goodsList[index]['zhusujine'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '补助金额' : goodsList[index]['buzhujine'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '其他金额' : goodsList[index]['qitajine'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '备注' : goodsList[index]['beizhu'].toString(), index == -1),
-        ]);
-  }
-
-  TableRow _buildSingleRow2(int index, List<Map> goodsList) {
-    return TableRow(
-      //第一行样式 添加背景色
-        children: [
-          _buildSideBox(index == -1 ? '单位名称' : goodsList[index]['danweimingcheng'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '账号' : goodsList[index]['zhanghao'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '开户行名称' : goodsList[index]['kaihuhangmingcheng'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '金额' : goodsList[index]['jine'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '支付方式' : goodsList[index]['zhifufangshi'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '备注' : goodsList[index]['beizhu'].toString(), index == -1),
-        ]);
-  }
-
-  TableRow _buildSingleRow3(int index, List<Map> goodsList) {
-    return TableRow(
-      //第一行样式 添加背景色
-        children: [
-          _buildSideBox(index == -1 ? '出发地' : goodsList[index]['chufadi'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '目的地' : goodsList[index]['mudidi'].toString(), index == -1),
-          _buildSideBox(index == -1 ? '预计出差日期' : goodsList[index]['yujichuchairiqi'].toString(), index == -1),
-        ]);
-  }
-
-  ///创建单个表格
-  Widget _buildSideBox(String title, isTitle) {
-    return SizedBox(
-        height: numRowHeight,
-        width: numRowWidth,
-        child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(width: 0.33, color: AppColors.FFC1C8D7))),
-            child: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: isTitle ? 15 : 13, color: AppColors.FF2F4058))
-        )
-    );
-  }
 
   ///用内置浏览器打开网页
   _launchURL(url) async {
@@ -552,7 +447,7 @@ class ExamineDetailContent extends StatelessWidget {
                                               taskFormList[index]['name'] == '费用'?
                                           true : false,
                                           child: Text.rich(TextSpan(
-                                              text: '${taskFormList[index]['name']}   ',
+                                              text: '${taskFormList[index]['name']}\n',
                                               style: const TextStyle(color: AppColors.FF959EB1, fontSize: 15.0),
                                               children: [
                                                 TextSpan(
@@ -567,7 +462,7 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '支付对象信息' ? false : true,
-                                          child: _buildChart(zhifuList, taskFormList[index]['name'])
+                                          child: ExamineDetailContentForm(mapList: zhifuList, name: taskFormList[index]['name'])
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差明细' ? false : true,
@@ -575,7 +470,7 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差明细' ? false : true,
-                                          child: _buildChart(chuchaiList, taskFormList[index]['name'])
+                                          child: ExamineDetailContentForm(mapList: chuchaiList, name: taskFormList[index]['name'])
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差日程' ? false : true,
@@ -583,7 +478,7 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '出差日程' ? false : true,
-                                          child: _buildChart(chuchairichengList, taskFormList[index]['name'])
+                                          child: ExamineDetailContentForm(mapList: chuchairichengList, name: taskFormList[index]['name'])
                                       ),
                                       Offstage(
                                           offstage: taskFormList[index]['name'] == '试吃品' ? false : true,
@@ -646,7 +541,7 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: (taskFormList[index]['name'] == '表单附件' || taskFormList[index]['name'] == '附件') ? false : true,
-                                          child: Row(
+                                          child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),
@@ -659,7 +554,7 @@ class ExamineDetailContent extends StatelessWidget {
                                       ),
                                       Offstage(
                                           offstage: (taskFormList[index]['name'] == '图片') ? false : true,
-                                          child: Row(
+                                          child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(taskFormList[index]['name'], style: TextStyle(fontSize: 15, color: AppColors.FF959EB1)),

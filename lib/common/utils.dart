@@ -237,6 +237,17 @@ String listToString(List<String> list) {
   return result.toString();
 }
 
+///list集合转化成,相隔的字符串
+String listToStringTime(List<String> list) {
+  if (list == null) {
+    return null;
+  }
+  String result;
+  list.forEach((string) =>
+  {if (result == null) result = string else result = '$result ~ $string'});
+  return result.toString();
+}
+
 class AppUtil {
   static const aMapAndroidKey = '9826f8c8e4d7b4b3eaafd13c6213bfcc';
   static const aMapiOSKey = '330ac281e8e9fdcee0cb9e2011a0323c';

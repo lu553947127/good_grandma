@@ -36,7 +36,7 @@ class StockAddGoodsCell extends StatelessWidget {
           children: [
             //商品
             ListTile(
-              title: Text(goodsNames.isNotEmpty ? goodsNames : '请选择商品',
+              title: Text(goodsNames.isNotEmpty ? '$goodsNames ${stockModel.goodsModel.specs.first.spec}' : '请选择商品',
                   style: TextStyle(
                       color: goodsNames.isNotEmpty
                           ? AppColors.FF2F4058
