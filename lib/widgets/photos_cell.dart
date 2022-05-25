@@ -78,14 +78,21 @@ class CustomPhotoWidget extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext content, int index){
                         if (title == '拜访图片'){
-                          return WatermarkImage(
+                          // return WatermarkImage(
+                          //     index: index,
+                          //     imagesProvider: imagesProvider,
+                          //     url: url,
+                          //     address: address
+                          // );
+                          return SelectImagesView(
+                              title: title,
                               index: index,
                               imagesProvider: imagesProvider,
-                              url: url,
-                              address: address
+                              url: url
                           );
                         }else {
                           return SelectImagesView(
+                              title: title,
                               index: index,
                               imagesProvider: imagesProvider,
                               url: url

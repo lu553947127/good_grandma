@@ -104,8 +104,9 @@ class _SelectCustomerPageState extends State<SelectCustomerPage> {
   Future<void> _refresh() async {
     try {
       Map<String, dynamic> map = {'${widget.name}': keyword};
+      LogUtil.d('param = $map');
       final val = await requestGet(widget.url, param: map);
-      LogUtil.d('customerList value = $val');
+      LogUtil.d('${widget.url} value = $val');
       var data = jsonDecode(val.toString());
       final List<dynamic> list = data['data'];
       _dataArray.clear();

@@ -1,3 +1,5 @@
+import 'package:good_grandma/common/log.dart';
+
 ///商品模型
 class GoodsModel {
   ///名称
@@ -18,21 +20,23 @@ class GoodsModel {
   ///单价元 开票价
   double invoice;
 
-  ///二批价
-  double middleman;
-
   ///重量(kg)
   double weight;
+
+  ///是否选择状态
   bool isSelected;
+
+  ///标准间比例
+  double proportion;
 
   ///总价
   double get countPrice => count * invoice;
 
-  ///二批价总价
-  double get countMiddlemanPrice => count * middleman;
-
   ///总重量
   double get countWeight => count * weight;
+
+  ///标准件数
+  double get standardCount => count * proportion;
 
   GoodsModel({
     this.name = '',
@@ -40,19 +44,20 @@ class GoodsModel {
     this.image = '',
     this.count = 1,
     this.invoice = 0,
-    this.middleman = 0,
     this.weight = 0,
+    this.proportion = 0,
     this.isSelected = false,
   }) {
     specs = [];
   }
+
   ///列表用
   GoodsModel.fromJsonForList(Map<String, dynamic> json) {
     name = json['name'] ?? '';
-    middleman = double.parse(json['middleman'].toString()) ?? 0;
     count = json['count'] ?? 0;
     weight = double.parse(json['weight']) ?? 0;
     invoice = double.parse(json['invoice']) ?? 0;
+    proportion = double.parse(json['proportion']) ?? 0;
     id = json['id'] ?? '';
     image = json['pic'] ?? '';
     String spec = json['spec'];
@@ -62,13 +67,10 @@ class GoodsModel {
 
   GoodsModel.fromJson(Map<String, dynamic> json) {
     name = json['name'] ?? '';
-    middleman = json['middleman'] ?? 0.0;
     count = json['count'] ?? 0;
     weight = json['weight'] ?? 0.0;
     invoice = json['invoice'] ?? 0.0;
     id = json['id'] ?? '';
-    // print('json = $json');
-
     image = json['path'] ?? '';
     specs = [];
     List<dynamic> _specs = json['specList'];
@@ -80,7 +82,6 @@ class GoodsModel {
         specs.add(specModel);
       }
     });
-    middleman = 0;
     isSelected = false;
   }
 

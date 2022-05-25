@@ -9,7 +9,9 @@ import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
+import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/widgets/my_declaration_form_cell.dart';
 import 'package:good_grandma/widgets/order_goods_count_view.dart';
 import 'package:good_grandma/pages/order/add_order_page.dart';
@@ -33,16 +35,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   void initState() {
     super.initState();
-    _model.setModelWithModel(widget.model);
     _controller.callRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    double countWeight = _model.goodsWeight;
-    // print('Store.readUserType() = ${Store.readUserType()}');
-    // print('_model.status = ${_model.status}');
-    // print('_model.createUserId = ${_model.createUserId}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('订单详情'),
@@ -66,16 +63,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           builder: (_) => ChangeNotifierProvider<
                                   DeclarationFormModel>.value(
                                 value: _model,
-                                child: AddOrderPage(editing: true, middleman: _model.orderType == 2),
+                                child: AddOrderPage(editing: true, orderType: _model.orderType),
                               )));
                   if (needRefresh != null && needRefresh)
                     _controller.callRefresh();
                 },
                 child: const Text('编辑',
                     style: const TextStyle(
-                        color: AppColors.FFC08A3F, fontSize: 14.0))),
-          ),
-        ],
+                        color: AppColors.FFC08A3F, fontSize: 14.0)))
+          )
+        ]
       ),
       body: MyEasyRefreshSliverWidget(
           controller: _controller,
@@ -85,38 +82,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           onLoad: null,
           slivers: [
             _Header(model: _model),
-            //是否自提
-            SliverVisibility(
-              visible: _model.orderType == 1 && _model.selfMentionName != null && _model.selfMentionName.isNotEmpty,
-              sliver: _TextCell(value: _model.selfMentionName, title: '是否自提'),
-            ),
-            //发票类型
-            SliverVisibility(
-              visible: _model.orderType == 1 && _model.invoiceTypeName != null && _model.invoiceTypeName.isNotEmpty,
-              sliver: _TextCell(value: _model.invoiceTypeName, title: '发票类型'),
-            ),
-            //是否渠道客户
-            SliverVisibility(
-              visible: _model.orderType == 1 && _model.orderTypeIsName != null && _model.orderTypeIsName.isNotEmpty,
-              sliver: _TextCell(value: _model.orderTypeIsName, title: '是否渠道客户'),
-            ),
-            //结算客户
-            SliverVisibility(
-              visible: _model.orderType == 1 && _model.settlementCusName != null && _model.settlementCusName.isNotEmpty,
-              sliver: _TextCell(value: _model.settlementCusName, title: '结算客户'),
-            ),
-            //仓库
-            SliverVisibility(
-              visible: _model.orderType == 1 && _model.warehouseName != null && _model.warehouseName.isNotEmpty,
-              sliver: _TextCell(value: _model.warehouseName, title: '仓库'),
-            ),
-            //驳回理由
-            SliverVisibility(
-              visible: _model.status == 5 &&
-                  _model.reject != null &&
-                  _model.reject.isNotEmpty,
-              sliver: _TextCell(value: _model.reject, title: '驳回理由'),
-            ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               sliver: SliverToBoxAdapter(
@@ -135,57 +100,87 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                     '总额：¥ ' +
                                         goodsModel.countPrice
                                             .toStringAsFixed(2),
-                                    style: const TextStyle(fontSize: 14.0),
-                                  ),
+                                    style: const TextStyle(fontSize: 14.0)
+                                  )
                                 ),
-                                const Divider(),
-                              ],
+                                const Divider()
+                              ]
                             )),
                         OrderGoodsCountView(
                           totalCount: _model.totalCount,
                           giftCount: _model.giftCount,
                           count: _model.goodsCount,
-                          countWeight: countWeight,
+                          countWeight: _model.goodsWeight,
                           countPrice: _model.goodsPrice,
-                          padding: const EdgeInsets.all(0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                          padding: const EdgeInsets.all(0)
+                        )
+                      ]
+                    )
+                  )
+                )
+              )
             ),
-            //补货商品(去掉了)
+            //仓库
             SliverVisibility(
-              // visible: _model.rewardGoodsList.isNotEmpty,
-              visible: false,
-              sliver: SliverPadding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-                sliver: SliverToBoxAdapter(
-                  child: Card(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('补货商品',
-                              style: const TextStyle(
-                                  color: AppColors.FF959EB1, fontSize: 14.0)),
-                          ..._model.rewardGoodsList.map((goodsModel) =>
-                              DeclarationGoodsCell(goodsModel: goodsModel)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              visible: _model.orderType == 1 && _model.warehouseName != null && _model.warehouseName.isNotEmpty,
+              sliver: _TextCell(value: _model.warehouseName, title: '仓库'),
             ),
-            //备注信息
+            //配送方式
             SliverVisibility(
-              visible: _model.remark != null && _model.remark.isNotEmpty,
-              sliver: _TextCell(value: _model.remark, title: '备注信息'),
+              visible: _model.orderType == 1 && _model.selfMentionName != null && _model.selfMentionName.isNotEmpty,
+              sliver: _TextCell(value: _model.selfMentionName, title: '配送方式'),
+            ),
+            //拼车码
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.carpoolCode != null && _model.carpoolCode.isNotEmpty,
+              sliver: _TextCell(value: _model.carpoolCode, title: '拼车码'),
+            ),
+            //发票类型
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.invoiceTypeName != null && _model.invoiceTypeName.isNotEmpty,
+              sliver: _TextCell(value: _model.invoiceTypeName, title: '发票类型'),
+            ),
+            //订单类型
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.orderTypeIsName != null && _model.orderTypeIsName.isNotEmpty,
+              sliver: _TextCell(value: _model.orderTypeIsName, title: '订单类型'),
+            ),
+            //结算客户
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.settlementCusName != null && _model.settlementCusName.isNotEmpty,
+              sliver: _TextCell(value: _model.settlementCusName, title: '结算客户'),
+            ),
+            //驳回理由
+            SliverVisibility(
+              visible: _model.status == 5 &&
+                  _model.reject != null &&
+                  _model.reject.isNotEmpty,
+              sliver: _TextCell(value: _model.reject, title: '驳回理由'),
+            ),
+            //折扣金额列表
+            SliverVisibility(
+              visible: _model.dictionaryModelList.isNotEmpty,
+              sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    DictionaryModel dictionaryModel = _model.dictionaryModelList[index];
+                    return Padding(padding: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Card(
+                        child: Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(dictionaryModel.dictKey,
+                                      style: const TextStyle(
+                                          color: AppColors.FF959EB1, fontSize: 14.0)),
+                                  SizedBox(height: 12.0),
+                                  Text(dictionaryModel.money ?? '', style: const TextStyle(fontSize: 14.0))
+                                ]
+                            )
+                        )
+                    ));
+                  }, childCount: _model.dictionaryModelList.length))
             ),
             //确认收货
             SliverVisibility(
@@ -228,8 +223,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 backgroundColor: AppColors.FFC08A3F,
                 shape: StadiumBorder()),
             child: const Text('取消订单',
-                style: TextStyle(color: Colors.white, fontSize: 15.0))),
-      ),
+                style: TextStyle(color: Colors.white, fontSize: 15.0)))
+      )
     )
     //审核订单按钮
         : Visibility(
@@ -271,15 +266,15 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       shape: StadiumBorder()),
                   child: const Text('确认审核',
                       style: TextStyle(
-                          color: Colors.white, fontSize: 15.0))),
-            ),
-          ],
-        ),
-      ),
+                          color: Colors.white, fontSize: 15.0)))
+            )
+          ]
+        )
+      )
     );
   }
 
-  //取消订单
+  ///取消订单
   void _cancelAction(BuildContext context) async {
     bool result = await AppUtil.bottomConformSheet(context, '是否要取消订单？',
         cancelText: '不取消', doneText: '取消');
@@ -287,7 +282,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _examineRequest(context, {'id': _model.id, 'status': 6});
   }
 
-  //驳回
+  ///驳回
   void _rejectAction(BuildContext context) {
     // if (_model.orderType == 1 &&
     //     (Store.readUserType() == 'xsb' || Store.readUserType() == 'yjkh')) {
@@ -306,14 +301,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     );
   }
 
-  //确认审核
+  ///确认审核
   void _examineAction(BuildContext context) async {
     bool result = await AppUtil.bottomConformSheet(context, '是否确认审核？');
     if (result != null && result)
       _examineRequest(context, {'id': _model.id, 'status': 2});
   }
 
-  //审核驳回网络请求
+  ///审核驳回网络请求
   void _examineRequest(BuildContext context, Map param) async {
     // print('param = ${jsonEncode(param)}');
     requestPost(Api.orderSh, json: jsonEncode(param)).then((value) {
@@ -323,7 +318,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     });
   }
 
-  //确认收货
+  ///确认收货
   void _submitAction(BuildContext context) async {
     // print('_model.id = ${_model.id}');
     bool result = await AppUtil.bottomConformSheet(context, '是否确认收货？');
@@ -343,8 +338,80 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       LogUtil.d('${Api.orderDetail} value = $val');
       var data = jsonDecode(val.toString());
       Map<String, dynamic> map = data['data'];
-      DeclarationFormModel model = DeclarationFormModel.fromJson(map);
-      _model.setModelWithModel(model);
+
+      _model.setStoreModel(StoreModel(
+        name: map['cusName'].toString(),
+        id: map['customerId'].toString(),
+        phone: map['cusPhone'].toString(),
+        address: map['cusName'].toString()
+      ));
+      _model.orderType = map['middleman'] ?? 1;
+      _model.reject = map['reject'].toString() ?? '';
+      _model.setCreateUserId(map['createUser'].toString() ?? '');
+      _model.setUpdateUser(map['updateUser'].toString() ?? '');
+
+      List<Map> orderDetailedList = (map['orderDetailedList'] as List).cast();
+      orderDetailedList.forEach((map) {
+        GoodsModel goodsModel = GoodsModel(
+            name: map['name'].toString() ?? '',
+            count: map['count'] ?? 0,
+            weight: map['weight'] != null ? double.parse(map['weight'].toString()) : 0.0,
+            invoice: double.parse(map['invoice'].toString()) ?? 0.0,
+            proportion: double.parse(map['proportion'].toString()) ?? 0.0,
+            id: map['id'].toString() ?? '',
+            image: map['pic'].toString() ?? ''
+        );
+        String spec = map['spec'].toString() ?? '';
+        if (spec.isNotEmpty) {
+          SpecModel specModel = SpecModel(spec: spec);
+          goodsModel.specs.add(specModel);
+        }
+        _model.addToArray(goodsModel);
+      });
+
+      List<Map> giftTotalArr = (map['giftTotalArr'] as List).cast();
+      giftTotalArr.forEach((element) {
+        _model.addToDictionaryArray(DictionaryModel(
+            id: element['dictId'].toString(),
+            remark: element['details'].toString(),
+            dictKey: element['type'].toString(),
+            money: element['total'].toString()
+        ));
+      });
+
+      _model.id = map['id'].toString();
+      _model.time = map['createTime'].toString();
+      _model.setPhone(map['cusPhone'].toString());
+      _model.setAddress(map['address'].toString());
+      _model.setStatus(map['status']);
+      _model.setWarehouseCode(map['warehouseCode'].toString());
+      _model.setWarehouseName(map['warehouseTitle'].toString());
+      _model.setSelfMention(map['selfMention']);
+      _model.setSelfMentionName(map['selfMentionStr'].toString());
+      _model.setCarpooling(map['carpoolCode'].toString().isEmpty ? '否' : '是');
+      _model.setCarpoolCode(map['carpoolCode'].toString());
+      _model.setCarId(map['carId'].toString());
+      // _model.setCarName(map['carName'].toString());
+      _model.setOrderTypeIs(map['orderType']);
+      _model.setOrderTypeIsName(map['orderType'] == 1 ? '普通订单' : '渠道客户订单');
+      _model.setIsInvoice(map['invoiceType'] == 0 ? '否' : '是');
+      _model.setInvoiceType(map['invoiceType']);
+      switch(map['invoiceType']){
+        case 1:
+          _model.setInvoiceTypeName('普票');
+          break;
+        case 2:
+          _model.setInvoiceTypeName('专票');
+          break;
+        case 3:
+          _model.setInvoiceTypeName('收据');
+          break;
+      }
+      _model.setSettlementCus(map['settlementCus'].toString());
+      _model.setSettlementCusName(map['settlementCusName'].toString());
+      _model.setInvoiceId(map['invoiceId'].toString());
+      // _model.setInvoiceName(map[''].toString());
+
       _controller.finishRefresh(success: true);
       if (mounted) setState(() {});
     } catch (error) {
@@ -388,12 +455,12 @@ class _TextCell extends StatelessWidget {
                     style: const TextStyle(
                         color: AppColors.FF959EB1, fontSize: 14.0)),
                 SizedBox(height: 12.0),
-                Text(_value ?? '', style: const TextStyle(fontSize: 14.0)),
-              ],
-            ),
-          ),
-        ),
-      ),
+                Text(_value ?? '', style: const TextStyle(fontSize: 14.0))
+              ]
+            )
+          )
+        )
+      )
     );
   }
 }
@@ -438,11 +505,11 @@ class _Header extends StatelessWidget {
                           _model.statusName,
                           style: TextStyle(
                               color: _model.statusColor,
-                              fontSize: 14.0),
-                        ),
-                      ),
-                    ),
-                  ],
+                              fontSize: 14.0)
+                        )
+                      )
+                    )
+                  ]
                 ),
                 Row(
                   children: [
@@ -452,8 +519,8 @@ class _Header extends StatelessWidget {
                       child: Text('  ' + _model.time,
                           style: const TextStyle(
                               color: AppColors.FF959EB1, fontSize: 14.0)),
-                    ),
-                  ],
+                    )
+                  ]
                 ),
                 const Divider(),
                 Row(
@@ -465,8 +532,8 @@ class _Header extends StatelessWidget {
                       child: Text('收货地址：${_model.address}',
                           style: const TextStyle(
                               color: AppColors.FF959EB1, fontSize: 14.0)),
-                    ),
-                  ],
+                    )
+                  ]
                 ),
                 Row(
                   children: [
@@ -477,14 +544,14 @@ class _Header extends StatelessWidget {
                       child: Text('联系电话：${_model.phone}',
                           style: const TextStyle(
                               color: AppColors.FF959EB1, fontSize: 14.0)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                    )
+                  ]
+                )
+              ]
+            )
+          )
+        )
+      )
     );
   }
 }

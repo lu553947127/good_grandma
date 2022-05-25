@@ -25,7 +25,6 @@ class _DeclarationFormDetailPageState extends State<DeclarationFormDetailPage> {
   @override
   void initState() {
     super.initState();
-    _model.setModelWithModel(widget.model);
     _refresh();
   }
 
@@ -75,33 +74,33 @@ class _DeclarationFormDetailPageState extends State<DeclarationFormDetailPage> {
                 ),
               ),
             ),
-            SliverVisibility(
-              visible: _model.remark != null && _model.remark.isNotEmpty,
-              sliver: SliverPadding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                sliver: SliverToBoxAdapter(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('备注信息',
-                              style: TextStyle(
-                                  color: AppColors.FF959EB1, fontSize: 12.0)),
-                          SizedBox(height: 12.0),
-                          Text(_model.remark,
-                              style: TextStyle(
-                                  color: AppColors.FF2F4058, fontSize: 12.0)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // SliverVisibility(
+            //   visible: _model.remark != null && _model.remark.isNotEmpty,
+            //   sliver: SliverPadding(
+            //     padding: const EdgeInsets.symmetric(
+            //         horizontal: 15.0, vertical: 10.0),
+            //     sliver: SliverToBoxAdapter(
+            //       child: Card(
+            //         child: Padding(
+            //           padding: const EdgeInsets.symmetric(
+            //               horizontal: 20.0, vertical: 15.0),
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               const Text('备注信息',
+            //                   style: TextStyle(
+            //                       color: AppColors.FF959EB1, fontSize: 12.0)),
+            //               SizedBox(height: 12.0),
+            //               Text(_model.remark,
+            //                   style: TextStyle(
+            //                       color: AppColors.FF2F4058, fontSize: 12.0)),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -157,7 +156,7 @@ class _DeclarationFormDetailPageState extends State<DeclarationFormDetailPage> {
     ));
     _model.setPhone('1234567890');
     _model.setAddress('山东省济南市历下区舜华路');
-    _model.setRemark('备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体。');
+    // _model.setRemark('备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体内容备注信息具体。');
     _model.setArrays(
         _model.goodsList,
         List.generate(

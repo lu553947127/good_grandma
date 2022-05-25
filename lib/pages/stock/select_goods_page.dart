@@ -15,22 +15,19 @@ import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/widgets/search_text_widget.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 
+///选择商品
 class SelectGoodsPage extends StatefulWidget {
   const SelectGoodsPage(
       {Key key,
       @required this.selGoods,
       @required this.customerId,
-      this.selectSingle = false,
-      this.forStock = true})
+      this.selectSingle = false})
       : super(key: key);
   final List<GoodsModel> selGoods;
   final String customerId;
 
   /// 是否只选一个
   final bool selectSingle;
-
-  /// 是否库存管理
-  final bool forStock;
 
   @override
   _SelectGoodsPageState createState() => _SelectGoodsPageState();
@@ -187,45 +184,29 @@ class _SelectGoodsPageState extends State<SelectGoodsPage> {
         'name': keyword,
         'current': '1',
         'size': '-1',
-        // 'current': _current,
-        // 'size': _pageSize,
         'customerId': widget.customerId
       };
-      // print('map = $map');
-      String url = Api.customerStockGoodsList;
-      if (!widget.forStock) url = Api.goodsList;
-      final val = await requestGet(url, param: map);
-      LogUtil.d('$url value = $val');
+
+      final val = await requestGet(Api.goodsList, param: map);
+      LogUtil.d('${Api.goodsList} value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _goodsList.clear();
       final List<dynamic> list = data['data'];
-      int i = 0;
       list.forEach((map) {
-        GoodsModel model;
-        if (widget.forStock) {
-          model = GoodsModel.fromJson((map as Map));
-        } else {
-          double invoice = double.parse(map['invoice']) ?? 0;
-          double middleman = double.parse(map['middleman']) ?? 0;
-          double weight = map['weight'] != null
-              ? double.parse(map['weight'].toString())
-              : 0;
-          model = GoodsModel(
-            name: map['name'] ?? '',
-            invoice: invoice,
-            middleman: middleman,
-            weight: weight,
-            image: map['path'] ?? '',
-            id: map['id'] ?? '',
-          );
-          String spec = map['spec'] ?? '';
-          if (spec.isNotEmpty) {
-            SpecModel specModel = SpecModel(spec: spec);
-            model.specs.add(specModel);
-          }
+        GoodsModel model = GoodsModel(
+          name: map['name'] ?? '',
+          invoice: double.parse(map['invoice']) ?? 0.0,
+          weight: map['weight'] != null ? double.parse(map['weight'].toString()) : 0.0,
+          image: map['path'] ?? '',
+          id: map['id'] ?? '',
+          proportion: double.parse(map['proportion']) ?? 0.0,
+        );
+        String spec = map['spec'] ?? '';
+        if (spec.isNotEmpty) {
+          SpecModel specModel = SpecModel(spec: spec);
+          model.specs.add(specModel);
         }
         _goodsList.add(model);
-        i++;
       });
 
       if (widget.selGoods.isNotEmpty && !widget.selectSingle) {
@@ -314,7 +295,7 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
                           color: Colors.transparent,
                           border:
                               Border.all(color: AppColors.FFC08A3F, width: 4)),
-                    ),
+                    )
                   ),
                   Visibility(
                     visible: widget.goodsModel.isSelected,
@@ -322,21 +303,21 @@ class _GoodsGridCellState extends State<_GoodsGridCell> {
                         bottom: 3,
                         right: 3,
                         child: Image.asset('assets/images/goods_sel.png',
-                            width: 30, height: 30)),
-                  ),
-                ],
-              ),
-            ),
+                            width: 30, height: 30))
+                  )
+                ]
+              )
+            )
           ),
           Text(widget.goodsModel.name),
           Visibility(
             visible: widget.goodsModel.specs.isNotEmpty,
             child: Text(specStr,
                 style:
-                    const TextStyle(color: AppColors.FF959EB1, fontSize: 11)),
-          ),
-        ],
-      ),
+                    const TextStyle(color: AppColors.FF959EB1, fontSize: 11))
+          )
+        ]
+      )
     );
   }
 }

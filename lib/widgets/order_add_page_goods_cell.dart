@@ -31,10 +31,6 @@ class AddPageGoodsCell extends StatelessWidget {
   Widget build(BuildContext context) {
     double price = model.invoice;
     double countPrice = model.countPrice;
-    if(middleman) {
-      price = model.middleman;
-      countPrice = model.countMiddlemanPrice;
-    }
     return Container(
       color: Colors.white,
       child: Column(

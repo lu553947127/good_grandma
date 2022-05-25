@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 class OrderPage extends StatefulWidget {
   const OrderPage({Key key, this.orderType = 1}) : super(key: key);
 
-  ///订单级别 1：一级订单 2：二级订单 3：我的报单
+  ///订单级别 1：一级订单 2：二级订单 3：直营订单
   final int orderType;
 
   @override
@@ -31,11 +31,15 @@ class _OrderPageState extends State<OrderPage> {
   final ScrollController _scrollController = ScrollController();
   List<Map> _listTitle = [
     {'name': '全部'},
-    {'name': '确认中'},
-    {'name': '审核中'},
+    {'name': '待确认'},
+    {'name': '账余审核'},
+    {'name': '装车率审核'},
+    {'name': '营业室审核'},
+    {'name': '待发货'},
     {'name': '已发货'},
     {'name': '已收货'},
     {'name': '驳回'},
+    {'name': '取消'},
   ];
   List<DeclarationFormModel> _dataArray = [];
   int _current = 1;
@@ -45,7 +49,6 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
     super.initState();
-    // if (widget.orderType == 2) _listTitle.removeAt(1);
     _controller.callRefresh();
   }
 
@@ -61,24 +64,37 @@ class _OrderPageState extends State<OrderPage> {
           SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
             DeclarationFormModel model = _dataArray[index];
-            return MyDeclarationFormCell(
-              model: model,
-              firstOrder: widget.orderType == 1,
-              onTap: () async {
-                bool stateChanged = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => OrderDetailPage(model: model)));
-                if (stateChanged != null && stateChanged) {
-                  _controller.callRefresh();
+
+            return widget.orderType == 3 ? MyDeclarationFormCell(
+                model: model,
+                orderType: widget.orderType,
+                onTap: () async {
+                  bool stateChanged = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => OrderDetailPage(model: model)));
+                  if (stateChanged != null && stateChanged) {
+                    _controller.callRefresh();
+                  }
                 }
-              },
+            ) :
+            OrderNewListItem(
+              model: model,
+                onTap: () async {
+                  bool stateChanged = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => OrderDetailPage(model: model)));
+                  if (stateChanged != null && stateChanged) {
+                    _controller.callRefresh();
+                  }
+                }
             );
           }, childCount: _dataArray.length)),
-          SliverSafeArea(sliver: SliverToBoxAdapter()),
+          SliverSafeArea(sliver: SliverToBoxAdapter())
         ]);
     return Scaffold(
-      appBar: AppBar(title: const Text('订货订单')),
+      appBar: AppBar(title: Text(widget.orderType == 3 ? '直营订单' : '订货订单')),
       body: Store.readUserType() == 'zn' //工厂用户
           ? listViews
           : Column(
@@ -91,13 +107,11 @@ class _OrderPageState extends State<OrderPage> {
                       _selIndex = index;
                       _controller.callRefresh();
                     }),
-                Expanded(
-                  child: listViews,
-                ),
-              ],
+                Expanded(child: listViews)
+              ]
             ),
       floatingActionButton: Visibility(
-        visible: widget.orderType != 3 && Store.readUserType() != 'zn',
+        visible: Store.readUserType() != 'zn',
         child: FloatingActionButton(
           child: Icon(Icons.add),
           backgroundColor: AppColors.FFC68D3E,
@@ -109,12 +123,12 @@ class _OrderPageState extends State<OrderPage> {
                     builder: (_) =>
                         ChangeNotifierProvider<DeclarationFormModel>.value(
                           value: model,
-                          child: AddOrderPage(middleman: widget.orderType == 2),
+                          child: AddOrderPage(orderType: widget.orderType),
                         )));
             if (needRefresh != null && needRefresh) _refresh();
-          },
-        ),
-      ),
+          }
+        )
+      )
     );
   }
 
@@ -134,26 +148,17 @@ class _OrderPageState extends State<OrderPage> {
         'current': _current,
         'size': _pageSize,
         'middleman': widget.orderType,
-        // 'status': Store.readUserType() == 'zn'//工厂用户只能看到待发货状态的订单
-        //     ? 2
-        //     : widget.orderType == 2
-        //         ? (_selIndex > 0 ? _selIndex + 1 : _selIndex)
-        //         : _selIndex
         'status': Store.readUserType() == 'zn'//工厂用户只能看到待发货状态的订单
             ? 2
             : _selIndex
       };
-      // print('param = ${jsonEncode(map)}');
-      String url = Api.orderList;
-      if (widget.orderType == 3) url = Api.myOrderList;
-      final val = await requestPost(url, json: jsonEncode(map));
-      LogUtil.d('$url value = $val');
+      final val = await requestPost(Api.orderList, json: jsonEncode(map));
+      LogUtil.d('${Api.orderList} value = $val');
       var data = jsonDecode(val.toString());
       if (_current == 1) _dataArray.clear();
       final List<dynamic> list = data['data'];
-      // print(list.toString());
       list.forEach((map) {
-        DeclarationFormModel model = DeclarationFormModel.fromJson(map);
+        DeclarationFormModel model = DeclarationFormModel.fromJsonList(map);
         _dataArray.add(model);
       });
       bool noMore = false;

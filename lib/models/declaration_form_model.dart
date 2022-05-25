@@ -1,16 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/goods_model.dart';
 
 class DeclarationFormModel extends ChangeNotifier {
   StoreModel _storeModel;
   List<GoodsModel> _goodsList;
-  List<GoodsModel> _rewardGoodsList;
   String _phone;
   String _address;
-  String _remark;
   String time;
   String reject;
   String _createUserId;
@@ -27,6 +26,18 @@ class DeclarationFormModel extends ChangeNotifier {
   String _warehouseName;
   int _totalCount;
   int _giftCount;
+  double _netAmount;
+  String _carpooling;
+  String _carpoolCode;
+  String _carpoolCustomers;
+  String _carId;
+  String _carName;
+  String _carCount;
+  String _carRate;
+  String _isInvoice;
+  String _invoiceId;
+  String _invoiceName;
+  List<DictionaryModel> _dictionaryModelList;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
@@ -37,10 +48,8 @@ class DeclarationFormModel extends ChangeNotifier {
   DeclarationFormModel({this.time = '', this.id = '',this.reject = '',this.orderType = 1}) {
     _storeModel = StoreModel();
     _goodsList = [];
-    _rewardGoodsList = [];
     _phone = '';
     _address = '';
-    _remark = '';
     _status = 1;
     _createUserId = '';
     _updateUser = '';
@@ -56,12 +65,24 @@ class DeclarationFormModel extends ChangeNotifier {
     _warehouseName = '';
     _totalCount = 0;
     _giftCount = 0;
+    _netAmount = 0;
+    _carpooling = '否';
+    _carpoolCode = '';
+    _carpoolCustomers = '';
+    _carId = '';
+    _carName = '';
+    _carCount = '';
+    _carRate = '';
+    _isInvoice = '否';
+    _invoiceId = '';
+    _invoiceName = '';
+    _dictionaryModelList = [];
   }
 
   DeclarationFormModel.fromJson(Map<String, dynamic> json) {
     String name = json['cusName'] ?? '';
     String customerId = json['customerId'].toString() ?? '';
-    String phone = json['phone'] ?? '';
+    String phone = json['cusPhone'] ?? '';
     String address = json['address'] ?? '';
     reject = json['reject'] ?? '';
     orderType = json['middleman'] ?? 1;
@@ -69,21 +90,40 @@ class DeclarationFormModel extends ChangeNotifier {
     _updateUser = json['updateUser'].toString() ?? '';
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
     _goodsList = [];
-    if (json['goodsList'] != null) {
-      json['goodsList'].forEach((v) {
-        goodsList.add(new GoodsModel.fromJsonForList(v));
+    if (json['orderDetailedList'] != null) {
+      json['orderDetailedList'].forEach((map) {
+        GoodsModel model = GoodsModel(
+          name: map['name'] ?? '',
+          count: map['count'] ?? 0,
+          weight: map['weight'] != null ? double.parse(map['weight'].toString()) : 0.0,
+          invoice: double.parse(map['invoice']) ?? 0.0,
+          proportion: double.parse(map['proportion']) ?? 0.0,
+          id: map['id'] ?? '',
+          image: map['pic'] ?? ''
+        );
+        String spec = map['spec'] ?? '';
+        if (spec.isNotEmpty) {
+          SpecModel specModel = SpecModel(spec: spec);
+          model.specs.add(specModel);
+        }
+        _goodsList.add(model);
       });
     }
-    _rewardGoodsList = [];
-    if (json['gifts'] != null) {
-      json['gifts'].forEach((v) {
-        _rewardGoodsList.add(new GoodsModel.fromJsonForList(v));
+
+    _dictionaryModelList = [];
+    if (json['giftTotalArr'] != null) {
+      json['giftTotalArr'].forEach((element) {
+        _dictionaryModelList.add(new DictionaryModel(
+            id: element['dictId'],
+            remark: element['details'],
+            dictKey: element['type'],
+            money: element['total']
+        ));
       });
     }
     id = json['id'] ?? '';
-    time = json['time'] ?? '';
-    _remark = json['remark'] ?? '';
-    _phone = json['phone'] ?? '';
+    time = json['createTime'] ?? '';
+    _phone = json['cusPhone'] ?? '';
     _address = json['address'] ?? '';
     _status = json['status'] ?? 1;
     _selfMention = json['selfMention'] ?? 1;
@@ -102,42 +142,64 @@ class DeclarationFormModel extends ChangeNotifier {
     _settlementCusName = json['settlementCusName'] ?? '';
     _warehouseCode = json['warehouseCode'] ?? '';
     _warehouseName = json['warehouseTitle'] ?? '';
-    _totalCount = json['totalCount'] ?? 0;
-    _giftCount = json['giftCount'] ?? 0;
+    _totalCount = json['total'] ?? 0;
+    _giftCount = json['standardCount'] ?? 0;
   }
 
-  setModelWithModel(DeclarationFormModel model) {
-    _status = model.status;
-    _storeModel = model.storeModel;
-    _phone = model.phone;
-    _address = model.address;
-    _remark = model.remark;
-    _goodsList = model.goodsList;
-    _rewardGoodsList = model.rewardGoodsList;
-    id = model.id;
-    time = model.time;
-    reject = model.reject;
-    orderType = model.orderType;
-    _createUserId = model.createUserId;
-    _updateUser = model.updateUser;
-    _selfMention = model.selfMention;
-    if (model.selfMention == 1)
+  DeclarationFormModel.fromJsonList(Map<String, dynamic> json) {
+    String name = json['cusName'] ?? '';
+    String customerId = json['customerId'].toString() ?? '';
+    String phone = json['cusPhone'] ?? '';
+    String address = json['address'] ?? '';
+    reject = json['reject'] ?? '';
+    orderType = json['middleman'] ?? 1;
+    _createUserId = json['createUser'].toString() ?? '';
+    _updateUser = json['updateUser'].toString() ?? '';
+    _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
+    _goodsList = [];
+
+    if (json['goodsList'] != null) {
+      json['goodsList'].forEach((map) {
+        GoodsModel model = GoodsModel(
+            name: map['name'] ?? '',
+            count: map['count'] ?? 0,
+            weight: double.parse(map['weight']) ?? 0,
+            invoice: double.parse(map['invoice']) ?? 0.0,
+            id: map['id'] ?? '',
+            image: map['pic'] ?? ''
+        );
+        String spec = map['spec'] ?? '';
+        if (spec.isNotEmpty) {
+          SpecModel specModel = SpecModel(spec: spec);
+          model.specs.add(specModel);
+        }
+        _goodsList.add(model);
+      });
+    }
+
+    id = json['id'] ?? '';
+    time = json['time'] ?? '';
+    _phone = json['cusPhone'] ?? '';
+    _address = json['address'] ?? '';
+    _status = json['status'] ?? 1;
+    _selfMention = json['selfMention'] ?? 1;
+    if (_selfMention == 1)
       _selfMentionName = '自提';
     else _selfMentionName = '物流';
-    _invoiceType = model.invoiceType;
-    if (model.invoiceType == 1)
+    _invoiceType = json['invoiceType'] ?? 1;
+    if (_invoiceType == 1)
       _invoiceTypeName = '普票';
     else _invoiceTypeName = '专票';
-    _orderTypeIs = model.orderTypeIs;
-    if (model.orderTypeIs == 1)
+    _orderTypeIs = json['orderType'] ?? 1;
+    if (_orderTypeIs == 1)
       _orderTypeIsName = '普通订单';
     else _orderTypeIsName = '渠道客户订单';
-    _settlementCus = model.settlementCus;
-    _settlementCusName = model.settlementCusName;
-    _warehouseCode = model.warehouseCode;
-    _warehouseName = model.warehouseName;
-    _totalCount = model.totalCount;
-    _giftCount = model.giftCount;
+    _settlementCus = json['settlementCus'] ?? '';
+    _settlementCusName = json['settlementCusName'] ?? '';
+    _warehouseCode = json['warehouseCode'] ?? '';
+    _warehouseName = json['warehouseTitle'] ?? '';
+    _totalCount = json['total'] ?? 0;
+    _giftCount = json['standardCount'] ?? 0;
   }
 
   ///店铺
@@ -146,22 +208,16 @@ class DeclarationFormModel extends ChangeNotifier {
   ///商品列表
   List<GoodsModel> get goodsList => _goodsList;
 
-  ///补货商品列表
-  List<GoodsModel> get rewardGoodsList => _rewardGoodsList;
-
   ///电话
   String get phone => _phone;
 
   ///地址
   String get address => _address;
 
-  ///备注
-  String get remark => _remark;
-
-  ///是否自提
+  ///配送方式
   int get selfMention => _selfMention;
 
-  ///是否自提
+  ///配送方式
   String get selfMentionName => _selfMentionName;
 
   ///发票类型
@@ -170,10 +226,10 @@ class DeclarationFormModel extends ChangeNotifier {
   ///发票类型
   String get invoiceTypeName => _invoiceTypeName;
 
-  ///是否渠道客户
+  ///订单类型
   int get orderTypeIs => _orderTypeIs;
 
-  ///是否渠道客户
+  ///订单类型
   String get orderTypeIsName => _orderTypeIsName;
 
   ///结算客户
@@ -194,33 +250,80 @@ class DeclarationFormModel extends ChangeNotifier {
   ///搭赠数量
   int get giftCount => _giftCount;
 
+  ///订单净额
+  double get netAmount => _netAmount;
+
+  ///是否拼车
+  String get carpooling => _carpooling;
+
+  ///拼车码
+  String get carpoolCode => _carpoolCode;
+
+  ///拼车客户
+  String get carpoolCustomers => _carpoolCustomers;
+
+  ///货车车型
+  String get carId => _carId;
+
+  ///货车车型
+  String get carName => _carName;
+
+  ///货车车型数量
+  String get carCount => _carCount;
+
+  ///装车率
+  String get carRate => _carRate;
+
+  ///是否需要发票
+  String get isInvoice => _isInvoice;
+
+  ///开票信息
+  String get invoiceId => _invoiceId;
+
+  ///开票信息
+  String get invoiceName => _invoiceName;
+
+  ///折扣详情列表
+  List<DictionaryModel> get dictionaryModelList => _dictionaryModelList;
+
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int get status => _status;
+
+  ///创建者id
   String get createUserId => _createUserId;
+
+  ///更新者id
   String get updateUser => _updateUser;
+
   ///订单状态名字
   String get statusName {
     switch(_status){
       case 1:
-        return '确认中';
+        return '待确认';
       case 2:
-        return '审核中';
+        return '账余审核';
       case 3:
-        return '已发货';
+        return '装车率审核';
       case 4:
-        return '已收货';
+        return '营业室审核';
       case 5:
-        return '驳回';
+        return '待发货';
       case 6:
-        return '取消';
+        return '已发货';
       case 7:
-        return '备货中';
+        return '已收货';
+      case 8:
+        return '驳回';
+      case 9:
+        return '取消';
       default:
         return '未知状态';
     }
   }
+
   ///状态文字颜色是否显示灰色
   bool showGray() => (status == 4 || status == 6);
+
   ///状态颜色
   Color get statusColor {
     switch(_status){
@@ -238,14 +341,13 @@ class DeclarationFormModel extends ChangeNotifier {
         return Color(0xFFE45C26);
       case 7:
         return Color(0xFFE5A800);
+      case 8:
+        return Color(0xFF142339);
+      case 9:
+        return Color(0xFF959EB1);
       default:
         return Color(0xFFEFEFF4);
     }
-  }
-
-  setCreateUserId(String createUserId){
-    _createUserId = createUserId;
-    notifyListeners();
   }
 
   ///商品总数
@@ -275,30 +377,56 @@ class DeclarationFormModel extends ChangeNotifier {
     return count;
   }
 
-  ///商品二批价总额
-  double get goodsMiddlemanPrice {
+  ///商品总标准件数
+  double get goodsStandardCount {
     double count = 0;
     _goodsList.forEach((goodsModel) {
-      count += goodsModel.countMiddlemanPrice;
+      count += goodsModel.standardCount;
     });
     return count;
   }
 
-  ///补货商品总额
-  double get goodsRewardPrice {
+  ///折扣合计
+  double get discount {
     double count = 0;
-    _rewardGoodsList.forEach((goodsModel) {
-      count += goodsModel.countPrice;
+    _dictionaryModelList.forEach((model) {
+      if (model.money.isEmpty) return;
+      count += double.parse(model.money);
     });
     return count;
   }
 
-  String get goodsListToString{
-    return jsonEncode(_goodsList.map((goodsModel) => goodsModel.toMap()).toList());
+  List<Map> get goodsListToString{
+    List<Map> mapList = [];
+    _goodsList.forEach((goodsModel) {
+      Map map = new Map();
+      map['goodsId'] = goodsModel.id;
+      map['count'] = goodsModel.count;
+      mapList.add(map);
+    });
+    return mapList;
   }
 
-  String get rewardGoodsListToString{
-    return jsonEncode(_rewardGoodsList.map((goodsModel) => goodsModel.toMap()).toList());
+  List<String> get dictionaryToList{
+    List<String> stringList = [];
+    _dictionaryModelList.forEach((element) {
+      if (element.id.isEmpty){
+        stringList.add('${element.remark}-${element.money}');
+      }else{
+        stringList.add('${element.remark}-${element.id}-${element.money}');
+      }
+    });
+    return stringList;
+  }
+
+  setCreateUserId(String createUserId){
+    _createUserId = createUserId;
+    notifyListeners();
+  }
+
+  setUpdateUser(String updateUser){
+    _updateUser = updateUser;
+    notifyListeners();
   }
 
   setStatus(int status) {
@@ -318,11 +446,6 @@ class DeclarationFormModel extends ChangeNotifier {
 
   setAddress(String address) {
     _address = address;
-    notifyListeners();
-  }
-
-  setRemark(String remark) {
-    _remark = remark;
     notifyListeners();
   }
 
@@ -376,6 +499,61 @@ class DeclarationFormModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  setNetAmount(double netAmount){
+    _netAmount = netAmount;
+    notifyListeners();
+  }
+
+  setCarpooling(String carpooling){
+    _carpooling = carpooling;
+    notifyListeners();
+  }
+
+  setCarpoolCode(String carpoolCode){
+    _carpoolCode = carpoolCode;
+    notifyListeners();
+  }
+
+  setCarpoolCustomers(String carpoolCustomers){
+    _carpoolCustomers = carpoolCustomers;
+    notifyListeners();
+  }
+
+  setCarId(String carId){
+    _carId = carId;
+    notifyListeners();
+  }
+
+  setCarName(String carName){
+    _carName = carName;
+    notifyListeners();
+  }
+
+  setCarCount(String carCount){
+    _carCount = carCount;
+    notifyListeners();
+  }
+
+  setCarRate(String carRate){
+    _carRate = carRate;
+    notifyListeners();
+  }
+
+  setIsInvoice(String isInvoice){
+    _isInvoice = isInvoice;
+    notifyListeners();
+  }
+
+  setInvoiceId(String invoiceId){
+    _invoiceId = invoiceId;
+    notifyListeners();
+  }
+
+  setInvoiceName(String invoiceName){
+    _invoiceName = invoiceName;
+    notifyListeners();
+  }
+
   setArrays(
     List<GoodsModel> array,
     List<GoodsModel> values,
@@ -386,9 +564,20 @@ class DeclarationFormModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  addToArray(List<GoodsModel> array, GoodsModel goodsModel) {
+  setDictArrays(
+      List<DictionaryModel> array,
+      List<DictionaryModel> values,
+      ) {
     if (array == null) array = [];
-    array.add(goodsModel);
+    array.clear();
+    array.addAll(values);
+    notifyListeners();
+  }
+
+  addToArray(GoodsModel goodsModel) {
+    if(_goodsList == null)
+      _goodsList = [];
+    _goodsList.add(goodsModel);
     notifyListeners();
   }
 
@@ -406,4 +595,31 @@ class DeclarationFormModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  addToDictionaryArray(DictionaryModel dictionaryModel) {
+    if(_dictionaryModelList == null)
+      _dictionaryModelList = [];
+    _dictionaryModelList.add(dictionaryModel);
+    notifyListeners();
+  }
+
+  editDictionaryArrayWith(List<DictionaryModel> array, int index, DictionaryModel dictionaryModel) {
+    if (array == null) array = [];
+    if (index >= array.length) return;
+    array.setAll(index, [dictionaryModel]);
+    notifyListeners();
+  }
+}
+
+///折扣详情列表
+class DictionaryModel {
+  String id;
+  String remark;
+  String dictKey;
+  String money;
+  DictionaryModel({
+    this.id = '',
+    this.remark = '',
+    this.dictKey = '',
+    this.money = ''
+  });
 }

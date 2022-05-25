@@ -203,6 +203,9 @@ class _Body extends State<HomePage> {
       case 'secondaryOrder'://二级订单
         Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 2)));
         break;
+      case 'directlyOrder'://直营订单
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 3)));
+        break;
       case 'freezerOrder'://冰柜订单
         Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerOrderPage()));
         break;

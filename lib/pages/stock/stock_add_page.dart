@@ -154,7 +154,6 @@ class _StockAddPageState extends State<StockAddPage> {
             image: element['pic'],
             count: element['count'],
             invoice: double.parse(element['invoice'].toString()),
-            middleman: double.parse(element['middleman'].toString()),
             weight: double.parse(element['weight'].toString())
         );
         stockModel.goodsModel.specs.add(SpecModel(spec: element['spec ']));

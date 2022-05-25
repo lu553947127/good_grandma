@@ -286,7 +286,11 @@ class _SignInButtonState extends State<_SignInButton> {
     /// <li>[DesiredAccuracy.NearestTenMeters] 10米 </li>
     /// <li>[DesiredAccuracy.Kilometer] 1000米</li>
     /// <li>[DesiredAccuracy.ThreeKilometers] 3000米</li>
-    locationOption.desiredAccuracy = DesiredAccuracy.Best;
+    if (Platform.isAndroid){
+      locationOption.desiredAccuracy = DesiredAccuracy.Best;
+    }else {
+      locationOption.desiredAccuracy = DesiredAccuracy.HundredMeters;
+    }
 
     ///设置iOS端是否允许系统暂停定位
     locationOption.pausesLocationUpdatesAutomatically = false;

@@ -9,13 +9,13 @@ class MyDeclarationFormCell extends StatelessWidget {
     Key key,
     @required this.model,
     @required this.onTap,
-    this.firstOrder = true,
+    this.orderType = 1,
   }) : super(key: key);
   final DeclarationFormModel model;
   final VoidCallback onTap;
 
-  ///是否是一级订单，一级订单和耳机订单显示的不太一样
-  final bool firstOrder;
+  ///是否是一级订单，一级订单和二级订单显示的不太一样
+  final int orderType;
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +70,13 @@ class MyDeclarationFormCell extends StatelessWidget {
                         text: '¥ ',
                         style: TextStyle(
                             color:
-                                firstOrder ? AppColors.FFE45C26 : Colors.black),
+                            orderType == 1 ? AppColors.FFE45C26 : Colors.black),
                       ),
                       TextSpan(
                         text: model.goodsPrice.toStringAsFixed(2),
                         style: TextStyle(
                             color:
-                                firstOrder ? AppColors.FFE45C26 : Colors.black,
+                            orderType == 1 ? AppColors.FFE45C26 : Colors.black,
                             fontSize: 16.0),
                       ),
                     ])),
@@ -141,3 +141,120 @@ class DeclarationGoodsCell extends StatelessWidget {
     );
   }
 }
+
+class OrderNewListItem extends StatelessWidget {
+  const OrderNewListItem({Key key,
+    @required this.model,
+    @required this.onTap,
+  }) : super(key: key);
+  final DeclarationFormModel model;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+        padding: const EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                offset: Offset(2, 1),
+                blurRadius: 1.5,
+              )
+            ]
+        ),
+        child: ListTile(
+          title: Column(
+              mainAxisSize:MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                width: 220,
+                                child: Text('订单号:${model.id}', style: TextStyle(fontSize: 14, color: model.statusColor))
+                            ),
+                            SizedBox(height: 10),
+                            Text(model.time, style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                          ]
+                      )),
+                      Card(
+                        color: model.statusColor.withOpacity(0.1),
+                        shadowColor: Colors.transparent,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 4.5),
+                          child: Text(
+                            model.statusName,
+                            style: TextStyle(
+                                color: model.statusColor,
+                                fontSize: 14.0)
+                          )
+                        )
+                      )
+                    ]
+                ),
+                SizedBox(height: 10),
+                //分割线
+                SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 1,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
+                    )
+                ),
+                SizedBox(height: 5),
+                Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Row(
+                        children: [
+                          Text('客户名称: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                          SizedBox(width: 10),
+                          Text(model.storeModel.name, style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                        ]
+                    )
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Row(
+                        children: [
+                          Text('订单总额: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                          SizedBox(width: 10),
+                          Text('${model.goodsPrice}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                        ]
+                    )
+                ),
+                // Container(
+                //     margin: EdgeInsets.only(top: 2),
+                //     child: Row(
+                //         children: [
+                //           Text('订单净额: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                //           SizedBox(width: 10),
+                //           Text('${model.goodsPrice}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                //         ]
+                //     )
+                // ),
+                Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Row(
+                        children: [
+                          Text('商品件数: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                          SizedBox(width: 10),
+                          Text('${model.goodsCount}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                        ]
+                    )
+                )
+              ]
+          ),
+          onTap: onTap,
+        )
+    );
+  }
+}
+

@@ -13,7 +13,8 @@ import 'package:good_grandma/widgets/post_add_input_cell.dart';
 ///收货地址
 class ReceivingAddress extends StatefulWidget {
   final String userId;
-  const ReceivingAddress({Key key, this.userId}) : super(key: key);
+  final int orderType;
+  const ReceivingAddress({Key key, this.userId, this.orderType}) : super(key: key);
 
   @override
   _ReceivingAddressState createState() => _ReceivingAddressState();
@@ -65,7 +66,7 @@ class _ReceivingAddressState extends State<ReceivingAddress> {
                       endWidget: Icon(Icons.chevron_right),
                       onTap: () async {
                         StoreModel result = await Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true, middleman: false)));
+                            MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true, orderType: widget.orderType)));
                         userId = result.id;
                         userName = result.name;
                         _findCustomerAddress();

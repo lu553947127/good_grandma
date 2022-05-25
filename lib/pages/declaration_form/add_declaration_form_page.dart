@@ -32,7 +32,7 @@ class _AddDeclarationFormPageState extends State<AddDeclarationFormPage> {
     List<Map> list = [
       {'title': '联系电话', 'hintText': '请输入电话号码', 'value': addModel.phone},
       {'title': '收货地址', 'hintText': '请输入收货地址', 'value': addModel.address},
-      {'title': '备注', 'hintText': '请输入备注', 'value': addModel.remark},
+      // {'title': '备注', 'hintText': '请输入备注', 'value': addModel.remark}
     ];
 
     return WillPopScope(
@@ -174,7 +174,7 @@ class _AddDeclarationFormPageState extends State<AddDeclarationFormPage> {
               addModel.setAddress(text);
               break;
             case 2:
-              addModel.setRemark(text);
+              // addModel.setRemark(text);
               break;
           }
         });

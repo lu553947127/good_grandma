@@ -2,9 +2,9 @@
 class Api {
   static String baseUrl() {
     /// 正式服
-    // return 'https://haoapo.haoapochn.cn/';
+    return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    return 'http://172.167.40.141:1888';
+    // return 'http://172.167.40.141:1888';
   }
 
   /** 登录相关 **/
@@ -189,6 +189,9 @@ class Api {
   ///获取补货金额明细
   static const amountDetails = "/api/hap-app/app/order/amountDetails";
 
+  ///获取补货金额明细日志
+  static const amountLogs = "/api/hap-app/app/order/amountLogs";
+
   ///收货地址列表
   static const findCustomerAddress = "/api/hap-app/app/order/findCustomerAddress";
 
@@ -197,6 +200,21 @@ class Api {
 
   ///修改收货地址
   static const editCustomerAddress = "/api/hap-app/app/order/editCustomerAddress";
+
+  ///生成拼车码
+  static const createCarpoolCode = "/api/hap-app/app/order/createCarpoolCode";
+
+  ///获取拼车客户
+  static const carpoolOrder = "/api/hap-app/app/order/carpoolOrder";
+
+  ///货车车型
+  static const selectCall = "/api/hap-app/app/car/all";
+
+  ///开票信息列表
+  static const invoiceList = "/api/hap-app/app/invoice/list";
+
+  ///折扣详情列表
+  static const dictionary = "/api/hap-app/app/dict/dictionary";
 
   /** 冰柜订单 **/
 
