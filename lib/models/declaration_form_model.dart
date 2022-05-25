@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/goods_model.dart';
 
@@ -41,6 +38,7 @@ class DeclarationFormModel extends ChangeNotifier {
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
   int _status;
+  ///订单id
   String id;
   ///标记订单是一级订单1还是二级订单2
   int orderType;
@@ -79,73 +77,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _dictionaryModelList = [];
   }
 
-  DeclarationFormModel.fromJson(Map<String, dynamic> json) {
-    String name = json['cusName'] ?? '';
-    String customerId = json['customerId'].toString() ?? '';
-    String phone = json['cusPhone'] ?? '';
-    String address = json['address'] ?? '';
-    reject = json['reject'] ?? '';
-    orderType = json['middleman'] ?? 1;
-    _createUserId = json['createUser'].toString() ?? '';
-    _updateUser = json['updateUser'].toString() ?? '';
-    _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
-    _goodsList = [];
-    if (json['orderDetailedList'] != null) {
-      json['orderDetailedList'].forEach((map) {
-        GoodsModel model = GoodsModel(
-          name: map['name'] ?? '',
-          count: map['count'] ?? 0,
-          weight: map['weight'] != null ? double.parse(map['weight'].toString()) : 0.0,
-          invoice: double.parse(map['invoice']) ?? 0.0,
-          proportion: double.parse(map['proportion']) ?? 0.0,
-          id: map['id'] ?? '',
-          image: map['pic'] ?? ''
-        );
-        String spec = map['spec'] ?? '';
-        if (spec.isNotEmpty) {
-          SpecModel specModel = SpecModel(spec: spec);
-          model.specs.add(specModel);
-        }
-        _goodsList.add(model);
-      });
-    }
-
-    _dictionaryModelList = [];
-    if (json['giftTotalArr'] != null) {
-      json['giftTotalArr'].forEach((element) {
-        _dictionaryModelList.add(new DictionaryModel(
-            id: element['dictId'],
-            remark: element['details'],
-            dictKey: element['type'],
-            money: element['total']
-        ));
-      });
-    }
-    id = json['id'] ?? '';
-    time = json['createTime'] ?? '';
-    _phone = json['cusPhone'] ?? '';
-    _address = json['address'] ?? '';
-    _status = json['status'] ?? 1;
-    _selfMention = json['selfMention'] ?? 1;
-    if (_selfMention == 1)
-      _selfMentionName = '自提';
-    else _selfMentionName = '物流';
-    _invoiceType = json['invoiceType'] ?? 1;
-    if (_invoiceType == 1)
-      _invoiceTypeName = '普票';
-    else _invoiceTypeName = '专票';
-    _orderTypeIs = json['orderType'] ?? 1;
-    if (_orderTypeIs == 1)
-      _orderTypeIsName = '普通订单';
-    else _orderTypeIsName = '渠道客户订单';
-    _settlementCus = json['settlementCus'] ?? '';
-    _settlementCusName = json['settlementCusName'] ?? '';
-    _warehouseCode = json['warehouseCode'] ?? '';
-    _warehouseName = json['warehouseTitle'] ?? '';
-    _totalCount = json['total'] ?? 0;
-    _giftCount = json['standardCount'] ?? 0;
-  }
-
+  ///解析订单列表数据并赋值
   DeclarationFormModel.fromJsonList(Map<String, dynamic> json) {
     String name = json['cusName'] ?? '';
     String customerId = json['customerId'].toString() ?? '';
@@ -155,6 +87,9 @@ class DeclarationFormModel extends ChangeNotifier {
     orderType = json['middleman'] ?? 1;
     _createUserId = json['createUser'].toString() ?? '';
     _updateUser = json['updateUser'].toString() ?? '';
+    id = json['id'] ?? '';
+    time = json['time'] ?? '';
+    _status = json['status'] ?? 1;
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
     _goodsList = [];
 
@@ -176,30 +111,6 @@ class DeclarationFormModel extends ChangeNotifier {
         _goodsList.add(model);
       });
     }
-
-    id = json['id'] ?? '';
-    time = json['time'] ?? '';
-    _phone = json['cusPhone'] ?? '';
-    _address = json['address'] ?? '';
-    _status = json['status'] ?? 1;
-    _selfMention = json['selfMention'] ?? 1;
-    if (_selfMention == 1)
-      _selfMentionName = '自提';
-    else _selfMentionName = '物流';
-    _invoiceType = json['invoiceType'] ?? 1;
-    if (_invoiceType == 1)
-      _invoiceTypeName = '普票';
-    else _invoiceTypeName = '专票';
-    _orderTypeIs = json['orderType'] ?? 1;
-    if (_orderTypeIs == 1)
-      _orderTypeIsName = '普通订单';
-    else _orderTypeIsName = '渠道客户订单';
-    _settlementCus = json['settlementCus'] ?? '';
-    _settlementCusName = json['settlementCusName'] ?? '';
-    _warehouseCode = json['warehouseCode'] ?? '';
-    _warehouseName = json['warehouseTitle'] ?? '';
-    _totalCount = json['total'] ?? 0;
-    _giftCount = json['standardCount'] ?? 0;
   }
 
   ///店铺
@@ -396,6 +307,7 @@ class DeclarationFormModel extends ChangeNotifier {
     return count;
   }
 
+  ///订单添加 订单列表map数据
   List<Map> get goodsListToString{
     List<Map> mapList = [];
     _goodsList.forEach((goodsModel) {
@@ -407,6 +319,7 @@ class DeclarationFormModel extends ChangeNotifier {
     return mapList;
   }
 
+  ///订单添加 折扣详情列表map数据
   List<String> get dictionaryToList{
     List<String> stringList = [];
     _dictionaryModelList.forEach((element) {

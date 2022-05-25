@@ -225,10 +225,14 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       middleman: widget.orderType == 2,
                       editingController: _editingController,
                       focusNode: _focusNode,
-                      deleteAction: () =>
-                          addModel.deleteArrayWith(addModel.goodsList, index),
-                      numberChangeAction: () =>
-                          addModel.editArrayWith(addModel.goodsList, index, model),
+                      deleteAction: () {
+                        addModel.deleteArrayWith(addModel.goodsList, index);
+                        addModel.setCarRate("%${((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100)}");
+                      },
+                      numberChangeAction: () {
+                        addModel.editArrayWith(addModel.goodsList, index, model);
+                        addModel.setCarRate("%${((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100)}");
+                      },
                     );
                   }, childCount: addModel.goodsList.length)),
               //商品总数
