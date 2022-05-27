@@ -8,7 +8,6 @@ class DeclarationFormModel extends ChangeNotifier {
   String _phone;
   String _address;
   String time;
-  String reject;
   String _createUserId;
   String _updateUser;
   int _selfMention;
@@ -42,6 +41,12 @@ class DeclarationFormModel extends ChangeNotifier {
   String id;
   ///标记订单是一级订单1还是二级订单2
   int orderType;
+  ///驳回原因
+  String reject;
+  ///订单净额
+  String totalPrice;
+  ///订单折扣
+  String giftTotal;
 
   DeclarationFormModel({this.time = '', this.id = '',this.reject = '',this.orderType = 1}) {
     _storeModel = StoreModel();
@@ -84,6 +89,8 @@ class DeclarationFormModel extends ChangeNotifier {
     String phone = json['cusPhone'] ?? '';
     String address = json['address'] ?? '';
     reject = json['reject'] ?? '';
+    totalPrice = json['totalPrice'].toString() ?? '';
+    giftTotal = json['giftTotal'].toString() ?? '';
     orderType = json['middleman'] ?? 1;
     _createUserId = json['createUser'].toString() ?? '';
     _updateUser = json['updateUser'].toString() ?? '';

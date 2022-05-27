@@ -59,7 +59,7 @@ class _OrderPageState extends State<OrderPage> {
               delegate: SliverChildBuilderDelegate((context, index) {
             DeclarationFormModel model = _dataArray[index];
 
-            return widget.orderType == 3 ? MyDeclarationFormCell(
+            return widget.orderType == 0 ? MyDeclarationFormCell(
                 model: model,
                 orderType: widget.orderType,
                 onTap: () async {

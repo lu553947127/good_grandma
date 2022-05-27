@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_grandma/common/map_open.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_edit.dart';
@@ -181,7 +182,13 @@ class VisitStatisticsDetail extends StatelessWidget {
                                             SizedBox(width: 3),
                                             Container(
                                                 width: 200,
-                                                child: Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058)), maxLines: 2)
+                                                child: InkWell(
+                                                  child: Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058)), maxLines: 2),
+                                                  onTap: () {
+                                                    URLOpenUtils.openAmap(double.parse(data['longitude'].toString()), double.parse(data['latitude'].toString()),
+                                                        address: data['address'], showErr: true);
+                                                  }
+                                                )
                                             )
                                           ]
                                       )

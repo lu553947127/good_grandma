@@ -214,39 +214,29 @@ class OrderNewListItem extends StatelessWidget {
                     margin: EdgeInsets.only(top: 2),
                     child: Row(
                         children: [
-                          Text('客户名称: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                          SizedBox(width: 10),
-                          Text(model.storeModel.name, style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                        ]
-                    )
-                ),
-                Container(
-                    margin: EdgeInsets.only(top: 2),
-                    child: Row(
-                        children: [
                           Text('订单总额: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                           SizedBox(width: 10),
                           Text('${model.goodsPrice}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
                         ]
                     )
                 ),
-                // Container(
-                //     margin: EdgeInsets.only(top: 2),
-                //     child: Row(
-                //         children: [
-                //           Text('订单净额: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                //           SizedBox(width: 10),
-                //           Text('${model.goodsPrice}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                //         ]
-                //     )
-                // ),
                 Container(
                     margin: EdgeInsets.only(top: 2),
                     child: Row(
                         children: [
-                          Text('商品件数: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                          Text('订单净额: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                           SizedBox(width: 10),
-                          Text('${model.goodsCount}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                          Text('${model.totalPrice}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                        ]
+                    )
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Row(
+                        children: [
+                          Text('销售折扣: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                          SizedBox(width: 10),
+                          Text('${model.giftTotal}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
                         ]
                     )
                 )
