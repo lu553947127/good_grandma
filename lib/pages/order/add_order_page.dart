@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
@@ -458,6 +457,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             switch(select){
                               case "普票":
                                 addModel.setInvoiceType(1);
+                                addModel.setInvoiceTypeName(select);
                                 break;
                               case "专票":
                                 showDialog(
@@ -476,12 +476,17 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                           ),
                                           actions: <Widget>[
                                             TextButton(
-                                                onPressed: () => Navigator.pop(context, false),
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                  addModel.setInvoiceType(0);
+                                                  addModel.setInvoiceTypeName('');
+                                                },
                                                 child: const Text('取消', style: TextStyle(color: Color(0xFF999999)))),
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context, true);
                                                   addModel.setInvoiceType(2);
+                                                  addModel.setInvoiceTypeName(select);
                                                 },
                                                 child: Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
                                           ]
@@ -491,9 +496,9 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                 break;
                               case "收据":
                                 addModel.setInvoiceType(3);
+                                addModel.setInvoiceTypeName(select);
                                 break;
                             }
-                            addModel.setInvoiceTypeName(select);
                           }
                       )
                   )
@@ -530,7 +535,12 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             Map<String, dynamic> map = {'userId':  addModel.storeModel.id};
                             Map select = await showSelectListParameter(context, Api.invoiceList, '请选择开票信息', 'title', map);
                             addModel.setInvoiceId(select['id']);
-                            addModel.setInvoiceName(select['title']);
+                            addModel.setInvoiceName('单位名称：${select['title']}\n'
+                                '纳税人识别号：${select['taxNo']}\n'
+                                '地址：${select['address']}\n'
+                                '电话：${select['phone']}\n'
+                                '开户银行：${select['bank']}\n'
+                                '账号：${select['card']}');
                           },
                           title: Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),

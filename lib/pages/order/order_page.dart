@@ -30,16 +30,10 @@ class _OrderPageState extends State<OrderPage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
   List<Map> _listTitle = [
-    {'name': '全部'},
-    {'name': '待确认'},
-    {'name': '账余审核'},
-    {'name': '装车率审核'},
-    {'name': '营业室审核'},
-    {'name': '待发货'},
-    {'name': '已发货'},
-    {'name': '已收货'},
     {'name': '驳回'},
-    {'name': '取消'},
+    {'name': '审核中'},
+    {'name': '备货中'},
+    {'name': '已发货'}
   ];
   List<DeclarationFormModel> _dataArray = [];
   int _current = 1;

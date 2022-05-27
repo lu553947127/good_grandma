@@ -34,22 +34,29 @@ class _AmountDetailsState extends State<AmountDetails> {
         appBar: AppBar(title: Text('明细')),
         body: CustomScrollView(
           slivers: [
-            SliverList(
+            SliverGrid(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   Map model = amountDetailsList[index];
                   return Container(
                       padding: EdgeInsets.all(5.0),
                       color: Colors.white,
-                      child: Column(
-                          children: [
-                            Text(model['typeStr']),
-                            SizedBox(height: 5),
-                            Text('${model['total']}',
-                                style: TextStyle(fontSize: 15, color: AppColors.FFC68D3E))
-                          ]
+                      child: Center(
+                        child: Column(
+                            children: [
+                              Text(model['typeStr'].toString().isEmpty ? '暂无' : model['typeStr'].toString()),
+                              SizedBox(height: 5),
+                              Text('${model['total']}',
+                                  style: TextStyle(fontSize: 15, color: AppColors.FFC68D3E))
+                            ]
+                        )
                       )
                   );
-                }, childCount: amountDetailsList.length)),
+                }, childCount: amountDetailsList.length),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3.0,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2)),
             SliverToBoxAdapter(child: Container(margin: EdgeInsets.all(15.0), child: Text('日志'))),
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
