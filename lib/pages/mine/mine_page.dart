@@ -10,6 +10,7 @@ import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
+import 'package:good_grandma/pages/mine/invoice.dart';
 import 'package:good_grandma/pages/mine/receiving_address.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
@@ -27,12 +28,11 @@ class _MinePageState extends State<MinePage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
   final List<Map> _list = [
-    // {'image': 'assets/images/mine_form_add.png', 'name': '我要报单'},
-
     {'image': 'assets/images/mine_order.png', 'name': '我的订单'},
     {'image': 'assets/images/mine_contract.png', 'name': '我的合同'},
     {'image': 'assets/images/mine_feedback.png', 'name': '意见反馈'},
     {'image': 'assets/images/mine_address.png', 'name': '收货地址'},
+    {'image': 'assets/images/mine_invoice.png', 'name': '发票管理'},
   ];
   String _local = '';
   String _type = '';
@@ -226,6 +226,10 @@ class _MinePageState extends State<MinePage> {
       case 3://收货地址
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => ReceivingAddress(userId: '')));
+        break;
+      case 4://发票管理
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => InvoicePage(userId: '')));
         break;
     }
   }

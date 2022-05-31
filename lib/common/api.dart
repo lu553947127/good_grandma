@@ -2,9 +2,9 @@
 class Api {
   static String baseUrl() {
     /// 正式服
-    return 'https://haoapo.haoapochn.cn/';
+    // return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    // return 'http://172.167.40.141:1888';
+    return 'http://172.167.40.141:1888';
   }
 
   /** 登录相关 **/
@@ -212,6 +212,15 @@ class Api {
 
   ///开票信息列表
   static const invoiceList = "/api/hap-app/app/invoice/list";
+
+  ///开票信息添加
+  static const invoiceAdd = "/api/hap-app/app/invoice/add";
+
+  ///开票信息修改
+  static const invoiceUpdate = "/api/hap-app/app/invoice/update";
+
+  ///开票信息删除
+  static const invoiceRemove = "/api/hap-app/app/invoice/remove";
 
   ///折扣详情列表
   static const dictionary = "/api/hap-app/app/dict/dictionary";

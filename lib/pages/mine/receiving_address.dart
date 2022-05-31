@@ -14,7 +14,7 @@ import 'package:good_grandma/widgets/post_add_input_cell.dart';
 class ReceivingAddress extends StatefulWidget {
   final String userId;
   final int orderType;
-  const ReceivingAddress({Key key, this.userId, this.orderType}) : super(key: key);
+  const ReceivingAddress({Key key, this.userId, this.orderType = 1}) : super(key: key);
 
   @override
   _ReceivingAddressState createState() => _ReceivingAddressState();

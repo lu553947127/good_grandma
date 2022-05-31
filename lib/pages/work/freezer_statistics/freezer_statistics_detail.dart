@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ///冰柜统计详情
 class FreezerStatisticsDetail extends StatefulWidget {
-  var data;
+  dynamic data;
   FreezerStatisticsDetail({Key key, this.data}) : super(key: key);
 
   @override

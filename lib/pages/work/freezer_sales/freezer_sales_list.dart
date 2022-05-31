@@ -81,8 +81,8 @@ class FreezerSalesList extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerSalesDetail(
             data: data,
           )));
-        },
-      ),
+        }
+      )
     );
   }
 }

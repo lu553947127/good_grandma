@@ -43,7 +43,6 @@ class _FreezerSalesDetailState extends State<FreezerSalesDetail> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

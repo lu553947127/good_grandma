@@ -13,6 +13,7 @@ import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/models/declaration_form_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
+import 'package:good_grandma/pages/mine/invoice.dart';
 import 'package:good_grandma/pages/mine/receiving_address.dart';
 import 'package:good_grandma/pages/order/amount_details.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
@@ -532,8 +533,9 @@ class _AddOrderPageState extends State<AddOrderPage> {
                               AppUtil.showToastCenter('请先选择客户');
                               return;
                             }
-                            Map<String, dynamic> map = {'userId':  addModel.storeModel.id};
-                            Map select = await showSelectListParameter(context, Api.invoiceList, '请选择开票信息', 'title', map);
+
+                            Map select = await Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => InvoicePage(userId: addModel.storeModel.id, orderType: widget.orderType)));
                             addModel.setInvoiceId(select['id']);
                             addModel.setInvoiceName('单位名称：${select['title']}\n'
                                 '纳税人识别号：${select['taxNo']}\n'
