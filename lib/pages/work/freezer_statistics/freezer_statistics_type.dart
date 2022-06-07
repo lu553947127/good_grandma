@@ -34,9 +34,12 @@ class FreezerStatisticsType extends StatelessWidget {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(areaName,
-                                style: TextStyle(
-                                    fontSize: 14, color: AppColors.FF2F4058)),
+                            LimitedBox(
+                                maxWidth: 60,
+                                child: Text(areaName,
+                                    style: TextStyle(
+                                        fontSize: 14, color: AppColors.FF2F4058), overflow: TextOverflow.ellipsis, maxLines: 1)
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 4.5),
                               child: Image.asset('assets/images/ic_work_down.png',
@@ -59,9 +62,12 @@ class FreezerStatisticsType extends StatelessWidget {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(customerName,
-                                    style: TextStyle(
-                                        fontSize: 14, color: AppColors.FF2F4058)),
+                                LimitedBox(
+                                    maxWidth: 60,
+                                    child: Text(customerName,
+                                        style: TextStyle(
+                                            fontSize: 14, color: AppColors.FF2F4058), overflow: TextOverflow.ellipsis, maxLines: 1)
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4.5),
                                   child: Image.asset('assets/images/ic_work_down.png',
@@ -79,9 +85,12 @@ class FreezerStatisticsType extends StatelessWidget {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(statusName,
-                                style: TextStyle(
-                                    fontSize: 14, color: AppColors.FF2F4058)),
+                            LimitedBox(
+                                maxWidth: 60,
+                                child: Text(statusName,
+                                    style: TextStyle(
+                                        fontSize: 14, color: AppColors.FF2F4058), overflow: TextOverflow.ellipsis, maxLines: 1)
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 4.5),
                               child: Image.asset('assets/images/ic_work_down.png',

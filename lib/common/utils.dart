@@ -87,7 +87,7 @@ Future<String> showPickerDate(BuildContext context) async {
   return result ?? "";
 }
 
-///选择开始日期和结束日期
+///选择开始日期和结束日期（年月日时分秒）
 void showPickerDateRange({
   @required BuildContext context,
   int type,
@@ -170,6 +170,104 @@ void showPickerDateRange({
           print('days--------$days');
 
           param = {'startTime': startTime, 'endTime': endTime, 'days': days};
+
+          Navigator.pop(context, param);
+        },
+        child: Text('确定', style: TextStyle(fontSize: 14,color: Color(0xFFC68D3E))))
+  ];
+
+  param = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("选择日期范围"),
+          actions: actions,
+          content: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text("开始时间:"),
+                ps.makePicker(),
+                Text("结束时间:"),
+                pe.makePicker()
+              ],
+            ),
+          ),
+        );
+      });
+
+  if (param != null) {
+    if (callBack != null) callBack(param);
+  }
+}
+
+///选择开始日期和结束日期（年月）
+void showPickerDateRangeNew({
+  @required BuildContext context,
+  int type,
+  @required Function(Map map) callBack}) async {
+  Map param;
+  String startTime;
+  String endTime;
+  int _type = PickerDateTimeType.kYM;
+  if(type != null)
+    _type = type;
+  Picker ps = Picker(
+      hideHeader: true,
+      adapter: DateTimePickerAdapter(
+          type: _type,
+          isNumberMonth: true,
+          // yearSuffix: "年",
+          // monthSuffix: "月",
+          // daySuffix: "日",
+          // hourSuffix: '时',
+          // minuteSuffix: '分',
+          value: DateTime.now()
+      ),
+      onConfirm: (Picker picker, List value) {
+        print((picker.adapter as DateTimePickerAdapter).value);
+      }
+  );
+
+  Picker pe = Picker(
+      hideHeader: true,
+      adapter: DateTimePickerAdapter(
+          type: _type,
+          isNumberMonth: true,
+          // yearSuffix: "年",
+          // monthSuffix: "月",
+          // daySuffix: "日",
+          // hourSuffix: '时',
+          // minuteSuffix: '分',
+          value: DateTime.now()
+      ),
+      onConfirm: (Picker picker, List value) {
+        print((picker.adapter as DateTimePickerAdapter).value);
+      }
+  );
+
+  List<Widget> actions = [
+    TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('取消', style: TextStyle(fontSize: 14,color: Color(0xFF2F4058)))),
+    TextButton(
+        onPressed: () {
+
+          ps.onConfirm(ps, ps.selecteds);
+          pe.onConfirm(pe, pe.selecteds);
+
+          startTime = formatDate((ps.adapter as DateTimePickerAdapter).value,
+              [yyyy, '.', mm]);
+          endTime = formatDate((pe.adapter as DateTimePickerAdapter).value,
+              [yyyy, '.', mm]);
+
+          print('startTime--------$startTime');
+          print('endTime--------$endTime');
+
+          param = {'startTime': startTime, 'endTime': endTime};
 
           Navigator.pop(context, param);
         },

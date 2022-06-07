@@ -29,9 +29,11 @@ import 'package:good_grandma/pages/stock/stock_page.dart';
 import 'package:good_grandma/pages/track/track_page.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_add.dart';
 import 'package:good_grandma/pages/work/customer_visit/customer_visit_edit.dart';
+import 'package:good_grandma/pages/work/discount/discount_management.dart';
 import 'package:good_grandma/pages/work/freezer_sales/freezer_sales.dart';
 import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics.dart';
 import 'package:good_grandma/pages/work/market_material/market_material.dart';
+import 'package:good_grandma/pages/work/receivable/receivable.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
@@ -205,6 +207,12 @@ class _Body extends State<HomePage> {
         break;
       case 'directlyOrder'://直营订单
         Navigator.push(context, MaterialPageRoute(builder:(context)=> OrderPage(orderType: 3)));
+        break;
+      case 'receive'://应收明细账
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> ReceivableDetail()));
+        break;
+      case 'amount'://折扣管理
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> DiscountManagement()));
         break;
       case 'freezerOrder'://冰柜订单
         Navigator.push(context, MaterialPageRoute(builder:(context)=> FreezerOrderPage()));

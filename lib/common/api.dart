@@ -225,6 +225,19 @@ class Api {
   ///折扣详情列表
   static const dictionary = "/api/hap-app/app/dict/dictionary";
 
+  /** 应收明细 **/
+
+  ///应收明细列表
+  static const receivableList = "/api/hap-app/app/tplus/receiveAccountDetailRpt";
+
+  ///帐套列表
+  static const subsidiaryList = "/api/hap-app/app/subsidiarycorporation/allList";
+
+  /** 折扣管理 **/
+
+  ///折扣管理列表
+  static const amountList = "/api/hap-app/app/amount/list";
+
   /** 冰柜订单 **/
 
   ///冰柜订单列表

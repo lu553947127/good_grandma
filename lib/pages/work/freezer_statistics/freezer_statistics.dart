@@ -43,13 +43,7 @@ class _FreezerStatisticsState extends State<FreezerStatistics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text("冰柜统计",style: TextStyle(fontSize: 18, color: Colors.black)),
-      ),
+      appBar: AppBar(title: Text('冰柜统计')),
       body: Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Column(
