@@ -214,6 +214,16 @@ class OrderNewListItem extends StatelessWidget {
                     margin: EdgeInsets.only(top: 2),
                     child: Row(
                         children: [
+                          Text('客户名称: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                          SizedBox(width: 10),
+                          Text('${model.storeModel.name}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                        ]
+                    )
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 2),
+                    child: Row(
+                        children: [
                           Text('订单总额: ', style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
                           SizedBox(width: 10),
                           Text('${model.goodsPrice}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))

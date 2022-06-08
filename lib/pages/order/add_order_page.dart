@@ -209,7 +209,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                   addModel.setArrays(
                                       addModel.goodsList, _selGoodsList);
                                   //选择完商品更新装车率
-                                  addModel.setCarRate("%${((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100)}");
+                                  addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100), 2)}");
                                 }
                               },
                               icon:
@@ -227,11 +227,11 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       focusNode: _focusNode,
                       deleteAction: () {
                         addModel.deleteArrayWith(addModel.goodsList, index);
-                        addModel.setCarRate("%${((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100)}");
+                        addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100), 2)}");
                       },
                       numberChangeAction: () {
                         addModel.editArrayWith(addModel.goodsList, index, model);
-                        addModel.setCarRate("%${((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100)}");
+                        addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100), 2)}");
                       },
                     );
                   }, childCount: addModel.goodsList.length)),
@@ -371,7 +371,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             addModel.setCarName(select['title']);
                             addModel.setCarCount(select['count']);
                             //计算装车率
-                            addModel.setCarRate("%${((addModel.goodsStandardCount / double.parse(select['count'])) * 100)}");
+                            addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(select['count'])) * 100), 2)}");
                           }
                       )
                   )
@@ -702,6 +702,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
       }else {
         _orderAdd(param);
       }
+    }else {
+      _orderAdd(param);
     }
   }
 
