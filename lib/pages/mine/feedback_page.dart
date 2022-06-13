@@ -6,6 +6,7 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
@@ -143,6 +144,25 @@ class _FeedbackPageState extends State<FeedbackPage> {
         //打开日志显示
         showDebugBtn(context);
       }
+      return;
+    }
+    if(_editingController.text == '909'){
+      showDialog(
+          context: context,
+          builder: (context1) {
+            return AlertDialog(
+              title: const Text('提醒'),
+              content: Text('您的手机品牌为：${Store.readBrand()}'),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('取消', style: TextStyle(color: Color(0xFF999999)))),
+                TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('确定', style: TextStyle(color: Color(0xFFC08A3F)))),
+              ],
+            );
+          });
       return;
     }
     if(_type.isEmpty){

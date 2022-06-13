@@ -10,8 +10,7 @@ import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/StoreModel.dart';
 import 'package:good_grandma/pages/declaration_form/select_store_page.dart';
-import 'package:good_grandma/pages/stock/select_customer_page.dart';
-import 'package:good_grandma/pages/work/freezer_statistics/freezer_statistics_type.dart';
+import 'package:good_grandma/pages/work/freezer_sales/freezer_sales_type.dart';
 
 ///应收明细页面
 class ReceivableDetail extends StatefulWidget {
@@ -29,8 +28,6 @@ class _ReceivableDetailState extends State<ReceivableDetail> {
 
   String customerId = '';
   String customerName = '客户';
-  String subId = '';
-  String subName = '帐套';
   String time = '所有日期';
   String startDate = '';
   String endDate = '';
@@ -51,34 +48,18 @@ class _ReceivableDetailState extends State<ReceivableDetail> {
             margin: EdgeInsets.only(bottom: 20),
             child: Column(
                 children: [
-                  FreezerStatisticsType(
+                  FreezerSalesType(
                       areaName: customerName,
-                      customerName: subName,
-                      statusName: time,
+                      customerName: time,
                       onPressed: () async{
                         StoreModel result = await Navigator.push(context,
                             MaterialPageRoute(builder: (_) => SelectStorePage(forOrder: true, orderType: 1)));
                         customerId = result.id;
                         customerName = result.name;
                         if (mounted) setState(() {});
-                        if (subId.isNotEmpty){
-                          _downloadData();
-                        }else {
-                          showToast('请选择帐套');
-                        }
+                        _downloadData();
                       },
                       onPressed2: () async{
-                        Map select = await showSelectSearchList(context, Api.subsidiaryList, '请选择帐套', 'name');
-                        subId = select['id'];
-                        subName = select['name'];
-                        if (mounted) setState(() {});
-                        if (customerId.isNotEmpty){
-                          _downloadData();
-                        }else {
-                          showToast('请选择客户');
-                        }
-                      },
-                      onPressed3: () async {
                         showPickerDateRangeNew(
                             context: Application.appContext,
                             callBack: (Map param){
@@ -86,10 +67,10 @@ class _ReceivableDetailState extends State<ReceivableDetail> {
                               startDate = param['startTime'];
                               endDate = param['endTime'];
                               if (mounted) setState(() {});
-                              if (customerId.isNotEmpty && subId.isNotEmpty){
+                              if (customerId.isNotEmpty){
                                 _downloadData();
                               }else {
-                                showToast('请选择客户和帐套');
+                                showToast('请先选择客户');
                               }
                             }
                         );
@@ -179,7 +160,7 @@ class _ReceivableDetailState extends State<ReceivableDetail> {
                                   children: [
                                     Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150),
                                     SizedBox(height: 10),
-                                    Text('请先选择客户和帐套再查看明细')
+                                    Text('请先选择客户再查看明细')
                                   ]
                               )
                           )
@@ -206,7 +187,6 @@ class _ReceivableDetailState extends State<ReceivableDetail> {
     try {
       Map<String, dynamic> map = {
         'id': customerId,
-        'subId': subId,
         'periodBegin': startDate,
         'periodEnd': endDate,
         'current': _current,

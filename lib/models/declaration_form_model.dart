@@ -26,6 +26,7 @@ class DeclarationFormModel extends ChangeNotifier {
   String _carpooling;
   String _carpoolCode;
   String _carpoolCustomers;
+  double _standardCount;
   String _carId;
   String _carName;
   String _carCount;
@@ -33,6 +34,7 @@ class DeclarationFormModel extends ChangeNotifier {
   String _isInvoice;
   String _invoiceId;
   String _invoiceName;
+  String _remark;
   List<DictionaryModel> _dictionaryModelList;
 
   ///标记订单状态 1待确认(待经销商确认)2待发货(待工厂确认)3待收货4完成5驳回
@@ -47,6 +49,8 @@ class DeclarationFormModel extends ChangeNotifier {
   String totalPrice;
   ///订单折扣
   String giftTotal;
+  ///订单号
+  String code;
 
   DeclarationFormModel({this.time = '', this.id = '',this.reject = '',this.orderType = 1}) {
     _storeModel = StoreModel();
@@ -72,6 +76,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _carpooling = '否';
     _carpoolCode = '';
     _carpoolCustomers = '';
+    _standardCount = 0;
     _carId = '';
     _carName = '';
     _carCount = '';
@@ -80,6 +85,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _invoiceId = '';
     _invoiceName = '';
     _dictionaryModelList = [];
+    _remark = '';
   }
 
   ///解析订单列表数据并赋值
@@ -95,6 +101,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _createUserId = json['createUser'].toString() ?? '';
     _updateUser = json['updateUser'].toString() ?? '';
     id = json['id'] ?? '';
+    code = json['code'] ?? '';
     time = json['time'] ?? '';
     _status = json['status'] ?? 1;
     _storeModel = StoreModel(name: name,id: customerId,phone: phone,address: address);
@@ -180,6 +187,9 @@ class DeclarationFormModel extends ChangeNotifier {
   ///拼车客户
   String get carpoolCustomers => _carpoolCustomers;
 
+  ///拼车码返回件数
+  double get standardCount => _standardCount;
+
   ///货车车型
   String get carId => _carId;
 
@@ -201,6 +211,9 @@ class DeclarationFormModel extends ChangeNotifier {
   ///开票信息
   String get invoiceName => _invoiceName;
 
+  ///备注
+  String get remark => _remark;
+
   ///折扣详情列表
   List<DictionaryModel> get dictionaryModelList => _dictionaryModelList;
 
@@ -219,9 +232,9 @@ class DeclarationFormModel extends ChangeNotifier {
       case 1:
         return '待确认';
       case 2:
-        return '账余审核';
-      case 3:
         return '装车率审核';
+      case 3:
+        return '账余审核';
       case 4:
         return '营业室审核';
       case 5:
@@ -439,6 +452,11 @@ class DeclarationFormModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  setStandardCount(double standardCount){
+    _standardCount = standardCount;
+    notifyListeners();
+  }
+
   setCarId(String carId){
     _carId = carId;
     notifyListeners();
@@ -471,6 +489,11 @@ class DeclarationFormModel extends ChangeNotifier {
 
   setInvoiceName(String invoiceName){
     _invoiceName = invoiceName;
+    notifyListeners();
+  }
+
+  setRemark(String remark){
+    _remark = remark;
     notifyListeners();
   }
 

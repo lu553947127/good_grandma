@@ -178,7 +178,7 @@ class OrderNewListItem extends StatelessWidget {
                           children: [
                             Container(
                                 width: 220,
-                                child: Text('订单号:${model.id}', style: TextStyle(fontSize: 14, color: model.statusColor))
+                                child: Text('订单号:${model.code}', style: TextStyle(fontSize: 14, color: model.statusColor))
                             ),
                             SizedBox(height: 10),
                             Text(model.time, style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))

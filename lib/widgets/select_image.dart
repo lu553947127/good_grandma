@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -205,6 +206,8 @@ class _SelectImagesViewState extends State<SelectImagesView> {
       return GestureDetector(
         child: Image.asset('assets/images/icon_add_images.png', width: 192, height: 108),
         onTap: () async{
+          ///关闭软键盘
+          FocusScope.of(context).requestFocus(FocusNode());
           //show
           final source = await _showBottomSheet();
           //image

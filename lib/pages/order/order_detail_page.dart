@@ -48,10 +48,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             visible: _model.orderType == 1
             //一级订单 审核阶段发布者可以编辑，驳回阶段只有城市经理可以编辑
                 ? (_model.status == 1 && _model.createUserId == Store.readUserId()) ||
-                    (_model.status == 5 && Store.readUserType() == 'xsb') ||
+                    (_model.status == 8 && Store.readUserType() == 'xsb') ||
                       (_model.status == 1 && Store.readUserId() != _model.updateUser)
             //二级订单 二级客户自己下的订单可以被驳回，驳回后可以自己编辑
-                : (_model.status == 5 &&
+                : (_model.status == 8 &&
                     _model.createUserId == Store.readUserId() &&
                     Store.readUserType() ==
                         'ejkh'),
@@ -150,6 +150,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               visible: _model.orderType == 1 && _model.settlementCusName != null && _model.settlementCusName.isNotEmpty,
               sliver: _TextCell(value: _model.settlementCusName, title: '结算客户'),
             ),
+            //货车车型
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.carName != null && _model.carName.isNotEmpty,
+              sliver: _TextCell(value: _model.carName, title: '货车车型'),
+            ),
             //驳回理由
             SliverVisibility(
               visible: _model.status == 5 &&
@@ -182,12 +187,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ));
                   }, childCount: _model.dictionaryModelList.length))
             ),
+            //备注
+            SliverVisibility(
+              visible: _model.remark != null && _model.remark.isNotEmpty,
+              sliver: _TextCell(value: _model.remark, title: '备注'),
+            ),
             //确认收货
             SliverVisibility(
-              visible: _model.status == 3 &&
-                  (_model.orderType == 1
-                      ? _model.createUserId == Store.readUserId() //一级订单 订单创建人签收
-                      : Store.readUserType() == 'ejkh'), //二级订单 二级客户签收
+              visible: _model.orderType == 1 && _model.status == 6 &&  _model.createUserId == Store.readUserId() || //一级订单 订单创建人状态是已发货
+                  _model.orderType == 2 && _model.status == 6 && Store.readUserType() == 'ejkh' || //二级订单二级客户状态是已发货
+                  _model.orderType == 3 && _model.status == 6 , //直营订单状态是已发货
               sliver: SliverToBoxAdapter(
                   child: SubmitBtn(
                       title: '确认收货', onPressed: () => _submitAction(context))),
@@ -200,11 +209,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Widget _btmView(BuildContext context) {
-    return (Store.readUserType() == 'ejkh' &&
-        (_model.status == 2 || _model.status == 5)) || //二级客户取消订单
-        (Store.readUserType() == 'xsb' &&
-            _model.status == 5 &&
-            _model.orderType == 1) //一级订单城市经理可以在订单驳回后取消订单
+    return (Store.readUserType() == 'ejkh' && _model.status == 8) || //二级客户取消订单
+        (Store.readUserType() == 'xsb' && _model.status == 8 && _model.orderType == 1) //一级订单城市经理可以在订单驳回后取消订单
     //取消订单按钮
         ? Container(
       //二级订单这两个状态下有取消订单的功能
@@ -279,26 +285,18 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     bool result = await AppUtil.bottomConformSheet(context, '是否要取消订单？',
         cancelText: '不取消', doneText: '取消');
     if (result != null && result)
-      _examineRequest(context, {'id': _model.id, 'status': 6});
+      _examineRequest(context, {'id': _model.id, 'status': 9});
   }
 
   ///驳回
   void _rejectAction(BuildContext context) {
-    // if (_model.orderType == 1 &&
-    //     (Store.readUserType() == 'xsb' || Store.readUserType() == 'yjkh')) {
-    //   //一级订单：工厂可以审核,可以驳回，城市经理、一级客户只能确认,不能驳回。如果订单被驳回，就一定是驳回到城市经理那，城市经理可以编辑重新提交，也可以取消订单
-    //   AppUtil.showToastCenter('您没有驳回权限');
-    //   return;
-    // }
     AppUtil.showInputDialog(
       context: context,
       editingController: TextEditingController(),
       focusNode: FocusNode(),
       text: '',
       hintText: '请输入驳回理由',
-      callBack: (text) => _examineRequest(
-          context, {'id': _model.id, 'status': 5, 'reject': text}),
-    );
+      callBack: (text) => _examineRequest(context, {'id': _model.id, 'status': 8, 'reject': text}));
   }
 
   ///确认审核
@@ -308,27 +306,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _examineRequest(context, {'id': _model.id, 'status': 2});
   }
 
-  ///审核驳回网络请求
-  void _examineRequest(BuildContext context, Map param) async {
-    // print('param = ${jsonEncode(param)}');
-    requestPost(Api.orderSh, json: jsonEncode(param)).then((value) {
-      var data = jsonDecode(value.toString());
-      // print('data = $data');
-      if (data['code'] == 200) Navigator.pop(context, true);
-    });
-  }
-
   ///确认收货
   void _submitAction(BuildContext context) async {
-    // print('_model.id = ${_model.id}');
     bool result = await AppUtil.bottomConformSheet(context, '是否确认收货？');
     if (result != null && result)
-      requestPost(Api.orderConfirm, json: jsonEncode({'id': _model.id}))
-          .then((value) {
-        var data = jsonDecode(value.toString());
-        // print('data = $data');
-        if (data['code'] == 200) Navigator.pop(context, true);
-      });
+      _examineRequest(context, {'id': _model.id, 'status': 7});
+  }
+
+  ///订单操作接口
+  void _examineRequest(BuildContext context, Map param) async {
+    requestPost(Api.orderSh, json: jsonEncode(param)).then((value) {
+      var data = jsonDecode(value.toString());
+      if (data['code'] == 200) Navigator.pop(context, true);
+    });
   }
 
   ///获取订单详情
@@ -351,6 +341,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _model.setCreateUserId(map['createUser'].toString() ?? '');
       _model.setUpdateUser(map['updateUser'].toString() ?? '');
 
+      _model.goodsList.clear();
       List<Map> orderDetailedList = (map['orderDetailedList'] as List).cast();
       orderDetailedList.forEach((map) {
         GoodsModel goodsModel = GoodsModel(
@@ -370,6 +361,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         _model.addToArray(goodsModel);
       });
 
+      _model.dictionaryModelList.clear();
       List<Map> giftTotalArr = (map['giftTotalArr'] as List).cast();
       giftTotalArr.forEach((element) {
         _model.addToDictionaryArray(DictionaryModel(
@@ -392,7 +384,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _model.setCarpooling(map['carpoolCode'].toString().isEmpty ? '否' : '是');
       _model.setCarpoolCode(map['carpoolCode'].toString());
       _model.setCarId(map['carId'].toString());
-      // _model.setCarName(map['carName'].toString());
+      _model.setCarName(map['carType'].toString());
       _model.setOrderTypeIs(map['orderType']);
       _model.setOrderTypeIsName(map['orderType'] == 1 ? '普通订单' : '渠道客户订单');
       _model.setIsInvoice(map['invoiceType'] == 0 ? '否' : '是');
@@ -412,6 +404,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _model.setSettlementCusName(map['settlementCusName'].toString());
       _model.setInvoiceId(map['invoiceId'].toString());
       // _model.setInvoiceName(map[''].toString());
+      _model.setRemark(map['remark'].toString());
 
       _controller.finishRefresh(success: true);
       if (mounted) setState(() {});

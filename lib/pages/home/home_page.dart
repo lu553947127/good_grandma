@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -80,6 +81,7 @@ class _Body extends State<HomePage> {
     super.initState();
     _controller.callRefresh();
     _getVersion();
+    getPhoneBrand();
   }
 
   @override
@@ -487,6 +489,16 @@ class _Body extends State<HomePage> {
         Navigator.push(context, MaterialPageRoute(builder:(context)=> CustomerVisitAdd()));
       }
     });
+  }
+
+  ///获取手机品牌型号
+  void getPhoneBrand() async{
+    DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();
+    if(Platform.isAndroid){
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      LogUtil.d('brand----${androidInfo.brand}');
+      Store.saveBrand(androidInfo.brand);
+    }
   }
 
   @override

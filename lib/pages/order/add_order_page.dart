@@ -49,8 +49,6 @@ class _AddOrderPageState extends State<AddOrderPage> {
   double orderAmount = 0;
   ///是否是编辑
   bool _isEdit = false;
-  ///标准件数
-  double standardCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +207,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                   addModel.setArrays(
                                       addModel.goodsList, _selGoodsList);
                                   //选择完商品更新装车率
-                                  addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100), 2)}");
+                                  addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}");
                                 }
                               },
                               icon:
@@ -227,11 +225,11 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       focusNode: _focusNode,
                       deleteAction: () {
                         addModel.deleteArrayWith(addModel.goodsList, index);
-                        addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100), 2)}");
+                        addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}");
                       },
                       numberChangeAction: () {
                         addModel.editArrayWith(addModel.goodsList, index, model);
-                        addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(addModel.carCount)) * 100), 2)}");
+                        addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}");
                       },
                     );
                   }, childCount: addModel.goodsList.length)),
@@ -371,7 +369,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             addModel.setCarName(select['title']);
                             addModel.setCarCount(select['count']);
                             //计算装车率
-                            addModel.setCarRate("%${formatNum(((addModel.goodsStandardCount / double.parse(select['count'])) * 100), 2)}");
+                            addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(select['count'])) * 100), 2)}");
                           }
                       )
                   )
@@ -587,6 +585,38 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             })
                     );
                   }, childCount: addModel.dictionaryModelList.length)),
+              SliverToBoxAdapter(child: SizedBox(height: 10.0)),
+              //备注
+              SliverToBoxAdapter(
+                  child: Container(
+                      color: Colors.white,
+                      child: ListTile(
+                        onTap: () async {
+                          AppUtil.showInputDialog(
+                              context: context,
+                              editingController: _editingController,
+                              focusNode: _focusNode,
+                              text: addModel.remark,
+                              hintText: '请输入备注',
+                              keyboardType: TextInputType.text,
+                              callBack: (text) {
+                                addModel.setRemark(text);
+                              });
+                        },
+                        title: Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text('备注',
+                              style: const TextStyle(
+                                  color: AppColors.FF2F4058, fontSize: 14.0)),
+                        ),
+                        subtitle: addModel.remark.isNotEmpty
+                            ? Text(addModel.remark)
+                            : Text('请输入备注',
+                            style: const TextStyle(
+                                color: AppColors.FFC1C8D7, fontSize: 14.0)),
+                      )
+                  )
+              ),
               SliverSafeArea(
                 sliver: SliverToBoxAdapter(
                   child: SubmitBtn(title: '提  交', onPressed: () => _submitAction(context, addModel))
@@ -672,7 +702,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
       'invoiceType': model.invoiceType,//发票类型
       'settlementCus': model.settlementCus,//结算客户
       'invoiceId': model.invoiceId,//开票信息
-      'giftTotalList': model.dictionaryToList//销售折扣详情列表
+      'giftTotalList': model.dictionaryToList,//销售折扣详情列表
+      'remark': model.remark//备注
     };
 
     if (!(widget.orderType == 2) && model.selfMention == 2 && model.carId.isNotEmpty) {
@@ -747,12 +778,12 @@ class _AddOrderPageState extends State<AddOrderPage> {
       LogUtil.d('请求结果---carpoolOrder----$data');
       if (data['data']['cus'] != null){
         model.setCarpoolCustomers(data['data']['cus']);
-        standardCount = double.parse(data['data']['standardCount']) ?? 0;
+        model.setStandardCount(double.parse(data['data']['standardCount'].toString()));
       }else {
         model.setCarpoolCustomers('');
-        standardCount = 0;
+        model.setStandardCount(0);
       }
-      if (mounted) setState(() {});
+      model.setCarRate("%${formatNum((((model.goodsStandardCount + model.standardCount) / double.parse(model.carCount)) * 100), 2)}");
     });
   }
 

@@ -51,6 +51,9 @@ class Store {
   ///当前登录人岗位
   static const _postType = "postType";
 
+  ///当前使用安卓手机品牌型号
+  static const _brand = 'brand';
+
   static saveUserType(String userType) {
     _box.write(_userType, userType);
   }
@@ -169,6 +172,14 @@ class Store {
 
   static String readPostType() {
     return _box.read(_postType);
+  }
+
+  static saveBrand(String brand) {
+    _box.write(_brand, brand);
+  }
+
+  static String readBrand() {
+    return _box.read(_brand);
   }
 
   static removeToken() {

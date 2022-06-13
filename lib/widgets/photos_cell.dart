@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_luban/flutter_luban.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/select_form.dart';
@@ -16,14 +17,15 @@ import 'package:provider/provider.dart';
 
 ///自定义多图片选择器
 class CustomPhotoWidget extends StatelessWidget {
-  CustomPhotoWidget({Key key,
+  const CustomPhotoWidget({Key key,
     this.title,
     this.length,
     this.url,
-    this.sizeHeight,
+    this.sizeHeight = 0,
     this.bgColor = Colors.white,
     this.address = '未知位置'
   }) : super(key: key);
+
 
   final String title;
   final int length;
@@ -33,7 +35,7 @@ class CustomPhotoWidget extends StatelessWidget {
   final Color bgColor;
 
   ///分割线间距
-  double sizeHeight = 0;
+  final double sizeHeight;
   final String address;
 
   @override
@@ -78,18 +80,21 @@ class CustomPhotoWidget extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext content, int index){
                         if (title == '拜访图片'){
-                          // return WatermarkImage(
-                          //     index: index,
-                          //     imagesProvider: imagesProvider,
-                          //     url: url,
-                          //     address: address
-                          // );
-                          return SelectImagesView(
-                              title: title,
-                              index: index,
-                              imagesProvider: imagesProvider,
-                              url: url
-                          );
+                          if (Store.readBrand() == 'meizu'){
+                            return WatermarkImage(
+                                index: index,
+                                imagesProvider: imagesProvider,
+                                url: url,
+                                address: address
+                            );
+                          }else {
+                            return SelectImagesView(
+                                title: title,
+                                index: index,
+                                imagesProvider: imagesProvider,
+                                url: url
+                            );
+                          }
                         }else {
                           return SelectImagesView(
                               title: title,
