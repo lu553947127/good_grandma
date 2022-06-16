@@ -19,6 +19,7 @@ import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/add_text_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
+import 'package:good_grandma/widgets/progerss_dialog.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -64,6 +65,16 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       images = listToString(imagesProvider.urlList);
     }
 
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return NetLoadingDialog(
+              requestCallBack: null,
+              outsideDismiss: false
+          );
+        });
+
     Map<String, dynamic> map = {
       'appCode': deviceCode,
       'customerType': customerType,
@@ -80,6 +91,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
     requestPost(Api.customerVisitAdd, json: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---customerVisitAdd----$data');
+      Navigator.pop(context);
       if (data['code'] == 200){
         showToast("添加成功");
         Navigator.of(Application.appContext).pop('refresh');

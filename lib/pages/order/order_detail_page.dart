@@ -155,6 +155,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               visible: _model.orderType == 1 && _model.carName != null && _model.carName.isNotEmpty,
               sliver: _TextCell(value: _model.carName, title: '货车车型'),
             ),
+            //开票信息
+            SliverVisibility(
+              visible: _model.orderType == 1 && _model.invoiceName != null && _model.invoiceName.isNotEmpty,
+              sliver: _TextCell(value: _model.invoiceName, title: '开票信息'),
+            ),
             //驳回理由
             SliverVisibility(
               visible: _model.status == 5 &&
@@ -383,8 +388,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _model.setSelfMentionName(map['selfMentionStr'].toString());
       _model.setCarpooling(map['carpoolCode'].toString().isEmpty ? '否' : '是');
       _model.setCarpoolCode(map['carpoolCode'].toString());
+      if (map['carpoolCode'].toString().isNotEmpty){
+        _carpoolOrder(map['carpoolCode'].toString(), _model);
+      }
       _model.setCarId(map['carId'].toString());
       _model.setCarName(map['carType'].toString());
+      if (map['carId'].toString().isNotEmpty){
+        _carDetail(_model, map['carId'].toString());
+      }
       _model.setOrderTypeIs(map['orderType']);
       _model.setOrderTypeIsName(map['orderType'] == 1 ? '普通订单' : '渠道客户订单');
       _model.setIsInvoice(map['invoiceType'] == 0 ? '否' : '是');
@@ -403,7 +414,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       _model.setSettlementCus(map['settlementCus'].toString());
       _model.setSettlementCusName(map['settlementCusName'].toString());
       _model.setInvoiceId(map['invoiceId'].toString());
-      // _model.setInvoiceName(map[''].toString());
+      if (map['invoiceId'].toString().isNotEmpty){
+        _invoiceDetail(_model, map['invoiceId'].toString());
+      }
       _model.setRemark(map['remark'].toString());
 
       _controller.finishRefresh(success: true);
@@ -411,6 +424,56 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     } catch (error) {
       _controller.finishRefresh(success: false);
     }
+  }
+
+  ///获取拼车客户
+  Future<void> _carpoolOrder(String carpoolCode, DeclarationFormModel model) async{
+    Map<String, dynamic> map = {'id': model.id, 'carpoolCode': carpoolCode};
+    requestPost(Api.carpoolOrder, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---carpoolOrder----$data');
+      if (data['msg'] == 'success'){
+        if (data['data']['cus'] != null){
+          model.setCarpoolCustomers(data['data']['cus']);
+          model.setStandardCount(double.parse(data['data']['standardCount'].toString()));
+        }else {
+          model.setCarpoolCustomers('');
+          model.setStandardCount(0);
+        }
+        model.setCarRate("${formatNum((((model.goodsStandardCount + model.standardCount) / double.parse(model.carCount)) * 100), 2)}%");
+      }
+    });
+  }
+
+  ///货车车型详情
+  Future<void> _carDetail(DeclarationFormModel model, String id) async{
+    Map<String, dynamic> map = {'id': id};
+    requestGet(Api.carDetail, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---carDetail----$data');
+      _model.setCarCount(data['data']['count']);
+      _model.setCarRate("${formatNum((((_model.goodsStandardCount + _model.standardCount) / double.parse(data['data']['count'])) * 100), 2)}%");
+    });
+  }
+
+  ///发票信息详情
+  Future<void> _invoiceDetail(DeclarationFormModel model, String id) async{
+    Map<String, dynamic> map = {'id': id};
+    requestGet(Api.invoiceDetail, param: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---invoiceDetail----$data');
+      if (data['data']['id'].toString() != '-1'){
+        _model.setInvoiceName('单位名称：${data['data']['title']}\n'
+            '纳税人识别号：${data['data']['taxNo']}\n'
+            '地址：${data['data']['address']}\n'
+            '电话：${data['data']['phone']}\n'
+            '开户银行：${data['data']['bank']}\n'
+            '账号：${data['data']['card']}');
+      }else{
+        _model.setInvoiceName('');
+      }
+      if (mounted) setState(() {});
+    });
   }
 
   @override

@@ -343,7 +343,7 @@ class DeclarationFormModel extends ChangeNotifier {
   List<String> get dictionaryToList{
     List<String> stringList = [];
     _dictionaryModelList.forEach((element) {
-      if (element.id.isEmpty){
+      if (element.remark == 'giftTotal'){
         stringList.add('${element.remark}-${element.money}');
       }else{
         stringList.add('${element.remark}-${element.id}-${element.money}');
@@ -549,6 +549,13 @@ class DeclarationFormModel extends ChangeNotifier {
     if (array == null) array = [];
     if (index >= array.length) return;
     array.setAll(index, [dictionaryModel]);
+    notifyListeners();
+  }
+
+  deleteDictionaryArrayWith(List<DictionaryModel> array, int index) {
+    if (array == null) array = [];
+    if (index >= array.length) return;
+    array.removeAt(index);
     notifyListeners();
   }
 }

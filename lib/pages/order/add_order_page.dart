@@ -207,7 +207,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                   addModel.setArrays(
                                       addModel.goodsList, _selGoodsList);
                                   //选择完商品更新装车率
-                                  addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}");
+                                  addModel.setCarRate("${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}%");
                                 }
                               },
                               icon:
@@ -225,11 +225,11 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       focusNode: _focusNode,
                       deleteAction: () {
                         addModel.deleteArrayWith(addModel.goodsList, index);
-                        addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}");
+                        addModel.setCarRate("${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}%");
                       },
                       numberChangeAction: () {
                         addModel.editArrayWith(addModel.goodsList, index, model);
-                        addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}");
+                        addModel.setCarRate("${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}%");
                       },
                     );
                   }, childCount: addModel.goodsList.length)),
@@ -369,7 +369,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             addModel.setCarName(select['title']);
                             addModel.setCarCount(select['count']);
                             //计算装车率
-                            addModel.setCarRate("%${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(select['count'])) * 100), 2)}");
+                            addModel.setCarRate("${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(select['count'])) * 100), 2)}%");
                           }
                       )
                   )
@@ -405,6 +405,10 @@ class _AddOrderPageState extends State<AddOrderPage> {
                                 addModel.setIsInvoice("否");
                                 addModel.setInvoiceType(0);
                                 addModel.setInvoiceTypeName('');
+                                addModel.setSettlementCus('');
+                                addModel.setSettlementCusName('');
+                                addModel.setInvoiceId('');
+                                addModel.setInvoiceName('');
                                 break;
                               case "渠道客户订单":
                                 addModel.setOrderTypeIs(2);
@@ -567,6 +571,12 @@ class _AddOrderPageState extends State<AddOrderPage> {
                         value: model.money,
                         hintText: '请输入',
                         endWidget: null,
+                        // endWidget: TextButton(
+                        //     child: Text('删除', style: TextStyle(color: AppColors.FFDD0000)),
+                        //     onPressed: (){
+                        //       addModel.deleteDictionaryArrayWith(addModel.dictionaryModelList, index);
+                        //     }
+                        // ),
                         onTap: () => AppUtil.showInputDialog(
                             context: context,
                             editingController: _editingController,
@@ -707,6 +717,10 @@ class _AddOrderPageState extends State<AddOrderPage> {
     };
 
     if (!(widget.orderType == 2) && model.selfMention == 2 && model.carId.isNotEmpty) {
+      if (model.carCount.isEmpty){
+        _orderAdd(param);
+        return;
+      }
       double number = ((model.goodsStandardCount / double.parse(model.carCount)) * 100);
       if (number < 90){
         showDialog(
@@ -766,24 +780,31 @@ class _AddOrderPageState extends State<AddOrderPage> {
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---createCarpoolCode----$data');
       model.setCarpoolCode(data['data']);
-      _carpoolOrder(data['data'], model);
+      // _carpoolOrder(data['data'], model);
     });
   }
 
   ///获取拼车客户
   Future<void> _carpoolOrder(String carpoolCode, DeclarationFormModel model) async{
-    Map<String, dynamic> map = {'carpoolCode': carpoolCode};
+    Map<String, dynamic> map = {'id': model.id, 'carpoolCode': carpoolCode};
     requestPost(Api.carpoolOrder, json: jsonEncode(map)).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---carpoolOrder----$data');
-      if (data['data']['cus'] != null){
-        model.setCarpoolCustomers(data['data']['cus']);
-        model.setStandardCount(double.parse(data['data']['standardCount'].toString()));
+      if (data['msg'] == 'success'){
+        if (data['data']['cus'] != null){
+          model.setCarpoolCustomers(data['data']['cus']);
+          model.setStandardCount(double.parse(data['data']['standardCount'].toString()));
+        }else {
+          model.setCarpoolCustomers('');
+          model.setStandardCount(0);
+        }
+        model.setCarRate("${formatNum((((model.goodsStandardCount + model.standardCount) / double.parse(model.carCount)) * 100), 2)}%");
       }else {
+        model.setCarpoolCode('');
         model.setCarpoolCustomers('');
         model.setStandardCount(0);
+        showToast('${data['data']['msg']}');
       }
-      model.setCarRate("%${formatNum((((model.goodsStandardCount + model.standardCount) / double.parse(model.carCount)) * 100), 2)}");
     });
   }
 

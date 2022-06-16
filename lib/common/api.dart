@@ -210,6 +210,9 @@ class Api {
   ///货车车型
   static const selectCall = "/api/hap-app/app/car/all";
 
+  ///货车车型详情
+  static const carDetail = "/api/hap-app/app/car/detail";
+
   ///开票信息列表
   static const invoiceList = "/api/hap-app/app/invoice/list";
 
@@ -221,6 +224,9 @@ class Api {
 
   ///开票信息删除
   static const invoiceRemove = "/api/hap-app/app/invoice/remove";
+
+  ///开票信息详情
+  static const invoiceDetail = "/api/hap-app/app/invoice/detail";
 
   ///折扣详情列表
   static const dictionary = "/api/hap-app/app/dict/dictionary";

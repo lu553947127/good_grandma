@@ -10,6 +10,7 @@ import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/add_content_input.dart';
 import 'package:good_grandma/widgets/photos_cell.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
+import 'package:good_grandma/widgets/progerss_dialog.dart';
 import 'package:provider/provider.dart';
 
 ///客户拜访编辑
@@ -45,6 +46,16 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
       return;
     }
 
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return NetLoadingDialog(
+              requestCallBack: null,
+              outsideDismiss: false
+          );
+        });
+
     Map<String, dynamic> map = {
       'id': widget.data['id'],
       'status': '2',
@@ -57,6 +68,7 @@ class _CustomerVisitEditState extends State<CustomerVisitEdit> {
     requestPost(Api.customerVisitEdit, json: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---customerVisitEdit----$data');
+      Navigator.pop(context);
       if (data['code'] == 200){
         showToast("拜访结束");
         Navigator.pop(context, true);
