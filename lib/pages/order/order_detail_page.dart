@@ -451,8 +451,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     requestGet(Api.carDetail, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---carDetail----$data');
-      _model.setCarCount(data['data']['count']);
-      _model.setCarRate("${formatNum((((_model.goodsStandardCount + _model.standardCount) / double.parse(data['data']['count'])) * 100), 2)}%");
+
+      if (data['data']['id'].toString() != '-1'){
+        _model.setCarCount(data['data']['count']);
+        _model.setCarRate("${formatNum((((_model.goodsStandardCount + _model.standardCount) / double.parse(data['data']['count'])) * 100), 2)}%");
+      }else {
+        _model.setCarCount('');
+        _model.setCarRate('');
+      }
     });
   }
 

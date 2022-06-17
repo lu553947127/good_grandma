@@ -204,12 +204,7 @@ class _AppPageState extends State<AppPage> {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          brightness: Brightness.light,
-          title: Text('应用'),
-        ),
+        appBar: AppBar(title: Text('应用')),
         body: MyEasyRefreshSliverWidget(
             controller: _controller,
             scrollController: _scrollController,

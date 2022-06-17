@@ -80,7 +80,8 @@ class CustomPhotoWidget extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext content, int index){
                         if (title == '拜访图片'){
-                          if (Store.readBrand() == 'meizu'){
+                          if (Store.readBrand() == 'meizu'
+                              && Store.readBrand() == 'MEIZU'){
                             return WatermarkImage(
                                 index: index,
                                 imagesProvider: imagesProvider,

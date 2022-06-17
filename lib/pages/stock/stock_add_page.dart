@@ -10,6 +10,7 @@ import 'package:good_grandma/models/employee_model.dart';
 import 'package:good_grandma/models/goods_model.dart';
 import 'package:good_grandma/models/stock_add_model.dart';
 import 'package:good_grandma/pages/stock/select_customer_page.dart';
+import 'package:good_grandma/widgets/progerss_dialog.dart';
 import 'package:good_grandma/widgets/stock_add_goods_cell.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
@@ -107,6 +108,17 @@ class _StockAddPageState extends State<StockAddPage> {
       AppUtil.showToastCenter('商品不能为空');
       return;
     }
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return NetLoadingDialog(
+              requestCallBack: null,
+              outsideDismiss: false
+          );
+        });
+
     Map param = {
       'customerId': _model.customer.id,
       'checkList': _model.stockList
@@ -122,6 +134,7 @@ class _StockAddPageState extends State<StockAddPage> {
     requestPost(Api.customerStockAdd, json: jsonEncode(param)).then((value) {
       var data = jsonDecode(value.toString());
       print('data = $data');
+      Navigator.pop(context);
       if (data['code'] == 200) Navigator.pop(context, true);
     });
   }

@@ -22,7 +22,6 @@ import 'package:good_grandma/pages/work/work_text.dart';
 import 'package:good_grandma/widgets/order_add_page_goods_cell.dart';
 import 'package:good_grandma/widgets/order_goods_count_view.dart';
 import 'package:good_grandma/widgets/post_add_input_cell.dart';
-import 'package:good_grandma/widgets/select_form.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
@@ -585,7 +584,13 @@ class _AddOrderPageState extends State<AddOrderPage> {
                             text: model.money,
                             hintText: model.money,
                             callBack: (text) {
-                              double num = double.parse(text) + addModel.discount;
+                              double num = 0;
+                              if (widget.editing){
+                                num = double.parse(text) + addModel.discount - double.parse(addModel.dictionaryModelList[index].money);
+                              }else {
+                                num = double.parse(text) + addModel.discount;
+                              }
+
                               if (addModel.goodsPrice < num){
                                 showToast('折扣合计不能超过订单总额');
                                 return;
