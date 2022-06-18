@@ -786,6 +786,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
       LogUtil.d('请求结果---createCarpoolCode----$data');
       model.setCarpoolCode(data['data']);
       // _carpoolOrder(data['data'], model);
+      //20220618-451066
     });
   }
 
@@ -795,7 +796,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
     requestPost(Api.carpoolOrder, json: jsonEncode(map)).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---carpoolOrder----$data');
-      if (data['msg'] == 'success'){
+      if (data['data']['msg'] == 'success'){
         if (data['data']['cus'] != null){
           model.setCarpoolCustomers(data['data']['cus']);
           model.setStandardCount(double.parse(data['data']['standardCount'].toString()));
