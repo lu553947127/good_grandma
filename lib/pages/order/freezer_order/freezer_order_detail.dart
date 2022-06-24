@@ -107,8 +107,7 @@ class FreezerOrderDetail extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                                       ),
-                                      child: Text(_setTextStatus(data['status'], data['auth']),
-                                          style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
+                                      child: Text(data['statusName'], style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                                   )
                                 ]
                             ),
@@ -160,7 +159,7 @@ class FreezerOrderDetail extends StatelessWidget {
                                       SizedBox(width: 10),
                                       Container(
                                         width: 200,
-                                        child: Text(data['address'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
+                                        child: Text('${data['provinceName']}${data['cityName']}${data['address']}', style: TextStyle(fontSize: 12,color: Color(0XFF2F4058))),
                                       )
                                     ]
                                 )
@@ -194,44 +193,32 @@ class FreezerOrderDetail extends StatelessWidget {
             onTap1: () {
               _onTap1(context);
             },
-            isVisibility1: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
-                Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
-                Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
-                Store.readPostType() == 'cw' && data['auth'] == 4,
+            isVisibility1: data['approve'] == true && data['auth'] != 'freezer_order_fh',
             //驳回
             onTap2: () {
               _onTap2(context);
             },
-            isVisibility2: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
-                Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
-                Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
-                Store.readPostType() == 'cw' && data['auth'] == 4,
+            isVisibility2: data['approve'] == true,
             //编辑
             onTap3: () {
               _onTap3(context);
             },
-            isVisibility3: Store.readPostType() == 'sjizl' && data['auth'] == 1 ||
-                Store.readPostType() == 'dqjlzl' && data['auth'] == 2 ||
-                Store.readPostType() == 'qdbgzl' && data['auth'] == 3 ||
-                Store.readPostType() == 'cw' && data['auth'] == 4 ||
-                (Store.readPostType() == 'csjl' || (Store.readPostType().contains('jkh'))) && data['auth'] == 0,
+            isVisibility3: data['status'] == 0 && data['approve'] == true,
             //发货
             onTap4: () {
               _onTap4(context);
             },
-            isVisibility4: Store.readPostType() == 'gc' && data['auth'] == 5 && !data['falg'],
+            isVisibility4: data['status'] == 2 && data['auth'] == 'freezer_order_fh',
             //确认收货
             onTap5: () {
               _freezerOrderOver(context);
             },
-            isVisibility5: Store.readUserType().contains('jkh')  && data['status'] == 2 ||
-                Store.readPostType() == 'csjl'  && data['status'] == 2,
+            isVisibility5: Store.readPostType() == 'csjl'  && data['auth'] == 'deliver',
             //取消订单
             onTap6: (){
               _freezerOrderCancel(context);
             },
-            isVisibility6: Store.readUserType().contains('jkh') && data['auth'] == 0 && data['status'] == 4 ||
-                Store.readPostType() == 'csjl' && data['auth'] == 0 && data['status'] == 4
+            isVisibility6: Store.readPostType() == 'csjl'  && data['auth'] == 'reject'
         )
     );
   }

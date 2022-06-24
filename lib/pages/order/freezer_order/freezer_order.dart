@@ -132,7 +132,7 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
                                             decoration: BoxDecoration(
                                               color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                                             ),
-                                            child: Text(_setTextStatus(freezerOrderList[index]['status'], freezerOrderList[index]['auth']),
+                                            child: Text('${freezerOrderList[index]['statusName']}',
                                                 style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                                         )
                                       ]
@@ -185,7 +185,8 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
                                             SizedBox(width: 10),
                                             Container(
                                               width: 200,
-                                              child: Text(freezerOrderList[index]['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                              child: Text('${freezerOrderList[index]['provinceName']}${freezerOrderList[index]['cityName']}${freezerOrderList[index]['address']}',
+                                                  style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
                                             )
                                           ]
                                       )

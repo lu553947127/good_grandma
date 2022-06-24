@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/examine/examine_detail_content_form.dart';
 import 'package:good_grandma/widgets/picture_big_view.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -451,7 +452,9 @@ class ExamineDetailContent extends StatelessWidget {
                                               style: const TextStyle(color: AppColors.FF959EB1, fontSize: 15.0),
                                               children: [
                                                 TextSpan(
-                                                    text: '${taskFormList[index]['value']}'.isEmpty ? '暂无' : '${taskFormList[index]['value']}',
+                                                    text: '${taskFormList[index]['value']}'.isEmpty ? '暂无' :
+                                                    taskFormList[index]['name'] == '出差天数' ? '${formatNum(double.parse(taskFormList[index]['value']), 2)}' :
+                                                    '${taskFormList[index]['value']}',
                                                     style: const TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                               ]
                                           ))

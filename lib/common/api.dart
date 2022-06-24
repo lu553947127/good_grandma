@@ -276,6 +276,9 @@ class Api {
   ///冰柜订单详情
   static const freezerOrderGetOrderDetail = "/api/hap-app/app/freezerOrder/getOrderDetail";
 
+  ///冰柜订单选择省市区
+  static const regionSelect = "/api/hap-app/app/region/select";
+
 
   /** 物料订单 **/
 

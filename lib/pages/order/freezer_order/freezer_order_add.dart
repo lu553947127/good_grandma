@@ -56,6 +56,10 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
     freezerOrderModel.setLinkPhone(widget.data['linkPhone']);
     freezerOrderModel.setCustomerId(widget.data['customerId']);
     freezerOrderModel.setCustomerName(widget.data['customerName']);
+    freezerOrderModel.setProvinceCode(widget.data['province']);
+    freezerOrderModel.setProvinceName(widget.data['provinceName']);
+    freezerOrderModel.setCityCode(widget.data['city']);
+    freezerOrderModel.setCityName(widget.data['cityName']);
     freezerOrderModel.setAddress(widget.data['address']);
   }
 
@@ -233,6 +237,40 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
           ),
           SliverToBoxAdapter(
               child: ActivityAddTextCell(
+                  title: '地区（省）',
+                  hintText: '请选择省',
+                  value: freezerOrderModel.provinceName,
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () async {
+                    Map<String, dynamic> map = {'code': '00'};
+                    Map select = await showSelectListParameter(context, Api.regionSelect, '请选择省', 'name', map);
+                    freezerOrderModel.setProvinceCode(select['code']);
+                    freezerOrderModel.setProvinceName(select['name']);
+                    freezerOrderModel.setCityCode('');
+                    freezerOrderModel.setCityName('');
+                  }
+              )
+          ),
+          SliverToBoxAdapter(
+              child: ActivityAddTextCell(
+                  title: '地区（市）',
+                  hintText: '请选择市',
+                  value: freezerOrderModel.cityName,
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () async {
+                    if (freezerOrderModel.provinceCode.isEmpty){
+                      showToast('请先选择省');
+                      return;
+                    }
+                    Map<String, dynamic> map = {'code': freezerOrderModel.provinceCode};
+                    Map select = await showSelectListParameter(context, Api.regionSelect, '请选择市', 'name', map);
+                    freezerOrderModel.setCityCode(select['code']);
+                    freezerOrderModel.setCityName(select['name']);
+                  }
+              )
+          ),
+          SliverToBoxAdapter(
+              child: ActivityAddTextCell(
                   title: '收货地址',
                   hintText: '请输入收货地址',
                   value: freezerOrderModel.address,
@@ -298,6 +336,11 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
       return;
     }
 
+    if (freezerOrderModel.provinceCode == ''){
+      EasyLoading.showToast('地区不能为空');
+      return;
+    }
+
     if (freezerOrderModel.address == ''){
       EasyLoading.showToast('收货地址不能为空');
       return;
@@ -309,6 +352,8 @@ class _FreezerOrderAddPageState extends State<FreezerOrderAddPage> {
       'linkName': freezerOrderModel.linkName,
       'linkPhone': freezerOrderModel.linkPhone,
       'customerId': freezerOrderModel.customerId,
+      'province': freezerOrderModel.provinceCode,
+      'city': freezerOrderModel.cityCode,
       'address': freezerOrderModel.address
     };
 

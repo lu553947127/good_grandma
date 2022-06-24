@@ -38,7 +38,7 @@ class _PerformanceStatisticsPageState extends State<PerformanceStatisticsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget titleView = Text('我的业绩(元)',
+    Widget titleView = Text('我的业绩(万元)',
         style: const TextStyle(
             color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold));
     return Scaffold(

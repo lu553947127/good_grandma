@@ -56,32 +56,38 @@ class OrderDetailBottom extends StatelessWidget {
                 _OrderBtn(
                     isVisibility: isVisibility1,
                     title: '审批',
-                    onTap: onTap1
+                    onTap: onTap1,
+                    color: AppColors.FFC08A3F
                 ),
                 _OrderBtn(
                     isVisibility: isVisibility2,
                     title: '驳回',
-                    onTap: onTap2
+                    onTap: onTap2,
+                    color: AppColors.FF959DB0
                 ),
                 _OrderBtn(
                     isVisibility: isVisibility3,
                     title: '编辑',
-                    onTap: onTap3
+                    onTap: onTap3,
+                    color: AppColors.FF05A8C6
                 ),
                 _OrderBtn(
                     isVisibility: isVisibility4,
                     title: '发货',
-                    onTap: onTap4
+                    onTap: onTap4,
+                    color: AppColors.FF12BD95
                 ),
                 _OrderBtn(
                     isVisibility: isVisibility5,
                     title: '确认收货',
-                    onTap: onTap5
+                    onTap: onTap5,
+                    color: AppColors.FFE45C26
                 ),
                 _OrderBtn(
                     isVisibility: isVisibility6,
                     title: '取消订单',
-                    onTap: onTap6
+                    onTap: onTap6,
+                    color: AppColors.FF999999
                 )
               ]
           )
@@ -95,11 +101,13 @@ class _OrderBtn extends StatelessWidget {
       {Key key,
         this.isVisibility,
         this.title,
-        this.onTap})
+        this.onTap,
+        this.color})
       : super(key: key);
   final bool isVisibility;
   final String title;
   final VoidCallback onTap;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -108,12 +116,13 @@ class _OrderBtn extends StatelessWidget {
       child: TextButton(
           onPressed: onTap,
           child: Container(
+            width: 100,
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: AppColors.FFC08A3F, borderRadius: BorderRadius.circular(5),
+                color: color, borderRadius: BorderRadius.circular(42),
               ),
-              child: Text(title,
-                  style: TextStyle(fontSize: 12, color: Colors.white))
+              child: Center(child: Text(title,
+                  style: TextStyle(fontSize: 16, color: Colors.white)))
           ))
     );
   }

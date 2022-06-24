@@ -315,7 +315,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                       child: PostAddInputCell(
                           title: '拼车码',
                           value: '${addModel.carpoolCode}',
-                          hintText: '${addModel.carpoolCode}',
+                          hintText: addModel.carpoolCode.isEmpty ? '请输入拼车码' : '${addModel.carpoolCode}',
                           endWidget: TextButton(
                               child: Text('生成', style: TextStyle(color: AppColors.FFC08A3F)),
                               onPressed: (){

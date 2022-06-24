@@ -15,6 +15,18 @@ class FreezerOrderModel extends ChangeNotifier {
   ///客户名称
   String _customerName;
 
+  ///省
+  String _provinceCode;
+
+  ///省
+  String _provinceName;
+
+  ///市
+  String _cityCode;
+
+  ///市
+  String _cityName;
+
   ///收货地址
   String _address;
 
@@ -35,6 +47,10 @@ class FreezerOrderModel extends ChangeNotifier {
     _linkPhone = '';
     _customerId = '';
     _customerName = '';
+    _provinceCode = '';
+    _provinceName = '';
+    _cityCode = '';
+    _cityName = '';
     _address = '';
     _freezerList = [];
     freezerMapList = [];
@@ -53,6 +69,18 @@ class FreezerOrderModel extends ChangeNotifier {
 
   ///客户名称
   String get customerName => _customerName;
+
+  ///省
+  String get provinceCode => _provinceCode;
+
+  ///省
+  String get provinceName => _provinceName;
+
+  ///市
+  String get cityCode => _cityCode;
+
+  ///市
+  String get cityName => _cityName;
 
   ///收货地址
   String get address => _address;
@@ -80,6 +108,26 @@ class FreezerOrderModel extends ChangeNotifier {
 
   setCustomerName(String customerName) {
     _customerName = customerName;
+    notifyListeners();
+  }
+
+  setProvinceCode(String provinceCode) {
+    _provinceCode = provinceCode;
+    notifyListeners();
+  }
+
+  setProvinceName(String provinceName) {
+    _provinceName = provinceName;
+    notifyListeners();
+  }
+
+  setCityCode(String cityCode) {
+    _cityCode = cityCode;
+    notifyListeners();
+  }
+
+  setCityName(String cityName) {
+    _cityName = cityName;
     notifyListeners();
   }
 
