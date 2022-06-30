@@ -56,7 +56,7 @@ class _ExamineDetailContentFormState extends State<ExamineDetailContentForm> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(margin: EdgeInsets.only(left: 5.0), child: Text(title, style: TextStyle(fontSize: 12))),
+                          Container(margin: EdgeInsets.only(left: 5.0), child: Text('$title', style: TextStyle(fontSize: 12))),
                           IconButton(
                               onPressed: () {
                                 Map map = new Map();

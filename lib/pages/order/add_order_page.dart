@@ -303,7 +303,20 @@ class _AddOrderPageState extends State<AddOrderPage> {
                           endWidget: Icon(Icons.chevron_right),
                           onTap: () async {
                             String select = await showPicker(['是', '否'], context);
-                            addModel.setCarpooling(select.isEmpty ? '否' : select);
+                            if (select.isEmpty){
+                              return;
+                            }
+                            switch(select){
+                              case "是":
+                                break;
+                              case "否":
+                                addModel.setCarpoolCode('');
+                                addModel.setCarpoolCustomers('');
+                                addModel.setStandardCount(0);
+                                addModel.setCarRate("${formatNum((((addModel.goodsStandardCount + addModel.standardCount) / double.parse(addModel.carCount)) * 100), 2)}%");
+                                break;
+                            }
+                            addModel.setCarpooling(select);
                           }
                       )
                   )

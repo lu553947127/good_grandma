@@ -70,11 +70,11 @@ void showImageRange({@required BuildContext context, @required Function(Map map)
             });
         var byte = await pickedFile.readAsBytes();
         print('pickedFile---size----${byte.length}');
-        getPutFile(Api.putFile, pickedFile.path).then((val) async{
-          var data = json.decode(val.toString());
+        getPutAliOssFile(Api.putFile, new File(pickedFile.path)).then((val) async{
+          var data = val;
           print('请求结果---uploadFile----$data');
           Navigator.pop(context);
-          param = {'name': data['data']['originalName'], 'image': data['data']['link'], 'size': byte.length};
+          param = {'name': data['originalName'], 'image': data['link'], 'size': byte.length};
           ///回传图片数据
           if (param != null) {
             if (callBack != null) callBack(param);
@@ -130,11 +130,11 @@ class _SelectImagesViewState extends State<SelectImagesView> {
         EasyLoading.show(status: '图片压缩中...');
         Luban.compressImage(compressObject).then((_path) {
           EasyLoading.dismiss();
-          getPutFile(widget.url, _path).then((val) async{
-            var data = json.decode(val.toString());
+          getPutAliOssFile(widget.url, new File(_path)).then((val) async{
+            var data = val;
             print('请求结果---uploadFile----$data');
-            widget.imagesProvider.fileList(data['data']['link'], 'png', '');
-            widget.imagesProvider.addImageData(data['data']['link'], data['data']['originalName']);
+            widget.imagesProvider.fileList(data['link'], 'jpg', '');
+            widget.imagesProvider.addImageData(data['link'], data['originalName']);
           });
         });
         return true;
@@ -312,11 +312,11 @@ class _WatermarkImageState extends State<WatermarkImage> {
         EasyLoading.show(status: '图片压缩中...');
         Luban.compressImage(compressObject).then((_path) {
           EasyLoading.dismiss();
-          getPutFile(widget.url, _path).then((val) async{
-            var data = json.decode(val.toString());
+          getPutAliOssFile(widget.url, new File(_path)).then((val) async{
+            var data = val;
             print('请求结果---uploadFile----$data');
-            widget.imagesProvider.fileList(data['data']['link'], 'png', '');
-            widget.imagesProvider.addImageData(data['data']['link'], data['data']['originalName']);
+            widget.imagesProvider.fileList(data['link'], 'jpg', '');
+            widget.imagesProvider.addImageData(data['link'], data['originalName']);
           });
         });
       }

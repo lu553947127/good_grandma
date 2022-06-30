@@ -5,6 +5,7 @@ import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/order/material_order/material_order_add.dart';
 import 'package:good_grandma/pages/order/material_order/material_order_model.dart';
@@ -23,20 +24,18 @@ class MaterialOrderDetail extends StatefulWidget {
 }
 
 class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
+  final TextEditingController _editingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
 
     List<Map> materialDetailsList = (widget.data['materialDetailsVOS'] as List).cast();
 
-    int count = 0;
-    materialDetailsList.forEach((map) {
-      count += map['nowCount'];
-    });
-
-    _setTextStatus(status){
+    _setTextStatus(status, Map map){
       switch(status){
         case 1:
-          return '审核中';
+          return '${map['authName']}';
           break;
         case 2:
           return '审核通过';
@@ -48,10 +47,17 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           return '驳回';
           break;
         case 5:
-          return '终止';
+          return '已终止';
           break;
         case 6:
-          return '发货';
+          if (map['ifsplit'] == 0){
+            return '已发货';
+          }else {
+            return '已发货（部分发货）';
+          }
+          break;
+        case 7:
+          return '未发货';
           break;
         default:
           return '无';
@@ -60,7 +66,31 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('物料订单详情')),
+      appBar: AppBar(
+          title: Text('物料订单详情'),
+          actions: [
+            Visibility(
+              visible: widget.data['userId'] == Store.readUserId() && widget.data['status'] == 4,
+              child: TextButton(
+                  child: Text('编辑', style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
+                  onPressed: () async {
+                    MarketingOrderModel model = MarketingOrderModel();
+                    bool needRefresh = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) =>
+                            ChangeNotifierProvider<MarketingOrderModel>.value(
+                              value: model,
+                              child: MaterialOrderAddPage(id: widget.data['id'], data: widget.data, newKey: ''),
+                            )));
+                    if(needRefresh != null && needRefresh){
+                      Navigator.pop(context, true);
+                    }
+                  }
+              )
+            )
+          ]
+      ),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -93,7 +123,7 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
                         decoration: BoxDecoration(
                           color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                         ),
-                        child: Text(_setTextStatus(widget.data['status']),
+                        child: Text(_setTextStatus(widget.data['status'], widget.data),
                             style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                     )
                   ]
@@ -146,10 +176,15 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
               );
             }, childCount: materialDetailsList.length),
           ),
+          SliverVisibility(
+            visible: widget.data['status'] == 1 && widget.data['opinion'] != null && widget.data['opinion'].toString().isNotEmpty ||
+                widget.data['status'] == 4 && widget.data['opinion'].toString().isNotEmpty,
+            sliver: SliverToBoxAdapter(child: MarketingActivityMsgCell(title: '审批意见', value: '${widget.data['opinion']}')),
+          ),
           SliverSafeArea(
               sliver: SliverToBoxAdapter(
                   child: Visibility(
-                    visible: widget.data['status'] == 6 && count != 0 ? true : false,
+                    visible: widget.data['userId'] == Store.readUserId() && widget.data['status'] == 6,
                     child: SubmitBtn(
                         title: '入库',
                         onPressed: () {
@@ -162,22 +197,42 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           SliverSafeArea(
               sliver: SliverToBoxAdapter(
                   child: Visibility(
-                    visible: widget.data['status'] == 4 ? true : false,
+                      visible: widget.data['status'] == 1 && widget.data['approve'] == true,
+                      child: SubmitBtn(
+                          title: '审核',
+                          onPressed: () async {
+                            AppUtil.showInputDialog(
+                                context: context,
+                                editingController: _editingController,
+                                focusNode: _focusNode,
+                                text: '',
+                                hintText: '请输入审批意见',
+                                keyboardType: TextInputType.text,
+                                callBack: (text) {
+                                  _materialApprove(context, '1', text);
+                                });
+                          }
+                      )
+                  )
+              )
+          ),
+          SliverSafeArea(
+              sliver: SliverToBoxAdapter(
+                  child: Visibility(
+                    visible: widget.data['status'] == 4 && widget.data['approve'] == true,
                     child: SubmitBtn(
                         title: '驳回',
                         onPressed: () async {
-                          MarketingOrderModel model = MarketingOrderModel();
-                          bool needRefresh = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                  ChangeNotifierProvider<MarketingOrderModel>.value(
-                                    value: model,
-                                    child: MaterialOrderAddPage(id: widget.data['id'], data: widget.data, newKey: ''),
-                                  )));
-                          if(needRefresh != null && needRefresh){
-                            Navigator.pop(context, true);
-                          }
+                          AppUtil.showInputDialog(
+                              context: context,
+                              editingController: _editingController,
+                              focusNode: _focusNode,
+                              text: '',
+                              hintText: '请输入审批意见',
+                              keyboardType: TextInputType.text,
+                              callBack: (text) {
+                                _materialApprove(context, '4', text);
+                              });
                         }
                     )
                   )
@@ -190,13 +245,7 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
 
   ///入库
   void _submitWarehousing(BuildContext context) async {
-
-    Map<String, dynamic> map = {
-      'id': widget.data['id']
-    };
-
-    LogUtil.d('请求结果---materialOrderAdd----$map');
-
+    Map<String, dynamic> map = {'id': widget.data['id']};
     requestPost(Api.materialOrderWarehousing, formData: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---materialOrderWarehousing----$data');
@@ -207,5 +256,47 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
         showToast(data['msg']);
       }
     });
+  }
+
+  ///审核
+  void _materialApprove(BuildContext context, status, opinion) async {
+    Map<String, dynamic> map = {
+      'id': widget.data['id'],
+      'status': status,
+      'opinion': opinion
+    };
+
+    requestPost(Api.materialApprove, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---materialApprove----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
+  ///驳回
+  void _materialReject(BuildContext context) async {
+    Map<String, dynamic> map = {'id': widget.data['id']};
+    requestPost(Api.materialReject, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---materialReject----$data');
+      if (data['code'] == 200){
+        showToast("成功");
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+    _editingController.dispose();
   }
 }

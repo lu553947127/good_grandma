@@ -16,7 +16,7 @@ class URLOpenUtils {
       }
     } on Exception catch(e) {
       if (showErr)
-        showToast('无法调起腾讯地图');
+        showToast('无法调起腾讯地图，请先安装后再使用');
       return false;
     }
     return true;
@@ -33,7 +33,7 @@ class URLOpenUtils {
       }
     } on Exception catch(e) {
       if (showErr)
-        showToast('无法调起高德地图');
+        showToast('无法调起高德地图，请先安装后再使用');
       return false;
     }
     return true;
@@ -50,7 +50,7 @@ class URLOpenUtils {
       }
     } on Exception catch(e) {
       if (showErr)
-        showToast('无法调起高德地图');
+        showToast('无法调起百度地图，请先安装后再使用');
       return false;
     }
     return true;
@@ -67,7 +67,7 @@ class URLOpenUtils {
       }
     } on Exception catch(e) {
       if (showErr)
-        showToast('无法调起高德地图，请先安装');
+        showToast('无法调起苹果地图，请先安装');
       return false;
     }
     return true;

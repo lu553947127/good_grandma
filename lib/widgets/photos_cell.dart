@@ -156,13 +156,13 @@ class _OaPhotoWidgetState extends State<OaPhotoWidget> {
         EasyLoading.show(status: '图片压缩中...');
         Luban.compressImage(compressObject).then((_path) {
           EasyLoading.dismiss();
-          getPutFile(widget.url, _path).then((val) async{
-            var data = json.decode(val.toString());
+          getPutAliOssFile(widget.url, new File(_path)).then((val) async{
+            var data = val;
             print('请求结果---uploadFile----$data');
             if (widget.title == '图片'){
-              widget.timeSelectProvider.imageAdd(data['data']['link'], 'png', '');
+              widget.timeSelectProvider.imageAdd(data['link'], 'jpg', '');
             }else {
-              widget.timeSelectProvider.fileAdd(data['data']['link'], 'png', '');
+              widget.timeSelectProvider.fileAdd(data['link'], 'jpg', '');
             }
           });
         });

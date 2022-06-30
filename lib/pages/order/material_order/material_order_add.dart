@@ -127,18 +127,8 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                             Map area = await showSelectTreeList(context, '');
                             model.deptId = area['deptId'];
                             model.deptName = area['areaName'];
-                            _materialBudget(marketingOrderModel, model,  index, area['deptId']);
+                            marketingOrderModel.editCustomerModelWith(index, model);
                           }
-                      ),
-                      Visibility(
-                          visible: model.deptId.isNotEmpty,
-                          child: ActivityAddTextCell(
-                              title: '预算',
-                              hintText: '',
-                              value: '${model.surplus}',
-                              trailing: null,
-                              onTap: null
-                          )
                       ),
                       ActivityAddTextCell(
                           title: '经销商',
@@ -224,7 +214,12 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                                           value: marketingModel.materialName,
                                           trailing: Icon(Icons.chevron_right),
                                           onTap: () async {
-                                            Map select = await showSelectList(context, Api.materialSelectList, '请选择物料', 'name');
+                                            if (model.deptId.isEmpty){
+                                              showToast('请先选择区域');
+                                              return;
+                                            }
+                                            Map<String, dynamic> map = {'deptId': model.deptId};
+                                            Map select = await showSelectListParameter(context, Api.materialSelectStockList, '请选择物料', 'name', map);
                                             marketingModel.materialId = select['id'].toString();
                                             marketingModel.materialName = select['name'];
                                             marketingModel.newQuantity = select['quantity'];

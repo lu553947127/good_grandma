@@ -39,11 +39,7 @@ class _MarketMaterialState extends State<MarketMaterial> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            centerTitle: true,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.black),
-            title: Text("市场物料", style: TextStyle(fontSize: 18, color: Colors.black)),
+            title: Text('市场物料'),
             actions: [
               TextButton(
                   child: Text('入库', style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),

@@ -183,7 +183,7 @@ class VisitStatisticsDetail extends StatelessWidget {
                                             Container(
                                                 width: 200,
                                                 child: InkWell(
-                                                  child: Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0XFF2F4058)), maxLines: 2),
+                                                  child: Text(data['address'], style: TextStyle(fontSize: 12, color: Color(0xFF05A8C6)), maxLines: 2),
                                                   onTap: () {
                                                     URLOpenUtils.openAmap(double.parse(data['longitude'].toString()), double.parse(data['latitude'].toString()),
                                                         address: data['address'], showErr: true);

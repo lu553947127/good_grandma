@@ -54,6 +54,21 @@ class Store {
   ///当前使用安卓手机品牌型号
   static const _brand = 'brand';
 
+  ///阿里ossAccessKeyId
+  static const _ossAccessKeyId = 'ossAccessKeyId';
+
+  ///阿里oss endpoint
+  static const _ossEndpoint = 'ossEndpoint';
+
+  ///阿里oss policy
+  static const _ossPolicy = 'ossPolicy';
+
+  ///阿里oss signature
+  static const _ossSignature = 'ossSignature';
+
+  ///阿里oss dir
+  static const _ossDir = 'ossDir';
+
   static saveUserType(String userType) {
     _box.write(_userType, userType);
   }
@@ -180,6 +195,46 @@ class Store {
 
   static String readBrand() {
     return _box.read(_brand);
+  }
+
+  static saveOssAccessKeyId(String ossAccessKeyId) {
+    _box.write(_ossAccessKeyId, ossAccessKeyId);
+  }
+
+  static String readOssAccessKeyId() {
+    return _box.read(_ossAccessKeyId);
+  }
+
+  static saveOssEndpoint(String ossEndpoint) {
+    _box.write(_ossEndpoint, ossEndpoint);
+  }
+
+  static String readOssEndpoint() {
+    return _box.read(_ossEndpoint);
+  }
+
+  static saveOssPolicy(String ossPolicy) {
+    _box.write(_ossPolicy, ossPolicy);
+  }
+
+  static String readOssPolicy() {
+    return _box.read(_ossPolicy);
+  }
+
+  static saveOssSignature(String ossSignature) {
+    _box.write(_ossSignature, ossSignature);
+  }
+
+  static String readOssSignature() {
+    return _box.read(_ossSignature);
+  }
+
+  static saveOssDir(String ossDir) {
+    _box.write(_ossDir, ossDir);
+  }
+
+  static String readOssDir() {
+    return _box.read(_ossDir);
   }
 
   static removeToken() {

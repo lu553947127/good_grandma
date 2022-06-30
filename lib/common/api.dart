@@ -2,9 +2,9 @@
 class Api {
   static String baseUrl() {
     /// 正式服
-    // return 'https://haoapo.haoapochn.cn/';
+    return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    return 'http://172.167.40.141:1888';
+    // return 'http://172.167.40.141:1888';
   }
 
   /** 登录相关 **/
@@ -288,6 +288,9 @@ class Api {
   ///物料订单选择列表
   static const materialSelectList = "/api/hap-app/app/material/material_no_paging";
 
+  ///物料订单选择列表
+  static const materialSelectStockList = "/api/hap-app/app/material/material_no_paging/stock";
+
   ///物料订单添加
   static const materialOrderAdd = "/api/hap-app/app/materialRequisition/save";
 
@@ -305,6 +308,15 @@ class Api {
 
   ///获取预算
   static const materialBudget = "/api/hap-app/app/materialbudget/detail";
+
+  ///物料订单审批通过
+  static const materialApprove = "/api/hap-app/app/materialRequisition/approve";
+
+  ///物料订单驳回
+  static const materialReject = "/api/hap-app/app/materialRequisition/reject";
+
+  ///判断是否有新增权限，true有
+  static const materialAddAuth = "/api/hap-app/app/materialRequisition/addAuth";
 
 
   /** 审批申请 **/
@@ -542,4 +554,7 @@ class Api {
 
   ///根据经纬度查询当前地址
   static const findAddress = "/api/hap-app/app/sign/findAddress";
+
+  ///获取阿里oss配置信息
+  static const aliSignature = "/api/hap-resource/oss/endpoint/aliSignature";
 }

@@ -82,6 +82,7 @@ class _Body extends State<HomePage> {
     _controller.callRefresh();
     _getVersion();
     getPhoneBrand();
+    aliSignature();
   }
 
   @override
@@ -385,6 +386,7 @@ class _Body extends State<HomePage> {
     ///版本号
     String buildNumber = packageInfo.buildNumber;
     print('版本号---buildNumber----$buildNumber');
+    print('版本号---version----${packageInfo.version}');
     if (Platform.isAndroid) {
       Map<String, dynamic> map = {'type': 'android'};
       requestGet(Api.upgrade, param: map).then((val) async{
@@ -413,7 +415,7 @@ class _Body extends State<HomePage> {
               content: Text(content),
               actions: <Widget>[
                 TextButton(child: Text('确认', style: TextStyle(color: Color(0xFFC68D3E))), onPressed: (){
-                  Navigator.of(context).pop('ok');
+                  // Navigator.of(context).pop('ok');
                   _launchURL(url);
                 })
               ]
@@ -499,6 +501,20 @@ class _Body extends State<HomePage> {
       LogUtil.d('brand----${androidInfo.brand}');
       Store.saveBrand(androidInfo.brand);
     }
+  }
+
+  ///获取阿里oss配置信息
+  aliSignature(){
+    Map<String, dynamic> map = {'dir': 'android'};
+    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---aliSignature----$data');
+      Store.saveOssAccessKeyId(data['data']['accessId']);
+      Store.saveOssEndpoint(data['data']['host']);
+      Store.saveOssPolicy(data['data']['policy']);
+      Store.saveOssSignature(data['data']['signature']);
+      Store.saveOssDir(data['data']['dir']);
+    });
   }
 
   @override

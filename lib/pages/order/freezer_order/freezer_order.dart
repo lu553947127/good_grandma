@@ -10,6 +10,7 @@ import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_add.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_detail.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order_model.dart';
+import 'package:good_grandma/widgets/switch_type_title_widget.dart';
 import 'package:provider/provider.dart';
 
 ///冰柜订单页面
@@ -28,6 +29,13 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
   int _current = 1;
   int _pageSize = 10;
   List<Map> freezerOrderList = [];
+
+  List<Map> _listTitle = [
+    {'name': '驳回'},
+    {'name': '审核中'},
+    {'name': '已发货'}
+  ];
+  int _selIndex = 0;
 
   @override
   void initState() {
@@ -79,131 +87,139 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-            centerTitle: true,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.black),
-            title: Text("冰柜订单", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700))
-        ),
-        body: MyEasyRefreshSliverWidget(
-            controller: _controller,
-            scrollController: _scrollController,
-            dataCount: freezerOrderList.length,
-            onRefresh: _refresh,
-            onLoad: _onLoad,
-            slivers: [
-              SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return Container(
-                        margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
-                        padding: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(4),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                offset: Offset(2, 1),
-                                blurRadius: 1.5,
-                              )
-                            ]
-                        ),
-                        child: ListTile(
-                            title: Column(
-                                mainAxisSize:MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        appBar: AppBar(title: Text('冰柜订单')),
+        body: Column(
+          children: [
+            SwitchTypeTitleWidget(
+                backgroundColor: Colors.white,
+                selIndex: _selIndex,
+                list: _listTitle,
+                onTap: (index) {
+                  _selIndex = index;
+                  _controller.callRefresh();
+                }),
+            Expanded(
+              child: MyEasyRefreshSliverWidget(
+                  controller: _controller,
+                  scrollController: _scrollController,
+                  dataCount: freezerOrderList.length,
+                  onRefresh: _refresh,
+                  onLoad: _onLoad,
+                  slivers: [
+                    SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return Container(
+                              margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                              padding: const EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(4),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.03),
+                                      offset: Offset(2, 1),
+                                      blurRadius: 1.5,
+                                    )
+                                  ]
+                              ),
+                              child: ListTile(
+                                  title: Column(
+                                      mainAxisSize:MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                        Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Container(
-                                                width: 160,
-                                                child: Text(freezerOrderList[index]['customerName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                              Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      width: 160,
+                                                      child: Text(freezerOrderList[index]['customerName'], style: TextStyle(fontSize: 14, color: Color(0XFFE45C26))),
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Text(freezerOrderList[index]['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                                                  ]
                                               ),
-                                              SizedBox(height: 10),
-                                              Text(freezerOrderList[index]['createTime'], style: TextStyle(fontSize: 12, color: Color(0XFF959EB1)))
+                                              Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
+                                                  ),
+                                                  child: Text('${freezerOrderList[index]['statusName']}',
+                                                      style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
+                                              )
                                             ]
                                         ),
+                                        SizedBox(height: 10),
+                                        SizedBox(
+                                            width: MediaQuery.of(context).size.width,
+                                            height: 1,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
+                                            )
+                                        ),
+                                        SizedBox(height: 5),
                                         Container(
-                                            padding: EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
-                                            ),
-                                            child: Text('${freezerOrderList[index]['statusName']}',
-                                                style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
+                                            margin: EdgeInsets.only(top: 2),
+                                            child: Row(
+                                                children: [
+                                                  Text('联系人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                                  SizedBox(width: 10),
+                                                  Text(freezerOrderList[index]['linkName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                                ]
+                                            )
+                                        ),
+                                        Container(
+                                            margin: EdgeInsets.only(top: 2),
+                                            child: Row(
+                                                children: [
+                                                  Text('提单人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                                  SizedBox(width: 10),
+                                                  Text(freezerOrderList[index]['createUserName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                                ]
+                                            )
+                                        ),
+                                        Container(
+                                            margin: EdgeInsets.only(top: 2),
+                                            child: Row(
+                                                children: [
+                                                  Text('联系电话: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                                  SizedBox(width: 10),
+                                                  Text(freezerOrderList[index]['linkPhone'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
+                                                ]
+                                            )
+                                        ),
+                                        Container(
+                                            margin: EdgeInsets.only(top: 2),
+                                            child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text('收货地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
+                                                  SizedBox(width: 10),
+                                                  Container(
+                                                    width: 200,
+                                                    child: Text('${freezerOrderList[index]['provinceName']}${freezerOrderList[index]['cityName']}${freezerOrderList[index]['address']}',
+                                                        style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
+                                                  )
+                                                ]
+                                            )
                                         )
                                       ]
                                   ),
-                                  SizedBox(height: 10),
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 1,
-                                      child: DecoratedBox(
-                                        decoration: BoxDecoration(color: Color(0xFFEFEFF4)),
-                                      )
-                                  ),
-                                  SizedBox(height: 5),
-                                  Container(
-                                      margin: EdgeInsets.only(top: 2),
-                                      child: Row(
-                                          children: [
-                                            Text('联系人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                            SizedBox(width: 10),
-                                            Text(freezerOrderList[index]['linkName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                          ]
-                                      )
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(top: 2),
-                                      child: Row(
-                                          children: [
-                                            Text('提单人: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                            SizedBox(width: 10),
-                                            Text(freezerOrderList[index]['createUserName'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                          ]
-                                      )
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(top: 2),
-                                      child: Row(
-                                          children: [
-                                            Text('联系电话: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                            SizedBox(width: 10),
-                                            Text(freezerOrderList[index]['linkPhone'], style: TextStyle(fontSize: 12,color: Color(0XFF2F4058)))
-                                          ]
-                                      )
-                                  ),
-                                  Container(
-                                      margin: EdgeInsets.only(top: 2),
-                                      child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('收货地址: ',style: TextStyle(fontSize: 12,color: Color(0XFF959EB1))),
-                                            SizedBox(width: 10),
-                                            Container(
-                                              width: 200,
-                                              child: Text('${freezerOrderList[index]['provinceName']}${freezerOrderList[index]['cityName']}${freezerOrderList[index]['address']}',
-                                                  style: TextStyle(fontSize: 12, color: Color(0XFF2F4058))),
-                                            )
-                                          ]
-                                      )
-                                  )
-                                ]
-                            ),
-                            onTap: () async {
-                              bool needRefresh = await Navigator.push(context,
-                                  MaterialPageRoute(builder:(context)=> FreezerOrderDetail(data: freezerOrderList[index])));
-                              if(needRefresh != null && needRefresh){
-                                _controller.callRefresh();
-                              }
-                            }
-                        )
-                    );
-                  }, childCount: freezerOrderList.length)),
-            ]
+                                  onTap: () async {
+                                    bool needRefresh = await Navigator.push(context,
+                                        MaterialPageRoute(builder:(context)=> FreezerOrderDetail(data: freezerOrderList[index])));
+                                    if(needRefresh != null && needRefresh){
+                                      _controller.callRefresh();
+                                    }
+                                  }
+                              )
+                          );
+                        }, childCount: freezerOrderList.length)),
+                  ]
+              )
+            )
+          ]
         ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
@@ -239,7 +255,7 @@ class _FreezerOrderPageState extends State<FreezerOrderPage> {
   ///冰柜订单列表
   Future<void> _downloadData() async {
     try {
-      Map<String, dynamic> map = {'current': _current, 'size': _pageSize};
+      Map<String, dynamic> map = {'current': _current, 'size': _pageSize, 'status': _selIndex};
       final val = await requestGet(Api.freezerOrderList, param: map);
       var data = jsonDecode(val.toString());
       LogUtil.d('请求结果---freezerOrderList----$data');

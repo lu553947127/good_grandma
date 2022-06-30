@@ -84,7 +84,8 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
       'ipicture': images,
       'latitude': latitude,
       'longitude': longitude,
-      'address': address};
+      'address': address
+    };
 
     LogUtil.d('请求结果---customerVisitAdd----$map');
 
@@ -307,13 +308,7 @@ class _CustomerVisitAddState extends State<CustomerVisitAdd> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-          title: Text("客户拜访",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
-        ),
+        appBar: AppBar(title: Text('客户拜访')),
         body: SingleChildScrollView(
             child: Column(
                 children: [

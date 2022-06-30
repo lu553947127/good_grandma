@@ -42,10 +42,10 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
   @override
   Widget build(BuildContext context) {
 
-    _setTextStatus(status){
+    _setTextStatus(status, Map map){
       switch(status){
         case 1:
-          return '审核中';
+          return '${map['authName']}';
           break;
         case 2:
           return '审核通过';
@@ -57,10 +57,17 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
           return '驳回';
           break;
         case 5:
-          return '终止';
+          return '已终止';
           break;
         case 6:
-          return '发货';
+          if (map['ifsplit'] == 0){
+            return '已发货';
+          }else {
+            return '已发货（部分发货）';
+          }
+          break;
+        case 7:
+          return '未发货';
           break;
         default:
           return '无';
@@ -69,13 +76,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-            centerTitle: true,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.black),
-            title: Text("物料订单", style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700))
-        ),
+        appBar: AppBar(title: Text('物料订单')),
         body: MyEasyRefreshSliverWidget(
           controller: _controller,
           scrollController: _scrollController,
@@ -125,7 +126,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
                                           decoration: BoxDecoration(
                                             color: Color(0xFFF1E1E2), borderRadius: BorderRadius.circular(3),
                                           ),
-                                          child: Text(_setTextStatus(status),
+                                          child: Text(_setTextStatus(status, map),
                                               style: TextStyle(fontSize: 10, color: Color(0xFFDD0000)))
                                       )
                                     ]
@@ -184,7 +185,7 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
   Future<void> _refresh() async {
     _current = 1;
     await _downloadData();
-    _processList();
+    _materialAddAuth();
   }
 
   Future<void> _onLoad() async {
@@ -215,21 +216,13 @@ class _MaterialOrderPageState extends State<MaterialOrderPage> {
     }
   }
 
-  ///可发起的流程列表
-  Future<void> _processList() async{
-    Map<String, dynamic> map = {'category': '1451433477268877314', 'current': '1', 'size': '999'};
-    requestGet(Api.processList, param: map).then((val) async{
+  ///判断是否有新增权限
+  Future<void> _materialAddAuth() async{
+    Map<String, dynamic> map = {'id': '1539419776077631490'};
+    requestPost(Api.materialAddAuth, json: jsonEncode(map)).then((val) async{
       var data = json.decode(val.toString());
-      LogUtil.d('请求结果---processList----$data');
-      List<Map> processList = (data['data']['records'] as List).cast();
-      processList.forEach((element) {
-        String key = element['key'];
-        String key2 = 'fysq-scfy-';
-        if (key.contains(key2)){
-          newKey = element['key'];
-          isJurisdiction = true;
-        }
-      });
+      LogUtil.d('请求结果---materialAddAuth----$data');
+      isJurisdiction = data['data'];
       if (mounted) setState(() {});
     });
   }

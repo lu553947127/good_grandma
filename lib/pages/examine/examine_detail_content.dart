@@ -45,7 +45,7 @@ class ExamineDetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(variables['file'] != null){
+    if(variables['file'] != null && variables['file'].toString().isNotEmpty){
       fileList = (variables['file'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
@@ -92,7 +92,7 @@ class ExamineDetailContent extends StatelessWidget {
       }
     }
 
-    if(variables['biaodanfujian'] != null){
+    if(variables['biaodanfujian'] != null && variables['biaodanfujian'].toString().isNotEmpty){
       fileList = (variables['biaodanfujian'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
@@ -139,7 +139,7 @@ class ExamineDetailContent extends StatelessWidget {
       }
     }
 
-    if(variables['fujian'] != null){
+    if(variables['fujian'] != null && variables['fujian'].toString().isNotEmpty){
       fileList = (variables['fujian'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
@@ -186,7 +186,7 @@ class ExamineDetailContent extends StatelessWidget {
       }
     }
 
-    if(variables['1630552552652_12159'] != null){
+    if(variables['1630552552652_12159'] != null && variables['1630552552652_12159'].toString().isNotEmpty){
       fileList = (variables['1630552552652_12159'] as List).cast();
       LogUtil.d('fileList----$fileList');
       for (Map file in fileList) {
@@ -233,7 +233,7 @@ class ExamineDetailContent extends StatelessWidget {
       }
     }
 
-    if(variables['tupian'] != null){
+    if(variables['tupian'] != null && variables['tupian'].toString().isNotEmpty){
       imagesList = (variables['tupian'] as List).cast();
       LogUtil.d('tupian----$imagesList');
       for (Map file in imagesList) {
@@ -453,7 +453,7 @@ class ExamineDetailContent extends StatelessWidget {
                                               children: [
                                                 TextSpan(
                                                     text: '${taskFormList[index]['value']}'.isEmpty ? '暂无' :
-                                                    taskFormList[index]['name'] == '出差天数' ? '${formatNum(double.parse(taskFormList[index]['value']), 2)}' :
+                                                    taskFormList[index]['name'] == '出差天数' ? '${formatNum(double.parse(taskFormList[index]['value'].toString()), 2)}' :
                                                     '${taskFormList[index]['value']}',
                                                     style: const TextStyle(fontSize: 15, color: AppColors.FF2F4058))
                                               ]
