@@ -81,10 +81,30 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
+            child: Container(
+              margin: EdgeInsets.only(top: 4.0, bottom: 4.0),
+              height: 30,
+                decoration: new BoxDecoration(
+                    border: new Border.all(color: Color(0xFFEFEFF4), width: 0.6),
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.circular((5.0))
+                ),
+              child: Container(
+                  color: Color(0xFFFAFBFD),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(width: 240, margin: EdgeInsets.only(left: 5.0), child: Text('${file['label']}',
+                          style: TextStyle(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                      Container(margin: EdgeInsets.only(right: 5.0), child: Image.asset('assets/images/icon_upload_file.png',
+                          width: 15.0, height: 15.0))
+                    ]
+                  )
+              )
+            ),
             onTap: (){
               _launchURL(file['value']);
-            },
+            }
           ));
         }else {
           _views.add(Text('数据显示异常'));
@@ -128,7 +148,27 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
+            child: Container(
+                margin: EdgeInsets.only(top: 4.0, bottom: 4.0),
+                height: 30,
+                decoration: new BoxDecoration(
+                    border: new Border.all(color: Color(0xFFEFEFF4), width: 0.6),
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.circular((5.0))
+                ),
+                child: Container(
+                    color: Color(0xFFFAFBFD),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(width: 240, margin: EdgeInsets.only(left: 5.0), child: Text('${file['label']}',
+                              style: TextStyle(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                          Container(margin: EdgeInsets.only(right: 5.0), child: Image.asset('assets/images/icon_upload_file.png',
+                              width: 15.0, height: 15.0))
+                        ]
+                    )
+                )
+            ),
             onTap: (){
               _launchURL(file['value']);
             },
@@ -175,7 +215,27 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
+            child: Container(
+                margin: EdgeInsets.only(top: 4.0, bottom: 4.0),
+                height: 30,
+                decoration: new BoxDecoration(
+                    border: new Border.all(color: Color(0xFFEFEFF4), width: 0.6),
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.circular((5.0))
+                ),
+                child: Container(
+                    color: Color(0xFFFAFBFD),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(width: 240, margin: EdgeInsets.only(left: 5.0), child: Text('${file['label']}',
+                              style: TextStyle(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                          Container(margin: EdgeInsets.only(right: 5.0), child: Image.asset('assets/images/icon_upload_file.png',
+                              width: 15.0, height: 15.0))
+                        ]
+                    )
+                )
+            ),
             onTap: (){
               _launchURL(file['value']);
             },
@@ -222,7 +282,27 @@ class ExamineDetailContent extends StatelessWidget {
               }
           ) :
           InkWell(
-            child: Container(width: 240, child: Text(file['label'],  maxLines: 2)),
+            child: Container(
+                margin: EdgeInsets.only(top: 4.0, bottom: 4.0),
+                height: 30,
+                decoration: new BoxDecoration(
+                    border: new Border.all(color: Color(0xFFEFEFF4), width: 0.6),
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.circular((5.0))
+                ),
+                child: Container(
+                    color: Color(0xFFFAFBFD),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(width: 240, margin: EdgeInsets.only(left: 5.0), child: Text('${file['label']}',
+                              style: TextStyle(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                          Container(margin: EdgeInsets.only(right: 5.0), child: Image.asset('assets/images/icon_upload_file.png',
+                              width: 15.0, height: 15.0))
+                        ]
+                    )
+                )
+            ),
             onTap: (){
               _launchURL(file['value']);
             },

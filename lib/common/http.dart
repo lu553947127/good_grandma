@@ -299,9 +299,15 @@ Future getPutAliOssFile(url, File file) async{
       'file': await MultipartFile.fromFile(file.path),
     });
 
+    LogUtil.d('key:===$fileName');
+    LogUtil.d('OSSAccessKeyId:===${Store.readOssAccessKeyId()}');
+    LogUtil.d('sk:===y4yRa5tm1rYDOSwNQtoUh9Q9RJ0tfC');
+    LogUtil.d('encodePolicy:===${Store.readOssPolicy()}');
+    LogUtil.d('policy:===$encodePolicy');
+    LogUtil.d('Signature:===$signature');
+
     Dio dio = Dio();
     var response = await dio.post(Store.readOssEndpoint(), data: formData, onSendProgress: (int progress, int total){
-      LogUtil.d('total:===$progress===>$total');
       Future.delayed(Duration(milliseconds: 50)).then((value) {
         final currentProgress = (progress / total);
         EasyLoading.showProgress(
@@ -311,7 +317,7 @@ Future getPutAliOssFile(url, File file) async{
         if (currentProgress >= 1) {
           EasyLoading.dismiss();
         }
-        print("总进度==$total===当前的进度===$progress====百分比===${(currentProgress * 100).toStringAsFixed(0)}%====$currentProgress");
+        // print("总进度==$total===当前的进度===$progress====百分比===${(currentProgress * 100).toStringAsFixed(0)}%====$currentProgress");
       });
     });
 

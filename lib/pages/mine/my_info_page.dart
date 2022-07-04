@@ -78,14 +78,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                     ),
                                     trailing: Icon(Icons.chevron_right),
                                     onTap: () async {
-                                      showImageRange(
-                                          context: context,
-                                          callBack: (Map param){
-                                            _avatar = param['image'];
-                                            _updateUser(context);
-                                            setState(() {});
-                                          }
-                                      );
+                                      aliSignature();
                                     }
                                 ),
                                 divider,
@@ -222,6 +215,29 @@ class _MyInfoPageState extends State<MyInfoPage> {
       }else {
         showToast(data['msg']);
       }
+    });
+  }
+
+  ///获取阿里oss配置信息
+  aliSignature(){
+    Map<String, dynamic> map = {'dir': 'user'};
+    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---aliSignature----$data');
+      Store.saveOssAccessKeyId(data['data']['accessId']);
+      Store.saveOssEndpoint(data['data']['host']);
+      Store.saveOssPolicy(data['data']['policy']);
+      Store.saveOssSignature(data['data']['signature']);
+      Store.saveOssDir(data['data']['dir']);
+
+      showImageRange(
+          context: context,
+          callBack: (Map param){
+            _avatar = param['image'];
+            _updateUser(context);
+            setState(() {});
+          }
+      );
     });
   }
 

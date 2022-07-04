@@ -246,6 +246,11 @@ class Store {
     _box.remove(_userAvatar);
     _box.remove(_userType);
     _box.remove(_postType);
+    _box.remove(_ossAccessKeyId);
+    _box.remove(_ossEndpoint);
+    _box.remove(_ossPolicy);
+    _box.remove(_ossSignature);
+    _box.remove(_ossDir);
   }
 
   static removeAccount() {

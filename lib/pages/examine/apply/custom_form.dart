@@ -358,6 +358,13 @@ class _CustomFormViewState extends State<CustomFormView> {
                 )
               ]
             );
+          }else if (data['component'] == 'wf-upload'){
+            return OaPhotoWidget(
+                title: data['label'],
+                sizeHeight: 10,
+                url: data['action'],
+                timeSelectProvider: timeSelectProvider
+            );
           }else{
             return Container(
                 child: Text('无法显示未知动态组件')

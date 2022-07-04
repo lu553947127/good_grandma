@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,6 @@ class _Body extends State<HomePage> {
     _controller.callRefresh();
     _getVersion();
     getPhoneBrand();
-    aliSignature();
   }
 
   @override
@@ -501,20 +501,6 @@ class _Body extends State<HomePage> {
       LogUtil.d('brand----${androidInfo.brand}');
       Store.saveBrand(androidInfo.brand);
     }
-  }
-
-  ///获取阿里oss配置信息
-  aliSignature(){
-    Map<String, dynamic> map = {'dir': 'android'};
-    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---aliSignature----$data');
-      Store.saveOssAccessKeyId(data['data']['accessId']);
-      Store.saveOssEndpoint(data['data']['host']);
-      Store.saveOssPolicy(data['data']['policy']);
-      Store.saveOssSignature(data['data']['signature']);
-      Store.saveOssDir(data['data']['dir']);
-    });
   }
 
   @override

@@ -7,7 +7,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_luban/flutter_luban.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
+import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/pages/examine/model/time_select_provider.dart';
 import 'package:good_grandma/provider/image_provider.dart';
 import 'package:good_grandma/widgets/custom_camera.dart';
@@ -199,6 +201,29 @@ class _SelectImagesViewState extends State<SelectImagesView> {
         });
   }
 
+  ///获取阿里oss配置信息
+  aliSignature(){
+    Map<String, dynamic> map = {'dir': 'customer'};
+    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---aliSignature----$data');
+      Store.saveOssAccessKeyId(data['data']['accessId']);
+      Store.saveOssEndpoint(data['data']['host']);
+      Store.saveOssPolicy(data['data']['policy']);
+      Store.saveOssSignature(data['data']['signature']);
+      Store.saveOssDir(data['data']['dir']);
+
+      //show
+      final source = await _showBottomSheet();
+      //image
+      if (source == null) return;
+
+      final bool result = await _getImage(source);
+      if (!result) return;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -208,14 +233,7 @@ class _SelectImagesViewState extends State<SelectImagesView> {
         onTap: () async{
           ///关闭软键盘
           FocusScope.of(context).requestFocus(FocusNode());
-          //show
-          final source = await _showBottomSheet();
-          //image
-          if (source == null) return;
-
-          final bool result = await _getImage(source);
-          if (!result) return;
-          setState(() {});
+          aliSignature();
         },
       );
     }else{
@@ -357,15 +375,31 @@ class _WatermarkImageState extends State<WatermarkImage> {
         });
   }
 
+  ///获取阿里oss配置信息
+  aliSignature(){
+    Map<String, dynamic> map = {'dir': 'customer'};
+    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---aliSignature----$data');
+      Store.saveOssAccessKeyId(data['data']['accessId']);
+      Store.saveOssEndpoint(data['data']['host']);
+      Store.saveOssPolicy(data['data']['policy']);
+      Store.saveOssSignature(data['data']['signature']);
+      Store.saveOssDir(data['data']['dir']);
+
+      _showBottomSheet();
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if(widget.index == widget.imagesProvider.filePath.length){
       return GestureDetector(
         child: Image.asset('assets/images/icon_add_images.png', width: 192, height: 108),
         onTap: () async {
-          _showBottomSheet();
-          setState(() {});
-        },
+          aliSignature();
+        }
       );
     }else{
       return Container(

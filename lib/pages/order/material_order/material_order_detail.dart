@@ -14,6 +14,8 @@ import 'package:good_grandma/widgets/post_detail_group_title.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
+import 'material_order_approval.dart';
+
 ///物料订单详情
 class MaterialOrderDetail extends StatefulWidget {
   final dynamic data;
@@ -131,10 +133,16 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
             )
           ),
           SliverToBoxAdapter(
-            child: MarketingActivityMsgCell(title: '公司', value: '${widget.data['company']}'),
+            child: Container(
+              margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
+              child: MarketingActivityMsgCell(title: '公司', value: '${widget.data['company']}')
+            )
           ),
           SliverToBoxAdapter(
-            child: MarketingActivityMsgCell(title: '总价', value: '${widget.data['totalPrice']}'),
+            child: Container(
+              margin: EdgeInsets.only(left: 15.0, right: 15.0),
+              child: MarketingActivityMsgCell(title: '总价', value: '${widget.data['totalPrice']}')
+            )
           ),
           PostDetailGroupTitle(color: AppColors.FFC08A3F, name: '客户信息'),
           SliverList(
@@ -151,14 +159,14 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
                         MarketingActivityMsgCell(title: '经销商名称', value: materialDetailsList[index]['customerName']),
                         MarketingActivityMsgCell(title: '物料地址', value: materialDetailsList[index]['address']),
                         MarketingActivityMsgCell(title: '联系电话', value: materialDetailsList[index]['phone']),
-                        DetailGroupTitle(color: AppColors.FFC08A3F, name: '物料信息'),
+                        // DetailGroupTitle(color: AppColors.FFC08A3F, name: '物料信息'),
                         ListView.builder(
                             shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
                             physics:NeverScrollableScrollPhysics(),//禁止滚动
                             itemCount: materialDetails.length,
                             itemBuilder: (content, index){
                               return Container(
-                                  margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                                  // margin: EdgeInsets.only(left: 15.0, right: 15.0),
                                   child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -197,44 +205,18 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           SliverSafeArea(
               sliver: SliverToBoxAdapter(
                   child: Visibility(
-                      visible: widget.data['status'] == 1 && widget.data['approve'] == true,
+                      visible: widget.data['status'] == 1 && widget.data['approve'] == true ||
+                          widget.data['status'] == 4 && widget.data['approve'] == true,
                       child: SubmitBtn(
                           title: '审核',
                           onPressed: () async {
-                            AppUtil.showInputDialog(
-                                context: context,
-                                editingController: _editingController,
-                                focusNode: _focusNode,
-                                text: '',
-                                hintText: '请输入审批意见',
-                                keyboardType: TextInputType.text,
-                                callBack: (text) {
-                                  _materialApprove(context, '1', text);
-                                });
+                            bool needRefresh = await Navigator.push(context,
+                                MaterialPageRoute(builder:(context)=> MaterialOrderApproval(data: widget.data)));
+                            if(needRefresh != null && needRefresh){
+                              Navigator.pop(context, true);
+                            }
                           }
                       )
-                  )
-              )
-          ),
-          SliverSafeArea(
-              sliver: SliverToBoxAdapter(
-                  child: Visibility(
-                    visible: widget.data['status'] == 4 && widget.data['approve'] == true,
-                    child: SubmitBtn(
-                        title: '驳回',
-                        onPressed: () async {
-                          AppUtil.showInputDialog(
-                              context: context,
-                              editingController: _editingController,
-                              focusNode: _focusNode,
-                              text: '',
-                              hintText: '请输入审批意见',
-                              keyboardType: TextInputType.text,
-                              callBack: (text) {
-                                _materialApprove(context, '4', text);
-                              });
-                        }
-                    )
                   )
               )
           )
@@ -249,41 +231,6 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
     requestPost(Api.materialOrderWarehousing, formData: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---materialOrderWarehousing----$data');
-      if (data['code'] == 200){
-        showToast("成功");
-        Navigator.pop(context, true);
-      }else {
-        showToast(data['msg']);
-      }
-    });
-  }
-
-  ///审核
-  void _materialApprove(BuildContext context, status, opinion) async {
-    Map<String, dynamic> map = {
-      'id': widget.data['id'],
-      'status': status,
-      'opinion': opinion
-    };
-
-    requestPost(Api.materialApprove, formData: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---materialApprove----$data');
-      if (data['code'] == 200){
-        showToast("成功");
-        Navigator.pop(context, true);
-      }else {
-        showToast(data['msg']);
-      }
-    });
-  }
-
-  ///驳回
-  void _materialReject(BuildContext context) async {
-    Map<String, dynamic> map = {'id': widget.data['id']};
-    requestPost(Api.materialReject, formData: map).then((val) async{
-      var data = json.decode(val.toString());
-      LogUtil.d('请求结果---materialReject----$data');
       if (data['code'] == 200){
         showToast("成功");
         Navigator.pop(context, true);

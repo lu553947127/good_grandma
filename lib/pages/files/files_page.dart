@@ -106,12 +106,7 @@ class _FilesPageState extends State<FilesPage> {
           bool file = await _buildNewFileDialog(context);
           if (file != null) {
             if(file){//n上传文件
-              showImageRange(
-                  context: context,
-                  callBack: (Map param){
-                    _fileAddFile(context, param);
-                  }
-              );
+              aliSignature();
             }
             else{//n文件夹
               String needRefresh = await Navigator.push(context,
@@ -306,6 +301,27 @@ class _FilesPageState extends State<FilesPage> {
                 )
               );
             });
+  }
+
+  ///获取阿里oss配置信息
+  aliSignature(){
+    Map<String, dynamic> map = {'dir': 'file'};
+    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---aliSignature----$data');
+      Store.saveOssAccessKeyId(data['data']['accessId']);
+      Store.saveOssEndpoint(data['data']['host']);
+      Store.saveOssPolicy(data['data']['policy']);
+      Store.saveOssSignature(data['data']['signature']);
+      Store.saveOssDir(data['data']['dir']);
+
+      showImageRange(
+          context: context,
+          callBack: (Map param){
+            _fileAddFile(context, param);
+          }
+      );
+    });
   }
 
   @override

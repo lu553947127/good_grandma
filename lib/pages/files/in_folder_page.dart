@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/models/file_model.dart';
 import 'package:good_grandma/pages/files/add_folder_page.dart';
@@ -134,12 +135,7 @@ class _InFolderPageState extends State<InFolderPage> {
           bool file = await buildNewFileDialog(context);
           if (file != null) {
             if(file){//n上传文件
-              showImageRange(
-                  context: context,
-                  callBack: (Map param){
-                    _fileAddFile(context, param);
-                  }
-              );
+              aliSignature();
             }
             else{//n文件夹
               String needRefresh = await Navigator.push(context,
@@ -249,5 +245,26 @@ class _InFolderPageState extends State<InFolderPage> {
             ),
           );
         });
+  }
+
+  ///获取阿里oss配置信息
+  aliSignature(){
+    Map<String, dynamic> map = {'dir': 'file'};
+    requestPost(Api.aliSignature, json: jsonEncode(map)).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---aliSignature----$data');
+      Store.saveOssAccessKeyId(data['data']['accessId']);
+      Store.saveOssEndpoint(data['data']['host']);
+      Store.saveOssPolicy(data['data']['policy']);
+      Store.saveOssSignature(data['data']['signature']);
+      Store.saveOssDir(data['data']['dir']);
+
+      showImageRange(
+          context: context,
+          callBack: (Map param){
+            _fileAddFile(context, param);
+          }
+      );
+    });
   }
 }
