@@ -31,10 +31,12 @@ class MarketingOrderModel extends ChangeNotifier {
     _customerList.add(model);
     Map addData = new Map();
     addData['withGoods'] = model.withGoods;
+    addData['withGoodsNum'] = model.withGoodsNum;
     addData['deptId'] = model.deptId;
     addData['customerId'] = model.customerId;
     addData['address'] = model.address;
     addData['phone'] = model.phone;
+    addData['remarks'] = model.remarks;
     addData['materialDetails'] = model.materMapList;
 
     if (materMapList != null && materMapList.isNotEmpty){
@@ -59,10 +61,12 @@ class MarketingOrderModel extends ChangeNotifier {
     _customerList.setAll(index, [model]);
     Map addData = new Map();
     addData['withGoods'] = model.withGoods;
+    addData['withGoodsNum'] = model.withGoodsNum;
     addData['deptId'] = model.deptId;
     addData['customerId'] = model.customerId;
     addData['address'] = model.address;
     addData['phone'] = model.phone;
+    addData['remarks'] = model.remarks;
     addData['materialDetails'] = model.materMapList;
     customerMapList.setAll(index, [addData]);
     notifyListeners();
@@ -90,6 +94,9 @@ class CustomerModel {
   ///是否随货
   String withGoods;
 
+  ///随货订单编号
+  String withGoodsNum;
+
   ///区域id
   String deptId;
 
@@ -108,6 +115,9 @@ class CustomerModel {
   ///联系电话
   String phone;
 
+  ///备注
+  String remarks;
+
   ///物料列表
   List<MarketingModel> materList;
 
@@ -121,10 +131,12 @@ class CustomerModel {
     this.deptId = '',
     this.deptName = '',
     this.withGoods = '2',
+    this.withGoodsNum = '',
     this.customerId = '',
     this.customerName = '',
     this.address = '',
     this.phone = '',
+    this.remarks = '',
     this.surplus = 0
   }){
     materList = [];

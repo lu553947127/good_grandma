@@ -155,10 +155,12 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
                       children: [
                         SizedBox(height: 5),
                         MarketingActivityMsgCell(title: '是否随货', value: materialDetailsList[index]['withGoods'] == 1 ? '是' : '否'),
+                        MarketingActivityMsgCell(title: '随货订单编号', value: materialDetailsList[index]['withGoodsNum']),
                         MarketingActivityMsgCell(title: '区域', value: materialDetailsList[index]['deptName']),
                         MarketingActivityMsgCell(title: '经销商名称', value: materialDetailsList[index]['customerName']),
                         MarketingActivityMsgCell(title: '物料地址', value: materialDetailsList[index]['address']),
                         MarketingActivityMsgCell(title: '联系电话', value: materialDetailsList[index]['phone']),
+                        MarketingActivityMsgCell(title: '备注', value: materialDetailsList[index]['remarks']),
                         // DetailGroupTitle(color: AppColors.FFC08A3F, name: '物料信息'),
                         ListView.builder(
                             shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
@@ -187,7 +189,9 @@ class _MaterialOrderDetailState extends State<MaterialOrderDetail> {
           SliverVisibility(
             visible: widget.data['status'] == 1 && widget.data['opinion'] != null && widget.data['opinion'].toString().isNotEmpty ||
                 widget.data['status'] == 4 && widget.data['opinion'].toString().isNotEmpty,
-            sliver: SliverToBoxAdapter(child: MarketingActivityMsgCell(title: '审批意见', value: '${widget.data['opinion']}')),
+            sliver: SliverToBoxAdapter(child: Container(margin: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
+              child: MarketingActivityMsgCell(title: '审批意见', value: '${widget.data['opinion']}')
+            )),
           ),
           SliverSafeArea(
               sliver: SliverToBoxAdapter(

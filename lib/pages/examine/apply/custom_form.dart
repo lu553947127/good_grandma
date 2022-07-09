@@ -313,8 +313,7 @@ class _CustomFormViewState extends State<CustomFormView> {
           );
           break;
         default:
-          LogUtil.d('addData----${data['prop']}');
-          if(data['prop'] == 'feiyongshenqing'){
+          if(data['component'] == 'wf-apply-select'){
             return Column(
               children: [
                 Container(
@@ -322,10 +321,10 @@ class _CustomFormViewState extends State<CustomFormView> {
                     height: 60,
                     color: Colors.white,
                     child: ListTile(
-                      title: Text('请选择费用申请', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+                      title: Text('请选择${data['label']}', style: TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                       trailing: IconButton(
                           onPressed: () async {
-                            Map select = await showSelectCostList(context, Api.feeApplyPage, '请选择费用申请', 'id', data['params']['type']);
+                            Map select = await showSelectCostList(context, Api.feeApplyPage, '请选择${data['label']}', 'id', data['params']['type']);
                             timeSelectProvider.addCostStringModel(select['id']);
                           },
                           icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),

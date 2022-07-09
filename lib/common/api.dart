@@ -303,6 +303,9 @@ class Api {
   ///选择经销商带参数
   static const deptIdUser = "/api/hap-app/app/user/deptIdUser";
 
+  ///选择物料经销商带参数
+  static const marketingDeptIdUser = "/api/hap-app/app/user/marketingUser";
+
   ///选择公司
   static const materialCompany = "/api/hap-app/app/subsidiarycorporation/allList";
 
@@ -317,6 +320,9 @@ class Api {
 
   ///判断是否有新增权限，true有
   static const materialAddAuth = "/api/hap-app/app/materialRequisition/addAuth";
+
+  ///物料订单获取下级区域列表
+  static const deptNextMarketingList = "/api/hap-app/app/system/getMarketingDept";
 
 
   /** 审批申请 **/

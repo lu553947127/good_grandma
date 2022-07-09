@@ -355,11 +355,13 @@ class _SelectCostPageState extends State<SelectCostPage> {
                                         subtitle: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text('流程：${model['processDefinitionName']}'),
-                                            Text('申请时间：${model['createTime']}'),
-                                            // Text('说明：${model['shuoming']}'),
-                                            Text('金额：${model['money']}')
-                                          ],
+                                            Visibility(visible: model['processDefinitionName'] != null, child: Text('流程：${model['processDefinitionName']}')),
+                                            Visibility(visible: model['createTime'] != null, child: Text('申请时间：${model['createTime']}')),
+                                            Visibility(visible: model['chuchaishiyou'] != null, child: Text('出差事由：${model['chuchaishiyou']}')),
+                                            Visibility(visible: model['chuchaitianshu'] != null, child: Text('出差天数：${model['chuchaitianshu']}')),
+                                            Visibility(visible: model['money'] != null, child: Text('金额：${model['money']}')),
+                                            Visibility(visible: model['shuoming'] != null, child: Text('说明：${model['shuoming']}'))
+                                          ]
                                         ),
                                         onTap: () => Navigator.pop(context, model)
                                     ),

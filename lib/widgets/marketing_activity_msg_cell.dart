@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+
 ///灰色标题 黑色副标题 白色背景和底部下划线的cell
 class MarketingActivityMsgCell extends StatelessWidget {
   const MarketingActivityMsgCell({
@@ -25,9 +26,9 @@ class MarketingActivityMsgCell extends StatelessWidget {
                 style: const TextStyle(fontSize: 14.0)),
           ),
           const Divider(
-              color: AppColors.FFEFEFF4, thickness: 1, height: 1,indent: 10.0,endIndent: 10.0),
-        ],
-      ),
+              color: AppColors.FFEFEFF4, height: 1),
+        ]
+      )
     );
   }
 }

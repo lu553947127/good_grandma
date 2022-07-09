@@ -33,13 +33,12 @@ class _SelectListFormPageState extends State<SelectListFormPage> {
   ///区域下级列表
   _deptNextList(parentId){
     Map<String, dynamic> map = {'parentId': parentId};
-    requestGet(Api.deptNextList, param: map).then((val) async{
+    requestGet(widget.type == 'material' ? Api.deptNextMarketingList : Api.deptNextList, param: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---deptNextList----$data');
-      setState(() {
-        treeList = (data['data'] as List).cast();
-        deptId = parentId;
-      });
+      deptId = parentId;
+      treeList = (data['data'] as List).cast();
+      if (mounted) setState(() {});
     });
   }
 
@@ -57,12 +56,7 @@ class _SelectListFormPageState extends State<SelectListFormPage> {
   Widget build(BuildContext context) {
     SelectTreeProvider selectTreeProvider = Provider.of<SelectTreeProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text('请选择区域', style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+      appBar: AppBar(title: Text('请选择区域'),
         actions: [
           TextButton(
               child: Text("确定", style: TextStyle(fontSize: 14, color: Color(0xFFC08A3F))),
@@ -101,71 +95,62 @@ class _SelectListFormPageState extends State<SelectListFormPage> {
           )
         ],
       ),
-      body: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              child: Row(
-                  children: [
-                    Text('选择区域：', style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
-                    Container(
-                      width: 260,
-                      height: 30,
-                      child: ListView.builder(
-                          shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
-                          scrollDirection: Axis.horizontal,
-                          itemCount: selectTreeProvider.horizontalList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: index == 0 ? Color(0xFFF1EEEA) : Color(0xFFEEEFF2),
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                  child: Text(selectTreeProvider.horizontalList[index]['name'], style: TextStyle(fontSize: 15,
-                                      color: index == 0 ? Color(0xFFC08A3F) : Color(0xFF999999))),
-                                ),
-                                onTap: (){
-                                  if (index != 0){
-                                    return;
-                                  }
-                                  _deptNextList(selectTreeProvider.horizontalList[index]['id']);
-                                  selectTreeProvider.addDataChild(
-                                      widget.type == '全国' ? parentId : Store.readDeptId(),
-                                      widget.type == '全国' ? deptName : Store.readDeptName(), 0);
-                                }
-                            );
-                          }
-                      )
-                    )
-                  ]
-              ),
-            ),
-            treeList.length > 0 ?
-            Container(
-              height: 500,
-              child: ListView.builder(
-                  itemCount: treeList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                        title: Center(
-                          child: Text(treeList[index]['deptName'], style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
-                        ),
-                        onTap: (){
-                          _deptNextList(treeList[index]['id']);
-                          selectTreeProvider.addData(treeList[index]['id'], treeList[index]['deptName'], treeList[index]['deptCategory']);
-                        }
-                    );
-                  }
-              ),
-            ) :
-            Container(
-                margin: EdgeInsets.all(40),
-                child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
-            )
-          ]
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+              child: Container(
+                  margin: EdgeInsets.all(10),
+                  height: 30.0,
+                  child: ListView.builder(
+                      shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
+                      scrollDirection: Axis.horizontal,
+                      itemCount: selectTreeProvider.horizontalList.length,
+                      itemBuilder: (context, index) {
+                        Map model = selectTreeProvider.horizontalList[index];
+                        return InkWell(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: index == 0 ? Color(0xFFF1EEEA) : Color(0xFFEEEFF2),
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                              child: Text(model['name'], style: TextStyle(fontSize: 15,
+                                  color: index == 0 ? Color(0xFFC08A3F) : Color(0xFF999999))),
+                            ),
+                            onTap: (){
+                              if (index != 0){
+                                return;
+                              }
+                              _deptNextList(model['id']);
+                              selectTreeProvider.addDataChild(
+                                  widget.type == '全国' ? parentId : Store.readDeptId(),
+                                  widget.type == '全国' ? deptName : Store.readDeptName(), 0);
+                            }
+                        );
+                      }
+                  )
+              )
+          ),
+          treeList.length > 0 ?
+          SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                Map model = treeList[index];
+                return ListTile(
+                    title: Center(
+                      child: Text(model['deptName'], style: TextStyle(fontSize: 15, color: Color(0XFF2F4058))),
+                    ),
+                    onTap: (){
+                      _deptNextList(model['id']);
+                      selectTreeProvider.addData(model['id'], model['deptName'], model['deptCategory']);
+                    }
+                );
+              }, childCount: treeList.length)):
+          SliverToBoxAdapter(child: Container(
+              margin: EdgeInsets.all(40),
+              child: Image.asset('assets/images/icon_empty_images.png', width: 150, height: 150)
+          ))
+        ]
       )
     );
   }

@@ -136,12 +136,12 @@ class _AmountDetailsState extends State<AmountDetails> {
                                   )
                                 ]
                             )
-                        ),
-                      ],
-                    ),
+                        )
+                      ]
+                    )
                   );
                 }, childCount: amountLogs.length)),
-          ],
+          ]
         )
     );
   }

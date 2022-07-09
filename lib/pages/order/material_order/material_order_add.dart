@@ -27,9 +27,13 @@ class MaterialOrderAddPage extends StatefulWidget {
 class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   final TextEditingController _editingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  bool _isEdit = false;
 
+  ///是否加载编辑数据
+  bool _isEdit = false;
+  ///标题
   String title = '新增物料订单';
+  ///是否加载客户信息
+  bool isCustomer = false;
 
   ///编辑物料订单数据回显
   _materialEdit(MarketingOrderModel marketingOrderModel){
@@ -41,12 +45,14 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
       List<Map> materialDetails = (element['materialDetails'] as List).cast();
       marketingOrderModel.addCustomerModel(CustomerModel(
           withGoods: element['withGoods'].toString(),
+          withGoodsNum: element['withGoodsNum'],
           deptId: element['deptId'],
           deptName: element['deptName'],
           customerId: element['customerId'],
           customerName: element['customerName'],
           address: element['address'],
-          phone: element['phone']
+          phone: element['phone'],
+          remarks: element['remarks']
       ), materialDetails);
     });
   }
@@ -54,9 +60,18 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
   @override
   Widget build(BuildContext context) {
     final MarketingOrderModel marketingOrderModel = Provider.of<MarketingOrderModel>(context);
+
+    ///编辑数据初始化
     if (_isEdit == false && widget.id != ''){
       _materialEdit(marketingOrderModel);
     }
+
+    ///添加客户数据初始化
+    if (isCustomer == false && widget.id.isEmpty){
+      isCustomer = true;
+      marketingOrderModel.addCustomerModel(CustomerModel(), null);
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: CustomScrollView(
@@ -73,28 +88,27 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                 }
             )
           ),
-          SliverToBoxAdapter(
-              child: Container(
-                  height: 60,
-                  color: Colors.white,
-                  child: ListTile(
-                    title: const Text('请添加客户信息',
-                        style:
-                        TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
-                    trailing: IconButton(
-                        onPressed: () {
-                          marketingOrderModel.addCustomerModel(CustomerModel(), null);
-                        },
-                        icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
-                  )
-              )
-          ),
+          // SliverToBoxAdapter(
+          //     child: Container(
+          //         height: 60,
+          //         color: Colors.white,
+          //         child: ListTile(
+          //           title: const Text('请添加客户信息',
+          //               style:
+          //               TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
+          //           trailing: IconButton(
+          //               onPressed: () {
+          //                 marketingOrderModel.addCustomerModel(CustomerModel(), null);
+          //               },
+          //               icon: Icon(Icons.add_circle, color: AppColors.FFC68D3E)),
+          //         )
+          //     )
+          // ),
           SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 CustomerModel model = marketingOrderModel.customerList[index];
                 return Column(
                     children: [
-                      SizedBox(height: index == 0 ? 1 : 10),
                       Container(
                           height: 60,
                           color: Colors.white,
@@ -102,7 +116,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text('是否随货',style: TextStyle(fontSize: 14,color: Color(0XFF333333))),
+                                Text('是否随货', style: TextStyle(fontSize: 16.0)),
                                 Checkbox(
                                     value: model.withGoods == '1',
                                     activeColor: Color(0xFFC68D3E),
@@ -111,11 +125,33 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                                         model.withGoods = '1';
                                       }else{
                                         model.withGoods = '2';
+                                        model.withGoodsNum = '';
                                       }
                                       marketingOrderModel.editCustomerModelWith(index, model);
                                     }
                                 )
                               ]
+                          )
+                      ),
+                      const Divider(color: AppColors.FFF4F5F8, thickness: 1, height: 1),
+                      Visibility(
+                          visible: model.withGoods == '1',
+                          child: ActivityAddTextCell(
+                              title: '随货订单编号',
+                              hintText: '请输入随货订单编号',
+                              value: model.withGoodsNum,
+                              trailing: null,
+                              onTap: () => AppUtil.showInputDialog(
+                                  context: context,
+                                  editingController: _editingController,
+                                  focusNode: _focusNode,
+                                  text: model.withGoodsNum,
+                                  hintText: '请输入随货订单编号',
+                                  keyboardType: TextInputType.text,
+                                  callBack: (text) {
+                                    model.withGoodsNum = text;
+                                    marketingOrderModel.editCustomerModelWith(index, model);
+                                  })
                           )
                       ),
                       ActivityAddTextCell(
@@ -124,7 +160,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                           value: model.deptName,
                           trailing: Icon(Icons.chevron_right),
                           onTap: () async {
-                            Map area = await showSelectTreeList(context, '');
+                            Map area = await showSelectTreeList(context, 'material');
                             model.deptId = area['deptId'];
                             model.deptName = area['areaName'];
                             marketingOrderModel.editCustomerModelWith(index, model);
@@ -141,7 +177,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                               return;
                             }
                             Map<String, dynamic> map = {'deptId': model.deptId, 'type': 'material'};
-                            Map select = await showSelectListParameter(context, Api.deptIdUser, '请选择经销商', 'corporateName', map);
+                            Map select = await showSelectListParameter(context, Api.marketingDeptIdUser, '请选择经销商', 'corporateName', map);
                             model.customerId = select['id'];
                             model.customerName = select['corporateName'];
                             model.address = select['address'];
@@ -182,6 +218,23 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                                 marketingOrderModel.editCustomerModelWith(index, model);
                               })
                       ),
+                      ActivityAddTextCell(
+                          title: '备注',
+                          hintText: '请输备注',
+                          value: model.remarks,
+                          trailing: null,
+                          onTap: () => AppUtil.showInputDialog(
+                              context: context,
+                              editingController: _editingController,
+                              focusNode: _focusNode,
+                              text: model.remarks,
+                              hintText: '请输备注',
+                              keyboardType: TextInputType.text,
+                              callBack: (text) {
+                                model.remarks = text;
+                                marketingOrderModel.editCustomerModelWith(index, model);
+                              })
+                      ),
                       Container(
                           height: 60,
                           color: Colors.white,
@@ -204,7 +257,7 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                           itemBuilder: (content, index){
                             MarketingModel marketingModel = model.materList[index];
                             return Container(
-                                margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                                // margin: EdgeInsets.only(left: 15.0, right: 15.0),
                                 child: Column(
                                     children: [
                                       SizedBox(height: index == 0 ? 1 : 10),
@@ -275,17 +328,17 @@ class _MaterialOrderAddPageState extends State<MaterialOrderAddPage> {
                             );
                           }
                       ),
-                      Container(
-                          width: double.infinity,
-                          color: Colors.white,
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                              onPressed: (){
-                                marketingOrderModel.deleteCustomerModelWith(index);
-                              },
-                              icon: Icon(Icons.delete, color: AppColors.FFDD0000)
-                          )
-                      )
+                      // Container(
+                      //     width: double.infinity,
+                      //     color: Colors.white,
+                      //     alignment: Alignment.centerRight,
+                      //     child: IconButton(
+                      //         onPressed: (){
+                      //           marketingOrderModel.deleteCustomerModelWith(index);
+                      //         },
+                      //         icon: Icon(Icons.delete, color: AppColors.FFDD0000)
+                      //     )
+                      // )
                     ]
                 );
               }, childCount: marketingOrderModel.customerList.length)),
