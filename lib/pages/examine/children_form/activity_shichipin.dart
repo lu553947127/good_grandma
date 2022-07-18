@@ -92,7 +92,7 @@ class _shichipinFromState extends State<shichipinFrom> {
                   ],
                   callBack: (text) {
                     if (sampleModel.materialId == ''){
-                      EasyLoading.showToast('请先选择试吃品，再输入数量哦');
+                      EasyLoading.showToast('请先选择体验装，再输入数量哦');
                       return;
                     }
                     sampleModel.costCash = (double.parse(text) * sampleModel.unitPrice);

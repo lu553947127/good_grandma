@@ -5,12 +5,14 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
 import 'package:good_grandma/common/colors.dart';
 import 'package:good_grandma/common/http.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/mine/feedback_page.dart';
 import 'package:good_grandma/pages/mine/invoice.dart';
+import 'package:good_grandma/pages/mine/notice.dart';
 import 'package:good_grandma/pages/mine/receiving_address.dart';
 import 'package:good_grandma/pages/mine/set_up_page.dart';
 import 'package:good_grandma/pages/open_account/open_account_page.dart';
@@ -33,6 +35,7 @@ class _MinePageState extends State<MinePage> {
     {'image': 'assets/images/mine_feedback.png', 'name': '意见反馈'},
     {'image': 'assets/images/mine_address.png', 'name': '收货地址'},
     {'image': 'assets/images/mine_invoice.png', 'name': '发票管理'},
+    {'image': 'assets/images/mine_notice.png', 'name': '通知公告审批'}
   ];
   String _local = '';
   String _type = '';
@@ -166,7 +169,7 @@ class _MinePageState extends State<MinePage> {
     try {
       Map<String, dynamic> map = {'userId': userId};
       final val = await requestGet(Api.getUserInfoById,param: map);
-      // LogUtil.d('getUserInfoById value = $val');
+      LogUtil.d('getUserInfoById value = $val');
       Map result = jsonDecode(val.toString());
       Map data = result['data'];
       _local = data['deptName'] ?? '';
@@ -180,6 +183,12 @@ class _MinePageState extends State<MinePage> {
       _userName = data['name'] ?? '';
       if(Store.readNickName() != _userName)
         Store.saveNickName(_userName);
+      if (data['auditNotice'] == true){
+        _list.removeWhere((map) => map['name'] == '通知公告审批');
+        _list.add({'image': 'assets/images/mine_notice.png', 'name': '通知公告审批'});
+      }else {
+        _list.removeWhere((map) => map['name'] == '通知公告审批');
+      }
       _controller.finishRefresh(success: true);
       if (mounted) setState(() {});
     } catch (error) {
@@ -230,6 +239,10 @@ class _MinePageState extends State<MinePage> {
       case 4://发票管理
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => InvoicePage(userId: '')));
+        break;
+      case 5://通知公告审批
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => NoticeExamine()));
         break;
     }
   }

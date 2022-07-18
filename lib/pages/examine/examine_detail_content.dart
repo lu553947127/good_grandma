@@ -439,10 +439,10 @@ class ExamineDetailContent extends StatelessWidget {
 
       for(int i=0; i < taskFormList.length; i++) {
 
-        if (taskFormList[i]['name'] == '试吃品'){
+        if (taskFormList[i]['name'] == '体验装'){
           taskFormList.removeAt(i);
         }
-        if (taskFormList[i]['name'] == '试吃品(箱)/数量'){
+        if (taskFormList[i]['name'] == '体验装(箱)/数量'){
           taskFormList.removeAt(i);
         }
         if (taskFormList[i]['name'] == '现金(元)'){
@@ -524,7 +524,7 @@ class ExamineDetailContent extends StatelessWidget {
                                               taskFormList[index]['name'] == '出差明细' ||
                                               taskFormList[index]['name'] == '图片' ||
                                               taskFormList[index]['name'] == '出差日程' ||
-                                              taskFormList[index]['name'] == '试吃品' ||
+                                              taskFormList[index]['name'] == '体验装' ||
                                               taskFormList[index]['name'] == '费用'?
                                           true : false,
                                           child: Text.rich(TextSpan(
@@ -564,7 +564,7 @@ class ExamineDetailContent extends StatelessWidget {
                                           child: ExamineDetailContentForm(mapList: chuchairichengList, name: taskFormList[index]['name'])
                                       ),
                                       Offstage(
-                                          offstage: taskFormList[index]['name'] == '试吃品' ? false : true,
+                                          offstage: taskFormList[index]['name'] == '体验装' ? false : true,
                                           child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
@@ -580,8 +580,8 @@ class ExamineDetailContent extends StatelessWidget {
                                                           return Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
-                                                              Text.rich(TextSpan(text: '试吃品   ', children: [TextSpan(text: '${sampleList[index]['materialName']}')])),
-                                                              Text.rich(TextSpan(text: '试吃品(箱)/数量   ', children: [TextSpan(text: '${sampleList[index]['sample']}')])),
+                                                              Text.rich(TextSpan(text: '体验装   ', children: [TextSpan(text: '${sampleList[index]['materialName']}')])),
+                                                              Text.rich(TextSpan(text: '体验装(箱)/数量   ', children: [TextSpan(text: '${sampleList[index]['sample']}')])),
                                                               Text.rich(TextSpan(text: '现金(元)   ', children: [TextSpan(text: '${sampleList[index]['costCash']}')])),
                                                               Text.rich(TextSpan(text: '是否随货   ', children: [TextSpan(text: sampleList[index]['withGoods'] == 1 ? '是' : '否')])),
                                                             ]

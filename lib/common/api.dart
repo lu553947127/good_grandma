@@ -45,6 +45,15 @@ class Api {
   ///消息已读
   static const settingRead = "/api/hap-app/app/notice/settingRead";
 
+  ///通知公告审批列表
+  static const auditNoticeList = "/api/hap-app/app/notice/auditNoticeList";
+
+  ///通知公告审批
+  static const auditNoticeApprove = "/api/hap-app/app/notice/approve";
+
+  ///通知公告驳回
+  static const auditNoticeReject = "/api/hap-app/app/notice/reject";
+
 
   /** 拜访计划相关 **/
 
@@ -323,6 +332,9 @@ class Api {
 
   ///物料订单获取下级区域列表
   static const deptNextMarketingList = "/api/hap-app/app/system/getMarketingDept";
+
+  ///物料订单获取订单状态列表
+  static const materialGetStatusList = "/api/hap-app/app/materialRequisition/getStatusList";
 
 
   /** 审批申请 **/

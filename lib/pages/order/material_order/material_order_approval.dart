@@ -12,7 +12,9 @@ import 'package:good_grandma/widgets/submit_btn.dart';
 ///物料订单审批页面
 class MaterialOrderApproval extends StatefulWidget {
   final dynamic data;
-  const MaterialOrderApproval({Key key, this.data}) : super(key: key);
+  final String type;
+  final String id;
+  const MaterialOrderApproval({Key key, this.data, this.type = '', this.id = ''}) : super(key: key);
 
   @override
   State<MaterialOrderApproval> createState() => _MaterialOrderApprovalState();
@@ -30,7 +32,7 @@ class _MaterialOrderApprovalState extends State<MaterialOrderApproval> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('物料订单审核')),
+      appBar: AppBar(title: Text(widget.type.isEmpty ? '物料订单审核' : '公告审批')),
       body: Column(
         children: [
           Container(
@@ -97,7 +99,11 @@ class _MaterialOrderApprovalState extends State<MaterialOrderApproval> {
           SubmitBtn(
               title: '提  交',
               onPressed: () {
-                _materialApprove(context);
+                if (widget.type.isEmpty){
+                  _materialApprove(context);
+                }else {
+                  _noticeApprove(context);
+                }
               }
           )
         ],
@@ -105,7 +111,7 @@ class _MaterialOrderApprovalState extends State<MaterialOrderApproval> {
     );
   }
 
-  ///审核
+  ///物料订单审核
   void _materialApprove(BuildContext context) async {
     if (opinion.isEmpty){
       showToast('审核意见不能为空');
@@ -121,6 +127,37 @@ class _MaterialOrderApprovalState extends State<MaterialOrderApproval> {
     requestPost(Api.materialApprove, formData: map).then((val) async{
       var data = json.decode(val.toString());
       LogUtil.d('请求结果---materialApprove----$data');
+      if (data['code'] == 200){
+        showToast('成功');
+        Navigator.pop(context, true);
+      }else {
+        showToast(data['msg']);
+      }
+    });
+  }
+
+  ///通知公告审核
+  void _noticeApprove(BuildContext context) async {
+    if (status == 4 && opinion.isEmpty){
+      showToast('驳回意见不能为空');
+      return;
+    }
+
+    String url = '';
+    if (status == 1){
+      url = Api.auditNoticeApprove;
+    }else {
+      url = Api.auditNoticeReject;
+    }
+
+    Map<String, dynamic> map = {
+      'id': widget.id,
+      'opinion': opinion
+    };
+
+    requestPost(url, formData: map).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---noticeApprove----$data');
       if (data['code'] == 200){
         showToast('成功');
         Navigator.pop(context, true);

@@ -6,12 +6,16 @@ import 'package:good_grandma/common/http.dart';
 import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/msg_list_model.dart';
+import 'package:good_grandma/pages/order/material_order/material_order_approval.dart';
 import 'package:good_grandma/widgets/msg_detail_cell_content.dart';
 import 'package:good_grandma/widgets/submit_btn.dart';
 import 'package:provider/provider.dart';
 
 ///消息详情
 class MsgDetailPage extends StatefulWidget {
+  final String type;
+  const MsgDetailPage({Key key, this.type = ''}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _Body();
 }
@@ -22,7 +26,7 @@ class _Body extends State<MsgDetailPage> {
   Widget build(BuildContext context) {
     final MsgListModel model = Provider.of<MsgListModel>(context);
     return Scaffold(
-      appBar: AppBar(title: Text('消息详情')),
+      appBar: AppBar(title: Text(widget.type.isEmpty ? '消息详情' : '公告审批详情')),
       body: Scrollbar(
         child: SingleChildScrollView(
           child: SafeArea(
@@ -66,9 +70,17 @@ class _Body extends State<MsgDetailPage> {
                 Visibility(
                   visible: !model.read,
                   child: SubmitBtn(
-                      title: '立即签收',
-                      onPressed: () {
-                        _setReadRequest(context, model);
+                      title: widget.type.isEmpty ? '立即签收' : '审批',
+                      onPressed: () async {
+                        if (widget.type.isEmpty){
+                          _setReadRequest(context, model);
+                        }else {
+                          bool needRefresh = await Navigator.push(context,
+                              MaterialPageRoute(builder:(context)=> MaterialOrderApproval(type: 'examine', id: model.id)));
+                          if(needRefresh != null && needRefresh){
+                            Navigator.pop(context, true);
+                          }
+                        }
                       }
                   )
                 )

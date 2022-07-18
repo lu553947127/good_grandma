@@ -178,7 +178,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
               ),
               SliverToBoxAdapter(
                 child: ListTile(
-                    title: const Text('试吃品',
+                    title: const Text('体验装',
                         style: TextStyle(
                             color: AppColors.FF959EB1, fontSize: 12.0))),
               ),
@@ -187,7 +187,7 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                   height: 60,
                   color: Colors.white,
                   child: ListTile(
-                    title: const Text('请添加试吃品',
+                    title: const Text('请添加体验装',
                         style:
                         TextStyle(color: AppColors.FF070E28, fontSize: 15.0)),
                     trailing: IconButton(
@@ -220,8 +220,8 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
                             }
                         ),
                         ActivityAddTextCell(
-                            title: sampleModel.newQuantity == 0 ? '试吃品(箱)/数量': '试吃品(箱)/数量(${sampleModel.newQuantity})',
-                            hintText: '请输入试吃品(箱)/数量',
+                            title: sampleModel.newQuantity == 0 ? '体验装(箱)/数量': '体验装(箱)/数量(${sampleModel.newQuantity})',
+                            hintText: '请输入体验装(箱)/数量',
                             value: sampleModel.sample.toString(),
                             trailing: null,
                             onTap: () => sampleModel.newQuantity == 0 ? EasyLoading.showToast('请先选择物料后再输入哦') :
@@ -433,13 +433,13 @@ class _AddMarketingActivityPageState extends State<AddMarketingActivityPage> {
     }
 
     if (activityModel.sampleList.length == 0){
-      EasyLoading.showToast('试吃品不能为空');
+      EasyLoading.showToast('体验装不能为空');
       return;
     }
 
     activityModel.sampleList.forEach((element) {
       if (element.materialAreaId == ''){
-        EasyLoading.showToast('试吃品物料名称不能为空');
+        EasyLoading.showToast('体验装物料名称不能为空');
         return;
       }
     });

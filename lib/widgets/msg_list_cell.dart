@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 ///消息列表cell样式，也用于规章文件
 class MsgListCell extends StatelessWidget {
   final VoidCallback cellOnTap;
-  MsgListCell({Key key, @required this.cellOnTap}) : super(key: key);
+  final String type;
+  MsgListCell({Key key, @required this.cellOnTap, this.type = ''}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final MsgListModel model = Provider.of<MsgListModel>(context);
@@ -70,7 +71,7 @@ class MsgListCell extends StatelessWidget {
                               ]),
                           child: Center(
                             child: Text(
-                              model.read ? '已读' : '未读',
+                              type.isEmpty ? model.read ? '已读' : '未读' : '审批中',
                               style: TextStyle(
                                   color: model.read
                                       ? AppColors.FFC1C8D7
