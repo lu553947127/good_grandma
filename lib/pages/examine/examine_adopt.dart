@@ -219,7 +219,7 @@ class _ExamineOperationState extends State<ExamineOperation> {
     ///转办
     _transferTask(){
       if (customerId == '') {
-        EasyLoading.showToast("客户不能为空");
+        EasyLoading.showToast("人员不能为空");
         return;
       }
 
@@ -255,7 +255,7 @@ class _ExamineOperationState extends State<ExamineOperation> {
     ///委托
     _delegateTask(){
       if (customerId == '') {
-        EasyLoading.showToast("客户不能为空");
+        EasyLoading.showToast("人员不能为空");
         return;
       }
 
@@ -289,23 +289,17 @@ class _ExamineOperationState extends State<ExamineOperation> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(widget.title, style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: TextSelectView(
                 sizeHeight: 0,
-                leftTitle: '客户名称',
-                rightPlaceholder: '请选择客户',
+                leftTitle: '人员',
+                rightPlaceholder: '请选择人员',
                 value: customerName,
                 onPressed: () async{
-                  Map select = await showSelectSearchList(context, Api.allUser, '请选择客户', 'name');
+                  Map select = await showSelectSearchList(context, Api.allUser, '请选择人员', 'name');
                   setState(() {
                     customerId = select['id'];
                     customerName = select['name'];
