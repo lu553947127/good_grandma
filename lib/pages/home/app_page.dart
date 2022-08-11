@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:good_grandma/common/api.dart';
@@ -8,10 +9,12 @@ import 'package:good_grandma/common/my_cache_image_view.dart';
 import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
+import 'package:good_grandma/models/main_provider.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
 import 'package:good_grandma/pages/order/freezer_order/freezer_order.dart';
+import 'package:good_grandma/pages/order/loading_rate_audit.dart';
 import 'package:good_grandma/pages/order/material_order/material_order.dart';
 import 'package:good_grandma/pages/order/order_page.dart';
 import 'package:good_grandma/pages/regular_doc/regular_doc_page.dart';
@@ -32,6 +35,7 @@ import 'package:good_grandma/pages/work/receivable/receivable.dart';
 import 'package:good_grandma/pages/work/visit_plan/visit_plan.dart';
 import 'package:good_grandma/pages/work/visit_statistics/visit_statistics.dart';
 import 'package:good_grandma/pages/work/work_report/work_report.dart';
+import 'package:provider/provider.dart';
 
 ///应用
 class AppPage extends StatefulWidget {
@@ -45,7 +49,7 @@ class AppPage extends StatefulWidget {
 class _AppPageState extends State<AppPage> {
   final EasyRefreshController _controller = EasyRefreshController();
   final ScrollController _scrollController = ScrollController();
-
+  MainProvider _mainProvider;
   ///应用菜单列表
   List<Map> appMenuTreeList = [];
 
@@ -117,6 +121,7 @@ class _AppPageState extends State<AppPage> {
 
   @override
   Widget build(BuildContext context) {
+    _mainProvider = Provider.of<MainProvider>(context);
 
     ///功能模块点击
     void _btnOnPressed(BuildContext context, Map menu) {
@@ -166,6 +171,9 @@ class _AppPageState extends State<AppPage> {
         case 'materialOrder'://物料订单
           Navigator.push(context, MaterialPageRoute(builder:(context)=> MaterialOrderPage()));
           break;
+        case 'orderFinanceCar'://装车率审核
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> LoadingRateAudit()));
+          break;
         case 'approvalApplication'://审批申请
           if(widget.shenpiOnTap != null) widget.shenpiOnTap();
           break;
@@ -202,6 +210,30 @@ class _AppPageState extends State<AppPage> {
       }
     }
 
+    ///待审核状态角标
+    _setCount(code){
+      switch(code){
+        case 'firstOrder'://一级订单
+          return '${_mainProvider.countOne}';
+          break;
+        case 'directlyOrder'://直营订单
+          return '${_mainProvider.countZy}';
+          break;
+        case 'orderFinanceCar'://装车率审核
+          return '${_mainProvider.countZc}';
+          break;
+        case 'materialOrder'://物料订单
+          return '${_mainProvider.countWl}';
+          break;
+        case 'freezerOrder'://冰柜订单
+          return '${_mainProvider.countBg}';
+          break;
+        default:
+          return '';
+          break;
+      }
+    }
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(title: Text('应用')),
@@ -229,27 +261,40 @@ class _AppPageState extends State<AppPage> {
                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4, childAspectRatio: 0.9),
                                   itemCount: list.length,
                                   itemBuilder: (context, index) {
-                                    return TextButton(
-                                        onPressed: () {
-                                          _btnOnPressed(context, list[index]);
-                                        },
-                                        style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            MyCacheImageView(
-                                              imageURL: list[index]['source'],
-                                              width: 55.0,
-                                              height: 55.0,
-                                              errorWidgetChild: Image.asset(
-                                                  'assets/images/icon_empty_user.png',
-                                                  width: 55.0,
-                                                  height: 55.0),
-                                            ),
-                                            Text(list[index]['name'], style: TextStyle(fontSize: 14,
-                                                color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
-                                          ]
-                                        ));
+                                    return Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      child: TextButton(
+                                          onPressed: () {
+                                            _btnOnPressed(context, list[index]);
+                                          },
+                                          style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
+                                          child: Badge(
+                                              child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    MyCacheImageView(
+                                                      imageURL: list[index]['source'],
+                                                      width: 55.0,
+                                                      height: 55.0,
+                                                      errorWidgetChild: Image.asset(
+                                                          'assets/images/icon_empty_user.png',
+                                                          width: 55.0,
+                                                          height: 55.0),
+                                                    ),
+                                                    Text(list[index]['name'], style: TextStyle(fontSize: 14,
+                                                        color: Color(0XFF333333)), overflow: TextOverflow.ellipsis)
+                                                  ]
+                                              ),
+                                              badgeContent: Text(_setCount(list[index]['code']), style: TextStyle(color: Colors.white)),
+                                              showBadge: list[index]['code'] == 'firstOrder' && _mainProvider.countOne != 0 ||
+                                                  list[index]['code'] == 'directlyOrder'  && _mainProvider.countZy != 0 ||
+                                                  list[index]['code'] == 'orderFinanceCar'  && _mainProvider.countZc != 0 ||
+                                                  list[index]['code'] == 'materialOrder'  && _mainProvider.countWl != 0 ||
+                                                  list[index]['code'] == 'freezerOrder'  && _mainProvider.countBg != 0
+                                                  ? true : false
+                                          )
+                                      )
+                                    );
                                   }
                               ) :
                               Container()
@@ -268,6 +313,7 @@ class _AppPageState extends State<AppPage> {
 
   Future<void> _refresh() async {
    await _appMenuTree();
+   await _orderCount();
   }
 
   ///应用菜单列表
@@ -291,6 +337,19 @@ class _AppPageState extends State<AppPage> {
       _controller.finishRefresh(success: false);
       _controller.finishLoad(success: false, noMore: false);
     }
+  }
+
+  ///获取待审核数量
+  _orderCount(){
+    requestPost(Api.orderCount).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---orderCount----$data');
+      _mainProvider.setCountOne(data['data']['countOne']);
+      _mainProvider.setCountZy(data['data']['countZy']);
+      _mainProvider.setCountZc(data['data']['countZc']);
+      _mainProvider.setCountWl(data['data']['countWl']);
+      _mainProvider.setCountBg(data['data']['countBg']);
+    });
   }
 
   @override

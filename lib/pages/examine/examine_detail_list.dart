@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:good_grandma/common/colors.dart';
+import 'package:good_grandma/common/log.dart';
 import 'package:good_grandma/common/my_cache_image_view.dart';
 
 ///审核流程列表
@@ -97,7 +98,7 @@ class ExamineDetailList extends StatelessWidget {
 
     ///获取审批流程评论列表数据
     List<Map> commentsList = (flow['comments'] as List).cast();
-    // LogUtil.d('commentsList----$commentsList');
+    LogUtil.d('commentsList----$commentsList');
 
     String endTime = flow['endTime'];
 
@@ -140,7 +141,7 @@ class ExamineDetailList extends StatelessWidget {
                                         ]
                                     ),
                                     Visibility(
-                                        visible: flow['historyActivityType'] != 'startEvent' && endTime.isNotEmpty ? true : false,
+                                        visible: flow['historyActivityType'] != 'startEvent' ? true : false,
                                         child: ListView.builder(
                                             shrinkWrap:true,//范围内进行包裹（内容多高ListView就多高）
                                             physics:NeverScrollableScrollPhysics(),//禁止滚动

@@ -44,6 +44,19 @@ class _IndexPageState extends State<IndexPage> {
     });
   }
 
+  ///获取待审核数量
+  _orderCount(){
+    requestPost(Api.orderCount).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---orderCount----$data');
+      _mainProvider.setCountOne(data['data']['countOne']);
+      _mainProvider.setCountZy(data['data']['countZy']);
+      _mainProvider.setCountZc(data['data']['countZc']);
+      _mainProvider.setCountWl(data['data']['countWl']);
+      _mainProvider.setCountBg(data['data']['countBg']);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +68,7 @@ class _IndexPageState extends State<IndexPage> {
         AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3)),
         ShenPiPage(),
         MinePage()]);
+      _todoList();
     }else{
       _pages.addAll([
         HomePage(switchTabbarIndex: (index) => _switchTabbarIndex(index)),
@@ -62,7 +76,7 @@ class _IndexPageState extends State<IndexPage> {
         AppPage(shenpiOnTap: ()=> _switchTabbarIndex(3)),
         MinePage()]);
     }
-    _todoList();
+    _orderCount();
   }
 
   @override
@@ -108,8 +122,18 @@ class _IndexPageState extends State<IndexPage> {
           activeIcon: Image.asset('assets/images/tabbar_msg_sel.png',width: 22.0,height: 22.0),
           label: '消息'),
       BottomNavigationBarItem(
-          icon: Image.asset('assets/images/tabbar_app.png',width: 22.0,height: 22.0),
-          activeIcon: Image.asset('assets/images/tabbar_app_sel.png',width: 22.0,height: 22.0),
+          icon: Badge(
+              badgeContent: Text('${(_mainProvider.countOne + _mainProvider.countZy + _mainProvider.countZc + _mainProvider.countWl + _mainProvider.countBg)}',
+                  style: TextStyle(color: Colors.white)),
+              child: Image.asset('assets/images/tabbar_app.png',width: 22.0,height: 22.0),
+              showBadge: (_mainProvider.countOne + _mainProvider.countZy + _mainProvider.countZc + _mainProvider.countWl + _mainProvider.countBg) != 0 ? true : false
+          ),
+          activeIcon: Badge(
+              badgeContent: Text('${(_mainProvider.countOne + _mainProvider.countZy + _mainProvider.countZc + _mainProvider.countWl + _mainProvider.countBg)}',
+                  style: TextStyle(color: Colors.white)),
+              child: Image.asset('assets/images/tabbar_app_sel.png',width: 22.0,height: 22.0),
+              showBadge: (_mainProvider.countOne + _mainProvider.countZy + _mainProvider.countZc + _mainProvider.countWl + _mainProvider.countBg) != 0 ? true : false
+          ),
           label: '应用'),
       BottomNavigationBarItem(
           icon: Badge(

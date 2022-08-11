@@ -2,9 +2,9 @@
 class Api {
   static String baseUrl() {
     /// 正式服
-    // return 'https://haoapo.haoapochn.cn/';
+    return 'https://haoapo.haoapochn.cn/';
     /// 本地测试服务器
-    return 'http://172.167.40.141:1888';
+    // return 'http://172.167.40.141:1888';
   }
 
   /** 登录相关 **/
@@ -252,6 +252,17 @@ class Api {
 
   ///折扣管理列表
   static const amountList = "/api/hap-app/app/amount/list";
+
+  /** 装车率审核 **/
+
+  ///装车率审核列表
+  static const orderFinanceCarList = "/api/hap-app/app/order/orderFinanceCarList";
+
+  ///装车率审核详情
+  static const orderFinanceCarDetails = "/api/hap-app/app/order/orderFinanceCarDetails";
+
+  ///装车率审核
+  static const orderFinanceCar = "/api/hap-app/app/order/orderFinanceCar";
 
   /** 冰柜订单 **/
 
@@ -575,4 +586,7 @@ class Api {
 
   ///获取阿里oss配置信息
   static const aliSignature = "/api/hap-resource/oss/endpoint/aliSignature";
+
+  ///获取待审核数量
+  static const orderCount = "/api/hap-app/app/system/orderCount";
 }

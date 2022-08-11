@@ -33,6 +33,8 @@ class ExamineDetailContent extends StatelessWidget {
   ///费用列表集合
   List<Map> costList = [];
 
+  final String fileTop = 'http://101.132.36.246:8012/onlinePreview?url=';
+
   ///用内置浏览器打开网页
   _launchURL(url) async {
     if (await canLaunch(url)) {
@@ -103,7 +105,7 @@ class ExamineDetailContent extends StatelessWidget {
               )
             ),
             onTap: (){
-              _launchURL(file['value']);
+              _launchURL(fileTop + encodeBase64(file['value']));
             }
           ));
         }else {
@@ -170,7 +172,7 @@ class ExamineDetailContent extends StatelessWidget {
                 )
             ),
             onTap: (){
-              _launchURL(file['value']);
+              _launchURL(fileTop + encodeBase64(file['value']));
             },
           ));
         }else {
@@ -237,7 +239,7 @@ class ExamineDetailContent extends StatelessWidget {
                 )
             ),
             onTap: (){
-              _launchURL(file['value']);
+              _launchURL(fileTop + encodeBase64(file['value']));
             },
           ));
         }else {
@@ -304,7 +306,7 @@ class ExamineDetailContent extends StatelessWidget {
                 )
             ),
             onTap: (){
-              _launchURL(file['value']);
+              _launchURL(fileTop + encodeBase64(file['value']));
             },
           ));
         }else {
