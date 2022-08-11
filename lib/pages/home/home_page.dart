@@ -14,6 +14,7 @@ import 'package:good_grandma/common/my_easy_refresh_sliver.dart';
 import 'package:good_grandma/common/store.dart';
 import 'package:good_grandma/common/utils.dart';
 import 'package:good_grandma/models/home_report_model.dart';
+import 'package:good_grandma/models/main_provider.dart';
 import 'package:good_grandma/pages/contract/contract_page.dart';
 import 'package:good_grandma/pages/files/files_page.dart';
 import 'package:good_grandma/pages/guarantee/guarantee_page.dart';
@@ -45,6 +46,7 @@ import 'package:good_grandma/widgets/home_plan_cell.dart';
 import 'package:good_grandma/widgets/home_report_cell.dart';
 import 'package:good_grandma/widgets/home_table_header.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ///首页
@@ -77,6 +79,8 @@ class _Body extends State<HomePage> {
   ///是否有工作报告
   bool isWorkReport = false;
 
+  MainProvider _mainProvider;
+
   @override
   void initState() {
     super.initState();
@@ -87,6 +91,7 @@ class _Body extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _mainProvider = Provider.of<MainProvider>(context);
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -109,7 +114,8 @@ class _Body extends State<HomePage> {
             //顶部按钮
             HomeTableHeader(
                 onTap: (menu) => _titleBtnOnTap(context, menu),
-                homepageList: homepageList
+                homepageList: homepageList,
+                mainProvider: _mainProvider
             ),
             //消息通知
             SliverToBoxAdapter(
@@ -267,6 +273,7 @@ class _Body extends State<HomePage> {
     _getMsgCountRequest();
     _current = 1;
     _downloadData();
+    _orderCount();
   }
 
   Future<void> _onLoad() async {
@@ -501,6 +508,19 @@ class _Body extends State<HomePage> {
       LogUtil.d('brand----${androidInfo.brand}');
       Store.saveBrand(androidInfo.brand);
     }
+  }
+
+  ///获取待审核数量
+  _orderCount(){
+    requestPost(Api.orderCount).then((val) async{
+      var data = json.decode(val.toString());
+      LogUtil.d('请求结果---orderCount----$data');
+      _mainProvider.setCountOne(data['data']['countOne']);
+      _mainProvider.setCountZy(data['data']['countZy']);
+      _mainProvider.setCountZc(data['data']['countZc']);
+      _mainProvider.setCountWl(data['data']['countWl']);
+      _mainProvider.setCountBg(data['data']['countBg']);
+    });
   }
 
   @override
