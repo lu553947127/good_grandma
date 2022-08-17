@@ -89,21 +89,19 @@ class _OrderPageState extends State<OrderPage> {
         ]);
     return Scaffold(
       appBar: AppBar(title: Text(widget.orderType == 3 ? '直营订单' : '订货订单')),
-      body: Store.readUserType() == 'zn' //工厂用户
-          ? listViews
-          : Column(
-              children: [
-                SwitchTypeTitleWidget(
-                    backgroundColor: Colors.white,
-                    selIndex: _selIndex,
-                    list: _listTitle,
-                    onTap: (index) {
-                      _selIndex = index;
-                      _controller.callRefresh();
-                    }),
-                Expanded(child: listViews)
-              ]
-            ),
+      body: Column(
+          children: [
+            SwitchTypeTitleWidget(
+                backgroundColor: Colors.white,
+                selIndex: _selIndex,
+                list: _listTitle,
+                onTap: (index) {
+                  _selIndex = index;
+                  _controller.callRefresh();
+                }),
+            Expanded(child: listViews)
+          ]
+      ),
       floatingActionButton: Visibility(
         visible: Store.readUserType() != 'zn',
         child: FloatingActionButton(
