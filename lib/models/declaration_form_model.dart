@@ -79,7 +79,7 @@ class DeclarationFormModel extends ChangeNotifier {
     _standardCount = 0;
     _carId = '';
     _carName = '';
-    _carCount = '';
+    _carCount = '0';
     _carRate = '';
     _isInvoice = '否';
     _invoiceId = '';

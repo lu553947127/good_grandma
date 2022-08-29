@@ -140,9 +140,7 @@ class _OrderPageState extends State<OrderPage> {
         'current': _current,
         'size': _pageSize,
         'middleman': widget.orderType,
-        'status': Store.readUserType() == 'zn'//工厂用户只能看到待发货状态的订单
-            ? 2
-            : _selIndex
+        'status': _selIndex
       };
       final val = await requestPost(Api.orderList, json: jsonEncode(map));
       LogUtil.d('${Api.orderList} value = $val');

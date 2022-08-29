@@ -69,13 +69,7 @@ class _VisitStatisticsState extends State<VisitStatistics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text("拜访统计",style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
-      ),
+      appBar: AppBar(title: Text("拜访统计")),
       body: Column(
         children: [
           VisitStatisticsSelect(

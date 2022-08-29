@@ -244,7 +244,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           || Store.readUserType() == 'xsb'
           || Store.readUserId() != _model.updateUser)) || //一级订单待确认时一级客户、城市经理、修改人不等于当前登录人可以审核
           (_model.status == 2 && Store.readUserType() == 'zn')) && Store.readUserId() != _model.updateUser//一级订单待发货时工厂可以审核
-          : (_model.status == 1 && Store.readUserType() == 'yjkh'), //2级订单待收货时可以审核
+          : (_model.status == 1 && Store.readUserType() == 'yjkh' ||
+          _model.status == 1 && Store.readUserType() == 'xsb'), //2级订单待收货时可以审核
       child: Container(
         color: Colors.white,
         padding: EdgeInsets.only(

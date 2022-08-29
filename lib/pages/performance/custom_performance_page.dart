@@ -60,7 +60,7 @@ class _CustomPerformancePageState extends State<CustomPerformancePage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final data = jsonDecode(snapshot.data.toString());
-                      // LogUtil.d('请求结果---selectMonthStatistics----${snapshot.data}');
+                      LogUtil.d('请求结果---selectMonthStatistics----${snapshot.data}');
                       final List<dynamic> list = data['data'];
                       if(list == null || list.isEmpty)
                         return NoDataWidget(emptyRetry: () => setState(() {}));
