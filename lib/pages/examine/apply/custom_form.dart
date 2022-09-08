@@ -538,6 +538,12 @@ class _CustomFormViewState extends State<CustomFormView> {
             }
             addData[map['prop']] = timeSelectProvider.filePath;
           }
+        }else if ('wf-upload' == map['component']){
+          if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.filePath.length == 0){
+            EasyLoading.showToast('${map['label']}不能为空');
+            return;
+          }
+          addData[map['prop']] = timeSelectProvider.filePath;
         }else if ('date' == map['type']){
           if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.select == ''){
             EasyLoading.showToast('${map['label']}不能为空');
