@@ -730,7 +730,7 @@ class _CustomFormViewState extends State<CustomFormView> {
             return;
           }
           addData[map['prop']] = timeSelectProvider.money;
-        }else if ('feiyongshenqing' == map['prop']){
+        }else if ('feiyongshenqing' == map['prop'] || 'chuchaishenqing' == map['prop']){
           if ((map['rules'] != null && map['rules'].length > 0) && timeSelectProvider.costStringList.isEmpty){
             EasyLoading.showToast('${map['label']}不能为空');
             return;
