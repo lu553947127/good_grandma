@@ -43,6 +43,8 @@ class _zhifuduixiangxinxiFromState extends State<zhifuduixiangxinxiFrom> {
             String value = '';
             if (data['prop'] == 'zhifufangshi'){
               value = formModel.zhifufangshi;
+            }else if (data['prop'] == 'zigongsi') {
+              value = formModel.zigongsi;
             }
             return TextSelectView(
               leftTitle: data['label'],
@@ -53,6 +55,8 @@ class _zhifuduixiangxinxiFromState extends State<zhifuduixiangxinxiFrom> {
                 String select = await showSelect(context, data['dicUrl'], '请选择${data['label']}', data['props']);
                 if (data['prop'] == 'zhifufangshi'){
                   formModel.zhifufangshi = select;
+                }else if (data['prop'] == 'zigongsi') {
+                  formModel.zigongsi = select;
                 }
                 widget.timeSelectProvider.editzhifuduixiangFormWith(index, formModel);
                 return select;

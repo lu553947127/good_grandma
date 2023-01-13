@@ -439,6 +439,7 @@ class TimeSelectProvider with ChangeNotifier{
       _zhifuduixiangxinxiList = [];
     _zhifuduixiangxinxiList.add(formModel);
     Map addData = new Map();
+    addData['zigongsi'] = formModel.zigongsi;
     addData['danweimingcheng'] = formModel.danweimingcheng;
     addData['zhanghao'] = formModel.zhanghao;
     addData['kaihuhangmingcheng'] = formModel.kaihuhangmingcheng;
@@ -456,6 +457,7 @@ class TimeSelectProvider with ChangeNotifier{
     if(index >= _zhifuduixiangxinxiList.length) return;
     _zhifuduixiangxinxiList.setAll(index, [formModel]);
     Map addData = new Map();
+    addData['zigongsi'] = formModel.zigongsi;
     addData['danweimingcheng'] = formModel.danweimingcheng;
     addData['zhanghao'] = formModel.zhanghao;
     addData['kaihuhangmingcheng'] = formModel.kaihuhangmingcheng;
@@ -777,6 +779,9 @@ class TravelModel {
 ///支付对象信息模型
 class FormModel {
 
+  ///子公司
+  String zigongsi;
+
   ///单位名称
   String danweimingcheng;
 
@@ -796,6 +801,7 @@ class FormModel {
   String beizhu;
 
   FormModel({
+    this.zigongsi = '',
     this.danweimingcheng = '',
     this.zhanghao = '',
     this.kaihuhangmingcheng = '',
